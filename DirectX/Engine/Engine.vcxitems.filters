@@ -43,6 +43,45 @@
     <Filter Include="Graphics\ConstantBuffer">
       <UniqueIdentifier>{2f1622fd-2933-47fe-8726-734e9b71489f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Manager">
+      <UniqueIdentifier>{740d17ea-d463-4e92-b2d7-eac1d04bf43f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Manager\SceneManager">
+      <UniqueIdentifier>{a7567df6-1774-4c12-9f68-d3f4ce565218}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{3decc5f7-c68c-4013-ae41-b6093a23c155}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Scene">
+      <UniqueIdentifier>{780786df-5790-442b-b0b0-9d1ce546ac0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Layer">
+      <UniqueIdentifier>{2b73ba5d-ca78-4ba7-981d-fc4778d1e243}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\GameObject">
+      <UniqueIdentifier>{f7ec4d14-97f5-47aa-9c52-f71503ea0191}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Component">
+      <UniqueIdentifier>{9402beab-cf01-4e9e-8dd1-6a9f295bde4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Component\Base">
+      <UniqueIdentifier>{2530ca1b-50a0-4a2f-9ef8-dec89dde7ee0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Scene\Base">
+      <UniqueIdentifier>{15528161-1041-47d5-8ce0-aba8c9796955}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\GameObject\Base">
+      <UniqueIdentifier>{d0e3d960-04d8-407c-a667-dc2db214e16d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Component\Transform">
+      <UniqueIdentifier>{a1bf01eb-46c7-414c-ae45-f196efa45229}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Component\MeshRenderer">
+      <UniqueIdentifier>{85c0df24-4171-4660-b45f-b1af55684ea1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Scene\PlayScene">
+      <UniqueIdentifier>{4ca0343a-d00e-400f-b3cd-86c97be25565}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzEntity.cpp">
@@ -80,6 +119,30 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzConstantBuffer.cpp">
       <Filter>Graphics\ConstantBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzSceneManger.cpp">
+      <Filter>Manager\SceneManager</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzLayer.cpp">
+      <Filter>Scene\Layer</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzComponent.cpp">
+      <Filter>Scene\Component\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzScene.cpp">
+      <Filter>Scene\Scene\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzGameObject.cpp">
+      <Filter>Scene\GameObject\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzTransform.cpp">
+      <Filter>Scene\Component\Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzMeshRenderer.cpp">
+      <Filter>Scene\Component\MeshRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzPlayScene.cpp">
+      <Filter>Scene\Scene\PlayScene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -136,6 +199,30 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzConstantBuffer.h">
       <Filter>Graphics\ConstantBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzSceneManger.h">
+      <Filter>Manager\SceneManager</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzLayer.h">
+      <Filter>Scene\Layer</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzComponent.h">
+      <Filter>Scene\Component\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzScene.h">
+      <Filter>Scene\Scene\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzGameObject.h">
+      <Filter>Scene\GameObject\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzTransform.h">
+      <Filter>Scene\Component\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzMeshRenderer.h">
+      <Filter>Scene\Component\MeshRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzPlayScene.h">
+      <Filter>Scene\Scene\PlayScene</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -15,7 +15,7 @@ namespace zz::graphics
 
     bool ConstantBuffer::CreateConstantBuffer(size_t size)
     {
-        desc.ByteWidth = size;
+        desc.ByteWidth = (UINT)size;
         desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
         desc.Usage = D3D11_USAGE_DYNAMIC;
         desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;

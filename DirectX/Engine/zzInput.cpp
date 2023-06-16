@@ -59,7 +59,7 @@ namespace zz
 
             POINT mousePos = {};
             GetCursorPos(&mousePos);
-            Application &application = Application::GetInst();
+            Application& application = Application::GetInst();
 
             ScreenToClient(application.GetHwnd(), &mousePos);
             mMousePos.x = (float)mousePos.x;

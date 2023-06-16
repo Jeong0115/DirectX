@@ -39,7 +39,13 @@ namespace zz::graphics
         void BindsConstantBuffer(eShaderStage stage, eCBType type, ID3D11Buffer* buffer);
 
         void BindViewPort(D3D11_VIEWPORT* viewPort);
+        
+        void DrawIndexed(UINT IndexCount, UINT StartIndexLocation, INT BaseVertexLocation);
+        void ClearRenderTarget();
+        void UpdateViewPort();
         void Draw();
+        void Present();
+
         //Microsoft::WRL::ComPtr<ID3D11Device> GetD3D11Device() { return mDevice; }
 
 	private:

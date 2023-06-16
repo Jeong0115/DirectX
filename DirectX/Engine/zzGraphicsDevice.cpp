@@ -10,9 +10,9 @@ namespace zz::graphics
 {
 	GraphicsDevice::GraphicsDevice()
 	{
-        Application& apply = Application::GetInst();
+        Application& application = Application::GetInst();
 
-        HWND hWnd = apply.GetHwnd();
+        HWND hWnd = application.GetHwnd();
         UINT deviceFlag = D3D11_CREATE_DEVICE_DEBUG;
         D3D_FEATURE_LEVEL featureLevel = (D3D_FEATURE_LEVEL)0;
 
@@ -25,8 +25,8 @@ namespace zz::graphics
         // SwapChain
         DXGI_SWAP_CHAIN_DESC swapChainDesc = {};
         swapChainDesc.BufferCount = 2;
-        swapChainDesc.BufferDesc.Width = apply.GetWidth();
-        swapChainDesc.BufferDesc.Height = apply.GetHeight();
+        swapChainDesc.BufferDesc.Width = application.GetWidth();
+        swapChainDesc.BufferDesc.Height = application.GetHeight();
 
         if (!CreateSwapChain(&swapChainDesc, hWnd))
             return;
@@ -46,8 +46,8 @@ namespace zz::graphics
         depthStencilDesc.Format = DXGI_FORMAT::DXGI_FORMAT_D24_UNORM_S8_UINT;
         depthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
         depthStencilDesc.CPUAccessFlags = 0;
-        depthStencilDesc.Width = apply.GetWidth();
-        depthStencilDesc.Height = apply.GetHeight();
+        depthStencilDesc.Width = application.GetWidth();
+        depthStencilDesc.Height = application.GetHeight();
         depthStencilDesc.ArraySize = 1;
         depthStencilDesc.SampleDesc.Count = 1;
         depthStencilDesc.SampleDesc.Quality = 0;
@@ -313,17 +313,25 @@ namespace zz::graphics
         mContext->RSSetViewports(1, viewPort);
     }
 
-    void GraphicsDevice::Draw()
+    void GraphicsDevice::DrawIndexed(UINT IndexCount, UINT StartIndexLocation, INT BaseVertexLocation)
     {
-        Application& application = Application::GetInst();
-        // render target clear
+        mContext->DrawIndexed(IndexCount, StartIndexLocation, BaseVertexLocation);
+    }
+
+    void GraphicsDevice::ClearRenderTarget()
+    {
         FLOAT bgColor[4] = { 0.2f, 0.2f, 0.2f, 1.0f };
         mContext->ClearRenderTargetView(mRenderTargetView.Get(), bgColor);
         mContext->ClearDepthStencilView(mDepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1, 0);
+        mContext->OMSetRenderTargets(1, mRenderTargetView.GetAddressOf(), mDepthStencilView.Get());
+    }
 
-        // viewport update
+    void GraphicsDevice::UpdateViewPort()
+    {
+        Application& application = Application::GetInst();
         HWND hWnd = application.GetHwnd();
         RECT winRect = {};
+
         GetClientRect(hWnd, &winRect);
         mViewPort =
         {
@@ -334,13 +342,21 @@ namespace zz::graphics
         };
 
         BindViewPort(&mViewPort);
-        mContext->OMSetRenderTargets(1, mRenderTargetView.GetAddressOf(), mDepthStencilView.Get());
+    }
 
-        renderer::mesh->BindBuffer();
-        renderer::shader->BindShaders();
+    void GraphicsDevice::Draw()
+    {
+        
+        // viewport update
+        
+        
 
-        mContext->DrawIndexed(renderer::mesh->GetIndexCount(), 0, 0);
 
+       
+    }
+
+    void GraphicsDevice::Present()
+    {
         mSwapChain->Present(0, 0);
     }
 

@@ -1,17 +1,11 @@
 #include "zzApplication.h"
-//#include "zzGraphicsDevice.h"
+#include "zzSceneManger.h"
 #include "zzRenderer.h"
 #include "zzTime.h"
 #include "zzInput.h"
 
 namespace zz
 {	
-	/*HWND		Application::mHwnd = NULL;
-	POINT		Application::mResolution = {};
-	UINT		Application::mWidth = -1;
-	UINT		Application::mHeight = -1;
-	std::unique_ptr<zz::graphics::GraphicsDevice> Application::graphicDevice = nullptr;*/
-
 	Application::Application()
         : mHwnd(NULL)
         , mResolution{}
@@ -22,7 +16,7 @@ namespace zz
 
 	Application::~Application()
 	{
-        graphicDevice.release();
+        //graphicDevice.release();
 
         //ID3D11Debug* debugDevice = nullptr;
         ////graphics::GetDevice()->GetD3D11Device()->QueryInterface(__uuidof(ID3D11Debug), reinterpret_cast<void**>(&debugDevice));
@@ -50,21 +44,31 @@ namespace zz
         Input::Initialize();
 
         renderer::Initialize();
+        SceneManger::GetInst().Initialize();
 	}
 
 	void Application::Update()
 	{
         Time::Update();
         Input::Update();
+        SceneManger::GetInst().Update();
 	}
 
 	void Application::LateUpdate()
 	{
+        SceneManger::GetInst().LateUpdate();
 	}
 
 	void Application::Render()
 	{
         graphicDevice->Draw();
+
+        graphicDevice->ClearRenderTarget();
+        graphicDevice->UpdateViewPort();
+        SceneManger::GetInst().Render();
+        //graphicDevice->Draw();
+
+        graphicDevice->Present();
 	}
 
 	void Application::SetWindow(HWND hwnd, UINT width, UINT height)
