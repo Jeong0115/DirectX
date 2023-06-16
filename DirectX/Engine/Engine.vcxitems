@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <ItemsProjectGuid>{b1b89739-640a-41d9-8bcf-df5cea41a47c}</ItemsProjectGuid>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(MSBuildThisFileDirectory)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectCapability Include="SourceItemsFromImports" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzApplication.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzConstantBuffer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzEntity.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzGraphicsDevice.cpp">
+      <LanguageStandard Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">stdcpp20</LanguageStandard>
+      <LanguageStandard Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">stdcpp20</LanguageStandard>
+      <LanguageStandard Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">stdcpp20</LanguageStandard>
+      <LanguageStandard Condition="'$(Configuration)|$(Platform)'=='Release|x64'">stdcpp20</LanguageStandard>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzInput.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzMath.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzMesh.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzRenderer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzResource.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzResourceMgr.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzShader.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzTime.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)CommonInclude.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)define.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzApplication.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzConstantBuffer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzEngine.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzEntity.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzEnum.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzGraphics.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzGraphicsDevice.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzInput.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzMath.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzMesh.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzRenderer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzResource.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzResourceMgr.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzShader.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzTime.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzMath.inl" />
+  </ItemGroup>
+</Project>
