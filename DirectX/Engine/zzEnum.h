@@ -6,7 +6,6 @@ namespace zz
     {
         None,
         Transform,
-        Mesh,
         Particle,
         MeshRenderer,
         Script,
@@ -18,6 +17,15 @@ namespace zz
         Player,
         Monster,
         UI,
+        End,
+    };
+
+    enum class eResourceType
+    {
+        Texture,
+        Shader,
+        Material,
+        Mesh,
         End,
     };
 }

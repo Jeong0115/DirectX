@@ -2,7 +2,8 @@
 
 namespace zz
 {
-	Resource::Resource()
+	Resource::Resource(const eResourceType type)
+        : mType(type)
 	{
 
 	}

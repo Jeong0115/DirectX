@@ -16,6 +16,7 @@ namespace zz
         bool CreateIndexBuffer(void* indexData, UINT count);
 
         void BindBuffer();
+        void Render();
 
         UINT GetIndexCount() { return mIndexCnt; }
 

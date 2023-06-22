@@ -1,6 +1,9 @@
 #include "zzPlayScene.h"
 #include "zzTransform.h"
 #include "zzMeshRenderer.h"
+#include "zzResourceManager.h"
+#include "zzMesh.h"
+#include "zzMaterial.h"
 
 namespace zz
 {
@@ -16,14 +19,22 @@ namespace zz
     {
         GameObject* player = new GameObject();
         AddGameObject(eLayerType::Player, player);
-        player->AddComponent<MeshRenderer>();
+        MeshRenderer* mr = player->AddComponent<MeshRenderer>();
+        mr->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
+        mr->SetMaterial(ResourceManager::Find<Material>(L"SpriteMaterial"));
 
-        GameObject* player2 = new GameObject();
+        Transform* tr = player->GetComponent<Transform>();
+        tr->SetPosition(Vector3(-0.5f, 0.0f, 0.0f));
+        tr->SetScale(Vector3(1.0f, 2.0f, 1.0f));
+
+        //player->AddComponent<CameraScript>();
+
+       /* GameObject* player2 = new GameObject();
         AddGameObject(eLayerType::Player, player2);
         player2->AddComponent<MeshRenderer>();
 
         Transform* tr = player->GetComponent<Transform>();      
-        tr->SetPosition(Vector3(0.5f, 0.5f, 0.0f));
+        tr->SetPosition(Vector3(0.5f, 0.5f, 0.0f));*/
 
         Scene::Initialize();
     }

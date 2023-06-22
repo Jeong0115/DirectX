@@ -3,6 +3,7 @@
 #include "zzComponent.h"
 #include "zzMesh.h"
 #include "zzShader.h"
+#include "zzMaterial.h"
 
 namespace zz
 {
@@ -17,9 +18,12 @@ namespace zz
         virtual void LateUpdate() override;
         virtual void Render() override;
 
+        void SetMesh(std::shared_ptr<Mesh> mesh) { mMesh = mesh; }
+        void SetMaterial(std::shared_ptr<Material> material) { mMaterial = material; }
+
     private:
-        Mesh* mMesh;
-        Shader* mShader;
+        std::shared_ptr<Mesh> mMesh;
+        std::shared_ptr<Material> mMaterial;
     };
 }
 

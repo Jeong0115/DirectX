@@ -15,6 +15,7 @@ namespace zz
     void SceneManger::Initialize()
     {
         mActiveScene = new PlayScene();
+        mScenes.insert(std::make_pair(L"PlayScene", mActiveScene));
         mActiveScene->Initialize();
     }
     void SceneManger::Update()
@@ -28,5 +29,14 @@ namespace zz
     void SceneManger::Render()
     {
         mActiveScene->Render();
+    }
+
+    void SceneManger::Release()
+    {
+        for (auto iter : mScenes)
+        {
+            delete iter.second;
+            iter.second = nullptr;
+        }
     }
 }

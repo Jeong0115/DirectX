@@ -1,5 +1,6 @@
 #include "zzApplication.h"
 #include "zzSceneManger.h"
+#include "zzResourceManager.h"
 #include "zzRenderer.h"
 #include "zzTime.h"
 #include "zzInput.h"
@@ -61,7 +62,7 @@ namespace zz
 
 	void Application::Render()
 	{
-        graphicDevice->Draw();
+        //graphicDevice->Draw();
 
         graphicDevice->ClearRenderTarget();
         graphicDevice->UpdateViewPort();
@@ -70,6 +71,12 @@ namespace zz
 
         graphicDevice->Present();
 	}
+
+    void Application::Release()
+    {
+        SceneManger::GetInst().Release();
+        //graphicDevice.release();
+    }
 
 	void Application::SetWindow(HWND hwnd, UINT width, UINT height)
 	{

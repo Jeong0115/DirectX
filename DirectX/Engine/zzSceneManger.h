@@ -17,8 +17,10 @@ namespace zz
         void Update();
         void LateUpdate();
         void Render();
+        void Release();
 
     private:
         Scene* mActiveScene;
+        std::map<std::wstring, Scene*> mScenes;
     };
 }

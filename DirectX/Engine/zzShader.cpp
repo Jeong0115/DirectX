@@ -4,7 +4,8 @@ using namespace zz::graphics;
 namespace zz
 {   
     Shader::Shader()
-        : mInputLayout(nullptr)
+        : Resource(eResourceType::Shader)
+        , mInputLayout(nullptr)
         , mTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST)
     {
     }
@@ -46,7 +47,7 @@ namespace zz
     void Shader::BindShaders()
     {
         GetDevice()->BindInputLayout(mInputLayout);
-        GetDevice()->BindPrimitiveTopology(mTopology);
+        GetDevice()->BindPrimitiveTopology(mTopology); // 위치 고민해보자
 
         GetDevice()->BindVertexShader(mVS.Get());
         GetDevice()->BindPixelShader(mPS.Get());

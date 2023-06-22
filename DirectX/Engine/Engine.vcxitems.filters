@@ -16,29 +16,14 @@
     <Filter Include="Resource">
       <UniqueIdentifier>{b48a19e9-9de4-418f-b1e9-27a0f1fc90c2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Common\Time">
-      <UniqueIdentifier>{f73ba1d7-ee4b-4b1d-aa9b-56769c0d32b6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Common\Common">
-      <UniqueIdentifier>{822f6e20-25a1-4c87-bac0-c018f3cccfe7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Graphics">
       <UniqueIdentifier>{bd06b5b0-6b45-415b-a98d-9717d8d9850d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Input">
-      <UniqueIdentifier>{19b0102d-8dd0-43ed-935a-e6cbbce0c89d}</UniqueIdentifier>
     </Filter>
     <Filter Include="Graphics\Device">
       <UniqueIdentifier>{8dd5f6c4-9771-4ac9-aba3-a9e8c8749cc2}</UniqueIdentifier>
     </Filter>
     <Filter Include="Graphics\Renderer">
       <UniqueIdentifier>{cfeda0f8-04a4-4dfc-bf17-4077c51f4e5d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Graphics\Mesh">
-      <UniqueIdentifier>{a17da8f0-a9db-435b-acdd-56c5aa30a1dd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Graphics\Shader">
-      <UniqueIdentifier>{afa7593e-d168-416c-96b8-a41c1a10511f}</UniqueIdentifier>
     </Filter>
     <Filter Include="Graphics\ConstantBuffer">
       <UniqueIdentifier>{2f1622fd-2933-47fe-8726-734e9b71489f}</UniqueIdentifier>
@@ -82,6 +67,36 @@
     <Filter Include="Scene\Scene\PlayScene">
       <UniqueIdentifier>{4ca0343a-d00e-400f-b3cd-86c97be25565}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource\Base">
+      <UniqueIdentifier>{3ae54276-075d-4887-9bd9-5e33fa14f09c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\Texture">
+      <UniqueIdentifier>{55d1f822-fbd8-4f24-baf9-fc7dc42175e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Header">
+      <UniqueIdentifier>{822f6e20-25a1-4c87-bac0-c018f3cccfe7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Manager\Input">
+      <UniqueIdentifier>{19b0102d-8dd0-43ed-935a-e6cbbce0c89d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Manager\Time">
+      <UniqueIdentifier>{f73ba1d7-ee4b-4b1d-aa9b-56769c0d32b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Manager\ResourceManager">
+      <UniqueIdentifier>{0efae034-0d05-441b-9755-3725c3816664}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\Shader">
+      <UniqueIdentifier>{8704f0fc-fb12-4173-a340-64e60cde570e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\Mesh">
+      <UniqueIdentifier>{a17da8f0-a9db-435b-acdd-56c5aa30a1dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\Material">
+      <UniqueIdentifier>{a55c6cf9-8f62-4211-84ce-d5e381d6efd1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Component\Script">
+      <UniqueIdentifier>{0cc6caae-b32e-4329-85c1-b540c7fcf12f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzEntity.cpp">
@@ -94,16 +109,10 @@
       <Filter>Common\Math</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzInput.cpp">
-      <Filter>Input</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)zzResource.cpp">
-      <Filter>Resource</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)zzResourceMgr.cpp">
-      <Filter>Resource</Filter>
+      <Filter>Manager\Input</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzTime.cpp">
-      <Filter>Common\Time</Filter>
+      <Filter>Manager\Time</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzGraphicsDevice.cpp">
       <Filter>Graphics\Device</Filter>
@@ -112,10 +121,7 @@
       <Filter>Graphics\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzMesh.cpp">
-      <Filter>Graphics\Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)zzShader.cpp">
-      <Filter>Graphics\Shader</Filter>
+      <Filter>Resource\Mesh</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzConstantBuffer.cpp">
       <Filter>Graphics\ConstantBuffer</Filter>
@@ -144,6 +150,24 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)zzPlayScene.cpp">
       <Filter>Scene\Scene\PlayScene</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzResourceManager.cpp">
+      <Filter>Manager\ResourceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzResource.cpp">
+      <Filter>Resource\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzTexture.cpp">
+      <Filter>Resource\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzShader.cpp">
+      <Filter>Resource\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzMaterial.cpp">
+      <Filter>Resource\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzScript.cpp">
+      <Filter>Scene\Component\Script</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzEntity.h">
@@ -153,28 +177,22 @@
       <Filter>Application</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzInput.h">
-      <Filter>Input</Filter>
+      <Filter>Manager\Input</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzMath.h">
       <Filter>Common\Math</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)zzResource.h">
-      <Filter>Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)zzResourceMgr.h">
-      <Filter>Resource</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzTime.h">
-      <Filter>Common\Time</Filter>
+      <Filter>Manager\Time</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)CommonInclude.h">
-      <Filter>Common\Common</Filter>
+      <Filter>Common\Header</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzEngine.h">
-      <Filter>Common\Common</Filter>
+      <Filter>Common\Header</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzEnum.h">
-      <Filter>Common\Common</Filter>
+      <Filter>Common\Header</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzGraphics.h">
       <Filter>Graphics</Filter>
@@ -183,7 +201,7 @@
       <Filter>Common\Math</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)define.h">
-      <Filter>Common\Common</Filter>
+      <Filter>Common\Header</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzGraphicsDevice.h">
       <Filter>Graphics\Device</Filter>
@@ -192,10 +210,7 @@
       <Filter>Graphics\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzMesh.h">
-      <Filter>Graphics\Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)zzShader.h">
-      <Filter>Graphics\Shader</Filter>
+      <Filter>Resource\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzConstantBuffer.h">
       <Filter>Graphics\ConstantBuffer</Filter>
@@ -223,6 +238,24 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzPlayScene.h">
       <Filter>Scene\Scene\PlayScene</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzResourceManager.h">
+      <Filter>Manager\ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzResource.h">
+      <Filter>Resource\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzTexture.h">
+      <Filter>Resource\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzShader.h">
+      <Filter>Resource\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzMaterial.h">
+      <Filter>Resource\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzScript.h">
+      <Filter>Scene\Component\Script</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

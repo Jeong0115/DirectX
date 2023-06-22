@@ -7,8 +7,6 @@ namespace zz
 {
     MeshRenderer::MeshRenderer()
         : Component(eComponentType::MeshRenderer)
-        , mMesh(nullptr)
-        , mShader(nullptr)
     {
     }
 
@@ -36,8 +34,8 @@ namespace zz
         //mMesh->BindBuffer();
         //mShader->Binds();
 
-        renderer::mesh->BindBuffer();
-        renderer::shader->BindShaders();
-        graphics::GetDevice()->DrawIndexed(renderer::mesh->GetIndexCount(), 0, 0);
+        mMesh->BindBuffer();
+        mMaterial->Binds();
+        mMesh->Render();
     }
 }

@@ -7,7 +7,7 @@ namespace zz
 	class Resource : public Entity
 	{
 	public:
-		Resource();
+		Resource(const eResourceType type);
 		virtual ~Resource();
 
 	public:
@@ -21,9 +21,10 @@ namespace zz
 
 
 	private:
-		std::wstring mKey;
-		std::wstring mPath;
+		std::wstring    mKey;
+		std::wstring    mPath;
 
+        eResourceType   mType;
 	};
 }
 

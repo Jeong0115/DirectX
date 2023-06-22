@@ -1,10 +1,12 @@
 #include "zzMesh.h"
 #include "zzRenderer.h"
+#include "zzGraphicsDevice.h"
 
 namespace zz
 {
     Mesh::Mesh()
-        : mVertexBuffer(nullptr)
+        : Resource(eResourceType::Mesh)
+        , mVertexBuffer(nullptr)
         , mIndexBuffer(nullptr)
         , mVBDesc{}
         , mIBDesc{}
@@ -61,5 +63,10 @@ namespace zz
 
         graphics::GetDevice()->BindVertexBuffer(0, mVertexBuffer.GetAddressOf(), &stride, &offset);
         graphics::GetDevice()->BindIndexBuffer(mIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+    }
+
+    void Mesh::Render()
+    {
+        graphics::GetDevice()->DrawIndexed(mIndexCnt, 0, 0);
     }
 }

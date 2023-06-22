@@ -15,12 +15,18 @@ namespace zz::renderer
     {
         Vector3 pos;
         Vector4 color;
+        Vector2 uv;
+    };
+
+    CBUFFER(TransformCB, CBSLOT_TRANSFORM)
+    {
+        Matrix mWorld;
+        Matrix mView;
+        Matrix mProjection;
     };
 
     extern Vertex vertexes[];
-    extern Mesh* mesh;
-    extern Shader* shader;
-    extern graphics::ConstantBuffer* constantBuffer;
+    extern graphics::ConstantBuffer* constantBuffer[(UINT)eCBType::End];
 
     void Initialize();
     void Release();

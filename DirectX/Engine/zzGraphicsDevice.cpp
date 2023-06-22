@@ -94,7 +94,7 @@ namespace zz::graphics
         swapChainDesc.OutputWindow = hWnd;
         swapChainDesc.Windowed = true;
         swapChainDesc.BufferCount = desc->BufferCount;
-        swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT::DXGI_SWAP_EFFECT_DISCARD;
+        swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT::DXGI_SWAP_EFFECT_FLIP_DISCARD;
 
         swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
         swapChainDesc.BufferDesc.Width = desc->BufferDesc.Width;
@@ -114,39 +114,40 @@ namespace zz::graphics
 
         // 예외 처리 연습 
        
-        try
-        {
-            if (FAILED(mDevice->QueryInterface(__uuidof(IDXGIDevice), (void**)pDXGIDevice.GetAddressOf())))
-                throw false;
-
-            if (FAILED(pDXGIDevice->GetParent(__uuidof(IDXGIAdapter), (void**)pAdapter.GetAddressOf())))
-                throw false;
-
-            if (FAILED(pAdapter->GetParent(__uuidof(IDXGIFactory), (void**)pFactory.GetAddressOf())))
-                throw false;
-
-            if (FAILED(pFactory->CreateSwapChain(mDevice.Get(), &swapChainDesc, mSwapChain.GetAddressOf())))
-                throw false;
-        }
-        catch (bool result)
-        {
-            return result;
-        }
-
-        return true;
-        //if (FAILED(mDevice->QueryInterface(__uuidof(IDXGIDevice), (void**)pDXGIDevice.GetAddressOf())))
-        //    return false;
-
-        //if (FAILED(pDXGIDevice->GetParent(__uuidof(IDXGIAdapter), (void**)pAdapter.GetAddressOf())))
-        //    return false;
-
-        //if (FAILED(pAdapter->GetParent(__uuidof(IDXGIFactory), (void**)pFactory.GetAddressOf())))
-        //    return false;
-
-        //if (FAILED(pFactory->CreateSwapChain(mDevice.Get(), &swapChainDesc, mSwapChain.GetAddressOf())))
-        //    return false;
+        //try
+        //{
+        //    if (FAILED(mDevice->QueryInterface(__uuidof(IDXGIDevice), (void**)pDXGIDevice.GetAddressOf())))
+        //        throw false;
+        //
+        //    if (FAILED(pDXGIDevice->GetParent(__uuidof(IDXGIAdapter), (void**)pAdapter.GetAddressOf())))
+        //        throw false;
+        //
+        //    if (FAILED(pAdapter->GetParent(__uuidof(IDXGIFactory), (void**)pFactory.GetAddressOf())))
+        //        throw false;
+        //
+        //    if (FAILED(pFactory->CreateSwapChain(mDevice.Get(), &swapChainDesc, mSwapChain.GetAddressOf())))
+        //        throw false;
+        //}
+        //catch (bool result)
+        //{
+        //    return result;
+        //}
 
         //return true;
+
+        if (FAILED(mDevice->QueryInterface(__uuidof(IDXGIDevice), (void**)pDXGIDevice.GetAddressOf())))
+            return false;
+
+        if (FAILED(pDXGIDevice->GetParent(__uuidof(IDXGIAdapter), (void**)pAdapter.GetAddressOf())))
+            return false;
+
+        if (FAILED(pAdapter->GetParent(__uuidof(IDXGIFactory), (void**)pFactory.GetAddressOf())))
+            return false;
+
+        if (FAILED(pFactory->CreateSwapChain(mDevice.Get(), &swapChainDesc, mSwapChain.GetAddressOf())))
+            return false;
+
+        return true;
 	}
 
     bool GraphicsDevice::CreateTexture(const D3D11_TEXTURE2D_DESC* desc, void* data)
@@ -182,7 +183,7 @@ namespace zz::graphics
             , byteCode->GetBufferPointer(), byteCode->GetBufferSize(), ppInputLayout)))
             return false;
 
-        return false;
+        return true;
     }
 
     bool GraphicsDevice::CreateBuffer(ID3D11Buffer** buffer, D3D11_BUFFER_DESC* bufferDesc, D3D11_SUBRESOURCE_DATA* data)
@@ -191,6 +192,14 @@ namespace zz::graphics
             return false;
 
         return true;    
+    }
+
+    bool GraphicsDevice::CreateSamplerState(const D3D11_SAMPLER_DESC* pSamplerDesc, ID3D11SamplerState** ppSamplerState)
+    {
+        if (FAILED(mDevice->CreateSamplerState(pSamplerDesc, ppSamplerState)))
+            return false;
+
+        return false;
     }
     
    
@@ -227,8 +236,7 @@ namespace zz::graphics
         if (FAILED(mDevice->CreatePixelShader(pShaderBytecode, BytecodeLength, nullptr, ppPixelShader)))
             return false;
 
-        
-        return false;
+        return true;
     }
 
     void GraphicsDevice::BindInputLayout(ID3D11InputLayout* pInputLayout)
@@ -276,23 +284,27 @@ namespace zz::graphics
         case eShaderStage::VS:
             mContext->VSSetConstantBuffers((UINT)type, 1, &buffer);
             break;
+
         case eShaderStage::HS:
             mContext->HSSetConstantBuffers((UINT)type, 1, &buffer);
             break;
+
         case eShaderStage::DS:
             mContext->DSSetConstantBuffers((UINT)type, 1, &buffer);
             break;
+
         case eShaderStage::GS:
             mContext->GSSetConstantBuffers((UINT)type, 1, &buffer);
             break;
+
         case eShaderStage::PS:
             mContext->PSSetConstantBuffers((UINT)type, 1, &buffer);
             break;
+
         case eShaderStage::CS:
             mContext->CSSetConstantBuffers((UINT)type, 1, &buffer);
             break;
-        case eShaderStage::End:
-            break;
+
         default:
             break;
         }
@@ -306,6 +318,72 @@ namespace zz::graphics
         mContext->GSSetConstantBuffers((UINT)type, 1, &buffer);
         mContext->PSSetConstantBuffers((UINT)type, 1, &buffer);
         mContext->CSSetConstantBuffers((UINT)type, 1, &buffer);
+    }
+
+    void GraphicsDevice::BindSamplerState(eShaderStage stage, UINT StartSlot, ID3D11SamplerState** ppSamplers)
+    {
+        switch (stage)
+        {
+        case eShaderStage::VS:
+            mContext->VSSetSamplers(StartSlot, 1, ppSamplers);
+            break;
+
+        case eShaderStage::HS:
+            mContext->HSSetSamplers(StartSlot, 1, ppSamplers);
+            break;
+
+        case eShaderStage::DS:
+            mContext->DSSetSamplers(StartSlot, 1, ppSamplers);
+            break;
+
+        case eShaderStage::GS:
+            mContext->GSSetSamplers(StartSlot, 1, ppSamplers);
+            break;
+
+        case eShaderStage::PS:
+            mContext->PSSetSamplers(StartSlot, 1, ppSamplers);
+            break;
+
+        case eShaderStage::CS:
+            mContext->CSSetSamplers(StartSlot, 1, ppSamplers);
+            break;
+
+        default:
+            break;
+        }
+    }
+
+    void GraphicsDevice::BindShaderResource(eShaderStage stage, UINT startSlot, ID3D11ShaderResourceView** ppSRV)
+    {
+        switch (stage)
+        {
+        case eShaderStage::VS:
+            mContext->VSSetShaderResources(startSlot, 1, ppSRV);
+            break;
+
+        case eShaderStage::HS:
+            mContext->HSSetShaderResources(startSlot, 1, ppSRV);
+            break;
+
+        case eShaderStage::DS:
+            mContext->DSSetShaderResources(startSlot, 1, ppSRV);
+            break;
+
+        case eShaderStage::GS:
+            mContext->GSSetShaderResources(startSlot, 1, ppSRV);
+            break;
+
+        case eShaderStage::PS:
+            mContext->PSSetShaderResources(startSlot, 1, ppSRV);
+            break;
+
+        case eShaderStage::CS:
+            mContext->CSSetShaderResources(startSlot, 1, ppSRV);
+            break;
+
+        default:
+            break;
+        }
     }
 
     void GraphicsDevice::BindViewPort(D3D11_VIEWPORT* viewPort)

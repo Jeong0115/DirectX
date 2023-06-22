@@ -28,6 +28,23 @@ namespace zz
 
     void Transform::LateUpdate()
     {
+        mWorld = Matrix::Identity;
+
+        Matrix scale = Matrix::CreateScale(mScale);
+
+        Matrix rotation;
+        rotation = Matrix::CreateRotationX(mRotation.x);
+        rotation *= Matrix::CreateRotationY(mRotation.y);
+        rotation *= Matrix::CreateRotationZ(mRotation.z);
+
+        Matrix position;
+        position.Translation(mPosition);
+
+        mWorld = scale * rotation * position;
+
+        mUp = Vector3::TransformNormal(Vector3::Up, rotation);
+        mFoward = Vector3::TransformNormal(Vector3::Forward, rotation);
+        mRight = Vector3::TransformNormal(Vector3::Right, rotation);
     }
 
     void Transform::Render()
@@ -36,9 +53,13 @@ namespace zz
 
     void Transform::BindConstantBuffer()
     {
-        ConstantBuffer* buffer = renderer::constantBuffer;
-        Vector4 position(mPosition.x, mPosition.y, mPosition.z, 1.0f);
-        buffer->SetBufferData(&position);
-        buffer->BindConstantBuffer(eShaderStage::VS);
+        renderer::TransformCB trCB = {};
+        trCB.mWorld = mWorld;
+
+        //trCB.mView = mWorld;
+        //trCB.mProjection = mWorld;
+        ConstantBuffer* cb = renderer::constantBuffer[(UINT)eCBType::Transform];
+        cb->SetBufferData(&trCB);
+        cb->BindConstantBuffer(eShaderStage::VS);
     }
 }

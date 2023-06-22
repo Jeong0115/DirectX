@@ -8,37 +8,45 @@ namespace zz
 
     Layer::~Layer()
     {
+        for (GameObject* gameObject : mGameObjects)
+        {
+            if (gameObject == nullptr)
+                continue;
+
+            delete gameObject;
+            gameObject = nullptr;
+        }
     }
 
     void Layer::Initialize()
     {
-        for (GameObject* gameObj : mGameObjects)
+        for (GameObject* gameObject : mGameObjects)
         {
-            gameObj->Initialize();
+            gameObject->Initialize();
         }
     }
 
     void Layer::Update()
     {
-        for (GameObject* gameObj : mGameObjects)
+        for (GameObject* gameObject : mGameObjects)
         {
-            gameObj->Update();
+            gameObject->Update();
         }
     }
 
     void Layer::LateUpdate()
     {
-        for (GameObject* gameObj : mGameObjects)
+        for (GameObject* gameObject : mGameObjects)
         {
-            gameObj->LateUpdate();
+            gameObject->LateUpdate();
         }
     }
 
     void Layer::Render()
     {
-        for (GameObject* gameObj : mGameObjects)
+        for (GameObject* gameObject : mGameObjects)
         {
-            gameObj->Render();
+            gameObject->Render();
         }
     }
 
