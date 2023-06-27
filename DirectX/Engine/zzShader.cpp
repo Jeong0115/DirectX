@@ -1,4 +1,5 @@
 #include "zzShader.h"
+#include "zzRenderer.h"
 
 using namespace zz::graphics;
 namespace zz
@@ -7,6 +8,9 @@ namespace zz
         : Resource(eResourceType::Shader)
         , mInputLayout(nullptr)
         , mTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST)
+        , mRSType(eRSType::SolidBack)
+        , mDSType(eDSType::Less)
+        , mBSType(eBSType::AlphaBlend)
     {
     }
 
@@ -51,5 +55,14 @@ namespace zz
 
         GetDevice()->BindVertexShader(mVS.Get());
         GetDevice()->BindPixelShader(mPS.Get());
+
+        // 그냥 포인터 들고 있을지 생각
+        Microsoft::WRL::ComPtr<ID3D11RasterizerState> rsState = zz::renderer::rasterizerStates[(UINT)mRSType];
+        Microsoft::WRL::ComPtr<ID3D11DepthStencilState> dsState = zz::renderer::depthStencilStates[(UINT)mDSType];
+        Microsoft::WRL::ComPtr<ID3D11BlendState> bsState = zz::renderer::blendStates[(UINT)mBSType];
+
+        GetDevice()->BindRasterizeState(rsState.Get());
+        GetDevice()->BindDepthStencilState(dsState.Get());
+        GetDevice()->BindBlendState(bsState.Get());
     }
 }

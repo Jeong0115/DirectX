@@ -9,11 +9,14 @@ namespace zz
         Particle,
         MeshRenderer,
         Script,
+        Camera,
         End,
     };
 
     enum class eLayerType
     {
+        Camera,
+        BG,
         Player,
         Monster,
         UI,

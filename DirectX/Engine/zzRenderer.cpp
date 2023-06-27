@@ -11,9 +11,117 @@ namespace zz::renderer
     Vertex vertexes[4] = {};
 
     graphics::ConstantBuffer* constantBuffer[(UINT)eCBType::End] = {};
-    Microsoft::WRL::ComPtr<ID3D11SamplerState> samplerState[(UINT)eSamplerType::End] = {};
+    Microsoft::WRL::ComPtr<ID3D11SamplerState> samplerStates[(UINT)eSamplerType::End] = {};
+    Microsoft::WRL::ComPtr<ID3D11RasterizerState> rasterizerStates[(UINT)eRSType::End] = {};
+    Microsoft::WRL::ComPtr<ID3D11DepthStencilState> depthStencilStates[(UINT)eDSType::End] = {};
+    Microsoft::WRL::ComPtr<ID3D11BlendState> blendStates[(UINT)eBSType::End] = {};
 
-    void SetupState()
+    void LoadBuffer()
+    {
+        vertexes[0].pos = Vector3(-0.5f, 0.5f, 0.0f);
+        vertexes[0].color = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
+        vertexes[0].uv = Vector2(0.0f, 0.0f);
+
+        vertexes[1].pos = Vector3(0.5f, 0.5f, 0.0f);
+        vertexes[1].color = Vector4(0.0f, 1.0f, 0.0f, 1.0f);
+        vertexes[1].uv = Vector2(1.0f, 0.0f);
+
+        vertexes[2].pos = Vector3(0.5f, -0.5f, 0.0f);
+        vertexes[2].color = Vector4(0.0f, 0.0f, 1.0f, 1.0f);
+        vertexes[2].uv = Vector2(1.0f, 1.0f);
+
+        vertexes[3].pos = Vector3(-0.5f, -0.5f, 0.0f);
+        vertexes[3].color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+        vertexes[3].uv = Vector2(0.0f, 1.0f);
+
+        std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
+        mesh->CreateVertexBuffer(vertexes, 4);
+        ResourceManager::Insert(L"RectMesh", mesh);
+
+        std::vector<UINT> indexes = {};
+
+        indexes.push_back(0);
+        indexes.push_back(1);
+        indexes.push_back(2);
+
+        indexes.push_back(0);
+        indexes.push_back(2);
+        indexes.push_back(3);
+
+        mesh->CreateIndexBuffer(indexes.data(), (UINT)indexes.size());
+
+        constantBuffer[(UINT)eCBType::Transform] = new ConstantBuffer(eCBType::Transform);
+        constantBuffer[(UINT)eCBType::Transform]->CreateConstantBuffer(sizeof(TransformCB));
+    }
+    void LoadShader()
+    {
+        std::shared_ptr<Shader> shader = std::make_shared<Shader>();
+        shader->CreateShader(eShaderStage::VS, L"TriangleVS.hlsl", "main");
+        shader->CreateShader(eShaderStage::PS, L"TrianglePS.hlsl", "main");
+        ResourceManager::Insert(L"TriangleShader", shader);
+
+        std::shared_ptr<Shader> spriteShader = std::make_shared<Shader>();
+        spriteShader->CreateShader(eShaderStage::VS, L"SpriteVS.hlsl", "main");
+        spriteShader->CreateShader(eShaderStage::PS, L"SpritePS.hlsl", "main");
+        ResourceManager::Insert(L"SpriteShader", spriteShader);  
+
+    }
+    void LoadResource()
+    {
+#pragma region MountainBG
+        std::shared_ptr<Shader> spriteShader = ResourceManager::Find<Shader>(L"SpriteShader");
+        {
+            std::shared_ptr<Texture> texture = ResourceManager::Load<Texture>(L"T_MountainBG0", L"..\\Resources\\Texture\\parallax_clounds_00_color.png");
+
+            std::shared_ptr<Material> spriteMateiral2 = std::make_shared<Material>();
+            spriteMateiral2->SetShader(spriteShader);
+            spriteMateiral2->SetTexture(texture);
+            ResourceManager::Insert(L"M_MountainBG0", spriteMateiral2);
+        }
+        {
+            std::shared_ptr<Texture> texture = ResourceManager::Load<Texture>(L"T_MountainBG1", L"..\\Resources\\Texture\\parallax_clounds_01.png");
+
+            std::shared_ptr<Material> spriteMateiral2 = std::make_shared<Material>();
+            spriteMateiral2->SetShader(spriteShader);
+            spriteMateiral2->SetTexture(texture);
+            ResourceManager::Insert(L"M_MountainBG1", spriteMateiral2);
+        }
+        {
+            std::shared_ptr<Texture> texture = ResourceManager::Load<Texture>(L"T_MountainBG2", L"..\\Resources\\Texture\\parallax_mountains_02_color.png");
+
+            std::shared_ptr<Material> spriteMateiral = std::make_shared<Material>();
+            spriteMateiral->SetShader(spriteShader);
+            spriteMateiral->SetTexture(texture);
+            ResourceManager::Insert(L"M_MountainBG2", spriteMateiral);
+        }
+        {
+            std::shared_ptr<Texture> texture = ResourceManager::Load<Texture>(L"T_MountainBG3", L"..\\Resources\\Texture\\parallax_clounds_02_color.png");
+
+            std::shared_ptr<Material> spriteMateiral = std::make_shared<Material>();
+            spriteMateiral->SetShader(spriteShader);
+            spriteMateiral->SetTexture(texture);
+            ResourceManager::Insert(L"M_MountainBG3", spriteMateiral);
+        }
+        {
+            std::shared_ptr<Texture> texture = ResourceManager::Load<Texture>(L"T_MountainBG4", L"..\\Resources\\Texture\\parallax_mountains_layer_02_color.png");
+
+            std::shared_ptr<Material> spriteMateiral = std::make_shared<Material>();
+            spriteMateiral->SetShader(spriteShader);
+            spriteMateiral->SetTexture(texture);
+            ResourceManager::Insert(L"M_MountainBG4", spriteMateiral);
+        }
+        {
+            std::shared_ptr<Texture> texture = ResourceManager::Load<Texture>(L"T_MountainBG5", L"..\\Resources\\Texture\\parallax_mountains_layer_01_color.png");
+
+            std::shared_ptr<Material> spriteMateiral = std::make_shared<Material>();
+            spriteMateiral->SetShader(spriteShader);
+            spriteMateiral->SetTexture(texture);
+            ResourceManager::Insert(L"M_MountainBG5", spriteMateiral);
+        }
+#pragma endregion
+    }
+    
+    void CreateInputLayout()
     {
         D3D11_INPUT_ELEMENT_DESC arrLayout[3] = {};
 
@@ -42,111 +150,114 @@ namespace zz::renderer
         GetDevice()->CreateInputLayout(arrLayout, 3, shader->GetVSCode(), shader->GetInputLayoutAddressOf());
 
         shader = ResourceManager::Find<Shader>(L"SpriteShader");
-        GetDevice()->CreateInputLayout(arrLayout, 3 , shader->GetVSCode(), shader->GetInputLayoutAddressOf());
-
-        //std::shared_ptr<ID3D11SamplerState> samplerState = std::make_shared<ID3D11SamplerState>();
-
+        GetDevice()->CreateInputLayout(arrLayout, 3, shader->GetVSCode(), shader->GetInputLayoutAddressOf());
+    }
+    void CreateSamplerState()
+    {
         D3D11_SAMPLER_DESC desc = {};
         desc.AddressU = D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_WRAP;
         desc.AddressV = D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_WRAP;
         desc.AddressW = D3D11_TEXTURE_ADDRESS_MODE::D3D11_TEXTURE_ADDRESS_WRAP;
         desc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
-        GetDevice()->CreateSamplerState(&desc, samplerState[(UINT)eSamplerType::Point].GetAddressOf());
-        GetDevice()->BindSamplerState(eShaderStage::PS, 0, samplerState[(UINT)eSamplerType::Point].GetAddressOf());
+        GetDevice()->CreateSamplerState(&desc, samplerStates[(UINT)eSamplerType::Point].GetAddressOf());
+        GetDevice()->BindSamplerState(eShaderStage::PS, 0, samplerStates[(UINT)eSamplerType::Point].GetAddressOf());
 
         desc.Filter = D3D11_FILTER_ANISOTROPIC;
-        GetDevice()->CreateSamplerState(&desc, samplerState[(UINT)eSamplerType::Anisotropic].GetAddressOf());
-        GetDevice()->BindSamplerState(eShaderStage::PS, 1, samplerState[(UINT)eSamplerType::Anisotropic].GetAddressOf());
+        GetDevice()->CreateSamplerState(&desc, samplerStates[(UINT)eSamplerType::Anisotropic].GetAddressOf());
+        GetDevice()->BindSamplerState(eShaderStage::PS, 1, samplerStates[(UINT)eSamplerType::Anisotropic].GetAddressOf());
+    }
+    void CreateRasterizerState()
+    {
+        D3D11_RASTERIZER_DESC desc = {};
+        desc.FillMode = D3D11_FILL_MODE::D3D11_FILL_SOLID;
+        desc.CullMode = D3D11_CULL_MODE::D3D11_CULL_BACK;
+        GetDevice()->CreateRasterizeState(&desc, rasterizerStates[(UINT)eRSType::SolidBack].GetAddressOf());
 
-        //GetDevice()->CreateInputLayout(arrLayout, 3, shader->GetVSCode(), shader->GetInputLayoutAddressOf());
+        desc.FillMode = D3D11_FILL_MODE::D3D11_FILL_SOLID;
+        desc.CullMode = D3D11_CULL_MODE::D3D11_CULL_FRONT;
+        GetDevice()->CreateRasterizeState(&desc, rasterizerStates[(UINT)eRSType::SolidFront].GetAddressOf());
+
+        desc.FillMode = D3D11_FILL_MODE::D3D11_FILL_SOLID;
+        desc.CullMode = D3D11_CULL_MODE::D3D11_CULL_NONE;
+        GetDevice()->CreateRasterizeState(&desc, rasterizerStates[(UINT)eRSType::SolidNone].GetAddressOf());
+
+        desc.FillMode = D3D11_FILL_MODE::D3D11_FILL_WIREFRAME;
+        desc.CullMode = D3D11_CULL_MODE::D3D11_CULL_NONE;
+        GetDevice()->CreateRasterizeState(&desc, rasterizerStates[(UINT)eRSType::WireframeNone].GetAddressOf());
+    }
+    void CreateDepthStencilState()
+    {
+        D3D11_DEPTH_STENCIL_DESC desc = {};
+
+        desc.DepthEnable = true;
+        desc.DepthFunc = D3D11_COMPARISON_FUNC::D3D11_COMPARISON_LESS;
+        desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+        desc.StencilEnable = false;
+        GetDevice()->CreateDepthStencilState(&desc, depthStencilStates[(UINT)eDSType::Less].GetAddressOf());
+
+        desc.DepthEnable = true;
+        desc.DepthFunc = D3D11_COMPARISON_FUNC::D3D11_COMPARISON_GREATER;
+        desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+        desc.StencilEnable = false;
+        GetDevice()->CreateDepthStencilState(&desc, depthStencilStates[(UINT)eDSType::Greater].GetAddressOf());
+
+        desc.DepthEnable = true;
+        desc.DepthFunc = D3D11_COMPARISON_FUNC::D3D11_COMPARISON_LESS;
+        desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+        desc.StencilEnable = false;
+        GetDevice()->CreateDepthStencilState(&desc, depthStencilStates[(UINT)eDSType::NoWrite].GetAddressOf());
+
+        desc.DepthEnable = false;
+        desc.DepthFunc = D3D11_COMPARISON_FUNC::D3D11_COMPARISON_LESS;
+        desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+        desc.StencilEnable = false;
+        GetDevice()->CreateDepthStencilState(&desc, depthStencilStates[(UINT)eDSType::None].GetAddressOf());
+    }
+    void CreateBlendState()
+    {
+        D3D11_BLEND_DESC desc = {};
+
+        blendStates[(UINT)eBSType::Default] = nullptr;
+
+        desc.AlphaToCoverageEnable = false;
+        desc.IndependentBlendEnable = false;
+        desc.RenderTarget[0].BlendEnable = true;
+        desc.RenderTarget[0].BlendOp = D3D11_BLEND_OP::D3D11_BLEND_OP_ADD;
+        desc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+        desc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+        desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP::D3D11_BLEND_OP_ADD;
+        desc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+        desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+        desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+        GetDevice()->CreateBlendState(&desc, blendStates[(UINT)eBSType::AlphaBlend].GetAddressOf());
+
+        desc.AlphaToCoverageEnable = false;
+        desc.IndependentBlendEnable = false;
+        desc.RenderTarget[0].BlendEnable = true;
+        desc.RenderTarget[0].BlendOp = D3D11_BLEND_OP::D3D11_BLEND_OP_ADD;
+        desc.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
+        desc.RenderTarget[0].DestBlend = D3D11_BLEND_ONE;
+        desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+        GetDevice()->CreateBlendState(&desc, blendStates[(UINT)eBSType::OneOne].GetAddressOf());
     }
 
-    void LoadBuffer()
+    void SetupState()
     {
-        std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
-        mesh->CreateVertexBuffer(vertexes, 4);
-        ResourceManager::Insert(L"RectMesh", mesh);
-
-        std::vector<UINT> indexes = {};
-
-        indexes.push_back(0);
-        indexes.push_back(1);
-        indexes.push_back(2);
-
-        indexes.push_back(0);
-        indexes.push_back(2);
-        indexes.push_back(3);
-
-        mesh->CreateIndexBuffer(indexes.data(), (UINT)indexes.size());
-
-        constantBuffer[(UINT)eCBType::Transform] = new ConstantBuffer(eCBType::Transform);
-        constantBuffer[(UINT)eCBType::Transform]->CreateConstantBuffer(sizeof(TransformCB));
-
-        //Vector4 pos(0.5f, 0.0f, 0.0f, 1.0f);
-        //constantBuffer->SetBufferData(&pos);
-        //constantBuffer->BindConstantBuffer(eShaderStage::VS);
-    }
-
-    void LoadShader()
-    {
-        std::shared_ptr<Shader> shader = std::make_shared<Shader>();
-        shader->CreateShader(eShaderStage::VS, L"TriangleVS.hlsl", "main");
-        shader->CreateShader(eShaderStage::PS, L"TrianglePS.hlsl", "main");
-        ResourceManager::Insert(L"TriangleShader", shader);
-
-        std::shared_ptr<Shader> spriteShader = std::make_shared<Shader>();
-        spriteShader->CreateShader(eShaderStage::VS, L"SpriteVS.hlsl", "main");
-        spriteShader->CreateShader(eShaderStage::PS, L"SpritePS.hlsl", "main");
-        ResourceManager::Insert(L"SpriteShader", spriteShader);
-
-        std::shared_ptr<Texture> texture = ResourceManager::Load<Texture>(L"Charging1", L"..\\Resources\\Texture\\Charging.png");
-
-        std::shared_ptr<Material> spriteMateiral = std::make_shared<Material>();
-        spriteMateiral->SetShader(spriteShader);
-        spriteMateiral->SetTexture(texture);
-        ResourceManager::Insert(L"SpriteMaterial", spriteMateiral);
+        CreateInputLayout();
+        CreateSamplerState();
+        CreateRasterizerState();
+        CreateDepthStencilState();
+        CreateBlendState();
     }
 
     void Initialize()
     {
-        vertexes[0].pos = Vector3(-0.5f, 0.5f, 0.0f);
-        vertexes[0].color = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
-        vertexes[0].uv = Vector2(0.0f, 0.0f);
-
-        vertexes[1].pos = Vector3(0.5f, 0.5f, 0.0f);
-        vertexes[1].color = Vector4(0.0f, 1.0f, 0.0f, 1.0f);
-        vertexes[1].uv = Vector2(1.0f, 0.0f);
-
-        vertexes[2].pos = Vector3(0.5f, -0.5f, 0.0f);
-        vertexes[2].color = Vector4(0.0f, 0.0f, 1.0f, 1.0f);
-        vertexes[2].uv = Vector2(1.0f, 1.0f);
-
-        vertexes[3].pos = Vector3(-0.5f, -0.5f, 0.0f);
-        vertexes[3].color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-        vertexes[3].uv = Vector2(0.0f, 1.0f);
-        
-       /* for (int i = 0; i <= 360; i++)
-        {
-            float radian = i * 3.141592f / 180.f;
-            float x = std::cos(radian);
-            float y = std::sin(radian);
-
-            vertexes[index].pos = Vector3(x, y, 0.0f);
-            vertexes[index++].color = Vector4(1.f, 0.f, 0.f, 1.0f);
-
-            vertexes[index].pos = Vector3(0.0f, 0.0f, 0.0f);
-            vertexes[index++].color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-        }*/
-
         LoadBuffer();
         LoadShader();
+        LoadResource();
         SetupState();
-
-
-        std::shared_ptr<Texture> texture = ResourceManager::Find<Texture>(L"Charging1");
-        texture->BindShader(eShaderStage::PS, 0);
-
     }
+
     void Release()
     {
         for (ConstantBuffer* buff : constantBuffer)

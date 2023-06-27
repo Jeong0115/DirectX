@@ -61,7 +61,6 @@ namespace zz::graphics
 
         RECT winRect = {};
         GetClientRect(hWnd, &winRect);
-
         mViewPort =
         {
             0.0f, 0.0f
@@ -76,15 +75,6 @@ namespace zz::graphics
 
 	GraphicsDevice::~GraphicsDevice()
 	{
-        //mContext->ClearState();
-        //ID3D11Debug* debugDevice = nullptr;
-        //mDevice->QueryInterface(__uuidof(ID3D11Debug), reinterpret_cast<void**>(&debugDevice));
-
-        //if (debugDevice)
-        //{
-        //    debugDevice->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
-        //    debugDevice->Release();
-        //}
 	}
 
 	bool GraphicsDevice::CreateSwapChain(const DXGI_SWAP_CHAIN_DESC* desc, HWND hWnd)
@@ -111,29 +101,6 @@ namespace zz::graphics
         Microsoft::WRL::ComPtr<IDXGIDevice> pDXGIDevice = nullptr;
         Microsoft::WRL::ComPtr<IDXGIAdapter> pAdapter = nullptr;
         Microsoft::WRL::ComPtr<IDXGIFactory> pFactory = nullptr;
-
-        // 예외 처리 연습 
-       
-        //try
-        //{
-        //    if (FAILED(mDevice->QueryInterface(__uuidof(IDXGIDevice), (void**)pDXGIDevice.GetAddressOf())))
-        //        throw false;
-        //
-        //    if (FAILED(pDXGIDevice->GetParent(__uuidof(IDXGIAdapter), (void**)pAdapter.GetAddressOf())))
-        //        throw false;
-        //
-        //    if (FAILED(pAdapter->GetParent(__uuidof(IDXGIFactory), (void**)pFactory.GetAddressOf())))
-        //        throw false;
-        //
-        //    if (FAILED(pFactory->CreateSwapChain(mDevice.Get(), &swapChainDesc, mSwapChain.GetAddressOf())))
-        //        throw false;
-        //}
-        //catch (bool result)
-        //{
-        //    return result;
-        //}
-
-        //return true;
 
         if (FAILED(mDevice->QueryInterface(__uuidof(IDXGIDevice), (void**)pDXGIDevice.GetAddressOf())))
             return false;
@@ -201,9 +168,31 @@ namespace zz::graphics
 
         return false;
     }
-    
-   
 
+    bool GraphicsDevice::CreateRasterizeState(const D3D11_RASTERIZER_DESC* pRasterizerDesc, ID3D11RasterizerState** ppRasterizerState)
+    {
+        if (FAILED(mDevice->CreateRasterizerState(pRasterizerDesc, ppRasterizerState)))
+            return false;
+
+        return true;
+    }
+
+    bool GraphicsDevice::CreateDepthStencilState(const D3D11_DEPTH_STENCIL_DESC* pDepthStencilDesc, ID3D11DepthStencilState** ppDepthStencilState)
+    {
+        if (FAILED(mDevice->CreateDepthStencilState(pDepthStencilDesc, ppDepthStencilState)))
+            return false;
+
+        return true;
+    }
+
+    bool GraphicsDevice::CreateBlendState(const D3D11_BLEND_DESC* pBlendStateDesc, ID3D11BlendState** ppBlendState)
+    {
+        if (FAILED(mDevice->CreateBlendState(pBlendStateDesc, ppBlendState)))
+            return false;
+
+        return true;
+    }
+    
     bool GraphicsDevice::CompileFromfile(const std::wstring& fileName, const std::string& funcName, const std::string& version, ID3DBlob** ppCode)
     {
         ID3DBlob* errorBlob = nullptr;
@@ -389,6 +378,21 @@ namespace zz::graphics
     void GraphicsDevice::BindViewPort(D3D11_VIEWPORT* viewPort)
     {
         mContext->RSSetViewports(1, viewPort);
+    }
+
+    void GraphicsDevice::BindRasterizeState(ID3D11RasterizerState* pRasterizerState)
+    {
+        mContext->RSSetState(pRasterizerState);
+    }
+
+    void GraphicsDevice::BindDepthStencilState(ID3D11DepthStencilState* pDepthStencilState)
+    {
+        mContext->OMSetDepthStencilState(pDepthStencilState, 0);
+    }
+
+    void GraphicsDevice::BindBlendState(ID3D11BlendState* pBlendState)
+    {
+        mContext->OMSetBlendState(pBlendState, nullptr, 0xffffffff);
     }
 
     void GraphicsDevice::DrawIndexed(UINT IndexCount, UINT StartIndexLocation, INT BaseVertexLocation)

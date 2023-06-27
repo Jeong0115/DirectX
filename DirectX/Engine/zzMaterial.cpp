@@ -23,4 +23,9 @@ namespace zz
         mTexture->BindShader(eShaderStage::PS, 0); // 나중에 함수 이름 바꾸자
         mShader->BindShaders();
     }
+
+    void Material::Clear()
+    {
+        mTexture->Clear();
+    }
 }

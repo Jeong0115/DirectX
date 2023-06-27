@@ -80,23 +80,25 @@ namespace zz
 
 	void Application::SetWindow(HWND hwnd, UINT width, UINT height)
 	{
-        RECT rt = { 0, 0, (LONG)width , (LONG)height };
-        AdjustWindowRect(&rt, WS_OVERLAPPEDWINDOW, false); // true? false?
-        SetWindowPos(mHwnd, nullptr, 0, 0, rt.right - rt.left, rt.bottom - rt.top, 0);
-        ShowWindow(mHwnd, true);
-        UpdateWindow(mHwnd);
-
-		if (graphicDevice == nullptr)
-		{
-			mHwnd = hwnd;
-			mWidth = width;
-			mHeight = height;
+        if (graphicDevice == nullptr)
+        {
+            mHwnd = hwnd;
+            mWidth = width;
+            mHeight = height;
 
             mResolution.x = mWidth;
             mResolution.y = mHeight;
 
-			graphicDevice = std::make_unique<graphics::GraphicsDevice>();
+            graphicDevice = std::make_unique<graphics::GraphicsDevice>();
             graphics::GetDevice() = graphicDevice.get();
-		}	
+        }
+
+        RECT rt = { 0, 0, (LONG)width , (LONG)height };
+        AdjustWindowRect(&rt, WS_OVERLAPPEDWINDOW, true); // true? false?
+        SetWindowPos(mHwnd, nullptr, 30, 30, rt.right - rt.left, rt.bottom - rt.top, 0);
+        ShowWindow(mHwnd, true);
+        UpdateWindow(mHwnd);
+
+			
 	}
 }

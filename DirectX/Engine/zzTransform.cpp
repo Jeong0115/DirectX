@@ -1,6 +1,7 @@
 #include "zzTransform.h"
 #include "zzRenderer.h"
 #include "zzConstantBuffer.h"
+#include "zzCamera.h"
 
 namespace zz
 {
@@ -55,9 +56,9 @@ namespace zz
     {
         renderer::TransformCB trCB = {};
         trCB.mWorld = mWorld;
+        trCB.mView = Camera::GetViewMatrix();
+        trCB.mProjection = Camera::GetProjectionMatrix();
 
-        //trCB.mView = mWorld;
-        //trCB.mProjection = mWorld;
         ConstantBuffer* cb = renderer::constantBuffer[(UINT)eCBType::Transform];
         cb->SetBufferData(&trCB);
         cb->BindConstantBuffer(eShaderStage::VS);

@@ -15,6 +15,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzApplication.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzBGScript.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzCamera.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzCameraScript.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzComponent.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzConstantBuffer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzEntity.cpp" />
@@ -47,6 +50,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)CommonInclude.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)define.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzApplication.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzBGScript.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzCamera.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzCameraScript.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzComponent.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzConstantBuffer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzEngine.h" />

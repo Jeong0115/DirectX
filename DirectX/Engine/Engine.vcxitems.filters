@@ -97,6 +97,9 @@
     <Filter Include="Scene\Component\Script">
       <UniqueIdentifier>{0cc6caae-b32e-4329-85c1-b540c7fcf12f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scene\Component\Camera">
+      <UniqueIdentifier>{bb8d0172-2335-4d19-8e18-28d6894b0234}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzEntity.cpp">
@@ -168,6 +171,11 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)zzScript.cpp">
       <Filter>Scene\Component\Script</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzCamera.cpp">
+      <Filter>Scene\Component\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzCameraScript.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzBGScript.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzEntity.h">
@@ -257,5 +265,10 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzScript.h">
       <Filter>Scene\Component\Script</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzCamera.h">
+      <Filter>Scene\Component\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzCameraScript.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzBGScript.h" />
   </ItemGroup>
 </Project>

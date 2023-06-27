@@ -22,6 +22,9 @@ namespace zz::graphics
         bool CreateInputLayout(const D3D11_INPUT_ELEMENT_DESC* pInputElementDescs, UINT NumElements, ID3DBlob* byteCode, ID3D11InputLayout** ppInputLayout);
         bool CreateBuffer(ID3D11Buffer** buffer, D3D11_BUFFER_DESC* desc, D3D11_SUBRESOURCE_DATA* data);
         bool CreateSamplerState(const D3D11_SAMPLER_DESC* pSamplerDesc, ID3D11SamplerState** ppSamplerState);
+        bool CreateRasterizeState(const D3D11_RASTERIZER_DESC* pRasterizerDesc, ID3D11RasterizerState** ppRasterizerState);
+        bool CreateDepthStencilState(const D3D11_DEPTH_STENCIL_DESC* pDepthStencilDesc, ID3D11DepthStencilState** ppDepthStencilState);
+        bool CreateBlendState(const D3D11_BLEND_DESC* pBlendStateDesc, ID3D11BlendState** ppBlendState);
 
         bool CompileFromfile(const std::wstring& fileName, const std::string& funcName, const std::string& version, ID3DBlob** ppCode);
         
@@ -41,8 +44,11 @@ namespace zz::graphics
         void BindSamplerState(eShaderStage stage, UINT StartSlot, ID3D11SamplerState** ppSamplers);
         void BindShaderResource(eShaderStage stage, UINT startSlot, ID3D11ShaderResourceView** ppSRV);
 
-        void BindViewPort(D3D11_VIEWPORT* viewPort);
-        
+        void BindViewPort(D3D11_VIEWPORT* viewPort);       
+        void BindRasterizeState(ID3D11RasterizerState* pRasterizerState);
+        void BindDepthStencilState(ID3D11DepthStencilState* pDepthStencilState);
+        void BindBlendState(ID3D11BlendState* pBlendState);
+
         void DrawIndexed(UINT IndexCount, UINT StartIndexLocation, INT BaseVertexLocation);
         void ClearRenderTarget();
         void UpdateViewPort();

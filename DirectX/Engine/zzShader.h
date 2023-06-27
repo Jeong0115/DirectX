@@ -35,6 +35,10 @@ namespace zz
         Microsoft::WRL::ComPtr<ID3D11DomainShader> mDS;
         Microsoft::WRL::ComPtr<ID3D11GeometryShader> mGS;
         Microsoft::WRL::ComPtr<ID3D11PixelShader> mPS;
+
+        eRSType mRSType;
+        eDSType mDSType;
+        eBSType mBSType;
     };
 }
 
