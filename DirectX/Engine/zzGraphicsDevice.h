@@ -17,6 +17,8 @@ namespace zz::graphics
 		GraphicsDevice();
 		~GraphicsDevice();
 
+        void CreatePixelGrid();
+
         bool CreateSwapChain(const DXGI_SWAP_CHAIN_DESC* desc, HWND hWnd);
         bool CreateTexture(const D3D11_TEXTURE2D_DESC* desc, void* data);
         bool CreateInputLayout(const D3D11_INPUT_ELEMENT_DESC* pInputElementDescs, UINT NumElements, ID3DBlob* byteCode, ID3D11InputLayout** ppInputLayout);

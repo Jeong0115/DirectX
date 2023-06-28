@@ -69,6 +69,7 @@ namespace zz::graphics
             , 0.0f, 1.0f
         };
 
+        //CreatePixelGrid();
         BindViewPort(&mViewPort);
         mContext->OMSetRenderTargets(1, mRenderTargetView.GetAddressOf(), mDepthStencilView.Get());
 	}
@@ -76,6 +77,31 @@ namespace zz::graphics
 	GraphicsDevice::~GraphicsDevice()
 	{
 	}
+
+    void GraphicsDevice::CreatePixelGrid()
+    {
+        //D3D11_TEXTURE2D_DESC desc;
+        //ZeroMemory(&desc, sizeof(desc));
+        //desc.Width = 500;  // Width of the texture
+        //desc.Height = 500; // Height of the texture
+        //desc.MipLevels = 1;
+        //desc.ArraySize = 1;
+        //desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; // Pixel format
+        //desc.SampleDesc.Count = 1;
+        //desc.Usage = D3D11_USAGE_DEFAULT;
+        //desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;// D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+
+        //// Create the texture
+        //ID3D11Texture2D* texture = nullptr;
+        //mDevice->CreateTexture2D(&desc, nullptr, &texture);
+
+        //// Create a render target view
+        //ID3D11RenderTargetView* rtv = nullptr;
+        //mDevice->CreateRenderTargetView(texture, nullptr, &rtv);
+
+        //// Bind the render target view
+        //mContext->OMSetRenderTargets(1, &rtv, nullptr);
+    }
 
 	bool GraphicsDevice::CreateSwapChain(const DXGI_SWAP_CHAIN_DESC* desc, HWND hWnd)
 	{
@@ -431,9 +457,6 @@ namespace zz::graphics
         
         // viewport update
         
-        
-
-
        
     }
 

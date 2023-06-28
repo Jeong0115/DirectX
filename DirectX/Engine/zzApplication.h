@@ -24,6 +24,7 @@ namespace zz
         void Release();
 
 		void SetWindow(HWND hwnd, UINT width, UINT height);
+        void SetPixelHwnd(HWND hwnd) { mPixelHwnd = hwnd; }
 
 		UINT GetWidth() { return mWidth; }
 		UINT GetHeight() { return mHeight; }
@@ -38,6 +39,8 @@ namespace zz
 		UINT		mWidth;
 		UINT		mHeight;
 		POINT	    mResolution;
+
+        HWND		mPixelHwnd;
 		
 	};
 

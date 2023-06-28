@@ -176,6 +176,7 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzCameraScript.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzBGScript.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzPixelGrid.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzEntity.h">
@@ -270,5 +271,6 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzCameraScript.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzBGScript.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzPixelGrid.h" />
   </ItemGroup>
 </Project>

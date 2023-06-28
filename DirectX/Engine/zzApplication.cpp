@@ -4,6 +4,7 @@
 #include "zzRenderer.h"
 #include "zzTime.h"
 #include "zzInput.h"
+#include "zzPixelGrid.h"
 
 namespace zz
 {	
@@ -44,6 +45,7 @@ namespace zz
         Time::Initialize();
         Input::Initialize();
 
+       //PixelGrid::GetInst().Initialize();
         renderer::Initialize();
         SceneManger::GetInst().Initialize();
 	}
@@ -53,6 +55,7 @@ namespace zz
         Time::Update();
         Input::Update();
         SceneManger::GetInst().Update();
+        PixelGrid::GetInst().Update();
 	}
 
 	void Application::LateUpdate()
@@ -70,6 +73,7 @@ namespace zz
         //graphicDevice->Draw();
 
         graphicDevice->Present();
+        PixelGrid::GetInst().Render();
 	}
 
     void Application::Release()
@@ -98,7 +102,5 @@ namespace zz
         SetWindowPos(mHwnd, nullptr, 30, 30, rt.right - rt.left, rt.bottom - rt.top, 0);
         ShowWindow(mHwnd, true);
         UpdateWindow(mHwnd);
-
-			
 	}
 }

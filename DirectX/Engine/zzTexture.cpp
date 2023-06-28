@@ -10,6 +10,7 @@ namespace zz
         , mSRV(nullptr)
         , mDesc{}
     {
+        
     }
 
     Texture::~Texture()
@@ -46,6 +47,7 @@ namespace zz
             , mImage.GetMetadata()
             , mSRV.GetAddressOf()
         );
+        
         mSRV->GetResource((ID3D11Resource**)mTexture.GetAddressOf());
 
         return S_OK;
@@ -53,7 +55,7 @@ namespace zz
 
     void Texture::BindShader(eShaderStage stage, UINT startSlot)
     {
-        graphics::GetDevice()->BindShaderResource(stage, startSlot, mSRV.GetAddressOf());
+        graphics::GetDevice()->BindShaderResource(stage, startSlot, mSRV.GetAddressOf());      
     }
 
     void Texture::Clear()

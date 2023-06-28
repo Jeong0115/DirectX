@@ -34,6 +34,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)zzMath.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzMesh.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzMeshRenderer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzPixelGrid.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzPlayScene.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzRenderer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzResource.cpp" />
@@ -67,6 +68,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzMath.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzMesh.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzMeshRenderer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzPixelGrid.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzPlayScene.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzRenderer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzResource.h" />

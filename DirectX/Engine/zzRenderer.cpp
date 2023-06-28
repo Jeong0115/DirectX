@@ -3,6 +3,8 @@
 #include "zzResourceManager.h"
 #include "zzMaterial.h"
 
+#include "zzPixelGrid.h"
+
 using namespace zz;
 using namespace zz::graphics;
 
@@ -68,8 +70,8 @@ namespace zz::renderer
     }
     void LoadResource()
     {
-#pragma region MountainBG
         std::shared_ptr<Shader> spriteShader = ResourceManager::Find<Shader>(L"SpriteShader");
+#pragma region MountainBG
         {
             std::shared_ptr<Texture> texture = ResourceManager::Load<Texture>(L"T_MountainBG0", L"..\\Resources\\Texture\\parallax_clounds_00_color.png");
 
@@ -119,6 +121,53 @@ namespace zz::renderer
             ResourceManager::Insert(L"M_MountainBG5", spriteMateiral);
         }
 #pragma endregion
+#pragma region Mountain
+        //LoadPixelScene("data/biome_impl/mountain/right_entrance_bottom.png", "", x, y + 512, "", true)
+        //LoadPixelScene("data/biome_impl/mountain/right_bottom.png", "", x + 512 - 192, y + 512, "", true)
+        //LoadPixelScene("data/biome_impl/mountain/right_entrance.png", "data/biome_impl/mountain/right_entrance_visual.png", x, y, "data/biome_impl/mountain/right_entrance_background.png", true)
+
+        {
+            std::shared_ptr<Texture> texture = ResourceManager::Load<Texture>(L"hall_0_0", L"..\\Resources\\Texture\\Mountain\\hall.png");
+            PixelGrid::GetInst().SetImage(0, 0, texture);
+
+            texture = ResourceManager::Load<Texture>(L"hall_visual_0_0", L"..\\Resources\\Texture\\Mountain\\hall_visual.png");
+            std::shared_ptr<Material> spriteMateiral = std::make_shared<Material>();
+            spriteMateiral = std::make_shared<Material>();
+            spriteMateiral->SetShader(spriteShader);
+            spriteMateiral->SetTexture(texture);
+            ResourceManager::Insert(L"m_hall_visual_0_0", spriteMateiral);
+
+            texture = ResourceManager::Load<Texture>(L"hall_background_0_0", L"..\\Resources\\Texture\\Mountain\\hall_background.png");
+            spriteMateiral = std::make_shared<Material>();
+            spriteMateiral->SetShader(spriteShader);
+            spriteMateiral->SetTexture(texture);
+            ResourceManager::Insert(L"m_hall_background_0_0", spriteMateiral);
+        }
+
+        {
+            std::shared_ptr<Texture> texture = ResourceManager::Load<Texture>(L"hall_instructions_0_0", L"..\\Resources\\Texture\\Mountain\\hall_instructions.png");
+            PixelGrid::GetInst().SetImage(0, 0, texture);
+
+            texture = ResourceManager::Load<Texture>(L"hall_b_0_512", L"..\\Resources\\Texture\\Mountain\\hall_b.png");
+            PixelGrid::GetInst().SetImage(0, 512, texture);
+
+            texture = ResourceManager::Load<Texture>(L"hall_b_visual_0_512", L"..\\Resources\\Texture\\Mountain\\hall_b_visual.png");
+            std::shared_ptr<Material> spriteMateiral = std::make_shared<Material>();
+            spriteMateiral = std::make_shared<Material>();
+            spriteMateiral->SetShader(spriteShader);
+            spriteMateiral->SetTexture(texture);
+            ResourceManager::Insert(L"m_hall_b_visual_0_512", spriteMateiral);
+
+            //texture = ResourceManager::Load<Texture>(L"T_Mountain3", L"..\\Resources\\Texture\\Mountain\\hall_br_visual.png");
+            //spriteMateiral = std::make_shared<Material>();
+            //spriteMateiral->SetShader(spriteShader);
+            //spriteMateiral->SetTexture(texture);
+            //ResourceManager::Insert(L"M_Mountain3", spriteMateiral);
+        }
+
+
+#pragma endregion
+
     }
     
     void CreateInputLayout()

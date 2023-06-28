@@ -21,7 +21,13 @@ namespace zz
 
         virtual HRESULT Load(const std::wstring& path) override;
         void BindShader(eShaderStage stage, UINT startSlot);
+        math::Vector2 GetSize() { return math::Vector2((float)mImage.GetMetadata().width, (float)mImage.GetMetadata().height); }
         void Clear();
+
+        uint8_t* GetPixels() { return mImage.GetImages()->pixels; }
+        DXGI_FORMAT GetFormat() { return mImage.GetImages()->format; }
+        UINT GetImageSize() { return (UINT)mImage.GetImages()->width * (UINT)mImage.GetImages()->height; }
+        UINT GetImageWidth() { return (UINT)mImage.GetImages()->width; }
 
     private:
         ScratchImage mImage;
