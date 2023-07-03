@@ -40,4 +40,7 @@
   <ItemGroup>
     <ClCompile Include="NewFolder1\main.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
+  </ItemGroup>
 </Project>

@@ -2,9 +2,9 @@
 #include "zzEngine.h"
 
 namespace zz
-{
+{   
 	class Time
-	{
+	{   
 	public:
 		static void Initialize();
 		static void Update();

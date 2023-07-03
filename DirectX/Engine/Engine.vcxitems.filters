@@ -16,18 +16,6 @@
     <Filter Include="Resource">
       <UniqueIdentifier>{b48a19e9-9de4-418f-b1e9-27a0f1fc90c2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Graphics">
-      <UniqueIdentifier>{bd06b5b0-6b45-415b-a98d-9717d8d9850d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Graphics\Device">
-      <UniqueIdentifier>{8dd5f6c4-9771-4ac9-aba3-a9e8c8749cc2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Graphics\Renderer">
-      <UniqueIdentifier>{cfeda0f8-04a4-4dfc-bf17-4077c51f4e5d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Graphics\ConstantBuffer">
-      <UniqueIdentifier>{2f1622fd-2933-47fe-8726-734e9b71489f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Manager">
       <UniqueIdentifier>{740d17ea-d463-4e92-b2d7-eac1d04bf43f}</UniqueIdentifier>
     </Filter>
@@ -99,6 +87,42 @@
     </Filter>
     <Filter Include="Scene\Component\Camera">
       <UniqueIdentifier>{bb8d0172-2335-4d19-8e18-28d6894b0234}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics">
+      <UniqueIdentifier>{bd06b5b0-6b45-415b-a98d-9717d8d9850d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Device">
+      <UniqueIdentifier>{8dd5f6c4-9771-4ac9-aba3-a9e8c8749cc2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Renderer">
+      <UniqueIdentifier>{cfeda0f8-04a4-4dfc-bf17-4077c51f4e5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\ConstantBuffer">
+      <UniqueIdentifier>{2f1622fd-2933-47fe-8726-734e9b71489f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Element">
+      <UniqueIdentifier>{7e9daeee-2335-47ce-a3c6-bc3f996447b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Element\Solid">
+      <UniqueIdentifier>{e9d85e11-1a26-4386-91bc-b2da55e7ebb5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Element\Base">
+      <UniqueIdentifier>{caa83fda-6a70-47a7-9f3c-570db02943b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Element\Solid\Base">
+      <UniqueIdentifier>{ea8d178f-a6bd-455f-b532-986ee4287304}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Element\Solid\Sand">
+      <UniqueIdentifier>{31bddde0-3ca8-48a1-be83-0f1cf02ea17b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Element\Liquid">
+      <UniqueIdentifier>{f931164e-1baa-4601-a43c-a408a1538f91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Element\Liquid\Water">
+      <UniqueIdentifier>{265deb77-6c3a-43cc-8334-bca234418b67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Element\Liquid\Base">
+      <UniqueIdentifier>{ac336c2d-dfa0-4359-90ff-ebc6897081e6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -174,9 +198,31 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)zzCamera.cpp">
       <Filter>Scene\Component\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)zzCameraScript.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)zzBGScript.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzPixelGrid.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzElement.cpp">
+      <Filter>Element\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzSolid.cpp">
+      <Filter>Element\Solid\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzSand.cpp">
+      <Filter>Element\Solid\Sand</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzChunk.cpp">
+      <Filter>Element</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzBGScript.cpp">
+      <Filter>Scene\Component\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzCameraScript.cpp">
+      <Filter>Scene\Component\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzWater.cpp">
+      <Filter>Element\Liquid\Water</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzLiquid.cpp">
+      <Filter>Element\Liquid\Base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzEntity.h">
@@ -269,8 +315,30 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzCamera.h">
       <Filter>Scene\Component\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)zzCameraScript.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)zzBGScript.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzPixelGrid.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzElement.h">
+      <Filter>Element\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzSolid.h">
+      <Filter>Element\Solid\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzSand.h">
+      <Filter>Element\Solid\Sand</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzChunk.h">
+      <Filter>Element</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzCameraScript.h">
+      <Filter>Scene\Component\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzBGScript.h">
+      <Filter>Scene\Component\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzWater.h">
+      <Filter>Element\Liquid\Water</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzLiquid.h">
+      <Filter>Element\Liquid\Base</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

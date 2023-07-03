@@ -13,6 +13,7 @@ namespace zz
         , mResolution{}
         , mWidth(-1), mHeight(-1)
         , graphicDevice(nullptr)
+        , mPixelHwnd(nullptr)
     {
 	}
 

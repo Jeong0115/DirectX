@@ -24,7 +24,7 @@ namespace zz
         }
         else if (Input::GetKey(eKeyCode::A))
         {
-            pos.x -= 105.0f * (float)Time::DeltaTime();
+            pos.x -= 305.0f * (float)Time::DeltaTime();
             tr->SetPosition(pos);
         }
         else if (Input::GetKey(eKeyCode::D))
@@ -34,12 +34,12 @@ namespace zz
         }
         else if (Input::GetKey(eKeyCode::Q))
         {
-            pos.y -= 105.0f * (float)Time::DeltaTime();
+            pos.y -= 305.0f * (float)Time::DeltaTime();
             tr->SetPosition(pos);
         }
         else if (Input::GetKey(eKeyCode::E))
         {
-            pos.y += 105.0f * (float)Time::DeltaTime();
+            pos.y += 305.0f * (float)Time::DeltaTime();
             tr->SetPosition(pos);
         }
 

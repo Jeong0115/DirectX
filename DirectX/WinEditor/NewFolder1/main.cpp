@@ -14,6 +14,7 @@
 #include "zzPixelGrid.h"
 #include "zzRenderer.h"
 
+
 //#ifdef _DEBUG
 //#include <dxgidebug.h>
 //#include <d3d11.h>
@@ -154,6 +155,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    
    UpdateWindow(hWnd);
    application.Initialize();
+   //InitializeScenes();
    pixelGrid.SetHwnd(hWnd2);
    pixelGrid.Initialize();
   

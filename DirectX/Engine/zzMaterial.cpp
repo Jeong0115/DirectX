@@ -20,12 +20,14 @@ namespace zz
 
     void Material::Binds()
     {
-        mTexture->BindShader(eShaderStage::PS, 0); // 나중에 함수 이름 바꾸자
+        if(mTexture != nullptr)
+            mTexture->BindShader(eShaderStage::PS, 0); // 나중에 함수 이름 바꾸자
         mShader->BindShaders();
     }
 
     void Material::Clear()
     {
-        mTexture->Clear();
+        if (mTexture != nullptr)
+            mTexture->Clear();
     }
 }

@@ -14,7 +14,7 @@ namespace zz
         virtual HRESULT Load(const std::wstring& path) override;
 
         void Binds();
-        math::Vector2 GetSize() { return mTexture->GetSize(); }
+        math::Vector2 GetSize() { if (mTexture == nullptr) return math::Vector2::One; return mTexture->GetSize(); }
         void Clear();
 
         void SetShader(std::shared_ptr<Shader> shader) { mShader = shader; }

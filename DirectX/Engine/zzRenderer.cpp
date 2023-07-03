@@ -11,6 +11,7 @@ using namespace zz::graphics;
 namespace zz::renderer
 {
     Vertex vertexes[4] = {};
+    std::vector<zz::Camera*> cameras = {};
 
     graphics::ConstantBuffer* constantBuffer[(UINT)eCBType::End] = {};
     Microsoft::WRL::ComPtr<ID3D11SamplerState> samplerStates[(UINT)eSamplerType::End] = {};
@@ -71,6 +72,16 @@ namespace zz::renderer
     void LoadResource()
     {
         std::shared_ptr<Shader> spriteShader = ResourceManager::Find<Shader>(L"SpriteShader");
+
+        {
+            std::shared_ptr<Texture> texture = ResourceManager::Load<Texture>(L"rust", L"..\\Resources\\Texture\\rust.png");
+
+            std::shared_ptr<Material> spriteMateiral2 = std::make_shared<Material>();
+            spriteMateiral2->SetShader(spriteShader);
+            spriteMateiral2->SetTexture(texture);
+            ResourceManager::Insert(L"m_rust", spriteMateiral2);
+        }
+
 #pragma region MountainBG
         {
             std::shared_ptr<Texture> texture = ResourceManager::Load<Texture>(L"T_MountainBG0", L"..\\Resources\\Texture\\parallax_clounds_00_color.png");
@@ -143,7 +154,6 @@ namespace zz::renderer
             spriteMateiral->SetTexture(texture);
             ResourceManager::Insert(L"m_hall_background_0_0", spriteMateiral);
         }
-
         {
             std::shared_ptr<Texture> texture = ResourceManager::Load<Texture>(L"hall_instructions_0_0", L"..\\Resources\\Texture\\Mountain\\hall_instructions.png");
             PixelGrid::GetInst().SetImage(0, 0, texture);
@@ -157,12 +167,36 @@ namespace zz::renderer
             spriteMateiral->SetShader(spriteShader);
             spriteMateiral->SetTexture(texture);
             ResourceManager::Insert(L"m_hall_b_visual_0_512", spriteMateiral);
+        }
+        {
+            std::shared_ptr<Texture> texture = ResourceManager::Load<Texture>(L"hall_br_512_512", L"..\\Resources\\Texture\\Mountain\\hall_br.png");
+            PixelGrid::GetInst().SetImage(512, 512, texture);
 
-            //texture = ResourceManager::Load<Texture>(L"T_Mountain3", L"..\\Resources\\Texture\\Mountain\\hall_br_visual.png");
-            //spriteMateiral = std::make_shared<Material>();
-            //spriteMateiral->SetShader(spriteShader);
-            //spriteMateiral->SetTexture(texture);
-            //ResourceManager::Insert(L"M_Mountain3", spriteMateiral);
+            texture = ResourceManager::Load<Texture>(L"hall_br_visual_512_512", L"..\\Resources\\Texture\\Mountain\\hall_br_visual.png");
+            std::shared_ptr<Material> spriteMateiral = std::make_shared<Material>();
+            spriteMateiral = std::make_shared<Material>();
+            spriteMateiral->SetShader(spriteShader);
+            spriteMateiral->SetTexture(texture);
+            ResourceManager::Insert(L"m_hall_br_visual_512_512", spriteMateiral);
+        }
+        {
+            std::shared_ptr<Texture> texture = ResourceManager::Load<Texture>(L"hall_r_512_0", L"..\\Resources\\Texture\\Mountain\\hall_r.png");
+            PixelGrid::GetInst().SetImage(512, 0, texture);
+
+            texture = ResourceManager::Load<Texture>(L"hall_r_visual_512_0", L"..\\Resources\\Texture\\Mountain\\hall_r_visual.png");
+            std::shared_ptr<Material> spriteMateiral = std::make_shared<Material>();
+            spriteMateiral = std::make_shared<Material>();
+            spriteMateiral->SetShader(spriteShader);
+            spriteMateiral->SetTexture(texture);
+            ResourceManager::Insert(L"m_hall_r_visual_512_0", spriteMateiral);
+        }
+        {
+            std::shared_ptr<Texture> texture = ResourceManager::Load<Texture>(L"hall_bottom_-512_512", L"..\\Resources\\Texture\\Mountain\\hall_bottom.png");
+            //PixelGrid::GetInst().SetImage(-512, 512, texture); //나중에 해야됩니다
+        }
+        {
+            std::shared_ptr<Texture> texture = ResourceManager::Load<Texture>(L"hall_bottom_2_552_512", L"..\\Resources\\Texture\\Mountain\\hall_bottom_2.png");
+            PixelGrid::GetInst().SetImage(552, 512, texture);
         }
 
 
@@ -305,6 +339,16 @@ namespace zz::renderer
         LoadShader();
         LoadResource();
         SetupState();
+    }
+
+    void Render()
+    {
+        for (Camera* camera : cameras)
+        {
+            if (camera == nullptr) continue;
+            camera->Render();
+        }
+        cameras.clear();
     }
 
     void Release()

@@ -19,6 +19,7 @@ namespace zz
         void Render();
         void Release();
 
+        void CreateScene(std::wstring name, Scene* scene);
     private:
         Scene* mActiveScene;
         std::map<std::wstring, Scene*> mScenes;

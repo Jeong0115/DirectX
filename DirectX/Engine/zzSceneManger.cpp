@@ -39,4 +39,11 @@ namespace zz
             iter.second = nullptr;
         }
     }
+
+    void SceneManger::CreateScene(std::wstring name, Scene* scene)
+    {
+        mScenes.insert(std::make_pair(name, scene));
+        mActiveScene = scene;
+        scene->Initialize();
+    }
 }

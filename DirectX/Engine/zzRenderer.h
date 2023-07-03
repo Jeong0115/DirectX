@@ -5,6 +5,7 @@
 #include "zzMesh.h"
 #include "zzShader.h"
 #include "zzConstantBuffer.h"
+#include "zzCamera.h"
 
 using namespace zz::math;
 using namespace zz;
@@ -33,6 +34,9 @@ namespace zz::renderer
     extern Microsoft::WRL::ComPtr<ID3D11DepthStencilState> depthStencilStates[];
     extern Microsoft::WRL::ComPtr<ID3D11BlendState> blendStates[];
 
+    extern std::vector<zz::Camera*> cameras;
+
     void Initialize();
+    void Render();
     void Release();
 }

@@ -18,8 +18,10 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)zzBGScript.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzCamera.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzCameraScript.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzChunk.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzComponent.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzConstantBuffer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzElement.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzEntity.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzGameObject.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzGraphicsDevice.cpp">
@@ -30,6 +32,7 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzInput.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzLayer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzLiquid.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzMaterial.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzMath.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzMesh.cpp" />
@@ -39,13 +42,16 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)zzRenderer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzResource.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzResourceManager.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzSand.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzScene.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzSceneManger.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzScript.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzShader.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzSolid.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzTexture.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzTime.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzTransform.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzWater.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)CommonInclude.h" />
@@ -54,8 +60,10 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzBGScript.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzCamera.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzCameraScript.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzChunk.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzComponent.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzConstantBuffer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzElement.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzEngine.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzEntity.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzEnum.h" />
@@ -64,6 +72,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzGraphicsDevice.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzInput.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzLayer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzLiquid.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzMaterial.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzMath.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzMesh.h" />
@@ -73,13 +82,16 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzRenderer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzResource.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzResourceManager.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzSand.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzScene.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzSceneManger.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzScript.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzShader.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzSolid.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzTexture.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzTime.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzTransform.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzWater.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzMath.inl" />
