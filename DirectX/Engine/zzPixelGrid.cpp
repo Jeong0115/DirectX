@@ -124,6 +124,9 @@ namespace zz
                 GetCursorPos(&mousePos);
                 ScreenToClient(mHwnd, &mousePos);
 
+                mousePos.x += x;
+                mousePos.y += y;
+
                 if(mousePos.x > 50 && mousePos.y >50)
                 {
                     if (Input::GetKey(eKeyCode::LBUTTON))
