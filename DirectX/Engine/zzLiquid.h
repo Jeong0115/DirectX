@@ -10,6 +10,7 @@ namespace zz
         Liquid();
         virtual ~Liquid();
 
+        virtual Element* Clone() = 0;
         virtual void Move() = 0;
     };
 }

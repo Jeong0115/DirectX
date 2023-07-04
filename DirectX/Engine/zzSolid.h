@@ -10,6 +10,7 @@ namespace zz
         Solid();
         virtual ~Solid();
 
+        virtual Element* Clone() = 0;
         virtual void Move() = 0;
     };
 }

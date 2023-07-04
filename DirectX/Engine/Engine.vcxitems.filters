@@ -124,6 +124,9 @@
     <Filter Include="Element\Liquid\Base">
       <UniqueIdentifier>{ac336c2d-dfa0-4359-90ff-ebc6897081e6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Element\Solid\Rock">
+      <UniqueIdentifier>{f8142e17-960b-4a28-b5e6-8a5b83589bff}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzEntity.cpp">
@@ -222,6 +225,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzLiquid.cpp">
       <Filter>Element\Liquid\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzRock.cpp">
+      <Filter>Element\Solid\Rock</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -339,6 +345,9 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzLiquid.h">
       <Filter>Element\Liquid\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzRock.h">
+      <Filter>Element\Solid\Rock</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

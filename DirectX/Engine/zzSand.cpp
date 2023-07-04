@@ -6,7 +6,36 @@ namespace zz
 {
     Sand::Sand()
     {
-        mColor = 0xFFFFFF00;
+        switch (xorshift32() % 3)
+        {
+        case 0:
+            mColor = 0xFFFFFF00;
+            break;
+
+        case 1:
+            mColor = 0xFFB2C906;
+            break;
+
+        case 2:
+            mColor = 0xFFE9FC5A;
+            break;
+        }
+        switch (xorshift32() % 3)
+        {
+        case 0:
+            temp = 1.0f;
+            break;
+
+        case 1:
+            temp = 1.1f;
+            break;
+
+        case 2:
+            temp = 1.2f;
+            break;
+        }
+
+        mSpeed = 2.f;
     }
 
     Sand::~Sand()
@@ -14,15 +43,17 @@ namespace zz
 
     }
 
-    //uint32_t xorshift32()
-    //{
-    //    // A simple xorshift pseudo-random number generator
-    //    uint32_t state;
-    //    state ^= state << 13;
-    //    state ^= state >> 17;
-    //    state ^= state << 5;
-    //    return state;
-    //}
+
+
+    uint32_t xorshift32()
+    {
+        // A simple xorshift pseudo-random number generator
+        uint32_t state;
+        state ^= state << 13;
+        state ^= state >> 17;
+        state ^= state << 5;
+        return state;
+    }
 
     uint32_t x = 3, y = 1563, z, w;
 
@@ -35,11 +66,11 @@ namespace zz
         w ^= t;
         return w;
     }
-    
 
-    void Sand::Move()
+
+    /*void Sand::Move()
     {
-        if (!isFalling) return;
+        //if (!isFalling) return;
 
         PixelGrid& pixelGrid = PixelGrid::GetInst();
 
@@ -54,47 +85,46 @@ namespace zz
             {
             case 0:
             {
-                targetType = CheckTargetType(mX + 1, mY + 1);
-                if (targetType == eElementType::Liquid || targetType == eElementType::None)
+                for (int i = 1; i <= mSpeed; i++)
                 {
-                    SwapElement(mX + 1, mY + 1);
-                }
-
-                else if (targetType == eElementType::Solid)
-                {
-                    targetType = CheckTargetType(mX - 1, mY + 1);
+                    targetType = CheckTargetType(mX + i, mY + 1);
                     if (targetType == eElementType::Liquid || targetType == eElementType::None)
                     {
-                        SwapElement(mX - 1, mY + 1);
-                    }
-                    else if (targetType == eElementType::Solid)
-                    {
-                        isFalling = true;
-                        pixelGrid.SetActiveChunk(mX, mY );
+                        SwapElement(mX + i, mY + 1);
+                        return;
                     }
                 }
+                for (int i = -1; i >= -mSpeed; i--)
+                {
+                    targetType = CheckTargetType(mX + i, mY + 1);
+                    if (targetType == eElementType::Liquid || targetType == eElementType::None)
+                    {
+                        SwapElement(mX + i, mY + 1);
+                        return;
+                    }
+                }
+
             }
             break;
 
             case 1:
             {
-                targetType = CheckTargetType(mX - 1, mY + 1);
-                if (targetType == eElementType::Liquid || targetType == eElementType::None)
+                for (int i = -1; i >= -mSpeed; i--)
                 {
-                    SwapElement(mX - 1, mY + 1);
-                }
-
-                else if (targetType == eElementType::Solid)
-                {
-                    targetType = CheckTargetType(mX + 1, mY + 1);
+                    targetType = CheckTargetType(mX + i, mY + 1);
                     if (targetType == eElementType::Liquid || targetType == eElementType::None)
                     {
-                        SwapElement(mX + 1, mY + 1);
+                        SwapElement(mX + i, mY + 1);
+                        return;
                     }
-                    else if (targetType == eElementType::Solid)
+                }
+                for (int i = 1; i <= mSpeed; i++)
+                {
+                    targetType = CheckTargetType(mX + i, mY + 1);
+                    if (targetType == eElementType::Liquid || targetType == eElementType::None)
                     {
-                        isFalling = true;
-                        pixelGrid.SetActiveChunk(mX, mY);
+                        SwapElement(mX + i, mY + 1);
+                        return;
                     }
                 }
             }
@@ -103,66 +133,106 @@ namespace zz
             default:
                 break;
             }
-           
-        } 
 
-        /*eElementType targetType = target->GetType();
-
-        if (targetType == eElementType::Liquid)
-        {
-            pixelGrid.SwapElement(mX, mY, mX, mY + 1);
-            mX = mX;
-            mY = mY + 1;
-            pixelGrid.SetActiveChunk(mX, mY);
-            return;
         }
-        else if (targetType == eElementType::Solid)
+    }*/
+
+
+
+    void Sand::Move()
+    {
+        y += temp;
+
+        PixelGrid& pixelGrid = PixelGrid::GetInst();
+        eElementType targetType;
+
+        for(int i = y; i >= 1; i--)
         {
-            Element* targetLeft = pixelGrid.GetElement(mX - 1, mY + 1);
-
-            if (targetLeft == nullptr)
+            targetType = CheckTargetType(mX, mY + i);
+            if (targetType == eElementType::Liquid || targetType == eElementType::None)
             {
-                pixelGrid.SwapElement(mX, mY, mX - 1, mY + 1);
-                mX = mX - 1;
-                mY = mY + 1;
-                pixelGrid.SetActiveChunk(mX, mY);
+                SwapElement(mX, mY + i);
+                y -= i;
                 return;
             }
-            else if (targetLeft->GetType() == eElementType::Liquid)
-            {
-                pixelGrid.SwapElement(mX, mY, mX - 1, mY + 1);
-                mX = mX - 1;
-                mY = mY + 1;
-                pixelGrid.SetActiveChunk(mX, mY);
-                return;
-            }
-            else if (targetLeft->GetType() == eElementType::Solid)
-            {
-                Element* targetRight = pixelGrid.GetElement(mX + 1, mY + 1);
+        }
 
-                if (targetRight == nullptr)
+        switch (xorshift32() % 2)
+        {
+        case 0:
+        {
+            for (int j = y; j >= 1; j--)
+            {
+                for (int i = 1; i <= mSpeed; i++)
                 {
-                    pixelGrid.SwapElement(mX , mY, mX + 1, mY + 1);
-                    mX = mX + 1;
-                    mY = mY + 1;
-                    pixelGrid.SetActiveChunk(mX, mY);
-                    return;
-                }
-                else if (targetRight->GetType() == eElementType::Liquid)
-                {
-                    pixelGrid.SwapElement(mX, mY, mX + 1, mY + 1);
-                    mX = mX + 1;
-                    mY = mY + 1;
-                    pixelGrid.SetActiveChunk(mX, mY);
-                    return;
-                }
-                else
-                {
-                    isFalling = false;
-                    return;
+                    targetType = CheckTargetType(mX + i, mY + j);
+                    if (targetType == eElementType::Liquid || targetType == eElementType::None)
+                    {
+                        SwapElement(mX + i, mY + j);
+                        y -= j;
+                        return;
+                    }
                 }
             }
-        }*/
+            for (int j = y; j >= 1; j--)
+            {
+                for (int i = -1; i >= -mSpeed; i--)
+                {
+                    targetType = CheckTargetType(mX + i, mY + j);
+                    if (targetType == eElementType::Liquid || targetType == eElementType::None)
+                    {
+                        SwapElement(mX + i, mY + j);
+                        y -= j;
+                        return;
+                    }
+                }
+            }
+
+        }
+        break;
+
+        case 1:
+        {
+            for (int j = y; j >= 1; j--)
+            {
+                for (int i = -1; i >= -mSpeed; i--)
+                {
+                    targetType = CheckTargetType(mX + i, mY + j);
+                    if (targetType == eElementType::Liquid || targetType == eElementType::None)
+                    {
+                        SwapElement(mX + i, mY + j);
+                        y -= j;
+                        return;
+                    }
+                }
+            }
+            for (int j = y; j >= 1; j--)
+            {
+                for (int i = 1; i <= mSpeed; i++)
+                {
+                    targetType = CheckTargetType(mX + i, mY + j);
+                    if (targetType == eElementType::Liquid || targetType == eElementType::None)
+                    {
+                        SwapElement(mX + i, mY + j);
+                        y -= j;
+                        return;
+                    }
+                }
+            }
+        }
+        break;
+
+        default:
+            break;
+        }
+
+        y = 0;
+
+    }
+
+    Element* Sand::Clone()
+    {
+        return new Sand();
     }
 
 }

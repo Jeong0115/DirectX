@@ -69,10 +69,18 @@ namespace zz
             mesh->SetMaterial(ResourceManager::Find<Material>(L"m_hall_background_0_0"));
             mesh->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
         }
+
+        GameObject* object = new GameObject();
+        AddGameObject(eLayerType::Player, object);
+        object->GetComponent<Transform>()->SetPosition(Vector3(+1024 - 256, -1024 + 256, 0.05f));
+        MeshRenderer* mesh = object->AddComponent<MeshRenderer>();
+        mesh->SetMaterial(ResourceManager::Find<Material>(L"m_PixelTexture"));
+        mesh->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
+
         {
             GameObject* object = new GameObject();
             AddGameObject(eLayerType::Player, object);
-            object->GetComponent<Transform>()->SetPosition(Vector3(x, y, 0.1f));
+            object->GetComponent<Transform>()->SetPosition(Vector3(x, y, 0.0f));
             MeshRenderer* mesh = object->AddComponent<MeshRenderer>();
             mesh->SetMaterial(ResourceManager::Find<Material>(L"m_hall_visual_0_0"));
             mesh->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
@@ -88,7 +96,7 @@ namespace zz
         {
             GameObject* object = new GameObject();
             AddGameObject(eLayerType::Player, object);
-            object->GetComponent<Transform>()->SetPosition(Vector3(x + 300, y - 331, 0.1f));
+            object->GetComponent<Transform>()->SetPosition(Vector3(x + 300, y - 331, 0.0f));
             MeshRenderer* mesh = object->AddComponent<MeshRenderer>();
             mesh->SetMaterial(ResourceManager::Find<Material>(L"m_hall_br_visual_512_512"));
             mesh->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
@@ -97,11 +105,15 @@ namespace zz
         {
             GameObject* object = new GameObject();
             AddGameObject(eLayerType::Player, object);
-            object->GetComponent<Transform>()->SetPosition(Vector3(x + 300, y, 0.1f));
+            object->GetComponent<Transform>()->SetPosition(Vector3(x + 300, y, 0.0f));
             MeshRenderer* mesh = object->AddComponent<MeshRenderer>();
             mesh->SetMaterial(ResourceManager::Find<Material>(L"m_hall_r_visual_512_0"));
             mesh->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
         }
+
+       
+            
+        
         
 
         Scene::Initialize();
@@ -114,6 +126,9 @@ namespace zz
         //    mesh->SetMaterial(ResourceManager::Find<Material>(L"m_rust"));
         //    mesh->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
         //}
+
+        Transform* tr = object->GetComponent<Transform>();
+        tr->SetScale(Vector3(2048.f, 2048.f, 1.0f));
     }
 
     void PlayScene::Update()

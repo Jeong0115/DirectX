@@ -57,6 +57,8 @@ namespace zz::graphics
         void Draw();
         void Present();
 
+        void UpdateSubresource(ID3D11Resource* pDstResource, const void* pSrcData) { mContext->UpdateSubresource(pDstResource, 0, NULL, pSrcData, 2048 * 4, 0); }
+
         ID3D11Device* GetID3D11Device() { return mDevice.Get(); }
         //Microsoft::WRL::ComPtr<ID3D11Device> GetD3D11Device() { return mDevice; }
 

@@ -214,7 +214,7 @@ LRESULT CALLBACK PixelWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
 
         // 윈도우 크기 변경및 출력 설정
         SetWindowPos(hWnd
-            , nullptr, 500, -1000
+            , nullptr, 500, 500
             , rect.right - rect.left
             , rect.bottom - rect.top
             , 0);

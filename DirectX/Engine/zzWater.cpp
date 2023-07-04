@@ -5,6 +5,7 @@ namespace zz
 {
     Water::Water()
     {
+        mSpeed = 8;
         mColor = 0xFF0000FF;
     }
     Water::~Water()
@@ -28,27 +29,27 @@ namespace zz
             {
             case 0:
             {
-                for (int i = 1; i < 5; i++)
-                {
-                    if (CheckTargetType(mX + i, mY + 1) == eElementType::None)
-                    {
-                        SwapElement(mX + i, mY + 1);
-                        return;
-                    }
-                }
-                for (int i = -1; i > -5; i--)
-                {
-                    if (CheckTargetType(mX + i, mY + 1) == eElementType::None)
-                    {
-                        SwapElement(mX + i, mY + 1);
-                        return;
-                    }
-                }
+                //for (int i = 1; i <= mSpeed; i++)
+                //{
+                //    if (CheckTargetType(mX + i, mY + 1) == eElementType::None)
+                //    {
+                //        SwapElement(mX + i, mY + 1);
+                //        return;
+                //    }
+                //}
+                //for (int i = -1; i >= -mSpeed; i--)
+                //{
+                //    if (CheckTargetType(mX + i, mY + 1) == eElementType::None)
+                //    {
+                //        SwapElement(mX + i, mY + 1);
+                //        return;
+                //    }
+                //}
                 switch (xorshift32() % 2)
                 {
                 case 0:
                 {
-                    for (int i = 1; i < 5; i++)
+                    for (int i = 1; i <= mSpeed; i++)
                     {
                         if (CheckTargetType(mX + i, mY) == eElementType::None)
                         {
@@ -60,7 +61,7 @@ namespace zz
                 }
                 case 1:
                 {
-                    for (int i = -1; i > -5; i--)
+                    for (int i = -1; i >= -mSpeed; i--)
                     {
                         if (CheckTargetType(mX + i, mY) == eElementType::None)
                         {
@@ -77,27 +78,27 @@ namespace zz
 
             case 1:
             {
-                for (int i = -1; i > -5; i--)
-                {
-                    if (CheckTargetType(mX + i, mY + 1) == eElementType::None)
-                    {
-                        SwapElement(mX + i, mY + 1);
-                        return;
-                    }
-                }
-                for (int i = 1; i < 5; i++)
-                {
-                    if (CheckTargetType(mX + i, mY + 1) == eElementType::None)
-                    {
-                        SwapElement(mX + i, mY + 1);
-                        return;
-                    }
-                }
+                //for (int i = -1; i >= -mSpeed; i--)
+                //{
+                //    if (CheckTargetType(mX + i, mY + 1) == eElementType::None)
+                //    {
+                //        SwapElement(mX + i, mY + 1);
+                //        return;
+                //    }
+                //}
+                //for (int i = 1; i <= mSpeed; i++)
+                //{
+                //    if (CheckTargetType(mX + i, mY + 1) == eElementType::None)
+                //    {
+                //        SwapElement(mX + i, mY + 1);
+                //        return;
+                //    }
+                //}
                 switch (xorshift32() % 2)
                 {
                 case 0:
                 {
-                    for (int i = 1; i < 5; i++)
+                    for (int i = 1; i <= mSpeed; i++)
                     {
                         if (CheckTargetType(mX + i, mY) == eElementType::None)
                         {
@@ -109,7 +110,7 @@ namespace zz
                 }
                 case 1:
                 {
-                    for (int i = -1; i > -5; i--)
+                    for (int i = -1; i >= -mSpeed; i--)
                     {
                         if (CheckTargetType(mX + i, mY) == eElementType::None)
                         {
@@ -126,5 +127,9 @@ namespace zz
             }
             }
         }
+    }
+    Element* Water::Clone()
+    {
+        return new Water();
     }
 }

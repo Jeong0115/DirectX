@@ -42,6 +42,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)zzRenderer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzResource.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzResourceManager.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzRock.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzSand.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzScene.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzSceneManger.cpp" />
@@ -82,6 +83,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzRenderer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzResource.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzResourceManager.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzRock.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzSand.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzScene.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzSceneManger.h" />

@@ -1,5 +1,6 @@
 #include "zzTexture.h"
 #include "zzGraphicsDevice.h"
+#include "zzPixelGrid.h"
 
 namespace zz
 {
@@ -39,6 +40,7 @@ namespace zz
                 return S_FALSE;
         }
 
+
         CreateShaderResourceView
         (
             graphics::GetDevice()->GetID3D11Device()
@@ -68,5 +70,65 @@ namespace zz
         graphics::GetDevice()->BindShaderResource(eShaderStage::HS, 0, &srv);
         graphics::GetDevice()->BindShaderResource(eShaderStage::CS, 0, &srv);
         graphics::GetDevice()->BindShaderResource(eShaderStage::PS, 0, &srv);
+    }
+
+
+    PixelTexture::PixelTexture()
+    {
+        PixelGrid& pixelGrid = PixelGrid::GetInst();
+
+        std::vector<uint8_t>& pixelTexture = pixelGrid.GetPixelColor();
+
+        TexMetadata metadata;
+        metadata.width = 2048;
+        metadata.height = 2048;
+        metadata.depth = 1;
+        metadata.arraySize = 1;
+        metadata.mipLevels = 1;
+        metadata.format = DXGI_FORMAT_B8G8R8A8_UNORM;
+        metadata.dimension = TEX_DIMENSION_TEXTURE2D;
+
+        HRESULT hr2 = mImage.Initialize(metadata, CP_FLAGS_NONE);
+        if (FAILED(hr2)) {
+            int a = 0;
+        }
+
+        Image image;
+        image.width = 2048;
+        image.height = 2048;
+        image.format = DXGI_FORMAT_B8G8R8A8_UNORM;
+        image.rowPitch = image.width * sizeof(uint32_t);  // for DXGI_FORMAT_R8G8B8A8_UNORM
+        image.slicePitch = image.rowPitch * image.height;
+        image.pixels = pixelTexture.data();
+
+        mImage.InitializeFromImage(image);
+
+
+        HRESULT hr = CreateShaderResourceView
+        (
+            graphics::GetDevice()->GetID3D11Device()
+            , mImage.GetImages()
+            , mImage.GetImageCount()
+            , mImage.GetMetadata()
+            , mSRV.GetAddressOf()
+        );
+
+        if (FAILED(hr)) {
+            int a = 0;
+        }
+
+        mSRV->GetResource((ID3D11Resource**)mTexture.GetAddressOf());
+    }
+    PixelTexture::~PixelTexture()
+    {
+    }
+    void PixelTexture::BindShader(eShaderStage stage, UINT startSlot)
+    {
+        //temp();
+        PixelGrid& pixelGrid = PixelGrid::GetInst();
+
+        std::vector<uint8_t>& pixelTexture = pixelGrid.GetPixelColor();
+        zz::graphics::GetDevice()->UpdateSubresource(mTexture.Get(), pixelTexture.data());
+        Texture::BindShader(stage, startSlot);
     }
 }

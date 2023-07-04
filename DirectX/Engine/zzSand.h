@@ -11,8 +11,14 @@ namespace zz
         virtual ~Sand();
 
         virtual void Move() override;
+        virtual Element* Clone() override;
 
         bool update = true;
 
+    private:
+        float mSpeed;
+        float temp;
+
+        float y;
     };
 }

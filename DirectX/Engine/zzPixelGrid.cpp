@@ -4,10 +4,15 @@
 
 #include "zzInput.h"
 #include "zzTime.h"
+
 #include "zzSand.h"
 #include "zzWater.h"
+#include "zzRock.h"
 
 #include <minwindef.h>
+
+#include <random>
+#include <algorithm>
 
 namespace zz
 {
@@ -25,31 +30,11 @@ namespace zz
         mPixelColor.resize(mWidth * mHeight * 4);
         mElements.resize(mHeight, std::vector<Element*>(mWidth));
 
-        //for (int i = 0; i < mHeight; i++)
-        //{
-        //    for (int j = 0; j < mWidth; j++)
-        //    {
-        //        if(mElements[i][j] != nullptr)
-        //            memcpy(&mPixelColor[(i * mWidth + j) * 4], mElements[i][j]->GetColor(), 4);
-        //    }
-        //}
-
-        /*uint32_t x = 0xFFFFFFFF;
-
-        for(int i = 300 * mWidth; i <= 301 * mWidth; i++)
-        {
-            memcpy(&mPixelColor[i*4], &x, 4);
-        }
-
-        uint32_t yellow = 0xFFFF00FF;
-
-        for(int j=0; j<30; j++)
-        {
-            for (int i = 100; i <= 250; i++)
-            {
-                memcpy(&mPixelColor[(256 + j + mWidth * i) * 4], &yellow, 4);
-            }
-        }*/
+        mElementMap.insert({ 'w', new Water});
+        mElementMap.insert({ 's', new Sand });
+        mElementMap.insert({ 'r', new Rock });
+        mElementMap.insert({ 'n', nullptr });
+        mSelectElement = mElementMap.find('n')->second;
 
         //for (int i = 220; i < 221; i++)
         //{
@@ -60,17 +45,6 @@ namespace zz
         //    }
         //}
 
-        uint32_t a = 0xFFFFFFFF;
-        for (int i = 300; i < 310; i++)
-        {
-            for (int j = 100; j < 420; j++)
-            {
-                mElements[i][j] = new Sand();
-                mElements[i][j]->SetColor(a);
-                mElements[i][j]->SetPos(j, i);
-                mElements[i][j]->isFalling = false;
-            }
-        }
 
         uint32_t x = 0x00000000;
         for (UINT i = 0; i < mHeight; i++)
@@ -96,6 +70,12 @@ namespace zz
                 delete mElements[i][j];
             }
         }
+
+        for (auto map : mElementMap)
+        {
+            delete map.second;
+            map.second = nullptr;
+        }
     }
 
     void PixelGrid::Initialize()
@@ -116,67 +96,89 @@ namespace zz
         HBITMAP defaultBitmap = (HBITMAP)SelectObject(mBackHDC, mBackBuffer);
         DeleteObject(defaultBitmap);
 
-        mImage = new Image();
+        mImage = new PixelGridColor();
     }
 
-
-    //float x = 0, y = 0;
     void PixelGrid::Update()
     {
-        if(Input::GetKeyDown(eKeyCode::LBUTTON) || Input::GetKeyDown(eKeyCode::RBUTTON))
+        if (Input::GetKeyDown(eKeyCode::W) || Input::GetKeyDown(eKeyCode::S) || Input::GetKeyDown(eKeyCode::N)
+            || Input::GetKeyDown(eKeyCode::R))
         {
-            POINT mousePos = {};
-            GetCursorPos(&mousePos);
+            if ((Input::GetKeyDown(eKeyCode::W)))
+                mSelectElement = mElementMap.find('w')->second;
+            else if ((Input::GetKeyDown(eKeyCode::S)))
+                mSelectElement = mElementMap.find('s')->second;
+            else if ((Input::GetKeyDown(eKeyCode::R)))
+                mSelectElement = mElementMap.find('r')->second;
+            else if ((Input::GetKeyDown(eKeyCode::N)))
+                mSelectElement = mElementMap.find('n')->second;
+        }
 
-            ScreenToClient(mHwnd, &mousePos);
-
-            wchar_t text[50] = {};
-
-            swprintf_s(text, 50, L"Mouse Position : %d, %d\n", (int)mousePos.x, (int)mousePos.y);
-
-            OutputDebugStringW(text);
-
+        if(Input::GetKey(eKeyCode::LBUTTON) || Input::GetKeyDown(eKeyCode::RBUTTON))
+        {
             HWND nowHwnd = GetFocus();
 
             if(nowHwnd == mHwnd)
             {
+                POINT mousePos = {};
+                GetCursorPos(&mousePos);
+                ScreenToClient(mHwnd, &mousePos);
+
                 if(mousePos.x > 50 && mousePos.y >50)
                 {
-                    if (Input::GetKeyDown(eKeyCode::LBUTTON))
+                    if (Input::GetKey(eKeyCode::LBUTTON))
                     {
-                        for (int i = (int)mousePos.y - 25; i < mousePos.y + 25; i++)
+                        for (int i = (int)mousePos.y - 10; i < mousePos.y + 10; i++)
                         {
-                            for (int j = (int)mousePos.x - 5; j < mousePos.x + 5; j++)
+                            for (int j = (int)mousePos.x - 10; j < mousePos.x + 10; j++)
                             {
-                                mElements[i][j] = new Sand();
-                                mElements[i][j]->SetPos(j, i);
+                                if (mElements[i][j] != nullptr)
+                                    delete mElements[i][j];
 
-                                SetActiveChunk(j, i);
+                                if (mSelectElement == nullptr)
+                                {
+                                    mElements[i][j] = nullptr;
+                                    uint32_t x = 0x00000000;
+                                    memcpy(&mPixelColor[(i * mWidth + j) * 4], &x, 4);
+                                    SetActiveChunk(j, i);
+                                }
+                                else
+                                {
+                                    mElements[i][j] = mSelectElement->Clone();
+                                    mElements[i][j]->SetPos(j, i);
 
-                                memcpy(&mPixelColor[(i * mWidth + j) * 4], mElements[i][j]->GetColor(), 4);
+                                    SetActiveChunk(j, i);
+
+                                    memcpy(&mPixelColor[(i * mWidth + j) * 4], mElements[i][j]->GetColor(), 4);
+                                }
                             }
                         }
                     }
                     else
                     {
-                        for (int i = (int)mousePos.y - 50; i < mousePos.y + 50; i++)
+                        for (int i = (int)mousePos.y - 20; i < mousePos.y + 20; i++)
                         {
-                            for (int j = (int)mousePos.x - 50; j < mousePos.x + 50; j++)
+                            for (int j = (int)mousePos.x - 20 ; j < mousePos.x + 20; j ++)
                             {
-                                //delete mElements[i][j];
-                                //mElements[i][j] = nullptr;
+                                if (mElements[i][j] != nullptr)
+                                    delete mElements[i][j];
 
-                                //SetActiveChunk(j, i);
+                                if (mSelectElement == nullptr)
+                                {
+                                    mElements[i][j] = nullptr;
+                                    uint32_t x = 0x00000000;
+                                    memcpy(&mPixelColor[(i * mWidth + j) * 4], &x, 4);
+                                    SetActiveChunk(j, i);
+                                }
+                                else
+                                {
+                                    mElements[i][j] = mSelectElement->Clone();
+                                    mElements[i][j]->SetPos(j, i);
 
-                                //uint32_t x = 0x00000000;
-                                //memcpy(&mPixelColor[(i * mWidth + j) * 4], &x, 4);
+                                    SetActiveChunk(j, i);
 
-                                mElements[i][j] = new Water();
-                                mElements[i][j]->SetPos(j, i);
-
-                                SetActiveChunk(j, i);
-
-                                memcpy(&mPixelColor[(i * mWidth + j) * 4], mElements[i][j]->GetColor(), 4);
+                                    memcpy(&mPixelColor[(i * mWidth + j) * 4], mElements[i][j]->GetColor(), 4);
+                                }
                             }
                         }
                     }
@@ -232,14 +234,14 @@ namespace zz
             }
         }*/
 
-        for (int i = mHeight - 1; i >= 0; i--)
-        {
-            for (int j = mWidth - 1; j >= 0; j--)
-            {
-                if (mElements[i][j] == nullptr) continue;
-                mElements[i][j]->Move();
-            }
-        }
+        //for (int i = mHeight - 1; i >= 0; i--)
+        //{
+        //    for (int j = mWidth - 1; j >= 0; j--)
+        //    {
+        //        if (mElements[i][j] == nullptr) continue;
+        //        mElements[i][j]->Move();
+        //    }
+        //}
 
 
         
@@ -255,7 +257,21 @@ namespace zz
         //    }
         //}
 
-        /*for (int ci = 31; ci >= 0; ci--)
+        std::vector<int> numbers;
+        for (int i = 0; i <= 63; ++i) {
+            numbers.push_back(i);
+        }
+
+        // ·£´ý »ý¼º±â ÃÊ±âÈ­
+        std::random_device rd;
+        std::mt19937 g(rd());
+
+        // º¤ÅÍ ¼¯±â
+        std::shuffle(numbers.begin(), numbers.end(), g);
+
+        std::vector<Element*> elementsToMove;
+
+        for (int ci = 31; ci >= 0; ci--)
         {
             for (int cj = 31; cj >= 0; cj--)
             {
@@ -263,18 +279,28 @@ namespace zz
                 {
                     mChunks[ci][cj].SetDeath();
 
-                    for (int i = 63; i >= 0; i--)
+                    for (int i = 63; i>=0; i--)
                     {
-                        for (int j = 63; j >= 0; j--)
+                        //std::shuffle(numbers.begin(), numbers.end(), g);
+                        for (int j : numbers)
                         {
                             if (mElements[ci * 64 + i][cj * 64 + j] == nullptr) continue;
-                            mElements[ci * 64 + i][cj * 64 + j]->Move();
+                            //mElements[ci * 64 + i][cj * 64 + j]->Move();
+
+                            if (mElements[ci * 64 + i][cj * 64 + j]->isFalling) {
+                                elementsToMove.push_back((mElements[ci * 64 + i][cj * 64 + j]));
+                            }
 
                         }
                     }
                 }
             }
-        }*/
+        }
+
+        for (const auto& element : elementsToMove)
+        {
+            element->Move();
+        }
 
         //uint32_t x = 0x00000000;
         //for (UINT i = 0; i < mHeight; i++)
@@ -348,6 +374,25 @@ namespace zz
         SelectObject(mHdc, _oldBrush);
         DeleteObject(hollowBrush);
 
+        {
+            POINT mousePos = {};
+            GetCursorPos(&mousePos);
+            ScreenToClient(mHwnd, &mousePos);
+
+            HPEN greenPen = CreatePen(PS_SOLID, 1, RGB(255, 0, 0));
+            HPEN oldPen = (HPEN)SelectObject(mHdc, greenPen);
+            HBRUSH hollowBrush = (HBRUSH)GetStockObject(HOLLOW_BRUSH);
+            HBRUSH _oldBrush = (HBRUSH)SelectObject(mHdc, hollowBrush);
+
+            ::Rectangle(mHdc, mousePos.x - 10, mousePos.y - 10, mousePos.x + 10, mousePos.y + 10);
+
+            SelectObject(mHdc, oldPen);
+            DeleteObject(greenPen);
+
+            SelectObject(mHdc, _oldBrush);
+            DeleteObject(hollowBrush);
+        }
+
         HBRUSH grayBrush = CreateSolidBrush(RGB(121, 121, 121));
         HBRUSH oldBrush = (HBRUSH)SelectObject(mBackHDC, grayBrush);
         ::Rectangle(mBackHDC, -1, -1, 514, 514);
@@ -394,16 +439,16 @@ namespace zz
         y /= 64;
 
         mChunks[y][x].SetActive();
-        mChunks[y + 1][x + 1].SetActive();
-        if(x > 0 && y > 0)
-        {
-            mChunks[y - 1][x - 1].SetActive();
-        }
+        //mChunks[y + 1][x + 1].SetActive();
+        //if(x > 0 && y > 0)
+        //{
+        //    mChunks[y - 1][x - 1].SetActive();
+        //}
     }
 
     void PixelGrid::SetImage(int x, int y, std::shared_ptr<Texture> texture)
     {   
-        return;
+        //return;
         uint8_t* texPixels = texture->GetPixels();
         DXGI_FORMAT format = texture->GetFormat();
         UINT texSize = texture->GetImageSize() * 4;
@@ -425,7 +470,32 @@ namespace zz
                 uint8_t* currPixel = texPixels + i;
                 if (*(currPixel + 3) != (uint8_t)0)
                 {
-                    memcpy(&mPixelColor[col * mWidth * 4 + row], currPixel, 4);
+                    uint32_t color;
+                    memcpy(&color, currPixel, 4);
+
+                    if (color == 0xFFFFFFFF)
+                    {
+                        if (mElements[col][row / 4] == nullptr)
+                        {
+                            uint32_t none = 0x00000000;
+                            memcpy(&mPixelColor[(col * mWidth + row / 4) * 4], &none, 4);
+                        }
+                    }
+                    
+                    else if (color == 0xFF0A3344) 
+                    {
+                        mElements[col][row / 4] = new Rock();
+                        mElements[col][row / 4]->SetPos(row / 4, col);
+                        memcpy(&mPixelColor[(col * mWidth + row / 4) * 4], mElements[col][row / 4]->GetColor(), 4);
+                        SetActiveChunk(row / 4, col);
+                    }
+                    else if (color == 0xFF000042)
+                    {
+                        mElements[col][row / 4] = new Water();
+                        mElements[col][row / 4]->SetPos(row / 4, col);
+                        memcpy(&mPixelColor[(col * mWidth + row / 4) * 4], mElements[col][row / 4]->GetColor(), 4);
+                        SetActiveChunk(row / 4, col);
+                    }
                 }
             }
         }
@@ -441,11 +511,32 @@ namespace zz
                 uint8_t* currPixel = texPixels + i;
                 if (*(currPixel + 3) != (uint8_t)0)
                 {
-                    for (int j = 0; j <= 2; j++)
+                    uint32_t color;
+                    memcpy(&color, currPixel, 4);
+                    if (color == 0xFFFFFFFF)
                     {
-                        mPixelColor[col * mWidth * 4 + row + 2 - j] = *(currPixel + j);
+                        if(mElements[col][row / 4] == nullptr)
+                        {
+                            uint32_t none = 0x00000000;
+                            memcpy(&mPixelColor[(col * mWidth + row / 4) * 4], &none, 4);
+                        }
                     }
-                    mPixelColor[col * mWidth * 4 + row + 3] = *(currPixel + 3);
+                    else if (color == 0xFF44330A)
+                    {
+                        mElements[col][row / 4] = new Rock();
+                        mElements[col][row / 4]->SetPos(row / 4, col);
+                        memcpy(&mPixelColor[(col * mWidth + row / 4) * 4], mElements[col][row / 4]->GetColor(), 4);
+
+                        SetActiveChunk(row / 4, col);
+                    }
+                    else if (color == 0xFF420000)
+                    {
+                        mElements[col][row / 4] = new Water();
+                        mElements[col][row / 4]->SetPos(row / 4, col);
+                        memcpy(&mPixelColor[(col * mWidth + row / 4) * 4], mElements[col][row / 4]->GetColor(), 4);
+                        SetActiveChunk(row / 4, col);
+                    }
+
                 }
             }
         }
@@ -490,7 +581,7 @@ namespace zz
     }
 
 
-    Image::Image()
+    PixelGridColor::PixelGridColor()
         : mHdc(NULL)
     {
         BITMAPINFO bmi = { 0 };
@@ -513,16 +604,17 @@ namespace zz
         ReleaseDC(NULL, hdcScreen);
     }
 
-    Image::~Image()
+    PixelGridColor::~PixelGridColor()
     {
 
     }
 
-    void Image::Update(std::vector<uint8_t>& pixelColor, HDC BackDC, float x, float y)
+    void PixelGridColor::Update(std::vector<uint8_t>& pixelColor, HDC BackDC, float x, float y)
     {
         memcpy(bits, pixelColor.data(), pixelColor.size());
         BitBlt(BackDC, 0, 0, 2048, 2048, mHdc, (int)x, (int)-y, SRCCOPY);
     }
+
 
 
 }

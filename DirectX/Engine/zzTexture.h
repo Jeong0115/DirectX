@@ -20,7 +20,7 @@ namespace zz
         virtual ~Texture();
 
         virtual HRESULT Load(const std::wstring& path) override;
-        void BindShader(eShaderStage stage, UINT startSlot);
+        virtual void BindShader(eShaderStage stage, UINT startSlot);
         math::Vector2 GetSize() { return math::Vector2((float)mImage.GetMetadata().width, (float)mImage.GetMetadata().height); }
         void Clear();
 
@@ -29,10 +29,18 @@ namespace zz
         UINT GetImageSize() { return (UINT)mImage.GetImages()->width * (UINT)mImage.GetImages()->height; }
         UINT GetImageWidth() { return (UINT)mImage.GetImages()->width; }
 
-    private:
+    protected:
         ScratchImage mImage;
         Microsoft::WRL::ComPtr<ID3D11Texture2D> mTexture;
         Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mSRV;
         D3D11_TEXTURE2D_DESC mDesc;
+    };
+
+    class PixelTexture : public Texture
+    {
+    public:
+        PixelTexture();
+        virtual ~PixelTexture();
+        virtual void BindShader(eShaderStage stage, UINT startSlot) override;
     };
 }

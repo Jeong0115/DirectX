@@ -81,6 +81,14 @@ namespace zz::renderer
             spriteMateiral2->SetTexture(texture);
             ResourceManager::Insert(L"m_rust", spriteMateiral2);
         }
+        {
+            std::shared_ptr<Texture> texture = std::make_shared<PixelTexture>();
+
+            std::shared_ptr<Material> pixelTexture = std::make_shared<Material>();
+            pixelTexture->SetShader(spriteShader);
+            pixelTexture->SetTexture(texture);
+            ResourceManager::Insert(L"m_PixelTexture", pixelTexture);
+        }
 
 #pragma region MountainBG
         {
@@ -135,7 +143,7 @@ namespace zz::renderer
 #pragma region Mountain
         //LoadPixelScene("data/biome_impl/mountain/right_entrance_bottom.png", "", x, y + 512, "", true)
         //LoadPixelScene("data/biome_impl/mountain/right_bottom.png", "", x + 512 - 192, y + 512, "", true)
-        //LoadPixelScene("data/biome_impl/mountain/right_entrance.png", "data/biome_impl/mountain/right_entrance_visual.png", x, y, "data/biome_impl/mountain/right_entrance_background.png", true)
+        //LoadPixelScene("data/biomea_impl/mountain/right_entrance.png", "data/biome_impl/mountain/right_entrance_visual.png", x, y, "data/biome_impl/mountain/right_entrance_background.png", true)
 
         {
             std::shared_ptr<Texture> texture = ResourceManager::Load<Texture>(L"hall_0_0", L"..\\Resources\\Texture\\Mountain\\hall.png");

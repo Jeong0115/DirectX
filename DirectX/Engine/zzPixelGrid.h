@@ -11,6 +11,13 @@ namespace zz
     public:
         SINGLETON(PixelGrid)
 
+        enum class eElement
+        {
+            Sand,
+            Water,
+            End
+        };
+
     private:
         PixelGrid();
         ~PixelGrid();
@@ -25,6 +32,7 @@ namespace zz
         void SetHwnd(HWND hwnd) { mHwnd = hwnd; }
         void SetImage(int x, int y, std::shared_ptr<class Texture> texture);
         Element* GetElement(int x, int y) { return mElements[y][x]; }
+        std::vector<uint8_t>& GetPixelColor() { return mPixelColor; }
         void SwapElement(int x1, int y1, int x2, int y2);
         void SetActiveChunk(int x, int y);
 
@@ -41,23 +49,25 @@ namespace zz
         UINT mHeight;
 
         void* bits;
-        class Image* mImage;
-
+        class PixelGridColor* mImage;
+        
         double mFixedTime;
         Chunk mChunks[32][32];
 
-        
+        std::map<char, Element*> mElementMap;
+        Element* mSelectElement;
 
         float x = 0, y = 0;
     };
 
 
 
-    class Image
+
+    class PixelGridColor
     {
     public:
-        Image();
-        ~Image();
+        PixelGridColor();
+        ~PixelGridColor();
 
         void Update(std::vector<uint8_t>& pixelColor, HDC BackDC, float x, float y);
 
@@ -67,5 +77,6 @@ namespace zz
 
         void* bits;
     };
+    
 }
 

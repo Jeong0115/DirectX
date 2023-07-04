@@ -19,13 +19,15 @@ namespace zz
         Element();
         virtual ~Element();
 
+        virtual Element* Clone() = 0;
+
         virtual void Move() = 0;
         eElementType CheckTargetType(int targetX, int targetY);
         void SwapElement(int destX, int destY);
 
         void SetPos(int x, int y) { mX = x, mY = y; }
         uint32_t* GetColor() { return &mColor; }
-        void SetColor(uint32_t c) { mColor = c; }
+        void SetColor(uint32_t color) { mColor = color; }
 
         eElementType GetType() { return mType; }
 
@@ -33,7 +35,7 @@ namespace zz
         
 
         uint32_t xorshift32();
-        static uint32_t rand;
+        //static uint32_t rand;
 
 
 //#ifdef _DEBUG
