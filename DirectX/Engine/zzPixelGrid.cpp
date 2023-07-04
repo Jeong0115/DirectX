@@ -30,11 +30,11 @@ namespace zz
         mPixelColor.resize(mWidth * mHeight * 4);
         mElements.resize(mHeight, std::vector<Element*>(mWidth));
 
-        mElementMap.insert({ 'w', new Water});
-        mElementMap.insert({ 's', new Sand });
-        mElementMap.insert({ 'r', new Rock });
-        mElementMap.insert({ 'n', nullptr });
-        mSelectElement = mElementMap.find('n')->second;
+        mElementMap.insert({ 'z', new Water});
+        mElementMap.insert({ 'x', new Sand });
+        mElementMap.insert({ 'c', new Rock });
+        mElementMap.insert({ 'v', nullptr });
+        mSelectElement = mElementMap.find('v')->second;
 
         //for (int i = 220; i < 221; i++)
         //{
@@ -101,17 +101,17 @@ namespace zz
 
     void PixelGrid::Update()
     {
-        if (Input::GetKeyDown(eKeyCode::W) || Input::GetKeyDown(eKeyCode::S) || Input::GetKeyDown(eKeyCode::N)
-            || Input::GetKeyDown(eKeyCode::R))
+        if (Input::GetKeyDown(eKeyCode::Z) || Input::GetKeyDown(eKeyCode::X) || Input::GetKeyDown(eKeyCode::C)
+            || Input::GetKeyDown(eKeyCode::V))
         {
-            if ((Input::GetKeyDown(eKeyCode::W)))
-                mSelectElement = mElementMap.find('w')->second;
-            else if ((Input::GetKeyDown(eKeyCode::S)))
-                mSelectElement = mElementMap.find('s')->second;
-            else if ((Input::GetKeyDown(eKeyCode::R)))
-                mSelectElement = mElementMap.find('r')->second;
-            else if ((Input::GetKeyDown(eKeyCode::N)))
-                mSelectElement = mElementMap.find('n')->second;
+            if ((Input::GetKeyDown(eKeyCode::Z)))
+                mSelectElement = mElementMap.find('z')->second;
+            else if ((Input::GetKeyDown(eKeyCode::X)))
+                mSelectElement = mElementMap.find('x')->second;
+            else if ((Input::GetKeyDown(eKeyCode::C)))
+                mSelectElement = mElementMap.find('c')->second;
+            else if ((Input::GetKeyDown(eKeyCode::V)))
+                mSelectElement = mElementMap.find('v')->second;
         }
 
         if(Input::GetKey(eKeyCode::LBUTTON) || Input::GetKeyDown(eKeyCode::RBUTTON))
@@ -125,7 +125,7 @@ namespace zz
                 ScreenToClient(mHwnd, &mousePos);
 
                 mousePos.x += x;
-                mousePos.y += y;
+                mousePos.y -= y;
 
                 if(mousePos.x > 50 && mousePos.y >50)
                 {
@@ -198,6 +198,8 @@ namespace zz
         }
 
         mImage->Update(mPixelColor, mBackHDC, x, y);
+
+
     }
 
     void PixelGrid::FixedUpdate()
@@ -346,6 +348,9 @@ namespace zz
             y += 305.0f * (float)Time::DeltaTime();
         }
 
+       
+
+
         //BitBlt(mHdc, 0, 0, 512, 512, mBackHDC, 0, 0, SRCCOPY);
         StretchBlt(
             mHdc,     // Destination device context
@@ -367,8 +372,8 @@ namespace zz
         {
             for (int j = 0; j < 32; j++)
             {
-                if(mChunks[i][j].isActive())
-                    ::Rectangle(mHdc, j * 64, i * 64, (j + 1) * (64), (i + 1) * (64));
+                if (mChunks[i][j].isActive())
+                    ::Rectangle(mHdc, j * 64 -x, (i) * 64 + y, (j + 1 ) * (64) - x, (i + 1 ) * (64) + y);
             }
         }
         SelectObject(mHdc, oldPen);
@@ -616,6 +621,8 @@ namespace zz
     {
         memcpy(bits, pixelColor.data(), pixelColor.size());
         BitBlt(BackDC, 0, 0, 2048, 2048, mHdc, (int)x, (int)-y, SRCCOPY);
+
+
     }
 
 
