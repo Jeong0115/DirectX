@@ -198,8 +198,6 @@ namespace zz
         }
 
         mImage->Update(mPixelColor, mBackHDC, x, y);
-
-
     }
 
     void PixelGrid::FixedUpdate()
@@ -248,20 +246,6 @@ namespace zz
         //    }
         //}
 
-
-        
-        //int chunkSize = 10; // 청크의 크기를 10으로 설정. 이는 문제의 특성에 따라 다를 수 있음.
-        //for (int i = mHeight - 1; i >= 1; i -= chunkSize) {
-        //    for (int j = mWidth - 1; j >= 1; j -= chunkSize) {
-        //        for (int ci = i; ci > (((0) > (i - chunkSize)) ? (0) : (i - chunkSize)); --ci) {
-        //            for (int cj = j; cj > (((0) > (j - chunkSize)) ? (0) : (j - chunkSize)); --cj) {
-        //                if (mElements[ci][cj] == nullptr) continue;
-        //                mElements[ci][cj]->Move();
-        //            }
-        //        }
-        //    }
-        //}
-
         std::vector<int> numbers;
         for (int i = 0; i <= 63; ++i) {
             numbers.push_back(i);
@@ -293,7 +277,8 @@ namespace zz
                             //mElements[ci * 64 + i][cj * 64 + j]->Move();
 
                             if (mElements[ci * 64 + i][cj * 64 + j]->isFalling) {
-                                elementsToMove.push_back((mElements[ci * 64 + i][cj * 64 + j]));
+                                //elementsToMove.push_back((mElements[ci * 64 + i][cj * 64 + j]));
+                                mElements[ci * 64 + i][cj * 64 + j]->Move();
                             }
 
                         }
@@ -302,10 +287,10 @@ namespace zz
             }
         }
 
-        for (const auto& element : elementsToMove)
-        {
-            element->Move();
-        }
+        //for (const auto& element : elementsToMove)
+        //{
+        //    element->Move();
+        //}
 
         //uint32_t x = 0x00000000;
         //for (UINT i = 0; i < mHeight; i++)
@@ -454,13 +439,18 @@ namespace zz
         //}
     }
 
-    void PixelGrid::SetImage(int x, int y, std::shared_ptr<Texture> texture)
+    void PixelGrid::SetImage(int x, int y, std::shared_ptr<Texture> texture, std::shared_ptr<Texture> texture_visual)
     {   
         //return;
         uint8_t* texPixels = texture->GetPixels();
         DXGI_FORMAT format = texture->GetFormat();
         UINT texSize = texture->GetImageSize() * 4;
         UINT texWidth = texture->GetImageWidth() * 4;
+
+        uint8_t* visualPixel = nullptr;
+        uint8_t* texVisualPixels = nullptr;
+        if (texture_visual != nullptr)
+            texVisualPixels = texture_visual->GetPixels();
 
         x *= 4;
         UINT row = x;
@@ -475,7 +465,11 @@ namespace zz
                     col++;
                     row = x;
                 }
+
                 uint8_t* currPixel = texPixels + i;
+                if (texture_visual != nullptr)
+                    visualPixel = texVisualPixels + i;
+
                 if (*(currPixel + 3) != (uint8_t)0)
                 {
                     uint32_t color;
@@ -490,11 +484,23 @@ namespace zz
                         }
                     }
                     
-                    else if (color == 0xFF0A3344) 
+                    else if (color == 0xFF0A3344 || color == 0xFF0A3355)
                     {
                         mElements[col][row / 4] = new Rock();
                         mElements[col][row / 4]->SetPos(row / 4, col);
-                        memcpy(&mPixelColor[(col * mWidth + row / 4) * 4], mElements[col][row / 4]->GetColor(), 4);
+
+                        if (texVisualPixels != nullptr)
+                        {
+                            if (*(visualPixel + 3) == (uint8_t)0)
+                                memcpy(&mPixelColor[(col * mWidth + row / 4) * 4], mElements[col][row / 4]->GetColor(), 4);
+                            else
+                                memcpy(&mPixelColor[(col * mWidth + row / 4) * 4], visualPixel, 4);
+                        }
+                        else
+                        {
+                            memcpy(&mPixelColor[(col * mWidth + row / 4) * 4], mElements[col][row / 4]->GetColor(), 4);
+                        }
+
                         SetActiveChunk(row / 4, col);
                     }
                     else if (color == 0xFF000042)
@@ -517,6 +523,9 @@ namespace zz
                     row = 0;
                 }
                 uint8_t* currPixel = texPixels + i;
+                if(texture_visual != nullptr)
+                    visualPixel = texVisualPixels + i;
+
                 if (*(currPixel + 3) != (uint8_t)0)
                 {
                     uint32_t color;
@@ -529,11 +538,22 @@ namespace zz
                             memcpy(&mPixelColor[(col * mWidth + row / 4) * 4], &none, 4);
                         }
                     }
-                    else if (color == 0xFF44330A)
+                    else if (color == 0xFF44330A || color == 0xFF55330A) // ABGR
                     {
                         mElements[col][row / 4] = new Rock();
                         mElements[col][row / 4]->SetPos(row / 4, col);
-                        memcpy(&mPixelColor[(col * mWidth + row / 4) * 4], mElements[col][row / 4]->GetColor(), 4);
+
+                        if (texVisualPixels != nullptr)
+                        {
+                            if (*(visualPixel + 3) == (uint8_t)0)
+                                memcpy(&mPixelColor[(col * mWidth + row / 4) * 4], mElements[col][row / 4]->GetColor(), 4);
+                            else
+                                memcpy(&mPixelColor[(col * mWidth + row / 4) * 4], visualPixel, 4);
+                        }
+                        else
+                        {
+                            memcpy(&mPixelColor[(col * mWidth + row / 4) * 4], mElements[col][row / 4]->GetColor(), 4);
+                        }
 
                         SetActiveChunk(row / 4, col);
                     }

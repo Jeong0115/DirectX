@@ -30,7 +30,7 @@ namespace zz
         void Clear();
 
         void SetHwnd(HWND hwnd) { mHwnd = hwnd; }
-        void SetImage(int x, int y, std::shared_ptr<class Texture> texture);
+        void SetImage(int x, int y, std::shared_ptr<class Texture> texture, std::shared_ptr<class Texture> texture_visual = nullptr);
         Element* GetElement(int x, int y) { return mElements[y][x]; }
         std::vector<uint8_t>& GetPixelColor() { return mPixelColor; }
         void SwapElement(int x1, int y1, int x2, int y2);

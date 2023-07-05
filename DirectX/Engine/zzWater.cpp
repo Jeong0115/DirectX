@@ -5,8 +5,8 @@ namespace zz
 {
     Water::Water()
     {
-        mSpeed = 8;
-        mColor = 0xFF0000FF;
+        mSpeed = 5;
+        mColor = 0xA0376259;
     }
     Water::~Water()
     {
@@ -29,101 +29,89 @@ namespace zz
             {
             case 0:
             {
-                //for (int i = 1; i <= mSpeed; i++)
+                //switch (xorshift32() % 2)
                 //{
-                //    if (CheckTargetType(mX + i, mY + 1) == eElementType::None)
-                //    {
-                //        SwapElement(mX + i, mY + 1);
-                //        return;
-                //    }
-                //}
-                //for (int i = -1; i >= -mSpeed; i--)
+                //case 0:
                 //{
-                //    if (CheckTargetType(mX + i, mY + 1) == eElementType::None)
-                //    {
-                //        SwapElement(mX + i, mY + 1);
-                //        return;
-                //    }
-                //}
-                switch (xorshift32() % 2)
-                {
-                case 0:
-                {
-                    for (int i = 1; i <= mSpeed; i++)
+                    if(CheckTargetType(mX + 1, mY) == eElementType::None)
                     {
-                        if (CheckTargetType(mX + i, mY) == eElementType::None)
+                        for (int i = 2; i <= mSpeed; i++)
                         {
-                            SwapElement(mX + i, mY);
-                            return;
+                            if (CheckTargetType(mX + i, mY) != eElementType::None)
+                            {
+                                SwapElement(mX + i - 1, mY);
+                                return;
+                            }
                         }
+                        SwapElement(mX + mSpeed, mY);
+                        return;
+                    }
+                    //break;
+                //}
+                //case 1:
+                //{
+                    if (CheckTargetType(mX - 1, mY) == eElementType::None)
+                    {
+                        for (int i = 2; i <= mSpeed; i++)
+                        {
+                            if (CheckTargetType(mX - i, mY) != eElementType::None)
+                            {
+                                SwapElement(mX - i + 1, mY);
+                                return;
+                            }
+                        }
+                        SwapElement(mX - mSpeed, mY);
+                        return;
                     }
                     break;
-                }
-                case 1:
-                {
-                    for (int i = -1; i >= -mSpeed; i--)
-                    {
-                        if (CheckTargetType(mX + i, mY) == eElementType::None)
-                        {
-                            SwapElement(mX + i, mY);
-                            return;
-                        }
-                    }
-                    break;
-                }
-                }
-                break;
+                //}
+                //}
+                //break;
 
             }
 
             case 1:
             {
-                //for (int i = -1; i >= -mSpeed; i--)
+                //switch (xorshift32() % 2)
                 //{
-                //    if (CheckTargetType(mX + i, mY + 1) == eElementType::None)
-                //    {
-                //        SwapElement(mX + i, mY + 1);
-                //        return;
-                //    }
-                //}
-                //for (int i = 1; i <= mSpeed; i++)
+                //case 0:
                 //{
-                //    if (CheckTargetType(mX + i, mY + 1) == eElementType::None)
-                //    {
-                //        SwapElement(mX + i, mY + 1);
-                //        return;
-                //    }
-                //}
-                switch (xorshift32() % 2)
-                {
-                case 0:
-                {
-                    for (int i = 1; i <= mSpeed; i++)
+                    if (CheckTargetType(mX - 1, mY) == eElementType::None)
                     {
-                        if (CheckTargetType(mX + i, mY) == eElementType::None)
+                        for (int i = 2; i <= mSpeed; i++)
                         {
-                            SwapElement(mX + i, mY);
-                            return;
+                            if (CheckTargetType(mX - i, mY) != eElementType::None)
+                            {
+                                SwapElement(mX - i + 1, mY);
+                                return;
+                            }
                         }
+                        SwapElement(mX - mSpeed, mY);
+                        return;
+                    }
+                    //break;
+                //}
+                //case 1:
+                //{
+                    if (CheckTargetType(mX + 1, mY) == eElementType::None)
+                    {
+                        for (int i = 2; i <= mSpeed; i++)
+                        {
+                            if (CheckTargetType(mX + i, mY) != eElementType::None)
+                            {
+                                SwapElement(mX + i - 1, mY);
+                                return;
+                            }
+                        }
+                        SwapElement(mX + mSpeed, mY);
+                        return;
                     }
                     break;
-                }
-                case 1:
-                {
-                    for (int i = -1; i >= -mSpeed; i--)
-                    {
-                        if (CheckTargetType(mX + i, mY) == eElementType::None)
-                        {
-                            SwapElement(mX + i, mY);
-                            return;
-                        }
-                    }
-                    break;
-                }
+                //}
 
-                }
+                //}
 
-                break;
+                //break;
             }
             }
         }

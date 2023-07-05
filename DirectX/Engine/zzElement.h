@@ -37,7 +37,14 @@ namespace zz
         uint32_t xorshift32();
         //static uint32_t rand;
 
-
+        bool IsUpdate() {
+            if (isUpdate)
+            {
+                isUpdate = false;
+                return true;
+            }
+            return false;
+        }
 //#ifdef _DEBUG
 //        static int a;
 //        static float sum;
@@ -50,5 +57,8 @@ namespace zz
 
 
         eElementType mType;
+
+    private:
+        bool isUpdate = false;
     };
 }

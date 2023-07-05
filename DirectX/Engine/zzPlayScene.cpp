@@ -79,7 +79,7 @@ namespace zz
 
         {
             GameObject* object = new GameObject();
-            AddGameObject(eLayerType::Player, object);
+            //AddGameObject(eLayerType::Player, object);
             object->GetComponent<Transform>()->SetPosition(Vector3(x, y, 0.0f));
             MeshRenderer* mesh = object->AddComponent<MeshRenderer>();
             mesh->SetMaterial(ResourceManager::Find<Material>(L"m_hall_visual_0_0"));
@@ -87,7 +87,7 @@ namespace zz
         }
         {
             GameObject* object = new GameObject();
-            AddGameObject(eLayerType::Player, object);
+            //AddGameObject(eLayerType::Player, object);
             object->GetComponent<Transform>()->SetPosition(Vector3(x, y - 306 , 0.0f));
             MeshRenderer* mesh = object->AddComponent<MeshRenderer>();
             mesh->SetMaterial(ResourceManager::Find<Material>(L"m_hall_b_visual_0_512"));
@@ -95,7 +95,7 @@ namespace zz
         }
         {
             GameObject* object = new GameObject();
-            AddGameObject(eLayerType::Player, object);
+            //AddGameObject(eLayerType::Player, object);
             object->GetComponent<Transform>()->SetPosition(Vector3(x + 300, y - 331, 0.0f));
             MeshRenderer* mesh = object->AddComponent<MeshRenderer>();
             mesh->SetMaterial(ResourceManager::Find<Material>(L"m_hall_br_visual_512_512"));
@@ -104,7 +104,7 @@ namespace zz
         
         {
             GameObject* object = new GameObject();
-            AddGameObject(eLayerType::Player, object);
+            //AddGameObject(eLayerType::Player, object);
             object->GetComponent<Transform>()->SetPosition(Vector3(x + 300, y, 0.0f));
             MeshRenderer* mesh = object->AddComponent<MeshRenderer>();
             mesh->SetMaterial(ResourceManager::Find<Material>(L"m_hall_r_visual_512_0"));
