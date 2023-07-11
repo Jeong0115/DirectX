@@ -16,9 +16,5 @@ namespace zz
         bool update = true;
 
     private:
-        float mSpeed;
-        float temp;
-
-        float y;
     };
 }

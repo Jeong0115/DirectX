@@ -12,4 +12,14 @@ namespace zz
 
     }
 
+    void Solid::Update()
+    {
+    }
+
+    bool Solid::InteractElement(Element* target, Position targetPos, bool isFinal, bool isFirst, Position& lastPos, int depth)
+    {
+        return false;
+    }
+
+
 }

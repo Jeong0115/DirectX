@@ -15,13 +15,13 @@
 #include "zzRenderer.h"
 
 
-//#ifdef _DEBUG
-//#include <dxgidebug.h>
-//#include <d3d11.h>
-//
-//#pragma comment(lib, "d3d11.lib")
-//#pragma comment(lib, "dxguid.lib")
-//#endif
+#ifdef _DEBUG
+#include <dxgidebug.h>
+#include <d3d11.h>
+
+#pragma comment(lib, "d3d11.lib")
+#pragma comment(lib, "dxguid.lib")
+#endif
 
 #define MAX_LOADSTRING 100
 
@@ -38,24 +38,23 @@ INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK    PixelWndProc(HWND, UINT, WPARAM, LPARAM);
 
 zz::Application& application = zz::Application::GetInst();
-zz::PixelGrid& pixelGrid = zz::PixelGrid::GetInst();
-//#ifdef _DEBUG
-//void list_remaining_d3d_objects()
-//{
-//    HMODULE dxgidebugdll = GetModuleHandleW(L"dxgidebug.dll");
-//    decltype(&DXGIGetDebugInterface) GetDebugInterface = reinterpret_cast<decltype(&DXGIGetDebugInterface)>(GetProcAddress(dxgidebugdll, "DXGIGetDebugInterface"));
-//
-//    IDXGIDebug* debug;
-//
-//    GetDebugInterface(IID_PPV_ARGS(&debug));
-//
-//    OutputDebugStringW(L"Starting Live Direct3D Object Dump:\r\n");
-//    debug->ReportLiveObjects(DXGI_DEBUG_D3D11, DXGI_DEBUG_RLO_DETAIL);
-//    OutputDebugStringW(L"Completed Live Direct3D Object Dump.\r\n");
-//
-//    debug->Release();
-//}
-//#endif
+#ifdef _DEBUG
+void list_remaining_d3d_objects()
+{
+    HMODULE dxgidebugdll = GetModuleHandleW(L"dxgidebug.dll");
+    decltype(&DXGIGetDebugInterface) GetDebugInterface = reinterpret_cast<decltype(&DXGIGetDebugInterface)>(GetProcAddress(dxgidebugdll, "DXGIGetDebugInterface"));
+
+    IDXGIDebug* debug;
+
+    GetDebugInterface(IID_PPV_ARGS(&debug));
+
+    OutputDebugStringW(L"Starting Live Direct3D Object Dump:\r\n");
+    debug->ReportLiveObjects(DXGI_DEBUG_D3D11, DXGI_DEBUG_RLO_DETAIL);
+    OutputDebugStringW(L"Completed Live Direct3D Object Dump.\r\n");
+
+    debug->Release();
+}
+#endif
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
@@ -63,7 +62,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_ int       nCmdShow)
 {
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-    //_CrtSetBreakAlloc(29235);
+    //_CrtSetBreakAlloc(88386);
 
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
@@ -71,7 +70,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
     LoadStringW(hInstance, IDC_WINEDITOR, szWindowClass, MAX_LOADSTRING);
     MyRegisterClass(hInstance, szWindowClass, WndProc);
-
     MyRegisterClass(hInstance, L"PixelWndProc", PixelWndProc);
 
     if (!InitInstance (hInstance, nCmdShow))
@@ -103,11 +101,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     zz::renderer::Release();
     application.Release();
+    zz::PixelGrid::Release();
     //CoUninitialize();
 
-//#ifdef _DEBUG
-//    list_remaining_d3d_objects();
-//#endif
+#ifdef _DEBUG
+    list_remaining_d3d_objects();
+#endif
 
     return (int) msg.wParam;
 }
@@ -154,10 +153,11 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    ShowWindow(hWnd, nCmdShow);
    
    UpdateWindow(hWnd);
+   PixelGrid::SetHwnd(hWnd2);
+   PixelGrid::Initialize();
    application.Initialize();
    //InitializeScenes();
-   pixelGrid.SetHwnd(hWnd2);
-   pixelGrid.Initialize();
+   
   
    return TRUE;
 }

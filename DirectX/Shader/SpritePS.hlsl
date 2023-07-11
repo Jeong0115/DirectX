@@ -27,7 +27,6 @@ float4 main(VSOut In) : SV_TARGET
     //color.r = 1.f;
 
     
-    
     //cos(100.0f);
     
     //dot()

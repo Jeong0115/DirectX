@@ -20,22 +20,6 @@ namespace zz
             mColor = 0xFFE9FC5A;
             break;
         }
-        switch (xorshift32() % 3)
-        {
-        case 0:
-            temp = 1.0f;
-            break;
-
-        case 1:
-            temp = 1.1f;
-            break;
-
-        case 2:
-            temp = 1.2f;
-            break;
-        }
-
-        mSpeed = 2.f;
     }
 
     Sand::~Sand()
@@ -141,9 +125,8 @@ namespace zz
 
     void Sand::Move()
     {
-        y += temp;
+       /* y += temp;
 
-        PixelGrid& pixelGrid = PixelGrid::GetInst();
         eElementType targetType;
 
         for(int i = y; i >= 1; i--)
@@ -226,7 +209,7 @@ namespace zz
             break;
         }
 
-        y = 0;
+        y = 0;*/
 
     }
 

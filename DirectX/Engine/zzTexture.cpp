@@ -75,9 +75,7 @@ namespace zz
 
     PixelTexture::PixelTexture()
     {
-        PixelGrid& pixelGrid = PixelGrid::GetInst();
-
-        std::vector<uint8_t>& pixelTexture = pixelGrid.GetPixelColor();
+        std::vector<uint8_t>& pixelTexture = PixelGrid::GetPixelColor();
 
         TexMetadata metadata;
         metadata.width = 2048;
@@ -89,9 +87,6 @@ namespace zz
         metadata.dimension = TEX_DIMENSION_TEXTURE2D;
 
         HRESULT hr2 = mImage.Initialize(metadata, CP_FLAGS_NONE);
-        if (FAILED(hr2)) {
-            int a = 0;
-        }
 
         Image image;
         image.width = 2048;
@@ -103,7 +98,6 @@ namespace zz
 
         mImage.InitializeFromImage(image);
 
-
         HRESULT hr = CreateShaderResourceView
         (
             graphics::GetDevice()->GetID3D11Device()
@@ -113,21 +107,15 @@ namespace zz
             , mSRV.GetAddressOf()
         );
 
-        if (FAILED(hr)) {
-            int a = 0;
-        }
-
         mSRV->GetResource((ID3D11Resource**)mTexture.GetAddressOf());
     }
     PixelTexture::~PixelTexture()
     {
     }
+
     void PixelTexture::BindShader(eShaderStage stage, UINT startSlot)
     {
-        //temp();
-        PixelGrid& pixelGrid = PixelGrid::GetInst();
-
-        std::vector<uint8_t>& pixelTexture = pixelGrid.GetPixelColor();
+        std::vector<uint8_t>& pixelTexture = PixelGrid::GetPixelColor();
         zz::graphics::GetDevice()->UpdateSubresource(mTexture.Get(), pixelTexture.data());
         Texture::BindShader(stage, startSlot);
     }

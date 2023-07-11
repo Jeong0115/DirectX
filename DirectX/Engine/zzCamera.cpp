@@ -90,7 +90,7 @@ namespace zz
         {
             Projection = Matrix::CreatePerspectiveFieldOfViewLH(XM_2PI / 6.0f, mAspectRatio, mNear, mFar);
         }
-
+ 
 
         return true;
     }

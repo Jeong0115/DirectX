@@ -21,3 +21,5 @@
 #include "CommonInclude.h"
 #include "zzEnum.h"
 #include "zzMath.h"
+
+#include "fuction.h"

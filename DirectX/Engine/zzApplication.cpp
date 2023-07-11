@@ -56,7 +56,7 @@ namespace zz
         Time::Update();
         Input::Update();
         SceneManger::GetInst().Update();
-        PixelGrid::GetInst().Update();
+        PixelGrid::Update();
 	}
 
 	void Application::LateUpdate()
@@ -74,7 +74,7 @@ namespace zz
         //graphicDevice->Draw();
 
         graphicDevice->Present();
-        PixelGrid::GetInst().Render();
+        PixelGrid::Render();
 	}
 
     void Application::Release()

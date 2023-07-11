@@ -349,5 +349,11 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzRock.h">
       <Filter>Element\Solid\Rock</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzPosition.h">
+      <Filter>Common\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)fuction.h">
+      <Filter>Common\Header</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

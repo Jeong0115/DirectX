@@ -4,6 +4,8 @@
 namespace zz
 {
     Element::Element()
+        : mColor(0xFFFF00FF)
+        , mType(eElementType::None)
     {
 
     }
@@ -15,9 +17,8 @@ namespace zz
 
     Element::eElementType Element::CheckTargetType(int targetX, int targetY)
     {
-        PixelGrid& pixelGrid = PixelGrid::GetInst();
         if (targetX < 0 || targetY < 0) return eElementType::Solid;
-        Element* target = pixelGrid.GetElement(targetX, targetY);
+        Element* target = PixelGrid::GetElement(targetX, targetY);
 
         if (target == nullptr)
             return eElementType::None;
@@ -25,35 +26,37 @@ namespace zz
         return target->GetType();
     }
 
-    void Element::SwapElement(int destX, int destY)
+    void Element::SwapElement(Element* target) // 수정 예정
+    { 
+        Position targetPos = target->GetPos();
+        if (mPos.x % 64 == 0)
+            PixelGrid::SetActiveChunks(mPos.x - 1, mPos.y);
+        else if (mPos.x % 64 == 63)
+            PixelGrid::SetActiveChunks(mPos.x + 1, mPos.y);
+
+        if (mPos.y % 64 == 0)
+            PixelGrid::SetActiveChunks(mPos.x, mPos.y - 1);
+        else if (mPos.y % 64 == 63)
+            PixelGrid::SetActiveChunks(mPos.x, mPos.y + 1);
+
+        PixelGrid::SwapElement(mPos.x, mPos.y, targetPos.x, targetPos.y);
+        target->mStopCount = 0;
+        //PixelGrid::SetActiveChunk(mPos.x, mPos.y);
+    }
+
+    void Element::SwapLastPosition(Position pos)
     {
-        PixelGrid& pixelGrid = PixelGrid::GetInst();
+        if (pos.x < 0 || pos.y < 0) return;
+        if (mPos == pos) return;
+        this->mStopCount = 0;
 
-        if (mX % 64 == 0)
-        {
-            pixelGrid.SetActiveChunk(mX - 1, mY);
-        }
-        if (mX % 64 == 63)
-        {
-            pixelGrid.SetActiveChunk(mX + 1, mY);
-        }
-        if (mY % 64 == 0)
-        {
-            pixelGrid.SetActiveChunk(mX, mY - 1);
-        }
-        if (mY % 64 == 63)
-        {
-            pixelGrid.SetActiveChunk(mX, mY + 1);
-        }
+        if(PixelGrid::GetElement(pos.x, pos.y) != nullptr)
+            PixelGrid::GetElement(pos.x, pos.y)->mStopCount = 0;
 
-        pixelGrid.SwapElement(mX, mY, destX, destY);
-        //mX = destX;
-        //mY = destY;
-        pixelGrid.SetActiveChunk(mX, mY);
-
+        PixelGrid::SwapElement(mPos.x, mPos.y, pos.x, pos.y);
         
 
-        
+        //PixelGrid::SetActiveChunk(mPos.x, mPos.y);
     }
 
     //uint32_t Element::rand = 12345;

@@ -11,39 +11,124 @@
 
 #include <minwindef.h>
 
-#include <random>
 #include <algorithm>
+#include <thread>
+#include <mutex>
+//#include <functional>
+//#include <atomic>
+//#include <queue>
+//#include <future>
+//#include <deque>
+//#include <list>
+//#include <vector>
+//#include <type_traits>
 
 namespace zz
 {
-    PixelGrid::PixelGrid()
-        : mWidth(2048)
-        , mHeight(2048)
-        , mHwnd(NULL)
-        , mHdc(NULL)
-        , mBackHDC(NULL)
-        , mBackBuffer(NULL)
-        , mImage(nullptr)
-        , bits(nullptr)
-        , mFixedTime(0.0)
-    {
-        mPixelColor.resize(mWidth * mHeight * 4);
-        mElements.resize(mHeight, std::vector<Element*>(mWidth));
+   /* class ThreadPool {
+    public:
+        std::vector<std::thread> workers;
+        std::queue<std::function<void()>> tasks;
+        std::mutex queue_mutex;
+        std::condition_variable condition;
+        std::condition_variable all_idle;
+        bool stop;
+        std::atomic<int> active{0};
 
-        mElementMap.insert({ 'z', new Water});
+        ThreadPool(size_t threads) : stop(false) {
+            for (size_t i = 0; i < threads; ++i)
+            {
+                workers.emplace_back([this] {
+                    for (;;) {
+                        std::function<void()> task;
+                        {
+                            std::unique_lock<std::mutex> lock(this->queue_mutex);
+                            this->condition.wait(lock, [this] { return this->stop || !this->tasks.empty(); });
+                            if (this->stop && this->tasks.empty()) return;
+                            task = std::move(this->tasks.front());
+                            this->tasks.pop();
+                        }
+                        --this->active;
+                        task();
+                        ++this->active;
+                        if (this->active == 0) all_idle.notify_one();
+                    }
+                    });
+            }
+        }
+        template<class F, class... Args>
+        auto enqueue(F&& f, Args&&... args) -> std::future<typename std::invoke_result<F, Args...>::type> {
+            using return_type = typename std::invoke_result<F, Args...>::type;
+            auto task = std::make_shared<std::packaged_task<return_type()>>(std::bind(std::forward<F>(f), std::forward<Args>(args)...));
+            std::future<return_type> res = task->get_future();
+            {
+                std::unique_lock<std::mutex> lock(queue_mutex);
+                if (stop) throw std::runtime_error("enqueue on stopped ThreadPool");
+                ++this->active;
+                tasks.emplace([task]() { (*task)(); });
+            }
+            condition.notify_one();
+            return res;
+        }
+        ~ThreadPool() {
+            {
+                std::unique_lock<std::mutex> lock(queue_mutex);
+                stop = true;
+            }
+            condition.notify_all();
+            for (std::thread& worker : workers) worker.join();
+        }
+        void wait() {
+            std::unique_lock<std::mutex> lock(queue_mutex);
+            all_idle.wait(lock, [this]() { return this->active == 0; });
+        }
+    private:
+        
+        
+    };*/
+
+    UINT PixelGrid::mWidth = 2048;
+    UINT PixelGrid::mHeight = 2048;
+
+    HWND        PixelGrid::mHwnd = {};
+    HDC         PixelGrid::mHdc = {};
+    HBITMAP     PixelGrid::mBackBuffer = {};
+    HDC         PixelGrid::mBackHDC = {};
+
+    std::vector<uint8_t> PixelGrid::mPixelColor(mWidth* mHeight * 4);
+    std::vector<std::vector<Element*>> PixelGrid::mElements(mHeight, std::vector<Element*>(mWidth));
+
+    void* PixelGrid::bits;
+    PixelGridColor* PixelGrid::mImage;
+
+    double PixelGrid::mFixedTime;
+    Chunk PixelGrid::mChunks[32][32];
+
+    std::map<char, Element*> PixelGrid::mElementMap;
+    Element* PixelGrid::mSelectElement;
+
+    float PixelGrid::x = 0.f;
+    float PixelGrid::y = 0.f;
+
+    //ThreadPool pool(4);
+
+    PixelGrid::PixelGrid()
+    {
+    }
+
+    PixelGrid::~PixelGrid()
+    {
+
+    }
+
+    void PixelGrid::Initialize()
+    {
+        
+        mElementMap.insert({ 'z', new Water });
         mElementMap.insert({ 'x', new Sand });
         mElementMap.insert({ 'c', new Rock });
         mElementMap.insert({ 'v', nullptr });
         mSelectElement = mElementMap.find('v')->second;
-
-        //for (int i = 220; i < 221; i++)
-        //{
-        //    for (int j = 60; j < 200; j++)
-        //    {
-        //        mElements[j][i] = new Sand();
-        //        mElements[j][i]->SetPos(i, j);
-        //    }
-        //}
 
 
         uint32_t x = 0x00000000;
@@ -58,28 +143,8 @@ namespace zz
             }
         }
 
-    }
 
-    PixelGrid::~PixelGrid()
-    {
-        delete mImage;
-        for (UINT i = 0; i < mHeight; i++)
-        {
-            for (UINT j = 0; j < mWidth; j++)
-            {
-                delete mElements[i][j];
-            }
-        }
 
-        for (auto map : mElementMap)
-        {
-            delete map.second;
-            map.second = nullptr;
-        }
-    }
-
-    void PixelGrid::Initialize()
-    {
         mHdc = GetDC(mHwnd);
         BITMAPINFO bmi = { 0 };
         bmi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
@@ -124,63 +189,63 @@ namespace zz
                 GetCursorPos(&mousePos);
                 ScreenToClient(mHwnd, &mousePos);
 
-                mousePos.x += x;
-                mousePos.y -= y;
+                mousePos.x += (LONG)x;
+                mousePos.y -= (LONG)y;
 
-                if(mousePos.x > 50 && mousePos.y >50)
+                if(mousePos.x > 11 && mousePos.y > 11)
                 {
                     if (Input::GetKey(eKeyCode::LBUTTON))
                     {
-                        for (int i = (int)mousePos.y - 10; i < mousePos.y + 10; i++)
+                        for (int y = (int)mousePos.y - 10; y < mousePos.y + 10 ; y++)
                         {
-                            for (int j = (int)mousePos.x - 10; j < mousePos.x + 10; j++)
+                            for (int x = (int)mousePos.x - 10; x < mousePos.x + 10 ; x++)
                             {
-                                if (mElements[i][j] != nullptr)
-                                    delete mElements[i][j];
+                                if (mElements[y][x] != nullptr)
+                                    delete mElements[y][x];
 
                                 if (mSelectElement == nullptr)
                                 {
-                                    mElements[i][j] = nullptr;
-                                    uint32_t x = 0x00000000;
-                                    memcpy(&mPixelColor[(i * mWidth + j) * 4], &x, 4);
-                                    SetActiveChunk(j, i);
+                                    mElements[y][x] = nullptr;
+                                    uint32_t none = 0x00000000;
+                                    memcpy(&mPixelColor[(y * mWidth + x) * 4], &none, 4);
+                                    SetActiveChunks(x, y);
                                 }
                                 else
                                 {
-                                    mElements[i][j] = mSelectElement->Clone();
-                                    mElements[i][j]->SetPos(j, i);
+                                    mElements[y][x] = mSelectElement->Clone();
+                                    mElements[y][x]->SetPos(x, y);
 
-                                    SetActiveChunk(j, i);
+                                    SetActiveChunks(x, y);
 
-                                    memcpy(&mPixelColor[(i * mWidth + j) * 4], mElements[i][j]->GetColor(), 4);
+                                    memcpy(&mPixelColor[(y * mWidth + x) * 4], mElements[y][x]->GetColor(), 4);
                                 }
                             }
                         }
                     }
                     else
                     {
-                        for (int i = (int)mousePos.y - 20; i < mousePos.y + 20; i++)
+                        for (int y = (int)mousePos.y - 20; y < mousePos.y + 20; y++)
                         {
-                            for (int j = (int)mousePos.x - 20 ; j < mousePos.x + 20; j ++)
+                            for (int x = (int)mousePos.x - 20 ; x < mousePos.x + 20; x ++)
                             {
-                                if (mElements[i][j] != nullptr)
-                                    delete mElements[i][j];
+                                if (mElements[y][x] != nullptr)
+                                    delete mElements[y][x];
 
                                 if (mSelectElement == nullptr)
                                 {
-                                    mElements[i][j] = nullptr;
-                                    uint32_t x = 0x00000000;
-                                    memcpy(&mPixelColor[(i * mWidth + j) * 4], &x, 4);
-                                    SetActiveChunk(j, i);
+                                    mElements[y][x] = nullptr;
+                                    uint32_t none = 0x00000000;
+                                    memcpy(&mPixelColor[(y * mWidth + x) * 4], &none, 4);
+                                    SetActiveChunks(x, y);
                                 }
                                 else
                                 {
-                                    mElements[i][j] = mSelectElement->Clone();
-                                    mElements[i][j]->SetPos(j, i);
+                                    mElements[y][x] = mSelectElement->Clone();
+                                    mElements[y][x]->SetPos(x, y);
 
-                                    SetActiveChunk(j, i);
+                                    SetActiveChunks(x, y);
 
-                                    memcpy(&mPixelColor[(i * mWidth + j) * 4], mElements[i][j]->GetColor(), 4);
+                                    memcpy(&mPixelColor[(y * mWidth + x) * 4], mElements[y][x]->GetColor(), 4);
                                 }
                             }
                         }
@@ -199,6 +264,9 @@ namespace zz
 
         mImage->Update(mPixelColor, mBackHDC, x, y);
     }
+
+    std::vector<std::vector<Element*>> temp;
+    std::mutex mtx;
 
     void PixelGrid::FixedUpdate()
     {
@@ -246,6 +314,161 @@ namespace zz
         //    }
         //}
 
+       
+
+        {
+            //bool chunks[32][32] = {};
+            //bool chunksBuff[32][32] = {};
+            //bool updateFlag = false;
+
+            //for (int ci = 31; ci >= 0; ci--)
+            //{
+            //    for (int cj = 31; cj >= 0; cj--)
+            //    {
+            //        if (mChunks[ci][cj].isActive())
+            //        {
+            //            mChunks[ci][cj].SetDeath();
+            //            chunksBuff[cj][ci] = true;
+            //        }
+            //    }
+            //}
+
+            //int a = 4;
+            //std::thread t[4];
+
+            //while (true)
+            //{
+            //    updateFlag = false;
+            //    for (int ci = 31; ci >= 0; ci--)
+            //    {
+            //        for (int cj = 31; cj >= 0; cj--)
+            //        {
+            //            if (chunksBuff[ci][cj])
+            //            {
+            //                chunks[ci][cj] = true;
+            //                updateFlag = true;
+            //            }
+            //        }
+            //    }
+
+            //    if (!updateFlag) break;
+
+            //    int k = 0;
+            //    for (int i = 0; i < 32; i++)
+            //    {
+            //        for (int j = 0; j < 32; j++)
+            //        {
+            //            if (chunks[i][j])
+            //            {
+            //                for (int y = i; y <= i + 1; y++)
+            //                {
+            //                    if (y > 31) continue;
+            //                    for (int x = j - 1; x <= j + 1; x++)
+            //                    {
+            //                        if (x < 0 || x > 31) continue;
+
+            //                        chunks[y][x] = false;
+            //                    }
+            //                }
+            //                chunksBuff[i][j] = false;
+            //                t[k++] = std::thread(updateChunk, i, j);
+            //                //pool.enqueue(&PixelGrid::updateChunk, this, i, j);
+            //                if (k >= a) break;
+            //            }
+            //        }
+            //        if (k >= a) break;
+            //    }
+
+            //    for (int p = 0; p < k; p++)
+            //    {
+            //        t[p].join();
+            //    }
+
+            //}
+
+            //for (int i = 0; i < temp.size(); i++)
+            //{
+            //    for (int j = 0; j < temp[i].size(); j++)
+            //    {
+            //        temp[i][j]->isUpdate = false;
+            //    }
+            //}
+            //temp.clear();
+        }
+
+
+        {
+            std::vector<int> numbers;
+            for (int i = 0; i <= 63; ++i) {
+                numbers.push_back(i);
+            }
+
+            // ·£´ý »ý¼º±â ÃÊ±âÈ­
+            std::random_device rd;
+            std::mt19937 g(rd());
+
+            // º¤ÅÍ ¼¯±â
+            //std::shuffle(numbers.begin(), numbers.end(), g);
+
+            std::vector<Element*> elementsToMove;
+
+            for (int ci = 31; ci >= 0; ci--)
+            {
+                for (int cj = 31; cj >= 0; cj--)
+                {
+                    if (mChunks[ci][cj].isActive())
+                    {
+                        mChunks[ci][cj].SetDeath();
+
+                        for (int i = 63; i >= 0; i--)
+                        {
+                            std::shuffle(numbers.begin(), numbers.end(), g);
+                            for (int j : numbers)
+                            {
+                                if (mElements[ci * 64 + i][cj * 64 + j] == nullptr) continue;
+                                //mElements[ci * 64 + i][cj * 64 + j]->Move();
+
+                                if (/*!mElements[ci * 64 + i][cj * 64 + j]->Is()*/1)
+                                {
+                                    //mElements[ci * 64 + i][cj * 64 + j]->Move();
+                                    elementsToMove.push_back(mElements[ci * 64 + i][cj * 64 + j]);
+                                    //mElements[ci * 64 + i][cj * 64 + j]->Update();
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+
+            for (const auto& element : elementsToMove)
+            {
+                element->Update();
+            }
+        }
+
+        QueryPerformanceCounter(&curFreq);
+
+        double latency = (double)(curFreq.QuadPart - prevFreq.QuadPart) / (double)cpuFreq.QuadPart;
+        wchar_t text[100] = {};
+
+        swprintf_s(text, 100, L"FixedUpdate Latency : %f", latency);
+
+        SetWindowText(mHwnd, text);
+    }
+
+
+
+    void PixelGrid::registerElements(std::vector<Element*> elements)
+    {
+        std::lock_guard<std::mutex> lock(mtx);
+        temp.push_back(elements);
+    }
+
+    void PixelGrid::updateChunk(int x, int y)
+    {
+        std::vector<Element*> elementsToMove;
+
         std::vector<int> numbers;
         for (int i = 0; i <= 63; ++i) {
             numbers.push_back(i);
@@ -258,60 +481,28 @@ namespace zz
         // º¤ÅÍ ¼¯±â
         std::shuffle(numbers.begin(), numbers.end(), g);
 
-        std::vector<Element*> elementsToMove;
-
-        for (int ci = 31; ci >= 0; ci--)
+        for (int i = 63; i >= 0; i--)
         {
-            for (int cj = 31; cj >= 0; cj--)
+            for(int j : numbers)//for (int j = 63; j >= 0; j--)
             {
-                if (mChunks[ci][cj].isActive())
+                if (mElements[y * 64 + i][x * 64 + j] == nullptr) continue;
+
+                if (true/*mElements[y * 64 + i][x * 64 + j]->isFalling*/)
                 {
-                    mChunks[ci][cj].SetDeath();
+                    if (mElements[y * 64 + i][x * 64 + j]->IsUpdate()) continue;
 
-                    for (int i = 63; i>=0; i--)
-                    {
-                        //std::shuffle(numbers.begin(), numbers.end(), g);
-                        for (int j : numbers)
-                        {
-                            if (mElements[ci * 64 + i][cj * 64 + j] == nullptr) continue;
-                            //mElements[ci * 64 + i][cj * 64 + j]->Move();
-
-                            if (mElements[ci * 64 + i][cj * 64 + j]->isFalling) {
-                                //elementsToMove.push_back((mElements[ci * 64 + i][cj * 64 + j]));
-                                mElements[ci * 64 + i][cj * 64 + j]->Move();
-                            }
-
-                        }
-                    }
+                    elementsToMove.push_back(mElements[y * 64 + i][x * 64 + j]);
                 }
+
             }
         }
 
-        //for (const auto& element : elementsToMove)
-        //{
-        //    element->Move();
-        //}
-
-        //uint32_t x = 0x00000000;
-        //for (UINT i = 0; i < mHeight; i++)
-        //{
-        //    for (UINT j = 0; j < mWidth; j++)
-        //    {
-        //        if (mElements[i][j] != nullptr)
-        //            memcpy(&mPixelColor[(i * mWidth + j) * 4], mElements[i][j]->GetColor(), 4);
-        //        else
-        //            memcpy(&mPixelColor[(i * mWidth + j) * 4], &x, 4);
-        //    }
-        //}
-
-        QueryPerformanceCounter(&curFreq);
-
-        double latency = (double)(curFreq.QuadPart - prevFreq.QuadPart) / (double)cpuFreq.QuadPart;
-        wchar_t text[100] = {};
-
-        swprintf_s(text, 100, L"FixedUpdate Latency : %f", latency);
-
-        SetWindowText(mHwnd, text);
+        for (const auto& element : elementsToMove)
+        {
+            element->Update();
+            element->isUpdate = true;
+        }
+        registerElements(elementsToMove);
     }
 
     void PixelGrid::Render()
@@ -332,9 +523,6 @@ namespace zz
         {
             y += 305.0f * (float)Time::DeltaTime();
         }
-
-       
-
 
         //BitBlt(mHdc, 0, 0, 512, 512, mBackHDC, 0, 0, SRCCOPY);
         StretchBlt(
@@ -358,7 +546,7 @@ namespace zz
             for (int j = 0; j < 32; j++)
             {
                 if (mChunks[i][j].isActive())
-                    ::Rectangle(mHdc, j * 64 -x, (i) * 64 + y, (j + 1 ) * (64) - x, (i + 1 ) * (64) + y);
+                    ::Rectangle(mHdc, j * 64 - (int)x, (i) * 64 + (int)y, (j + 1 ) * (64) - (int)x, (i + 1 ) * (64) + (int)y);
             }
         }
         SelectObject(mHdc, oldPen);
@@ -391,6 +579,25 @@ namespace zz
         ::Rectangle(mBackHDC, -1, -1, 514, 514);
         SelectObject(mBackHDC, oldBrush);
         DeleteObject(grayBrush);
+    }
+
+    void PixelGrid::Release()
+    {
+        delete mImage;
+        DeleteObject(mBackBuffer);
+        for (UINT i = 0; i < mHeight; i++)
+        {
+            for (UINT j = 0; j < mWidth; j++)
+            {
+                delete mElements[i][j];
+            }
+        }
+
+        for (auto map : mElementMap)
+        {
+            delete map.second;
+            map.second = nullptr;
+        }
     }
 
     void PixelGrid::Clear()
@@ -426,22 +633,34 @@ namespace zz
 
     }
 
+    void PixelGrid::SetActiveChunks(int x, int y)
+    {
+        if (x % 64 == 0)
+            PixelGrid::SetActiveChunk(x - 1, y);
+        else if (x % 64 == 63)
+            PixelGrid::SetActiveChunk(x + 1, y);
+
+        if (y % 64 == 0)
+            PixelGrid::SetActiveChunk(x, y - 1);
+        else if (y % 64 == 63)      
+            PixelGrid::SetActiveChunk(x, y + 1);
+
+        SetActiveChunk(x, y);
+    }
+
     void PixelGrid::SetActiveChunk(int x, int y)
     {
         x /= 64;
         y /= 64;
 
         mChunks[y][x].SetActive();
-        //mChunks[y + 1][x + 1].SetActive();
-        //if(x > 0 && y > 0)
-        //{
-        //    mChunks[y - 1][x - 1].SetActive();
-        //}
     }
 
     void PixelGrid::SetImage(int x, int y, std::shared_ptr<Texture> texture, std::shared_ptr<Texture> texture_visual)
     {   
         //return;
+
+        if (x < 0 || y < 0) return;
         uint8_t* texPixels = texture->GetPixels();
         DXGI_FORMAT format = texture->GetFormat();
         UINT texSize = texture->GetImageSize() * 4;
@@ -486,29 +705,35 @@ namespace zz
                     
                     else if (color == 0xFF0A3344 || color == 0xFF0A3355)
                     {
-                        mElements[col][row / 4] = new Rock();
-                        mElements[col][row / 4]->SetPos(row / 4, col);
-
-                        if (texVisualPixels != nullptr)
+                        if(mElements[col][row / 4] == nullptr)
                         {
-                            if (*(visualPixel + 3) == (uint8_t)0)
-                                memcpy(&mPixelColor[(col * mWidth + row / 4) * 4], mElements[col][row / 4]->GetColor(), 4);
+                            mElements[col][row / 4] = new Rock();
+                            mElements[col][row / 4]->SetPos(row / 4, col);
+
+                            if (texVisualPixels != nullptr)
+                            {
+                                if (*(visualPixel + 3) == (uint8_t)0)
+                                    memcpy(&mPixelColor[(col * mWidth + row / 4) * 4], mElements[col][row / 4]->GetColor(), 4);
+                                else
+                                    memcpy(&mPixelColor[(col * mWidth + row / 4) * 4], visualPixel, 4);
+                            }
                             else
-                                memcpy(&mPixelColor[(col * mWidth + row / 4) * 4], visualPixel, 4);
-                        }
-                        else
-                        {
-                            memcpy(&mPixelColor[(col * mWidth + row / 4) * 4], mElements[col][row / 4]->GetColor(), 4);
+                            {
+                                memcpy(&mPixelColor[(col * mWidth + row / 4) * 4], mElements[col][row / 4]->GetColor(), 4);
+                            }
                         }
 
-                        SetActiveChunk(row / 4, col);
+                        SetActiveChunks(row / 4, col);
                     }
                     else if (color == 0xFF000042)
                     {
-                        mElements[col][row / 4] = new Water();
-                        mElements[col][row / 4]->SetPos(row / 4, col);
-                        memcpy(&mPixelColor[(col * mWidth + row / 4) * 4], mElements[col][row / 4]->GetColor(), 4);
-                        SetActiveChunk(row / 4, col);
+                        if (mElements[col][row / 4] == nullptr)
+                        {
+                            mElements[col][row / 4] = new Water();
+                            mElements[col][row / 4]->SetPos(row / 4, col);
+                            memcpy(&mPixelColor[(col * mWidth + row / 4) * 4], mElements[col][row / 4]->GetColor(), 4);
+                            SetActiveChunks(row / 4, col);
+                        }
                     }
                 }
             }
@@ -555,57 +780,19 @@ namespace zz
                             memcpy(&mPixelColor[(col * mWidth + row / 4) * 4], mElements[col][row / 4]->GetColor(), 4);
                         }
 
-                        SetActiveChunk(row / 4, col);
+                        SetActiveChunks(row / 4, col);
                     }
                     else if (color == 0xFF420000)
                     {
                         mElements[col][row / 4] = new Water();
                         mElements[col][row / 4]->SetPos(row / 4, col);
                         memcpy(&mPixelColor[(col * mWidth + row / 4) * 4], mElements[col][row / 4]->GetColor(), 4);
-                        SetActiveChunk(row / 4, col);
+                        SetActiveChunks(row / 4, col);
                     }
 
                 }
             }
         }
-
-        /*if (format == DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM)
-        {
-            for (UINT i = 0; i < texSize; i += 4, row += 4)
-            {
-                if (row >= texWidth + x * 4)
-                {
-                    col++;
-                    row = x * 4;
-                }
-                if (*(texPixels + i + 3) != (uint8_t)0)
-                {
-                    for (int j = 0; j <= 3; j++)
-                    {
-                        pixels[col * mWidth * 4 + row + j] = *(texPixels + i + j);
-                    }
-                }
-            }
-        }
-        else if (format == DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM)
-        {
-            for (UINT i = 0; i < texSize; i += 4, row += 4)
-            {
-                if (row >= texWidth + x)
-                {
-                    col++;
-                    row = 0;
-                }
-                if (*(texPixels + i + 3) != (uint8_t)0)
-                {
-                    for (int j = 0; j <= 2; j++)
-                    {
-                        pixels[col * mWidth * 4 + row + 2 - j] = *(texPixels + i + j);
-                    }
-                    pixels[col * mWidth * 4 + row + 3] = *(texPixels + i + 3);
-                }
-            }
-        }*/
     }
 
 
@@ -631,21 +818,16 @@ namespace zz
 
         ReleaseDC(NULL, hdcScreen);
     }
-
+    
     PixelGridColor::~PixelGridColor()
     {
-
+        DeleteObject(mBitmap);
     }
 
     void PixelGridColor::Update(std::vector<uint8_t>& pixelColor, HDC BackDC, float x, float y)
     {
         memcpy(bits, pixelColor.data(), pixelColor.size());
         BitBlt(BackDC, 0, 0, 2048, 2048, mHdc, (int)x, (int)-y, SRCCOPY);
-
-
     }
-
-
-
 }
 

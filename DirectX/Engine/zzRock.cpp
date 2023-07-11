@@ -5,7 +5,7 @@ namespace zz
     Rock::Rock()
     {
         mColor = 0xFF808080;
-        isFalling = false;
+        isFreeFalling = false;
     }
     Rock::~Rock()
     {

@@ -57,6 +57,7 @@
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)CommonInclude.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)define.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)fuction.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzApplication.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzBGScript.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzCamera.h" />
@@ -80,6 +81,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzMeshRenderer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzPixelGrid.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzPlayScene.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzPosition.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzRenderer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzResource.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzResourceManager.h" />

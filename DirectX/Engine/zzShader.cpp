@@ -17,6 +17,7 @@ namespace zz
     Shader::~Shader()
     {
         mInputLayout->Release();
+        //mInputLayout->Release();
     }
 
     HRESULT Shader::Load(const std::wstring& path)

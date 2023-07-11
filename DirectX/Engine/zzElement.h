@@ -1,6 +1,7 @@
 #pragma once
 
 #include "zzEngine.h"
+#include "zzPosition.h"
 
 namespace zz
 {
@@ -20,24 +21,34 @@ namespace zz
         virtual ~Element();
 
         virtual Element* Clone() = 0;
+        virtual bool InteractElement(Element* target, Position targetPos, bool isFinal, bool isFirst, Position& lastPos, int depth) = 0;
 
         virtual void Move() = 0;
+        virtual void Update() = 0;
         eElementType CheckTargetType(int targetX, int targetY);
-        void SwapElement(int destX, int destY);
+        void SwapElement(Element* target);
+        void SwapLastPosition(Position pos);
 
-        void SetPos(int x, int y) { mX = x, mY = y; }
+        void SetPos(Position pos) { mPos = pos; }
+        void SetPos(int x, int y) { mPos = Position(x, y); }
+        Position GetPos() { return mPos; }
+
         uint32_t* GetColor() { return &mColor; }
         void SetColor(uint32_t color) { mColor = color; }
 
         eElementType GetType() { return mType; }
 
-        bool isFalling = true;
+        math::Vector2 GetVelocity() { return mVelocity; }
+        void SetVelocity(math::Vector2 velocity) { mVelocity = velocity; }
+
+        bool isFreeFalling = true;
+        bool Is() { return mStopCount >= mStopThreshold; }
         
+        __forceinline float GetInertialResistance() { return mInertialResistance; }
 
-        uint32_t xorshift32();
-        //static uint32_t rand;
+        bool IsStop(Position startPos) { return startPos == mPos; }
 
-        bool IsUpdate() {
+        bool IsUpdate() {   
             if (isUpdate)
             {
                 isUpdate = false;
@@ -45,20 +56,30 @@ namespace zz
             }
             return false;
         }
+
+        uint32_t xorshift32();
+       
+        bool isUpdate = false;
 //#ifdef _DEBUG
 //        static int a;
 //        static float sum;
 //#endif
 
     protected:
-        uint32_t mColor;
-        int mX;
-        int mY;
+        math::Vector2 mVelocity;
+        math::Vector2 mVelocityRemainder;
+        float mInertialResistance = 0.f;
 
+        uint32_t mColor;    
+        Position mPos;
+        //int mStopUpdateCnt;
 
         eElementType mType;
-
+        float mFrictionFactor = 1.f;
+        int mStopCount = 0;
+        int mStopThreshold = 2;
+        //friend class Liquid;
     private:
-        bool isUpdate = false;
+        
     };
 }

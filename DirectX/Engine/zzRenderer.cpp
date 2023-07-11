@@ -149,17 +149,16 @@ namespace zz::renderer
             std::shared_ptr<Texture> texture = ResourceManager::Load<Texture>(L"hall_0_0", L"..\\Resources\\Texture\\Mountain\\hall.png");
             std::shared_ptr<Texture> texture_visual = ResourceManager::Load<Texture>(L"hall_visual_0_0", L"..\\Resources\\Texture\\Mountain\\hall_visual.png");
 
-            PixelGrid::GetInst().SetImage(0, 0, texture, texture_visual);
+            PixelGrid::SetImage(0, 0, texture, texture_visual);
 
             
-            std::shared_ptr<Material> spriteMateiral = std::make_shared<Material>();
-            spriteMateiral = std::make_shared<Material>();
+      /*      std::shared_ptr<Material> spriteMateiral = std::make_shared<Material>();
             spriteMateiral->SetShader(spriteShader);
             spriteMateiral->SetTexture(texture_visual);
-            ResourceManager::Insert(L"m_hall_visual_0_0", spriteMateiral);
+            ResourceManager::Insert(L"m_hall_visual_0_0", spriteMateiral);*/
 
             texture = ResourceManager::Load<Texture>(L"hall_background_0_0", L"..\\Resources\\Texture\\Mountain\\hall_background.png");
-            spriteMateiral = std::make_shared<Material>();
+            std::shared_ptr<Material> spriteMateiral = std::make_shared<Material>();
             spriteMateiral->SetShader(spriteShader);
             spriteMateiral->SetTexture(texture);
             ResourceManager::Insert(L"m_hall_background_0_0", spriteMateiral);
@@ -170,7 +169,7 @@ namespace zz::renderer
 
             std::shared_ptr<Texture> texture = ResourceManager::Load<Texture>(L"hall_b_0_512", L"..\\Resources\\Texture\\Mountain\\hall_b.png");
             std::shared_ptr<Texture> texture_visual = ResourceManager::Load<Texture>(L"hall_b_visual_0_512", L"..\\Resources\\Texture\\Mountain\\hall_b_visual.png");
-            PixelGrid::GetInst().SetImage(0, 512, texture, texture_visual);
+            //PixelGrid::SetImage(0, 512, texture, texture_visual);
 
             texture = ResourceManager::Load<Texture>(L"hall_b_visual_0_512", L"..\\Resources\\Texture\\Mountain\\hall_b_visual.png");
             std::shared_ptr<Material> spriteMateiral = std::make_shared<Material>();
@@ -182,7 +181,7 @@ namespace zz::renderer
         {
             std::shared_ptr<Texture> texture = ResourceManager::Load<Texture>(L"hall_br_512_512", L"..\\Resources\\Texture\\Mountain\\hall_br.png");
             std::shared_ptr<Texture> texture_visual = ResourceManager::Load<Texture>(L"hall_br_visual_512_512", L"..\\Resources\\Texture\\Mountain\\hall_br_visual.png");
-            PixelGrid::GetInst().SetImage(512, 512, texture, texture_visual);
+            PixelGrid::SetImage(512, 512, texture, texture_visual);
 
             texture = ResourceManager::Load<Texture>(L"hall_br_visual_512_512", L"..\\Resources\\Texture\\Mountain\\hall_br_visual.png");
             std::shared_ptr<Material> spriteMateiral = std::make_shared<Material>();
@@ -194,7 +193,7 @@ namespace zz::renderer
         {
             std::shared_ptr<Texture> texture = ResourceManager::Load<Texture>(L"hall_r_512_0", L"..\\Resources\\Texture\\Mountain\\hall_r.png");
             std::shared_ptr<Texture> texture_visual = ResourceManager::Load<Texture>(L"hall_r_visual_512_0", L"..\\Resources\\Texture\\Mountain\\hall_r_visual.png");
-            PixelGrid::GetInst().SetImage(512, 0, texture, texture_visual);
+            PixelGrid::SetImage(512, 0, texture, texture_visual);
 
             texture = ResourceManager::Load<Texture>(L"hall_r_visual_512_0", L"..\\Resources\\Texture\\Mountain\\hall_r_visual.png");
             std::shared_ptr<Material> spriteMateiral = std::make_shared<Material>();
@@ -209,7 +208,7 @@ namespace zz::renderer
         }
         {
             std::shared_ptr<Texture> texture = ResourceManager::Load<Texture>(L"hall_bottom_2_552_512", L"..\\Resources\\Texture\\Mountain\\hall_bottom_2.png");
-            PixelGrid::GetInst().SetImage(552, 512, texture);
+            PixelGrid::SetImage(552, 512, texture);
         }
 
 
