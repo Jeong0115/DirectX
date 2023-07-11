@@ -127,6 +127,9 @@
     <Filter Include="Element\Solid\Rock">
       <UniqueIdentifier>{f8142e17-960b-4a28-b5e6-8a5b83589bff}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Element\Liquid\Oil">
+      <UniqueIdentifier>{981984cb-c4f4-4647-a163-9e4ef29e1df7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzEntity.cpp">
@@ -228,6 +231,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzRock.cpp">
       <Filter>Element\Solid\Rock</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzOil.cpp">
+      <Filter>Element\Liquid\Oil</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -354,6 +360,9 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)fuction.h">
       <Filter>Common\Header</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzOil.h">
+      <Filter>Element\Liquid\Oil</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

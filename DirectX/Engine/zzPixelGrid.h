@@ -39,7 +39,9 @@ namespace zz
        // static Element* GetElement(int y, int x) { return mElements[y][x]; }
         static void SetActiveChunks(int x, int y);
         static void SetActiveChunk(int x, int y);
+        //static bool Is
 
+        static std::bitset<1> Step;
     private:
         static void updateChunk(int x, int y);
         static void registerElements(std::vector<Element*> elements);

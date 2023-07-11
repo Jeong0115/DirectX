@@ -11,9 +11,7 @@ namespace zz
     {
     }
 
-    void Rock::Move()
-    {
-    }
+
 
     Element* Rock::Clone()
     {

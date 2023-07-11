@@ -15,13 +15,13 @@
 #include "zzRenderer.h"
 
 
-#ifdef _DEBUG
-#include <dxgidebug.h>
-#include <d3d11.h>
-
-#pragma comment(lib, "d3d11.lib")
-#pragma comment(lib, "dxguid.lib")
-#endif
+//#ifdef _DEBUG
+//#include <dxgidebug.h>
+//#include <d3d11.h>
+//
+//#pragma comment(lib, "d3d11.lib")
+//#pragma comment(lib, "dxguid.lib")
+//#endif
 
 #define MAX_LOADSTRING 100
 
@@ -38,23 +38,23 @@ INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK    PixelWndProc(HWND, UINT, WPARAM, LPARAM);
 
 zz::Application& application = zz::Application::GetInst();
-#ifdef _DEBUG
-void list_remaining_d3d_objects()
-{
-    HMODULE dxgidebugdll = GetModuleHandleW(L"dxgidebug.dll");
-    decltype(&DXGIGetDebugInterface) GetDebugInterface = reinterpret_cast<decltype(&DXGIGetDebugInterface)>(GetProcAddress(dxgidebugdll, "DXGIGetDebugInterface"));
-
-    IDXGIDebug* debug;
-
-    GetDebugInterface(IID_PPV_ARGS(&debug));
-
-    OutputDebugStringW(L"Starting Live Direct3D Object Dump:\r\n");
-    debug->ReportLiveObjects(DXGI_DEBUG_D3D11, DXGI_DEBUG_RLO_DETAIL);
-    OutputDebugStringW(L"Completed Live Direct3D Object Dump.\r\n");
-
-    debug->Release();
-}
-#endif
+//#ifdef _DEBUG
+//void list_remaining_d3d_objects()
+//{
+//    HMODULE dxgidebugdll = GetModuleHandleW(L"dxgidebug.dll");
+//    decltype(&DXGIGetDebugInterface) GetDebugInterface = reinterpret_cast<decltype(&DXGIGetDebugInterface)>(GetProcAddress(dxgidebugdll, "DXGIGetDebugInterface"));
+//
+//    IDXGIDebug* debug;
+//
+//    GetDebugInterface(IID_PPV_ARGS(&debug));
+//
+//    OutputDebugStringW(L"Starting Live Direct3D Object Dump:\r\n");
+//    debug->ReportLiveObjects(DXGI_DEBUG_D3D11, DXGI_DEBUG_RLO_DETAIL);
+//    OutputDebugStringW(L"Completed Live Direct3D Object Dump.\r\n");
+//
+//    debug->Release();
+//}
+//#endif
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
@@ -104,9 +104,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     zz::PixelGrid::Release();
     //CoUninitialize();
 
-#ifdef _DEBUG
-    list_remaining_d3d_objects();
-#endif
+//#ifdef _DEBUG
+//    list_remaining_d3d_objects();
+//#endif
 
     return (int) msg.wParam;
 }

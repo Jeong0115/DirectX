@@ -13,19 +13,19 @@ namespace zz
     {
     }
 
+    
     void Liquid::Update()
     {
-        //if (mStopCount == mStopThreshold) 
-        //    return;
-        //
+       
+        if (mStep != PixelGrid::Step) 
+            return;
+        mStep.flip();
 
         //mVelocity += math::Vector2(0.0f, 5.0f);
         if (isFreeFalling)
         {
             mVelocity.x *= 0.8f;
         }
-        
-
 
         int yModifier = mVelocity.y < 0 ? -1 : 1;
         int xModifier = mVelocity.x < 0 ? -1 : 1;
@@ -92,6 +92,7 @@ namespace zz
                 xIncrease = smallerCount;
             }
 
+            // 어떻게 할까 수정해야됨
             Position targetPos = Position(mPos.x + (xIncrease * xModifier), mPos.y + (yIncrease * yModifier));
 
             if (/*matrix.isWithinBounds(carPos.x, carPos.y)*/1) 
@@ -104,15 +105,12 @@ namespace zz
                 if (stopped) break;
 
                 lastPos = targetPos;
-
             }
             else 
             {
                 //matrix.setElementAtIndex(getMatrixX(), getMatrixY(), ElementType.EMPTYCELL.createElementByMatrix(getMatrixX(), getMatrixY()));
                 return;
             }
-
-
             
         }
 
@@ -263,7 +261,7 @@ namespace zz
             if (isFreeFalling) 
             {
                 float absY = max(fabs(mVelocity.y) / 31, 105);
-                mVelocity.x = mVelocity.x < 0 ? -absY : absY;
+                mVelocity.x = mVelocity.x < 0 ? absY : -absY;
             }
 
             math::Vector2 copyVelocity = mVelocity;
@@ -365,7 +363,7 @@ namespace zz
 
     bool Liquid::compareDensity(Liquid* target)
     {
-        return (mDensity > target->GetDensity() && target->GetPos().y <= mPos.y); 
+        return ((mDensity > target->GetDensity()) && (target->GetPos().y >= mPos.y));
     }
 
     void Liquid::swapLiquid(Element* target)  // 이것도 수정해야됨
@@ -374,7 +372,8 @@ namespace zz
         if (random() > 0.8f) 
             mVelocity.x *= -1;
         
-        SwapElement(target);
+        SwapLastPosition(target->GetPos());
+        //SwapElement(target);
     }
 
     int Liquid::getAdditional(float val) 
@@ -390,7 +389,7 @@ namespace zz
 
         float avg = (vel + targetVel) / 2;
 
-        if (avg > 0)
+        if (avg < 0)
             return avg;
         else 
             return max(avg, 124.f);

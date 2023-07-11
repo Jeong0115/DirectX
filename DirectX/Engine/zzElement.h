@@ -23,7 +23,6 @@ namespace zz
         virtual Element* Clone() = 0;
         virtual bool InteractElement(Element* target, Position targetPos, bool isFinal, bool isFirst, Position& lastPos, int depth) = 0;
 
-        virtual void Move() = 0;
         virtual void Update() = 0;
         eElementType CheckTargetType(int targetX, int targetY);
         void SwapElement(Element* target);
@@ -73,6 +72,7 @@ namespace zz
         uint32_t mColor;    
         Position mPos;
         //int mStopUpdateCnt;
+        std::bitset<1> mStep;
 
         eElementType mType;
         float mFrictionFactor = 1.f;

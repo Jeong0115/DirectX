@@ -1,14 +1,14 @@
 #pragma once
 
-#include "zzSolid.h"
+#include "zzLiquid.h"
 
 namespace zz
 {
-    class Sand : public Solid
+    class Oil : public Liquid
     {
     public:
-        Sand();
-        virtual ~Sand();
+        Oil();
+        virtual ~Oil();
 
         virtual Element* Clone() override;
 

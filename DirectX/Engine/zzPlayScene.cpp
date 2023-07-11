@@ -113,11 +113,6 @@ namespace zz
             mesh->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
         }
 
-       
-            
-        
-        
-
         Scene::Initialize();
 
         //{

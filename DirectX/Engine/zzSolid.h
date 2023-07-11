@@ -11,7 +11,6 @@ namespace zz
         virtual ~Solid();
 
         virtual Element* Clone() = 0;
-        virtual void Move() = 0;
 
         virtual void Update() override;
 

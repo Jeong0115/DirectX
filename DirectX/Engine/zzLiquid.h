@@ -8,14 +8,13 @@ namespace zz
     {
     public:
         Liquid();
+
         virtual ~Liquid();
 
         virtual Element* Clone() = 0;
 
         virtual void Update() override;
         virtual bool InteractElement(Element* target, Position targetPos, bool isFinal, bool isFirst, Position& lastPos, int depth) override;
-
-        
 
         __forceinline int GetDensity() { return mDensity; }
 
@@ -29,7 +28,8 @@ namespace zz
         bool iterateToAdditional(int startingX, int startingY, int distance, Position lastPos);
 
 
-        int mDensity = 5;
-        int mDispersionRate = 5;
+    protected:
+        int mDensity = 0;
+        int mDispersionRate = 0;
     };  
 }

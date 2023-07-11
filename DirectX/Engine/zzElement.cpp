@@ -7,7 +7,7 @@ namespace zz
         : mColor(0xFFFF00FF)
         , mType(eElementType::None)
     {
-
+        mStep = PixelGrid::Step;
     }
 
     Element::~Element()

@@ -8,24 +8,25 @@
 #include "zzSand.h"
 #include "zzWater.h"
 #include "zzRock.h"
+#include "zzOil.h"
 
 #include <minwindef.h>
 
 #include <algorithm>
 #include <thread>
 #include <mutex>
-//#include <functional>
-//#include <atomic>
-//#include <queue>
-//#include <future>
-//#include <deque>
-//#include <list>
-//#include <vector>
-//#include <type_traits>
+#include <functional>
+#include <atomic>
+#include <queue>
+#include <future>
+#include <deque>
+#include <list>
+#include <vector>
+#include <type_traits>
 
 namespace zz
 {
-   /* class ThreadPool {
+    class ThreadPool {
     public:
         std::vector<std::thread> workers;
         std::queue<std::function<void()>> tasks;
@@ -48,9 +49,9 @@ namespace zz
                             task = std::move(this->tasks.front());
                             this->tasks.pop();
                         }
-                        --this->active;
+                        
                         task();
-                        ++this->active;
+                        --this->active;
                         if (this->active == 0) all_idle.notify_one();
                     }
                     });
@@ -85,7 +86,7 @@ namespace zz
     private:
         
         
-    };*/
+    };
 
     UINT PixelGrid::mWidth = 2048;
     UINT PixelGrid::mHeight = 2048;
@@ -110,7 +111,9 @@ namespace zz
     float PixelGrid::x = 0.f;
     float PixelGrid::y = 0.f;
 
-    //ThreadPool pool(4);
+    std::bitset<1> PixelGrid::Step = {};
+
+    ThreadPool pool(20);
 
     PixelGrid::PixelGrid()
     {
@@ -123,10 +126,12 @@ namespace zz
 
     void PixelGrid::Initialize()
     {
-        
+        Step.set();
+
         mElementMap.insert({ 'z', new Water });
         mElementMap.insert({ 'x', new Sand });
         mElementMap.insert({ 'c', new Rock });
+        mElementMap.insert({ 'o', new Oil});
         mElementMap.insert({ 'v', nullptr });
         mSelectElement = mElementMap.find('v')->second;
 
@@ -142,8 +147,6 @@ namespace zz
                     memcpy(&mPixelColor[(i * mWidth + j) * 4], &x, 4);
             }
         }
-
-
 
         mHdc = GetDC(mHwnd);
         BITMAPINFO bmi = { 0 };
@@ -167,7 +170,7 @@ namespace zz
     void PixelGrid::Update()
     {
         if (Input::GetKeyDown(eKeyCode::Z) || Input::GetKeyDown(eKeyCode::X) || Input::GetKeyDown(eKeyCode::C)
-            || Input::GetKeyDown(eKeyCode::V))
+            || Input::GetKeyDown(eKeyCode::V) || Input::GetKeyDown(eKeyCode::O))
         {
             if ((Input::GetKeyDown(eKeyCode::Z)))
                 mSelectElement = mElementMap.find('z')->second;
@@ -177,6 +180,8 @@ namespace zz
                 mSelectElement = mElementMap.find('c')->second;
             else if ((Input::GetKeyDown(eKeyCode::V)))
                 mSelectElement = mElementMap.find('v')->second;
+            else if ((Input::GetKeyDown(eKeyCode::O)))
+                mSelectElement = mElementMap.find('o')->second;
         }
 
         if(Input::GetKey(eKeyCode::LBUTTON) || Input::GetKeyDown(eKeyCode::RBUTTON))
@@ -224,9 +229,9 @@ namespace zz
                     }
                     else
                     {
-                        for (int y = (int)mousePos.y - 20; y < mousePos.y + 20; y++)
+                        for (int y = (int)mousePos.y - 0; y < mousePos.y + 1; y++)
                         {
-                            for (int x = (int)mousePos.x - 20 ; x < mousePos.x + 20; x ++)
+                            for (int x = (int)mousePos.x - 0 ; x < mousePos.x + 1; x ++)
                             {
                                 if (mElements[y][x] != nullptr)
                                     delete mElements[y][x];
@@ -258,8 +263,9 @@ namespace zz
         mFixedTime += Time::DeltaTime();
         if (mFixedTime >= 1.0 / 50.0)
         {
-            mFixedTime -= 1.0 / 50.0;
+            mFixedTime -=0;
             FixedUpdate();
+            Step.flip();
         }
 
         mImage->Update(mPixelColor, mBackHDC, x, y);
@@ -317,100 +323,9 @@ namespace zz
        
 
         {
-            //bool chunks[32][32] = {};
-            //bool chunksBuff[32][32] = {};
-            //bool updateFlag = false;
-
-            //for (int ci = 31; ci >= 0; ci--)
-            //{
-            //    for (int cj = 31; cj >= 0; cj--)
-            //    {
-            //        if (mChunks[ci][cj].isActive())
-            //        {
-            //            mChunks[ci][cj].SetDeath();
-            //            chunksBuff[cj][ci] = true;
-            //        }
-            //    }
-            //}
-
-            //int a = 4;
-            //std::thread t[4];
-
-            //while (true)
-            //{
-            //    updateFlag = false;
-            //    for (int ci = 31; ci >= 0; ci--)
-            //    {
-            //        for (int cj = 31; cj >= 0; cj--)
-            //        {
-            //            if (chunksBuff[ci][cj])
-            //            {
-            //                chunks[ci][cj] = true;
-            //                updateFlag = true;
-            //            }
-            //        }
-            //    }
-
-            //    if (!updateFlag) break;
-
-            //    int k = 0;
-            //    for (int i = 0; i < 32; i++)
-            //    {
-            //        for (int j = 0; j < 32; j++)
-            //        {
-            //            if (chunks[i][j])
-            //            {
-            //                for (int y = i; y <= i + 1; y++)
-            //                {
-            //                    if (y > 31) continue;
-            //                    for (int x = j - 1; x <= j + 1; x++)
-            //                    {
-            //                        if (x < 0 || x > 31) continue;
-
-            //                        chunks[y][x] = false;
-            //                    }
-            //                }
-            //                chunksBuff[i][j] = false;
-            //                t[k++] = std::thread(updateChunk, i, j);
-            //                //pool.enqueue(&PixelGrid::updateChunk, this, i, j);
-            //                if (k >= a) break;
-            //            }
-            //        }
-            //        if (k >= a) break;
-            //    }
-
-            //    for (int p = 0; p < k; p++)
-            //    {
-            //        t[p].join();
-            //    }
-
-            //}
-
-            //for (int i = 0; i < temp.size(); i++)
-            //{
-            //    for (int j = 0; j < temp[i].size(); j++)
-            //    {
-            //        temp[i][j]->isUpdate = false;
-            //    }
-            //}
-            //temp.clear();
-        }
-
-
-        {
-            std::vector<int> numbers;
-            for (int i = 0; i <= 63; ++i) {
-                numbers.push_back(i);
-            }
-
-            // ·£´ý »ý¼º±â ÃÊ±âÈ­
-            std::random_device rd;
-            std::mt19937 g(rd());
-
-            // º¤ÅÍ ¼¯±â
-            //std::shuffle(numbers.begin(), numbers.end(), g);
-
-            std::vector<Element*> elementsToMove;
+            bool chunks[32][32] = {};
+            bool chunksBuff[32][32] = {};
+            bool updateFlag = false;
 
             for (int ci = 31; ci >= 0; ci--)
             {
@@ -419,32 +334,127 @@ namespace zz
                     if (mChunks[ci][cj].isActive())
                     {
                         mChunks[ci][cj].SetDeath();
-
-                        for (int i = 63; i >= 0; i--)
-                        {
-                            std::shuffle(numbers.begin(), numbers.end(), g);
-                            for (int j : numbers)
-                            {
-                                if (mElements[ci * 64 + i][cj * 64 + j] == nullptr) continue;
-                                //mElements[ci * 64 + i][cj * 64 + j]->Move();
-
-                                if (/*!mElements[ci * 64 + i][cj * 64 + j]->Is()*/1)
-                                {
-                                    //mElements[ci * 64 + i][cj * 64 + j]->Move();
-                                    elementsToMove.push_back(mElements[ci * 64 + i][cj * 64 + j]);
-                                    //mElements[ci * 64 + i][cj * 64 + j]->Update();
-                                }
-
-                            }
-                        }
+                        chunksBuff[cj][ci] = true;
                     }
                 }
             }
 
-            for (const auto& element : elementsToMove)
+            int a = 20;
+            //std::thread t[50];
+
+
+            //int p = 0;
+            while (true)
             {
-                element->Update();
+                updateFlag = false;
+                for (int ci = 31; ci >= 0; ci--)
+                {
+                    for (int cj = 31; cj >= 0; cj--)
+                    {
+                        if (chunksBuff[ci][cj])
+                        {
+                            chunks[ci][cj] = true;
+                            updateFlag = true;
+                        }
+                    }
+                }
+
+                if (!updateFlag) 
+                    break;
+
+                int k = 0;
+                for (int i = 0; i < 32; i++)
+                {
+                    for (int j = 0; j < 32; j++)
+                    {
+                        if (chunks[i][j])
+                        {
+                            for (int y = i; y <= i + 1; y++)
+                            {
+                                if (y > 31) continue;
+                                for (int x = j - 1; x <= j + 1; x++)
+                                {
+                                    if (x < 0 || x > 31) continue;
+
+                                    chunks[y][x] = false;
+                                }
+                            }
+                            chunksBuff[i][j] = false;
+                            //t[k++] = std::thread(updateChunk, i, j);
+                            pool.enqueue(updateChunk, i, j);
+                            k++;
+                            if (k >= a) break;
+                        }
+                    }
+                    if (k >= a) break;
+                }
+
+                pool.wait();
+                //for (int p = 0; p < k; p++)
+                //{
+                //    t[p].join();
+                //}
+
+
             }
+        }
+        //for (int i = 0; i < temp.size(); i++)
+        //    {
+        //        for (int j = 0; j < temp[i].size(); j++)
+        //        {
+        //            temp[i][j]->isUpdate = false;
+        //        }
+        //    }
+        //    temp.clear();
+
+        {
+            //std::vector<int> numbers;
+            //for (int i = 0; i <= 63; ++i) {
+            //    numbers.push_back(i);
+            //}
+
+            //// ·£´ý »ý¼º±â ÃÊ±âÈ­
+            //std::random_device rd;
+            //std::mt19937 g(rd());
+
+            //// º¤ÅÍ ¼¯±â
+            ////std::shuffle(numbers.begin(), numbers.end(), g);
+
+            //std::vector<Element*> elementsToMove;
+
+            //for (int ci = 31; ci >= 0; ci--)
+            //{
+            //    for (int cj = 31; cj >= 0; cj--)
+            //    {
+            //        if (mChunks[ci][cj].isActive())
+            //        {
+            //            mChunks[ci][cj].SetDeath();
+
+            //            for (int i = 63; i >= 0; i--)
+            //            {
+            //                std::shuffle(numbers.begin(), numbers.end(), g);
+            //                for (int j : numbers)
+            //                {
+            //                    if (mElements[ci * 64 + i][cj * 64 + j] == nullptr) continue;
+            //                    //mElements[ci * 64 + i][cj * 64 + j]->Move();
+
+            //                    if (/*!mElements[ci * 64 + i][cj * 64 + j]->Is()*/1)
+            //                    {
+            //                        //mElements[ci * 64 + i][cj * 64 + j]->Move();
+            //                        //elementsToMove.push_back(mElements[ci * 64 + i][cj * 64 + j]);
+            //                        mElements[ci * 64 + i][cj * 64 + j]->Update();
+            //                    }
+
+            //                }
+            //            }
+            //        }
+            //    }
+            //}
+
+            //for (const auto& element : elementsToMove)
+            //{
+            //    //element->Update();
+            //}
         }
 
         QueryPerformanceCounter(&curFreq);
@@ -455,8 +465,9 @@ namespace zz
         swprintf_s(text, 100, L"FixedUpdate Latency : %f", latency);
 
         SetWindowText(mHwnd, text);
-    }
 
+        
+    }
 
 
     void PixelGrid::registerElements(std::vector<Element*> elements)
@@ -467,7 +478,7 @@ namespace zz
 
     void PixelGrid::updateChunk(int x, int y)
     {
-        std::vector<Element*> elementsToMove;
+        //std::vector<Element*> elementsToMove;
 
         std::vector<int> numbers;
         for (int i = 0; i <= 63; ++i) {
@@ -487,22 +498,22 @@ namespace zz
             {
                 if (mElements[y * 64 + i][x * 64 + j] == nullptr) continue;
 
-                if (true/*mElements[y * 64 + i][x * 64 + j]->isFalling*/)
-                {
-                    if (mElements[y * 64 + i][x * 64 + j]->IsUpdate()) continue;
-
-                    elementsToMove.push_back(mElements[y * 64 + i][x * 64 + j]);
-                }
+                //if (true/*mElements[y * 64 + i][x * 64 + j]->isFalling*/)
+                //{
+                    //if (mElements[y * 64 + i][x * 64 + j]->IsUpdate()) continue;
+                    mElements[y * 64 + i][x * 64 + j]->Update();
+                    //elementsToMove.push_back(mElements[y * 64 + i][x * 64 + j]);
+              /*  }*/
 
             }
         }
 
-        for (const auto& element : elementsToMove)
-        {
-            element->Update();
-            element->isUpdate = true;
-        }
-        registerElements(elementsToMove);
+        //for (const auto& element : elementsToMove)
+        //{
+        //    element->Update();
+        //    element->isUpdate = true;
+        //}
+        //registerElements(elementsToMove);
     }
 
     void PixelGrid::Render()
@@ -658,7 +669,7 @@ namespace zz
 
     void PixelGrid::SetImage(int x, int y, std::shared_ptr<Texture> texture, std::shared_ptr<Texture> texture_visual)
     {   
-        //return;
+        return;
 
         if (x < 0 || y < 0) return;
         uint8_t* texPixels = texture->GetPixels();
