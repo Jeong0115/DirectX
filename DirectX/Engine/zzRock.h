@@ -1,10 +1,10 @@
 #pragma once
 
-#include "zzSolid.h"
+#include "zzImmovableSolid.h"
 
 namespace zz
 {
-    class Rock : public Solid
+    class Rock : public ImmovableSolid
     {
     public:
         Rock();

@@ -1,10 +1,10 @@
 #pragma once
 
-#include "zzSolid.h"
+#include "zzMovableSolid.h"
 
 namespace zz
 {
-    class Sand : public Solid
+    class Sand : public MovableSolid
     {
     public:
         Sand();

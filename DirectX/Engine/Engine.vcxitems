@@ -14,6 +14,7 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzImmovableSolid.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzApplication.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzBGScript.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzCamera.cpp" />
@@ -49,6 +50,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)zzSceneManger.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzScript.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzShader.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzMovableSolid.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzSolid.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzTexture.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzTime.cpp" />
@@ -59,6 +61,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)CommonInclude.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)define.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)fuction.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzElementColor.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzImmovableSolid.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzApplication.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzBGScript.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzCamera.h" />
@@ -93,6 +97,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzSceneManger.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzScript.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzShader.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzMovableSolid.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzSolid.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzTexture.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzTime.h" />

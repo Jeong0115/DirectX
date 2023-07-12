@@ -6,20 +6,11 @@ namespace zz
 {
     Sand::Sand()
     {
-        switch (xorshift32() % 1)
-        {
-        case 0:
-            mColor = 0xffb89e57;
-            break;
+        mColor = ElementColor::Sand;
 
-        case 1:
-            mColor = 0xff524f2d;
-            break;
-
-        case 2:
-            mColor = 0xFFE9FC5A;
-            break;
-        }
+        mVelocity = math::Vector2(random() > 0.5 ? -1.f : 1.f, 124.f);
+        mFrictionFactor = 0.9f;
+        mInertialResistance = .1f;
     }
 
     Sand::~Sand()

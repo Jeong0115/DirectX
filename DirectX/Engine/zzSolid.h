@@ -10,10 +10,9 @@ namespace zz
         Solid();
         virtual ~Solid();
 
+        virtual void Update() = 0;
         virtual Element* Clone() = 0;
-
-        virtual void Update() override;
-
-        virtual bool InteractElement(Element* target, Position targetPos, bool isFinal, bool isFirst, Position& lastPos, int depth) override;
+        virtual bool InteractElement(Element* target, Position targetPos, bool isFinal, bool isFirst, Position lastPos, int depth) = 0;
     };
+
 }

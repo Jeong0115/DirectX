@@ -4,11 +4,13 @@ namespace zz
 {
     Oil::Oil()
     {
-        mColor = 0xe63D3728;
+        mColor = ElementColor::Oil;
 
         mDensity = 4;
         mDispersionRate = 4;
         mFrictionFactor = 1.f;
+        mInertialResistance = 0;
+        mVelocity = math::Vector2(0, 124.f);
 
     }
     Oil::~Oil()

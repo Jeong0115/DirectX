@@ -8,6 +8,7 @@ namespace zz
         , mType(eElementType::None)
     {
         mStep = PixelGrid::Step;
+        mHeatResistance = 100;
     }
 
     Element::~Element()
@@ -28,25 +29,19 @@ namespace zz
 
     void Element::SwapElement(Element* target) // 수정 예정
     { 
-        Position targetPos = target->GetPos();
-        if (mPos.x % 64 == 0)
-            PixelGrid::SetActiveChunks(mPos.x - 1, mPos.y);
-        else if (mPos.x % 64 == 63)
-            PixelGrid::SetActiveChunks(mPos.x + 1, mPos.y);
+        if (target == nullptr) return;
 
-        if (mPos.y % 64 == 0)
-            PixelGrid::SetActiveChunks(mPos.x, mPos.y - 1);
-        else if (mPos.y % 64 == 63)
-            PixelGrid::SetActiveChunks(mPos.x, mPos.y + 1);
+        Position targetPos = target->GetPos();
+        if (mPos == targetPos) return;
+
+        this->mStopCount = 0;
+        target->mStopCount = 0;
 
         PixelGrid::SwapElement(mPos.x, mPos.y, targetPos.x, targetPos.y);
-        target->mStopCount = 0;
-        //PixelGrid::SetActiveChunk(mPos.x, mPos.y);
     }
 
-    void Element::SwapLastPosition(Position pos)
+    void Element::MoveLastPosition(Position pos)
     {
-        if (pos.x < 0 || pos.y < 0) return;
         if (mPos == pos) return;
         this->mStopCount = 0;
 
@@ -54,10 +49,101 @@ namespace zz
             PixelGrid::GetElement(pos.x, pos.y)->mStopCount = 0;
 
         PixelGrid::SwapElement(mPos.x, mPos.y, pos.x, pos.y);
-        
-
-        //PixelGrid::SetActiveChunk(mPos.x, mPos.y);
     }
+
+    void Element::SwapTarget(Position targetPos)
+    {
+        if (mPos == targetPos) return;
+        this->mStopCount = 0;
+
+        if (PixelGrid::GetElement(targetPos.x, targetPos.y) != nullptr)
+            PixelGrid::GetElement(targetPos.x, targetPos.y)->mStopCount = 0;
+
+        PixelGrid::SwapElement(mPos.x, mPos.y, targetPos.x, targetPos.y);
+    }
+
+    void Element::MoveLastPosAndSwapTarget(Position targetPos, Position lastPos) // 다시 한번 보자
+    {
+        if (mPos == lastPos || lastPos == targetPos) 
+        {
+            MoveLastPosition(targetPos);
+            return;
+        }
+
+        if (mPos == targetPos) 
+        {
+            MoveLastPosition(lastPos);
+            return;
+        }
+
+        MoveLastPosition(lastPos);
+        SwapTarget(targetPos);
+        //matrix.setElementAtIndex(moveToLocationMatrixX, moveToLocationMatrixY, toSwap);
+    }
+
+    bool Element::transferHeatToNeighbors()
+    {
+        //if ((PixelGrid::GetFrameCount() != (UINT)eFrameInfo::Effect) || !shouldApplyHeat()) return false;
+        //for (int y = mPos.y - 1; y <= mPos.y + 1; y++)
+        //{
+        //    for (int x = mPos.x- 1; x <= mPos.x + 1; x++)
+        //    {
+        //        if (!(x == 0 && y == 0)) 
+        //        {
+        //            Element* neighbor = PixelGrid::GetElement(x, y);
+
+        //            if (neighbor != nullptr) // 수정예정
+        //            {
+        //                neighbor->receiveHeat(matrix, heatFactor);
+        //            }
+        //        }
+        //    }
+        //}
+        return true;
+    }
+
+    bool Element::receiveHeat(int heat) 
+    {
+        if (mIsIgnited) 
+            return false;
+        
+        mHeatResistance -= (int)(random() * heat);
+        checkIfIgnited();
+        return true;
+    }
+
+    bool Element::receiveCooling(int cooling) 
+    {
+        if (mIsIgnited)
+        {
+            mHeatResistance += cooling;
+            checkIfIgnited();
+            return true;
+        }
+        return false;
+    }
+
+    void Element::checkIfIgnited() 
+    {
+       /* if (mHeatResistance <= 0)
+        {
+            mIsIgnited = true;
+            modifyColor();
+        }
+        else 
+        {
+            mIsIgnited = false;
+            this.color = ColorConstants.getColorForElementType(elementType, this.getMatrixX(), this.getMatrixY());
+        }*/
+    }
+
+
+
+
+
+
+
+
 
     //uint32_t Element::rand = 12345;
 

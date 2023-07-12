@@ -19,9 +19,6 @@ namespace zz
             End
         };
 
-    private:
-        
-
     public:
         static void Initialize();
         static void Update();
@@ -29,6 +26,7 @@ namespace zz
         static void Render();
         static void Release();
         static void Clear();
+
         static void SetHwnd(HWND hwnd) { mHwnd = hwnd; }
         static void SetImage(int x, int y, std::shared_ptr<class Texture> texture, std::shared_ptr<class Texture> texture_visual = nullptr);
         static Element* GetElement(int x, int y) { 
@@ -36,15 +34,15 @@ namespace zz
             return mElements[y][x]; } // ¼öÁ¤
         static std::vector<uint8_t>& GetPixelColor() { return mPixelColor; }
         static void SwapElement(int x1, int y1, int x2, int y2);
-       // static Element* GetElement(int y, int x) { return mElements[y][x]; }
         static void SetActiveChunks(int x, int y);
         static void SetActiveChunk(int x, int y);
-        //static bool Is
 
+        static int GetFrameCount() { return mFrameCount; }
         static std::bitset<1> Step;
     private:
         static void updateChunk(int x, int y);
         static void registerElements(std::vector<Element*> elements);
+        static void increaseFrameCount() { mFrameCount = mFrameCount == 3 ? 0 : mFrameCount + 1; }
 
         static HWND        mHwnd;
         static HDC         mHdc;
@@ -68,6 +66,8 @@ namespace zz
 
         static float x;
         static float y;
+
+        static int mFrameCount;
     };
 
 

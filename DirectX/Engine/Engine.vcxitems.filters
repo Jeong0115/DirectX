@@ -112,9 +112,6 @@
     <Filter Include="Element\Solid\Base">
       <UniqueIdentifier>{ea8d178f-a6bd-455f-b532-986ee4287304}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Element\Solid\Sand">
-      <UniqueIdentifier>{31bddde0-3ca8-48a1-be83-0f1cf02ea17b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Element\Liquid">
       <UniqueIdentifier>{f931164e-1baa-4601-a43c-a408a1538f91}</UniqueIdentifier>
     </Filter>
@@ -124,11 +121,29 @@
     <Filter Include="Element\Liquid\Base">
       <UniqueIdentifier>{ac336c2d-dfa0-4359-90ff-ebc6897081e6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Element\Solid\Rock">
-      <UniqueIdentifier>{f8142e17-960b-4a28-b5e6-8a5b83589bff}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Element\Liquid\Oil">
       <UniqueIdentifier>{981984cb-c4f4-4647-a163-9e4ef29e1df7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Element\Solid\Movable">
+      <UniqueIdentifier>{762334b7-407b-4fed-8294-0d44c6b72774}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Element\Solid\Immovable">
+      <UniqueIdentifier>{1294568d-a467-4a22-b69e-2dde825dc4ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Element\Solid\Movable\Base">
+      <UniqueIdentifier>{d3ade850-ce8a-4f2d-8827-23ac59fbc608}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Element\Solid\Movable\Sand">
+      <UniqueIdentifier>{31bddde0-3ca8-48a1-be83-0f1cf02ea17b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Element\Solid\Immovable\Base">
+      <UniqueIdentifier>{44343517-c266-444d-b31a-f13afaf77432}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Element\Solid\Immovable\Rock">
+      <UniqueIdentifier>{f8142e17-960b-4a28-b5e6-8a5b83589bff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Element\Color">
+      <UniqueIdentifier>{872e4ff1-3a3a-465c-ab4e-794d8dee1f51}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -208,11 +223,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)zzElement.cpp">
       <Filter>Element\Base</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)zzSolid.cpp">
-      <Filter>Element\Solid\Base</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzSand.cpp">
-      <Filter>Element\Solid\Sand</Filter>
+      <Filter>Element\Solid\Movable\Sand</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzChunk.cpp">
       <Filter>Element</Filter>
@@ -230,10 +242,19 @@
       <Filter>Element\Liquid\Base</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzRock.cpp">
-      <Filter>Element\Solid\Rock</Filter>
+      <Filter>Element\Solid\Immovable\Rock</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzOil.cpp">
       <Filter>Element\Liquid\Oil</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzSolid.cpp">
+      <Filter>Element\Solid\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzMovableSolid.cpp">
+      <Filter>Element\Solid\Movable\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzImmovableSolid.cpp">
+      <Filter>Element\Solid\Immovable\Base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -331,11 +352,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzElement.h">
       <Filter>Element\Base</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)zzSolid.h">
-      <Filter>Element\Solid\Base</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzSand.h">
-      <Filter>Element\Solid\Sand</Filter>
+      <Filter>Element\Solid\Movable\Sand</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzChunk.h">
       <Filter>Element</Filter>
@@ -353,7 +371,7 @@
       <Filter>Element\Liquid\Base</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzRock.h">
-      <Filter>Element\Solid\Rock</Filter>
+      <Filter>Element\Solid\Immovable\Rock</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzPosition.h">
       <Filter>Common\Header</Filter>
@@ -363,6 +381,18 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzOil.h">
       <Filter>Element\Liquid\Oil</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzSolid.h">
+      <Filter>Element\Solid\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzMovableSolid.h">
+      <Filter>Element\Solid\Movable\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzImmovableSolid.h">
+      <Filter>Element\Solid\Immovable\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzElementColor.h">
+      <Filter>Element\Color</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

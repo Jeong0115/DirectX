@@ -141,7 +141,7 @@ namespace zz
         //}
     }
 
-    bool Liquid::InteractElement(Element* target, Position targetPos, bool isFinal, bool isFirst, Position& lastPos, int depth)
+    bool Liquid::InteractElement(Element* target, Position targetPos, bool isFinal, bool isFirst, Position lastPos, int depth)
     {
         //boolean acted = actOnOther(neighbor, matrix);
         //if (acted) return true    
@@ -155,12 +155,12 @@ namespace zz
 
         if (targetType == eElementType::None)
         {
-            setAroundElementFreeFalling(targetPos, depth);
+            setAroundElementFreeFalling(lastPos, depth);
 
             if (isFinal)
             {
                 isFreeFalling = true;
-                SwapLastPosition(targetPos);
+                SwapTarget(targetPos);
                 //SwapElement(target); // 나중에 다시 보자
                 return true;
             }
@@ -190,7 +190,7 @@ namespace zz
 
             if (isFinal) 
             {
-                SwapLastPosition(lastPos);
+                MoveLastPosition(lastPos);
                 return true;
             }
 
@@ -245,7 +245,7 @@ namespace zz
 
             isFreeFalling = false;
 
-            SwapLastPosition(lastPos);
+            MoveLastPosition(lastPos);
             return true;
             //moveToLastValid(matrix, lastValidLocation);
         }
@@ -255,7 +255,7 @@ namespace zz
                 return true;
 
             if (isFinal) 
-                SwapLastPosition(lastPos);
+                MoveLastPosition(lastPos);
                 return true;
             
             if (isFreeFalling) 
@@ -309,14 +309,14 @@ namespace zz
 
             isFreeFalling = false;
 
-            SwapLastPosition(lastPos);
+            MoveLastPosition(lastPos);
             return true;
         }
         else if (target->GetType() == eElementType::Gas) 
         {
             if (isFinal) 
             {
-                SwapLastPosition(lastPos);
+                MoveLastPosition(lastPos);
                 return true;
             }
             return false;
@@ -372,7 +372,7 @@ namespace zz
         if (random() > 0.8f) 
             mVelocity.x *= -1;
         
-        SwapLastPosition(target->GetPos());
+        MoveLastPosition(target->GetPos());
         //SwapElement(target);
     }
 
@@ -419,7 +419,7 @@ namespace zz
                 {
                     if (isFinal)
                     {
-                        SwapLastPosition(Position(modifiedX, startingY));
+                        SwapTarget(Position(modifiedX, startingY));
                         return false;
                     }
                     lastValidLocation.x = modifiedX;
@@ -443,7 +443,7 @@ namespace zz
                     {
                         return true;
                     }
-                    SwapLastPosition(lastValidLocation);
+                    MoveLastPosition(lastValidLocation);
                     return false;
                 }
             }

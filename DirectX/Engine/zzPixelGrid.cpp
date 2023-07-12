@@ -49,7 +49,7 @@ namespace zz
                             task = std::move(this->tasks.front());
                             this->tasks.pop();
                         }
-                        
+
                         task();
                         --this->active;
                         if (this->active == 0) all_idle.notify_one();
@@ -84,10 +84,11 @@ namespace zz
             all_idle.wait(lock, [this]() { return this->active == 0; });
         }
     private:
-        
-        
+
+
     };
 
+    int PixelGrid::mFrameCount = 0;
     UINT PixelGrid::mWidth = 2048;
     UINT PixelGrid::mHeight = 2048;
 
@@ -131,7 +132,7 @@ namespace zz
         mElementMap.insert({ 'z', new Water });
         mElementMap.insert({ 'x', new Sand });
         mElementMap.insert({ 'c', new Rock });
-        mElementMap.insert({ 'o', new Oil});
+        mElementMap.insert({ 'o', new Oil });
         mElementMap.insert({ 'v', nullptr });
         mSelectElement = mElementMap.find('v')->second;
 
@@ -159,7 +160,7 @@ namespace zz
 
         HBITMAP mBackBuffer = CreateDIBSection(NULL, &bmi, DIB_RGB_COLORS, &bits, NULL, 0);
         if (!mBackBuffer) return;
-            
+
         mBackHDC = CreateCompatibleDC(mHdc);
         HBITMAP defaultBitmap = (HBITMAP)SelectObject(mBackHDC, mBackBuffer);
         DeleteObject(defaultBitmap);
@@ -184,11 +185,11 @@ namespace zz
                 mSelectElement = mElementMap.find('o')->second;
         }
 
-        if(Input::GetKey(eKeyCode::LBUTTON) || Input::GetKeyDown(eKeyCode::RBUTTON))
+        if (Input::GetKey(eKeyCode::LBUTTON) || Input::GetKeyDown(eKeyCode::RBUTTON))
         {
             HWND nowHwnd = GetFocus();
 
-            if(nowHwnd == mHwnd)
+            if (nowHwnd == mHwnd)
             {
                 POINT mousePos = {};
                 GetCursorPos(&mousePos);
@@ -197,13 +198,13 @@ namespace zz
                 mousePos.x += (LONG)x;
                 mousePos.y -= (LONG)y;
 
-                if(mousePos.x > 11 && mousePos.y > 11)
+                if (mousePos.x > 15 && mousePos.y > 15)
                 {
                     if (Input::GetKey(eKeyCode::LBUTTON))
                     {
-                        for (int y = (int)mousePos.y - 10; y < mousePos.y + 10 ; y++)
+                        for (int y = (int)mousePos.y - 10; y < mousePos.y + 10; y++)
                         {
-                            for (int x = (int)mousePos.x - 10; x < mousePos.x + 10 ; x++)
+                            for (int x = (int)mousePos.x - 10; x < mousePos.x + 10; x++)
                             {
                                 if (mElements[y][x] != nullptr)
                                     delete mElements[y][x];
@@ -229,9 +230,9 @@ namespace zz
                     }
                     else
                     {
-                        for (int y = (int)mousePos.y - 0; y < mousePos.y + 1; y++)
+                        for (int y = (int)mousePos.y - 15; y < mousePos.y + 15; y++)
                         {
-                            for (int x = (int)mousePos.x - 0 ; x < mousePos.x + 1; x ++)
+                            for (int x = (int)mousePos.x - 15; x < mousePos.x + 15; x++)
                             {
                                 if (mElements[y][x] != nullptr)
                                     delete mElements[y][x];
@@ -263,7 +264,7 @@ namespace zz
         mFixedTime += Time::DeltaTime();
         if (mFixedTime >= 1.0 / 50.0)
         {
-            mFixedTime -=0;
+            mFixedTime = 0;
             FixedUpdate();
             Step.flip();
         }
@@ -276,6 +277,8 @@ namespace zz
 
     void PixelGrid::FixedUpdate()
     {
+        increaseFrameCount();
+
         LARGE_INTEGER cpuFreq = {};
         LARGE_INTEGER prevFreq = {};
         LARGE_INTEGER curFreq = {};
@@ -283,49 +286,12 @@ namespace zz
         QueryPerformanceFrequency(&cpuFreq);
         QueryPerformanceCounter(&prevFreq);
 
-       /* for(int i = mWidth * mHeight - 1; i >= 0; i--)
+        // 멀티 쓰레드 element update
         {
-            uint32_t x;
-            memcpy(&x, &mPixelColor[i * 4], 4);
+            // copyChunksState을 마스크 처럼 쓸까, 아니면 지금 처럼 쓸까
 
-            if (x!= 0xFFFFFFFF && x != 0x00000000)
-            {
-                uint32_t target[3];
-                memcpy(target, &mPixelColor[(i + mHeight - 1) * 4], 12);
-
-                if (target[1] == 0x00000000)
-                {
-                    memcpy(&mPixelColor[i * 4 + mWidth * 4], &mPixelColor[i * 4], 4);
-                    ZeroMemory(&mPixelColor[i * 4], 4);
-                }
-                else if (target[0] == 0x00000000)
-                {
-                    memcpy(&mPixelColor[(i - 1) * 4 + mWidth * 4], &mPixelColor[i * 4], 4);
-                    ZeroMemory(&mPixelColor[i * 4], 4);
-                }
-                else if (target[2] == 0x00000000)
-                {
-                    memcpy(&mPixelColor[(i + 1) * 4 + mWidth * 4], &mPixelColor[i * 4], 4);
-                    ZeroMemory(&mPixelColor[i * 4], 4);
-                }
-            }
-        }*/
-
-        //for (int i = mHeight - 1; i >= 0; i--)
-        //{
-        //    for (int j = mWidth - 1; j >= 0; j--)
-        //    {
-        //        if (mElements[i][j] == nullptr) continue;
-        //        mElements[i][j]->Move();
-        //    }
-        //}
-
-       
-
-        {
-            bool chunks[32][32] = {};
-            bool chunksBuff[32][32] = {};
-            bool updateFlag = false;
+            std::bitset<32> copyChunksState[32] = {};
+            std::bitset<32 * 32> chunkMask = { 1, };
 
             for (int ci = 31; ci >= 0; ci--)
             {
@@ -334,54 +300,38 @@ namespace zz
                     if (mChunks[ci][cj].isActive())
                     {
                         mChunks[ci][cj].SetDeath();
-                        chunksBuff[cj][ci] = true;
+                        copyChunksState[cj].set(ci, true);
                     }
                 }
             }
 
             int a = 20;
-            //std::thread t[50];
 
-
-            //int p = 0;
             while (true)
             {
-                updateFlag = false;
-                for (int ci = 31; ci >= 0; ci--)
-                {
-                    for (int cj = 31; cj >= 0; cj--)
-                    {
-                        if (chunksBuff[ci][cj])
-                        {
-                            chunks[ci][cj] = true;
-                            updateFlag = true;
-                        }
-                    }
-                }
-
-                if (!updateFlag) 
-                    break;
+                if (chunkMask.all()) break;
+                chunkMask.set();
 
                 int k = 0;
-                for (int i = 0; i < 32; i++)
-                {
-                    for (int j = 0; j < 32; j++)
-                    {
-                        if (chunks[i][j])
-                        {
-                            for (int y = i; y <= i + 1; y++)
-                            {
-                                if (y > 31) continue;
-                                for (int x = j - 1; x <= j + 1; x++)
-                                {
-                                    if (x < 0 || x > 31) continue;
 
-                                    chunks[y][x] = false;
+                for (int y = 31; y >= 0; y--)
+                {
+                    for (int x = 31; x >= 0; x--)
+                    {
+                        if (copyChunksState[y][x] && chunkMask[y * 32 + x])
+                        {
+                            for (int maskY = y - 1; maskY <= y + 1; maskY++)
+                            {
+                                if (maskY < 0 || maskY > 31) continue;
+                                for (int maskX = x - 1; maskX <= x + 1; maskX++)
+                                {
+                                    if (maskX < 0 || maskX > 31) continue;
+                                    chunkMask[maskY * 32 + maskX] = false;
                                 }
                             }
-                            chunksBuff[i][j] = false;
-                            //t[k++] = std::thread(updateChunk, i, j);
-                            pool.enqueue(updateChunk, i, j);
+
+                            copyChunksState[y][x] = false;
+                            pool.enqueue(updateChunk, y, x);
                             k++;
                             if (k >= a) break;
                         }
@@ -390,72 +340,9 @@ namespace zz
                 }
 
                 pool.wait();
-                //for (int p = 0; p < k; p++)
-                //{
-                //    t[p].join();
-                //}
-
-
             }
         }
-        //for (int i = 0; i < temp.size(); i++)
-        //    {
-        //        for (int j = 0; j < temp[i].size(); j++)
-        //        {
-        //            temp[i][j]->isUpdate = false;
-        //        }
-        //    }
-        //    temp.clear();
-
-        {
-            //std::vector<int> numbers;
-            //for (int i = 0; i <= 63; ++i) {
-            //    numbers.push_back(i);
-            //}
-
-            //// 랜덤 생성기 초기화
-            //std::random_device rd;
-            //std::mt19937 g(rd());
-
-            //// 벡터 섞기
-            ////std::shuffle(numbers.begin(), numbers.end(), g);
-
-            //std::vector<Element*> elementsToMove;
-
-            //for (int ci = 31; ci >= 0; ci--)
-            //{
-            //    for (int cj = 31; cj >= 0; cj--)
-            //    {
-            //        if (mChunks[ci][cj].isActive())
-            //        {
-            //            mChunks[ci][cj].SetDeath();
-
-            //            for (int i = 63; i >= 0; i--)
-            //            {
-            //                std::shuffle(numbers.begin(), numbers.end(), g);
-            //                for (int j : numbers)
-            //                {
-            //                    if (mElements[ci * 64 + i][cj * 64 + j] == nullptr) continue;
-            //                    //mElements[ci * 64 + i][cj * 64 + j]->Move();
-
-            //                    if (/*!mElements[ci * 64 + i][cj * 64 + j]->Is()*/1)
-            //                    {
-            //                        //mElements[ci * 64 + i][cj * 64 + j]->Move();
-            //                        //elementsToMove.push_back(mElements[ci * 64 + i][cj * 64 + j]);
-            //                        mElements[ci * 64 + i][cj * 64 + j]->Update();
-            //                    }
-
-            //                }
-            //            }
-            //        }
-            //    }
-            //}
-
-            //for (const auto& element : elementsToMove)
-            //{
-            //    //element->Update();
-            //}
-        }
+        
 
         QueryPerformanceCounter(&curFreq);
 
@@ -465,8 +352,6 @@ namespace zz
         swprintf_s(text, 100, L"FixedUpdate Latency : %f", latency);
 
         SetWindowText(mHwnd, text);
-
-        
     }
 
 
@@ -494,16 +379,16 @@ namespace zz
 
         for (int i = 63; i >= 0; i--)
         {
-            for(int j : numbers)//for (int j = 63; j >= 0; j--)
+            for (int j : numbers)//for (int j = 63; j >= 0; j--)
             {
                 if (mElements[y * 64 + i][x * 64 + j] == nullptr) continue;
 
                 //if (true/*mElements[y * 64 + i][x * 64 + j]->isFalling*/)
                 //{
                     //if (mElements[y * 64 + i][x * 64 + j]->IsUpdate()) continue;
-                    mElements[y * 64 + i][x * 64 + j]->Update();
-                    //elementsToMove.push_back(mElements[y * 64 + i][x * 64 + j]);
-              /*  }*/
+                mElements[y * 64 + i][x * 64 + j]->Update();
+                //elementsToMove.push_back(mElements[y * 64 + i][x * 64 + j]);
+          /*  }*/
 
             }
         }
@@ -539,8 +424,8 @@ namespace zz
         StretchBlt(
             mHdc,     // Destination device context
             0, 0,        // Destination rectangle origin (x,y)
-            512 ,   // Destination rectangle width
-            512 ,  // Destination rectangle height
+            512,   // Destination rectangle width
+            512,  // Destination rectangle height
             mBackHDC,      // Source device context
             0, 0,        // Source rectangle origin (x,y)
             512,    // Source rectangle width
@@ -557,7 +442,7 @@ namespace zz
             for (int j = 0; j < 32; j++)
             {
                 if (mChunks[i][j].isActive())
-                    ::Rectangle(mHdc, j * 64 - (int)x, (i) * 64 + (int)y, (j + 1 ) * (64) - (int)x, (i + 1 ) * (64) + (int)y);
+                    ::Rectangle(mHdc, j * 64 - (int)x, (i) * 64 + (int)y, (j + 1) * (64) - (int)x, (i + 1) * (64) + (int)y);
             }
         }
         SelectObject(mHdc, oldPen);
@@ -622,26 +507,38 @@ namespace zz
 
     void PixelGrid::SwapElement(int x1, int y1, int x2, int y2)
     {
-        Element* temp = mElements[y1][x1];
+        //Element* temp = mElements[y1][x1];
 
-        mElements[y1][x1] = mElements[y2][x2];
+        //mElements[y1][x1] = mElements[y2][x2];
 
-        if(mElements[y1][x1] != nullptr)
-            mElements[y1][x1]->SetPos(x1, y1);
+        //if(mElements[y1][x1] != nullptr)
+        //    mElements[y1][x1]->SetPos(x1, y1);
 
-        mElements[y2][x2] = temp;
+        //mElements[y2][x2] = temp;
 
-        if (mElements[y2][x2] != nullptr)
-            mElements[y2][x2]->SetPos(x2, y2);
+        //if (mElements[y2][x2] != nullptr)
+        //    mElements[y2][x2]->SetPos(x2, y2);
 
-        uint32_t x;
+        //uint32_t color;
+        //memcpy(&color, &mPixelColor[(y1 * mWidth + x1) * 4], 4);
+        //memcpy(&mPixelColor[(y1 * mWidth + x1) * 4], &mPixelColor[(y2 * mWidth + x2) * 4], 4);
+        //memcpy(&mPixelColor[(y2 * mWidth + x2) * 4], &color, 4);
 
-        //uint32_t x = mPixelColor[(y1 * mWidth + x1) * 4];
+        {
+            std::swap(mElements[y1][x1], mElements[y2][x2]);
 
-        memcpy(&x, &mPixelColor[(y1 * mWidth + x1) * 4], 4);
-        memcpy(&mPixelColor[(y1 * mWidth + x1) * 4], &mPixelColor[(y2 * mWidth + x2) * 4], 4);
-        memcpy(&mPixelColor[(y2 * mWidth + x2) * 4], &x, 4);
+            if (mElements[y1][x1] != nullptr)
+                mElements[y1][x1]->SetPos(x1, y1);
+            if (mElements[y2][x2] != nullptr)
+                mElements[y2][x2]->SetPos(x2, y2);
+   
 
+            uint32_t color;
+
+            memcpy(&color, &mPixelColor[(y1 * mWidth + x1) * 4], 4);
+            memcpy(&mPixelColor[(y1 * mWidth + x1) * 4], &mPixelColor[(y2 * mWidth + x2) * 4], 4);
+            memcpy(&mPixelColor[(y2 * mWidth + x2) * 4], &color, 4);
+        }
     }
 
     void PixelGrid::SetActiveChunks(int x, int y)
@@ -653,7 +550,7 @@ namespace zz
 
         if (y % 64 == 0)
             PixelGrid::SetActiveChunk(x, y - 1);
-        else if (y % 64 == 63)      
+        else if (y % 64 == 63)
             PixelGrid::SetActiveChunk(x, y + 1);
 
         SetActiveChunk(x, y);
@@ -668,7 +565,7 @@ namespace zz
     }
 
     void PixelGrid::SetImage(int x, int y, std::shared_ptr<Texture> texture, std::shared_ptr<Texture> texture_visual)
-    {   
+    {
         return;
 
         if (x < 0 || y < 0) return;
@@ -713,10 +610,10 @@ namespace zz
                             memcpy(&mPixelColor[(col * mWidth + row / 4) * 4], &none, 4);
                         }
                     }
-                    
+
                     else if (color == 0xFF0A3344 || color == 0xFF0A3355)
                     {
-                        if(mElements[col][row / 4] == nullptr)
+                        if (mElements[col][row / 4] == nullptr)
                         {
                             mElements[col][row / 4] = new Rock();
                             mElements[col][row / 4]->SetPos(row / 4, col);
@@ -759,7 +656,7 @@ namespace zz
                     row = 0;
                 }
                 uint8_t* currPixel = texPixels + i;
-                if(texture_visual != nullptr)
+                if (texture_visual != nullptr)
                     visualPixel = texVisualPixels + i;
 
                 if (*(currPixel + 3) != (uint8_t)0)
@@ -768,7 +665,7 @@ namespace zz
                     memcpy(&color, currPixel, 4);
                     if (color == 0xFFFFFFFF)
                     {
-                        if(mElements[col][row / 4] == nullptr)
+                        if (mElements[col][row / 4] == nullptr)
                         {
                             uint32_t none = 0x00000000;
                             memcpy(&mPixelColor[(col * mWidth + row / 4) * 4], &none, 4);
@@ -829,7 +726,7 @@ namespace zz
 
         ReleaseDC(NULL, hdcScreen);
     }
-    
+
     PixelGridColor::~PixelGridColor()
     {
         DeleteObject(mBitmap);
