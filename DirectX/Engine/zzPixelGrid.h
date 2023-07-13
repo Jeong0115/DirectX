@@ -29,19 +29,19 @@ namespace zz
 
         static void SetHwnd(HWND hwnd) { mHwnd = hwnd; }
         static void SetImage(int x, int y, std::shared_ptr<class Texture> texture, std::shared_ptr<class Texture> texture_visual = nullptr);
-        static Element* GetElement(int x, int y) { 
-            if (x < 0 || y < 0) return nullptr;
-            return mElements[y][x]; } // ¼öÁ¤
+        static Element* GetElement(int x, int y);
         static std::vector<uint8_t>& GetPixelColor() { return mPixelColor; }
         static void SwapElement(int x1, int y1, int x2, int y2);
         static void SetActiveChunks(int x, int y);
         static void SetActiveChunk(int x, int y);
+        static void SetPixelColor(int x, int y, uint32_t color);
+        static void DeleteElement(int x, int y);
+        static bool IsSurrounded(int x, int y);
 
         static int GetFrameCount() { return mFrameCount; }
         static std::bitset<1> Step;
     private:
         static void updateChunk(int x, int y);
-        static void registerElements(std::vector<Element*> elements);
         static void increaseFrameCount() { mFrameCount = mFrameCount == 3 ? 0 : mFrameCount + 1; }
 
         static HWND        mHwnd;

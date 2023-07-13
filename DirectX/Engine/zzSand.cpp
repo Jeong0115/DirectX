@@ -6,7 +6,7 @@ namespace zz
 {
     Sand::Sand()
     {
-        mColor = ElementColor::Sand;
+        mColor = ElementColor::RandomSandColor();
 
         mVelocity = math::Vector2(random() > 0.5 ? -1.f : 1.f, 124.f);
         mFrictionFactor = 0.9f;

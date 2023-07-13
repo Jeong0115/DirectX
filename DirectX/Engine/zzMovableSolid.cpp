@@ -92,12 +92,11 @@ namespace zz
                 yIncrease = i;
                 xIncrease = smallerCount;
             }
-
             Position targetPos = Position(mPos.x + (xIncrease * xModifier), mPos.y + (yIncrease * yModifier));
 
-            if (/*matrix.isWithinBounds(carPos.x, carPos.y)*/1)
+            Element* target = PixelGrid::GetElement(targetPos.x, targetPos.y);
+            if (target != nullptr)
             {
-                Element* target = PixelGrid::GetElement(targetPos.x, targetPos.y);
                 if (target == this) continue;
 
                 bool stopped = InteractElement(target, targetPos, i == largeDelatTime, i == 1, lastPos, 0);
@@ -108,16 +107,17 @@ namespace zz
             }
             else
             {
-                //matrix.setElementAtIndex(getMatrixX(), getMatrixY(), ElementType.EMPTYCELL.createElementByMatrix(getMatrixX(), getMatrixY()));
+                die();
                 return;
             }
         }
-        //applyHeatToNeighborsIfIgnited(matrix);
-        //takeEffectsDamage(matrix);
+
+        transferHeatToNeighbors();
+        takeEffectsDamage();
         //spawnSparkIfIgnited(matrix);
         //checkLifeSpan(matrix);
         //modifyColor();
-
+        
         mStopCount = IsStop(startPos) ? mStopCount + 1 : 0;
         if (mStopCount > mStopThreshold)
         {
@@ -134,13 +134,9 @@ namespace zz
 
     bool MovableSolid::InteractElement(Element* target, Position targetPos, bool isFinal, bool isFirst, Position lastPos, int depth)
     {
-        eElementType targetType;
-        if (target == nullptr)
-            targetType = eElementType::None;
-        else
-            targetType = target->GetType();
+        eElementType targetType = target->GetType();
 
-        if (targetType == eElementType::None)
+        if (targetType == eElementType::Empty)
         {
             setAroundElementFreeFalling(lastPos, depth);
 
@@ -200,7 +196,7 @@ namespace zz
             target->SetVelocity(math::Vector2(target->GetVelocity().x, mVelocity.y));
             mVelocity.x *= mFrictionFactor * target->GetFrictionFactor();
 
-            if (1/*diagonalElement != nullptr*/)
+            if (diagonalElement != nullptr)
             {
                 bool stoppedDiagonally
                     = InteractElement(diagonalElement, Position(mPos.x + additionalX, mPos.y + additionalY), true, false, lastPos, depth + 1);
@@ -213,7 +209,7 @@ namespace zz
             }
 
             Element* sideElement = PixelGrid::GetElement(mPos.x + additionalX, mPos.y);
-            if (1/*sideElement != nullptr && sideElement != diagonalElement*/) /// ?????????
+            if (sideElement != nullptr && sideElement != diagonalElement)
             {
                 bool stoppedSide 
                     = InteractElement(sideElement, Position(mPos.x + additionalX, mPos.y), true, false, lastPos, depth + 1);
@@ -250,8 +246,6 @@ namespace zz
     void MovableSolid::setAroundElementFreeFalling(Position targetPos, int depth)
     {
         if (depth > 0) return;
-
-        if (targetPos.x < 1 || targetPos.y < 0) return;
 
         Element* rightElement = PixelGrid::GetElement(targetPos.x + 1, targetPos.y);
         if (rightElement != nullptr)

@@ -5,8 +5,14 @@ namespace zz
 {
     Element::Element()
         : mColor(0xFFFF00FF)
-        , mType(eElementType::None)
-    {
+        , mType(eElementType::Empty)
+        , mbIgnited(false)
+        , mbHeated(false)
+        , mHeatFactor(10)
+        , mFireDamage(3)
+        , mHealth(500)
+        , resetFlammabilityResistance(mHeatFactor / 2)
+    {     
         mStep = PixelGrid::Step;
         mHeatResistance = 100;
     }
@@ -16,23 +22,24 @@ namespace zz
 
     }
 
-    Element::eElementType Element::CheckTargetType(int targetX, int targetY)
+    eElementType Element::CheckTargetType(int targetX, int targetY)
     {
-        if (targetX < 0 || targetY < 0) return eElementType::Solid;
         Element* target = PixelGrid::GetElement(targetX, targetY);
 
         if (target == nullptr)
-            return eElementType::None;
+        {
+            return eElementType::Out;
+        }
 
         return target->GetType();
     }
 
-    void Element::SwapElement(Element* target) // 수정 예정
+    void Element::SwapElement(Element* target)
     { 
         if (target == nullptr) return;
+        if (this == target) return; // 체크
 
         Position targetPos = target->GetPos();
-        if (mPos == targetPos) return;
 
         this->mStopCount = 0;
         target->mStopCount = 0;
@@ -43,10 +50,13 @@ namespace zz
     void Element::MoveLastPosition(Position pos)
     {
         if (mPos == pos) return;
+
         this->mStopCount = 0;
 
         if(PixelGrid::GetElement(pos.x, pos.y) != nullptr)
+        {
             PixelGrid::GetElement(pos.x, pos.y)->mStopCount = 0;
+        }
 
         PixelGrid::SwapElement(mPos.x, mPos.y, pos.x, pos.y);
     }
@@ -54,10 +64,13 @@ namespace zz
     void Element::SwapTarget(Position targetPos)
     {
         if (mPos == targetPos) return;
+
         this->mStopCount = 0;
 
         if (PixelGrid::GetElement(targetPos.x, targetPos.y) != nullptr)
+        {
             PixelGrid::GetElement(targetPos.x, targetPos.y)->mStopCount = 0;
+        }
 
         PixelGrid::SwapElement(mPos.x, mPos.y, targetPos.x, targetPos.y);
     }
@@ -83,29 +96,32 @@ namespace zz
 
     bool Element::transferHeatToNeighbors()
     {
-        //if ((PixelGrid::GetFrameCount() != (UINT)eFrameInfo::Effect) || !shouldApplyHeat()) return false;
-        //for (int y = mPos.y - 1; y <= mPos.y + 1; y++)
-        //{
-        //    for (int x = mPos.x- 1; x <= mPos.x + 1; x++)
-        //    {
-        //        if (!(x == 0 && y == 0)) 
-        //        {
-        //            Element* neighbor = PixelGrid::GetElement(x, y);
+        if ((PixelGrid::GetFrameCount() != (UINT)eFrameInfo::Effect) || !shouldApplyHeat()) //return false;
+        for (int y = mPos.y - 1; y <= mPos.y + 1; y++)
+        {
+            for (int x = mPos.x- 1; x <= mPos.x + 1; x++)
+            {
+                if (!(x == 0 && y == 0)) 
+                {
+                    Element* neighbor = PixelGrid::GetElement(x, y);
 
-        //            if (neighbor != nullptr) // 수정예정
-        //            {
-        //                neighbor->receiveHeat(matrix, heatFactor);
-        //            }
-        //        }
-        //    }
-        //}
+                    if (neighbor->GetType() == eElementType::Empty) continue;
+                    if (neighbor != nullptr) 
+                    {
+                        neighbor->receiveHeat(100); // 수정
+                    }
+                }
+            }
+        }
         return true;
     }
 
     bool Element::receiveHeat(int heat) 
     {
-        if (mIsIgnited) 
+        if (mbIgnited) 
+        {
             return false;
+        }
         
         mHeatResistance -= (int)(random() * heat);
         checkIfIgnited();
@@ -114,7 +130,7 @@ namespace zz
 
     bool Element::receiveCooling(int cooling) 
     {
-        if (mIsIgnited)
+        if (mbIgnited)
         {
             mHeatResistance += cooling;
             checkIfIgnited();
@@ -125,24 +141,91 @@ namespace zz
 
     void Element::checkIfIgnited() 
     {
-       /* if (mHeatResistance <= 0)
+        if (mHeatResistance <= 0)
         {
-            mIsIgnited = true;
-            modifyColor();
+            mbIgnited = true;
+            PixelGrid::SetPixelColor(mPos.x, mPos.y, ElementColor::RandomFireColor().color);
         }
         else 
         {
-            mIsIgnited = false;
-            this.color = ColorConstants.getColorForElementType(elementType, this.getMatrixX(), this.getMatrixY());
-        }*/
+            mbIgnited = false;
+            // 나중에 수정해야됨 
+            PixelGrid::SetPixelColor(mPos.x, mPos.y, mColor.color);
+        }
+    }
+
+    void Element::takeEffectsDamage() 
+    {
+        if (PixelGrid::GetFrameCount() != (UINT)eFrameInfo::Effect) 
+        {
+            return;
+        }
+
+        if (mbIgnited) {
+            takeFireDamage();
+        }
+        checkIfDead();
+    }
+
+    void Element::takeFireDamage()
+    {
+        mHealth -= mFireDamage;
+        if (isSurrounded()) 
+        {
+            mHeatResistance = resetFlammabilityResistance;
+        }
+        checkIfIgnited();
+    }
+
+    void Element::checkIfDead()
+    {
+        if (mHealth <= 0) 
+        {
+            die();
+        }
+    }
+
+    void Element::die() 
+    {
+        PixelGrid::DeleteElement(mPos.x, mPos.y);
+        delete this;
+    }
+
+    void Element::spawnSparkIfIgnited()
+    {
+        //if ((PixelGrid::GetFrameCount() != (UINT)eFrameInfo::Effect) || !mbIgnited) 
+        //{
+        //    return;
+        //}
+        //nullptr
+        //Element* upElement = PixelGrid::GetElement(mPos.x, mPos.y);
+
+        ////수정해야됨
+        //if (true/*upNeighbor != null*/) 
+        //{
+        //    if (upNeighbor instanceof EmptyCell) 
+        //    {
+        //        ElementType elementToSpawn = Math.random() > .1 ? ElementType.SPARK : ElementType.SMOKE;
+        //        //                ElementType elementToSpawn = ElementType.SPARK;
+        //        matrix.spawnElementByMatrix(getMatrixX(), getMatrixY() + 1, elementToSpawn);
+        //    }
+        //}
     }
 
 
+    bool Element::isSurrounded() 
+    {
+        if (PixelGrid::GetElement(mPos.x - 1, mPos.y)->GetType() == eElementType::Empty
+            || PixelGrid::GetElement(mPos.x + 1, mPos.y)->GetType() == eElementType::Empty
+            || PixelGrid::GetElement(mPos.x, mPos.y - 1)->GetType() == eElementType::Empty
+            || PixelGrid::GetElement(mPos.x, mPos.y + 1)->GetType() == eElementType::Empty)
+        {
+            return false;
+        }
 
-
-
-
-
+        return true;
+    }
+    
 
 
     //uint32_t Element::rand = 12345;

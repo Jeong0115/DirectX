@@ -9,6 +9,7 @@
 #include "zzWater.h"
 #include "zzRock.h"
 #include "zzOil.h"
+#include "zzEmptyElement.h"
 
 #include <minwindef.h>
 
@@ -21,7 +22,6 @@
 #include <future>
 #include <deque>
 #include <list>
-#include <vector>
 #include <type_traits>
 
 namespace zz
@@ -133,19 +133,14 @@ namespace zz
         mElementMap.insert({ 'x', new Sand });
         mElementMap.insert({ 'c', new Rock });
         mElementMap.insert({ 'o', new Oil });
-        mElementMap.insert({ 'v', nullptr });
-        mSelectElement = mElementMap.find('v')->second;
+        mElementMap.insert({ 'e', new EmptyElement });
+        mSelectElement = mElementMap.find('e')->second;
 
-
-        uint32_t x = 0x00000000;
         for (UINT i = 0; i < mHeight; i++)
         {
             for (UINT j = 0; j < mWidth; j++)
             {
-                if (mElements[i][j] != nullptr)
-                    memcpy(&mPixelColor[(i * mWidth + j) * 4], mElements[i][j]->GetColor(), 4);
-                else
-                    memcpy(&mPixelColor[(i * mWidth + j) * 4], &x, 4);
+                mElements[i][j] = new EmptyElement();
             }
         }
 
@@ -171,7 +166,7 @@ namespace zz
     void PixelGrid::Update()
     {
         if (Input::GetKeyDown(eKeyCode::Z) || Input::GetKeyDown(eKeyCode::X) || Input::GetKeyDown(eKeyCode::C)
-            || Input::GetKeyDown(eKeyCode::V) || Input::GetKeyDown(eKeyCode::O))
+            || Input::GetKeyDown(eKeyCode::E) || Input::GetKeyDown(eKeyCode::O))
         {
             if ((Input::GetKeyDown(eKeyCode::Z)))
                 mSelectElement = mElementMap.find('z')->second;
@@ -179,8 +174,8 @@ namespace zz
                 mSelectElement = mElementMap.find('x')->second;
             else if ((Input::GetKeyDown(eKeyCode::C)))
                 mSelectElement = mElementMap.find('c')->second;
-            else if ((Input::GetKeyDown(eKeyCode::V)))
-                mSelectElement = mElementMap.find('v')->second;
+            else if ((Input::GetKeyDown(eKeyCode::E)))
+                mSelectElement = mElementMap.find('e')->second;
             else if ((Input::GetKeyDown(eKeyCode::O)))
                 mSelectElement = mElementMap.find('o')->second;
         }
@@ -206,25 +201,14 @@ namespace zz
                         {
                             for (int x = (int)mousePos.x - 10; x < mousePos.x + 10; x++)
                             {
-                                if (mElements[y][x] != nullptr)
-                                    delete mElements[y][x];
+                                delete mElements[y][x];
 
-                                if (mSelectElement == nullptr)
-                                {
-                                    mElements[y][x] = nullptr;
-                                    uint32_t none = 0x00000000;
-                                    memcpy(&mPixelColor[(y * mWidth + x) * 4], &none, 4);
-                                    SetActiveChunks(x, y);
-                                }
-                                else
-                                {
-                                    mElements[y][x] = mSelectElement->Clone();
-                                    mElements[y][x]->SetPos(x, y);
+                                mElements[y][x] = mSelectElement->Clone();
+                                mElements[y][x]->SetPos(x, y);
 
-                                    SetActiveChunks(x, y);
+                                SetActiveChunks(x, y);
 
-                                    memcpy(&mPixelColor[(y * mWidth + x) * 4], mElements[y][x]->GetColor(), 4);
-                                }
+                                memcpy(&mPixelColor[(y * mWidth + x) * 4], mElements[y][x]->GetColor(), 4);
                             }
                         }
                     }
@@ -234,25 +218,14 @@ namespace zz
                         {
                             for (int x = (int)mousePos.x - 15; x < mousePos.x + 15; x++)
                             {
-                                if (mElements[y][x] != nullptr)
-                                    delete mElements[y][x];
+                                delete mElements[y][x];
 
-                                if (mSelectElement == nullptr)
-                                {
-                                    mElements[y][x] = nullptr;
-                                    uint32_t none = 0x00000000;
-                                    memcpy(&mPixelColor[(y * mWidth + x) * 4], &none, 4);
-                                    SetActiveChunks(x, y);
-                                }
-                                else
-                                {
-                                    mElements[y][x] = mSelectElement->Clone();
-                                    mElements[y][x]->SetPos(x, y);
+                                mElements[y][x] = mSelectElement->Clone();
+                                mElements[y][x]->SetPos(x, y);
 
-                                    SetActiveChunks(x, y);
+                                SetActiveChunks(x, y);
 
-                                    memcpy(&mPixelColor[(y * mWidth + x) * 4], mElements[y][x]->GetColor(), 4);
-                                }
+                                memcpy(&mPixelColor[(y * mWidth + x) * 4], mElements[y][x]->GetColor(), 4);
                             }
                         }
                     }
@@ -342,7 +315,7 @@ namespace zz
                 pool.wait();
             }
         }
-        
+
 
         QueryPerformanceCounter(&curFreq);
 
@@ -352,13 +325,6 @@ namespace zz
         swprintf_s(text, 100, L"FixedUpdate Latency : %f", latency);
 
         SetWindowText(mHwnd, text);
-    }
-
-
-    void PixelGrid::registerElements(std::vector<Element*> elements)
-    {
-        std::lock_guard<std::mutex> lock(mtx);
-        temp.push_back(elements);
     }
 
     void PixelGrid::updateChunk(int x, int y)
@@ -507,31 +473,12 @@ namespace zz
 
     void PixelGrid::SwapElement(int x1, int y1, int x2, int y2)
     {
-        //Element* temp = mElements[y1][x1];
-
-        //mElements[y1][x1] = mElements[y2][x2];
-
-        //if(mElements[y1][x1] != nullptr)
-        //    mElements[y1][x1]->SetPos(x1, y1);
-
-        //mElements[y2][x2] = temp;
-
-        //if (mElements[y2][x2] != nullptr)
-        //    mElements[y2][x2]->SetPos(x2, y2);
-
-        //uint32_t color;
-        //memcpy(&color, &mPixelColor[(y1 * mWidth + x1) * 4], 4);
-        //memcpy(&mPixelColor[(y1 * mWidth + x1) * 4], &mPixelColor[(y2 * mWidth + x2) * 4], 4);
-        //memcpy(&mPixelColor[(y2 * mWidth + x2) * 4], &color, 4);
-
         {
             std::swap(mElements[y1][x1], mElements[y2][x2]);
 
-            if (mElements[y1][x1] != nullptr)
                 mElements[y1][x1]->SetPos(x1, y1);
-            if (mElements[y2][x2] != nullptr)
                 mElements[y2][x2]->SetPos(x2, y2);
-   
+
 
             uint32_t color;
 
@@ -562,6 +509,17 @@ namespace zz
         y /= 64;
 
         mChunks[y][x].SetActive();
+    }
+
+    void PixelGrid::SetPixelColor(int x, int y, uint32_t color)
+    {
+        memcpy(&mPixelColor[(y * mWidth + x) * 4], &color, 4);
+    }
+
+    void PixelGrid::DeleteElement(int x, int y)
+    {
+        mElements[y][x] = new EmptyElement();
+        memcpy(&mPixelColor[(y * mWidth + x) * 4], EMPTY_COLOR, 4);
     }
 
     void PixelGrid::SetImage(int x, int y, std::shared_ptr<Texture> texture, std::shared_ptr<Texture> texture_visual)
@@ -604,17 +562,18 @@ namespace zz
 
                     if (color == 0xFFFFFFFF)
                     {
-                        if (mElements[col][row / 4] == nullptr)
+                        if (mElements[col][row / 4]->GetType() == eElementType::Empty)
                         {
-                            uint32_t none = 0x00000000;
-                            memcpy(&mPixelColor[(col * mWidth + row / 4) * 4], &none, 4);
+                            memcpy(&mPixelColor[(col * mWidth + row / 4) * 4], WHITE_COLOR, 4);
                         }
                     }
 
                     else if (color == 0xFF0A3344 || color == 0xFF0A3355)
                     {
-                        if (mElements[col][row / 4] == nullptr)
+                        if (mElements[col][row / 4]->GetType() == eElementType::Empty)
                         {
+                            delete mElements[col][row / 4];
+
                             mElements[col][row / 4] = new Rock();
                             mElements[col][row / 4]->SetPos(row / 4, col);
 
@@ -635,8 +594,10 @@ namespace zz
                     }
                     else if (color == 0xFF000042)
                     {
-                        if (mElements[col][row / 4] == nullptr)
+                        if (mElements[col][row / 4]->GetType() == eElementType::Empty)
                         {
+                            delete mElements[col][row / 4];
+
                             mElements[col][row / 4] = new Water();
                             mElements[col][row / 4]->SetPos(row / 4, col);
                             memcpy(&mPixelColor[(col * mWidth + row / 4) * 4], mElements[col][row / 4]->GetColor(), 4);
@@ -663,43 +624,67 @@ namespace zz
                 {
                     uint32_t color;
                     memcpy(&color, currPixel, 4);
+
                     if (color == 0xFFFFFFFF)
                     {
-                        if (mElements[col][row / 4] == nullptr)
+                        if (mElements[col][row / 4]->GetType() == eElementType::Empty)
                         {
-                            uint32_t none = 0x00000000;
-                            memcpy(&mPixelColor[(col * mWidth + row / 4) * 4], &none, 4);
+                            memcpy(&mPixelColor[(col * mWidth + row / 4) * 4], WHITE_COLOR, 4);
                         }
                     }
                     else if (color == 0xFF44330A || color == 0xFF55330A) // ABGR
                     {
-                        mElements[col][row / 4] = new Rock();
-                        mElements[col][row / 4]->SetPos(row / 4, col);
-
-                        if (texVisualPixels != nullptr)
+                        if (mElements[col][row / 4]->GetType() == eElementType::Empty)
                         {
-                            if (*(visualPixel + 3) == (uint8_t)0)
-                                memcpy(&mPixelColor[(col * mWidth + row / 4) * 4], mElements[col][row / 4]->GetColor(), 4);
+                            delete mElements[col][row / 4];
+                            mElements[col][row / 4] = new Rock();
+                            mElements[col][row / 4]->SetPos(row / 4, col);
+
+                            if (texVisualPixels != nullptr)
+                            {
+                                if (*(visualPixel + 3) == (uint8_t)0)
+                                {
+                                    memcpy(&mPixelColor[(col * mWidth + row / 4) * 4], mElements[col][row / 4]->GetColor(), 4);
+                                }
+                                else
+                                {
+                                    memcpy(&mPixelColor[(col * mWidth + row / 4) * 4], visualPixel, 4);
+                                }
+                            }
                             else
-                                memcpy(&mPixelColor[(col * mWidth + row / 4) * 4], visualPixel, 4);
+                            {
+                                memcpy(&mPixelColor[(col * mWidth + row / 4) * 4], mElements[col][row / 4]->GetColor(), 4);
+                            }
                         }
-                        else
-                        {
-                            memcpy(&mPixelColor[(col * mWidth + row / 4) * 4], mElements[col][row / 4]->GetColor(), 4);
-                        }
-
                         SetActiveChunks(row / 4, col);
                     }
                     else if (color == 0xFF420000)
                     {
-                        mElements[col][row / 4] = new Water();
-                        mElements[col][row / 4]->SetPos(row / 4, col);
-                        memcpy(&mPixelColor[(col * mWidth + row / 4) * 4], mElements[col][row / 4]->GetColor(), 4);
-                        SetActiveChunks(row / 4, col);
+                        if (mElements[col][row / 4]->GetType() == eElementType::Empty)
+                        {
+                            delete mElements[col][row / 4];
+                            mElements[col][row / 4] = new Water();
+                            mElements[col][row / 4]->SetPos(row / 4, col);
+
+                            memcpy(&mPixelColor[(col * mWidth + row / 4) * 4], mElements[col][row / 4]->GetColor(), 4);
+                            SetActiveChunks(row / 4, col);
+                        }
                     }
 
                 }
             }
+        }
+    }
+
+    Element* PixelGrid::GetElement(int x, int y)
+    {
+        if (x < 0 || x >= mWidth || y < 0 || y >= mHeight)
+        {
+            return nullptr;
+        }
+        else
+        {
+            return mElements[y][x];
         }
     }
 

@@ -95,20 +95,20 @@ namespace zz
             // 어떻게 할까 수정해야됨
             Position targetPos = Position(mPos.x + (xIncrease * xModifier), mPos.y + (yIncrease * yModifier));
 
-            if (/*matrix.isWithinBounds(carPos.x, carPos.y)*/1) 
+            Element* target = PixelGrid::GetElement(targetPos.x, targetPos.y);
+            if (target != nullptr)
             {
-                Element* target = PixelGrid::GetElement(targetPos.x, targetPos.y);
                 if (target == this) continue;
 
                 bool stopped = InteractElement(target, targetPos, i == largeDelatTime, i == 1, lastPos, 0);
                 
                 if (stopped) break;
-
+                    
                 lastPos = targetPos;
             }
             else 
             {
-                //matrix.setElementAtIndex(getMatrixX(), getMatrixY(), ElementType.EMPTYCELL.createElementByMatrix(getMatrixX(), getMatrixY()));
+                die();
                 return;
             }
             
@@ -146,14 +146,9 @@ namespace zz
         //boolean acted = actOnOther(neighbor, matrix);
         //if (acted) return true    
 
-        eElementType targetType;
+        eElementType targetType = target->GetType();
 
-        if (target == nullptr)
-            targetType = eElementType::None;
-        else
-            targetType = target->GetType();
-
-        if (targetType == eElementType::None)
+        if (targetType == eElementType::Empty)
         {
             setAroundElementFreeFalling(lastPos, depth);
 
@@ -406,8 +401,8 @@ namespace zz
                 int modifiedX = startingX + i * distanceModifier;
 
                 Element* target = PixelGrid::GetElement(modifiedX, startingY);
-                //if (target == nullptr) 
-                //    return true;
+                if (target == nullptr) 
+                    return true;
 
                 //boolean acted = actOnOther(neighbor, matrix);
                 //if (acted) return false;
@@ -415,7 +410,7 @@ namespace zz
                 bool isFirst = i == 0;
                 bool isFinal = i == abs(distance);
 
-                if (target == nullptr || target->GetType() == eElementType::None)
+                if (target->GetType() == eElementType::Empty)
                 {
                     if (isFinal)
                     {

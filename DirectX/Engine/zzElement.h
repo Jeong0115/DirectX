@@ -6,10 +6,11 @@
 
 namespace zz
 {
+    enum class eElementType { Solid, Liquid, Gas, Empty, Out };
     class Element
     {
     public:
-        enum class eElementType { Solid, Liquid, Gas, None };
+        
         enum class eFrameInfo { Effect = 1, Reaction = 3 };
 
         Element();
@@ -40,8 +41,8 @@ namespace zz
         bool isFreeFalling = true;
         bool Is() { return mStopCount >= mStopThreshold; }
         
-        __forceinline float GetInertialResistance() { return mInertialResistance; }
-        __forceinline float GetFrictionFactor() { return mFrictionFactor; }
+        float GetInertialResistance() { return mInertialResistance; }
+        float GetFrictionFactor() { return mFrictionFactor; }
 
         bool IsStop(Position startPos) { return startPos == mPos; }
 
@@ -55,10 +56,16 @@ namespace zz
 
     protected:
         bool transferHeatToNeighbors();
-        bool shouldApplyHeat() { return mIsIgnited || mHeated; }
+        bool shouldApplyHeat() { return mbIgnited || mbHeated; }
         bool receiveHeat(int heat);
         bool receiveCooling(int cooling);
         void checkIfIgnited();
+        void takeEffectsDamage();
+        void takeFireDamage();
+        void checkIfDead();
+        void die();
+        void spawnSparkIfIgnited();
+
 
         math::Vector2 mVelocity;
         math::Vector2 mVelocityRemainder;
@@ -73,10 +80,17 @@ namespace zz
         float mFrictionFactor = 1.f;
         int mStopCount = 0;
         int mStopThreshold = 2;
-        //friend class Liquid;
+
     private:
-        bool mIsIgnited;
-        bool mHeated;
+        bool isSurrounded();
+
+    private:
+        bool mbIgnited;
+        bool mbHeated;
         int mHeatResistance;
+        int mHeatFactor ;
+        int mFireDamage ;
+        int mHealth ;
+        int resetFlammabilityResistance;
     };
 }

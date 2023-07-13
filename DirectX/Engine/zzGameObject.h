@@ -28,7 +28,7 @@ namespace zz
 
         //template <class T, class = class std::enable_if<std::is_base_of<Component, T>::value>::type>   
         template<DerivedFromComponent T>
-        T* GetComponent()
+        T* GetComponent(/*const std::wstring name = "no_select"*/)
         {
             for (Component* comp : mComponents)
             {

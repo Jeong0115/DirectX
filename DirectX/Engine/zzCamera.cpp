@@ -74,8 +74,10 @@ namespace zz
 
         RECT rect = {};
         GetClientRect(application.GetHwnd(), &rect);
-        float width = (float)(rect.right - rect.left);
-        float height = (float)(rect.bottom - rect.top);
+        //float width = (float)(rect.right - rect.left);
+        //float height = (float)(rect.bottom - rect.top);
+        float width = 1600;
+        float height = 900;
         mAspectRatio = width / height;
 
         if (type == eProjectionType::OrthoGraphic)

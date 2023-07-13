@@ -145,6 +145,9 @@
     <Filter Include="Element\Color">
       <UniqueIdentifier>{872e4ff1-3a3a-465c-ab4e-794d8dee1f51}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Element\Empty">
+      <UniqueIdentifier>{2ab93a74-e3f7-4182-8f70-53eb3c578c71}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzEntity.cpp">
@@ -255,6 +258,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzImmovableSolid.cpp">
       <Filter>Element\Solid\Immovable\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzEmptyElement.cpp">
+      <Filter>Element\Empty</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -376,7 +382,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzPosition.h">
       <Filter>Common\Header</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)fuction.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)function.h">
       <Filter>Common\Header</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzOil.h">
@@ -393,6 +399,9 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzElementColor.h">
       <Filter>Element\Color</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzEmptyElement.h">
+      <Filter>Element\Empty</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
