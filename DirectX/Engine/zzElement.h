@@ -6,7 +6,7 @@
 
 namespace zz
 {
-    enum class eElementType { Solid, Liquid, Gas, Empty, Out };
+    enum class eElementType { Solid, Liquid, Gas, Particle, Empty, Out };
     class Element
     {
     public:
@@ -16,10 +16,10 @@ namespace zz
         Element();
         virtual ~Element();
 
-        virtual Element* Clone() = 0;
-        virtual bool InteractElement(Element* target, Position targetPos, bool isFinal, bool isFirst, Position lastPos, int depth) = 0;
-
         virtual void Update() = 0;
+        virtual bool InteractElement(Element* target, Position targetPos, bool isFinal, bool isFirst, Position lastPos, int depth) = 0;
+        virtual Element* Clone() = 0;
+        
         eElementType CheckTargetType(int targetX, int targetY);
         void SwapElement(Element* target);
         void MoveLastPosition(Position pos);
@@ -38,14 +38,17 @@ namespace zz
         math::Vector2 GetVelocity() { return mVelocity; }
         void SetVelocity(math::Vector2 velocity) { mVelocity = velocity; }
 
-        bool isFreeFalling = true;
+        
         bool Is() { return mStopCount >= mStopThreshold; }
+        bool IsFreeFalling() { return mbFreeFalling; }
+        void SetFreeFalling(bool fall) { mbFreeFalling = fall; }
         
         float GetInertialResistance() { return mInertialResistance; }
         float GetFrictionFactor() { return mFrictionFactor; }
 
         bool IsStop(Position startPos) { return startPos == mPos; }
-
+        void SetDead() { die(); }
+        virtual bool ReceiveHeat(int heat);
         uint32_t xorshift32();
        
         bool isUpdate = false;
@@ -57,7 +60,7 @@ namespace zz
     protected:
         bool transferHeatToNeighbors();
         bool shouldApplyHeat() { return mbIgnited || mbHeated; }
-        bool receiveHeat(int heat);
+        
         bool receiveCooling(int cooling);
         void checkIfIgnited();
         void takeEffectsDamage();
@@ -65,7 +68,9 @@ namespace zz
         void checkIfDead();
         void die();
         void spawnSparkIfIgnited();
+        void checkIgnitedAndSetColor();
 
+        bool mbFreeFalling = true;
 
         math::Vector2 mVelocity;
         math::Vector2 mVelocityRemainder;
@@ -80,17 +85,20 @@ namespace zz
         float mFrictionFactor = 1.f;
         int mStopCount = 0;
         int mStopThreshold = 2;
-
+        bool mbIgnited;
+        int mHeatResistance;
+        int mHeatFactor;
+        int mFireDamage;
+        int mHealth;
     private:
         bool isSurrounded();
 
     private:
-        bool mbIgnited;
+        
         bool mbHeated;
-        int mHeatResistance;
-        int mHeatFactor ;
-        int mFireDamage ;
-        int mHealth ;
+        
+        
+        
         int resetFlammabilityResistance;
     };
 }

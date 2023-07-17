@@ -35,6 +35,7 @@ namespace zz
         static void SetActiveChunks(int x, int y);
         static void SetActiveChunk(int x, int y);
         static void SetPixelColor(int x, int y, uint32_t color);
+        static void CreateElement(int x, int y, Element* element);
         static void DeleteElement(int x, int y);
         static bool IsSurrounded(int x, int y);
 
@@ -68,6 +69,8 @@ namespace zz
         static float y;
 
         static int mFrameCount;
+
+        static std::vector<Element*> mDeadElement;
     };
 
 

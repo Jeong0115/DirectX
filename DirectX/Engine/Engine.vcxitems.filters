@@ -148,6 +148,18 @@
     <Filter Include="Element\Empty">
       <UniqueIdentifier>{2ab93a74-e3f7-4182-8f70-53eb3c578c71}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Element\Gas">
+      <UniqueIdentifier>{2c471736-1fca-4998-b1c5-d1c5aca3a914}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Element\Gas\Base">
+      <UniqueIdentifier>{0d60329c-dd2f-4df3-bcc0-9d6c5db7bee0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Element\Gas\Spark">
+      <UniqueIdentifier>{dd2a49d3-84dc-4791-90d3-9b7abb6c58fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Element\Gas\Smoke">
+      <UniqueIdentifier>{f5f5240a-5843-4435-a937-7195c361a6e4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzEntity.cpp">
@@ -261,6 +273,15 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzEmptyElement.cpp">
       <Filter>Element\Empty</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzGas.cpp">
+      <Filter>Element\Gas\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzSpark.cpp">
+      <Filter>Element\Gas\Spark</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzSmoke.cpp">
+      <Filter>Element\Gas\Smoke</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -402,6 +423,15 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzEmptyElement.h">
       <Filter>Element\Empty</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzGas.h">
+      <Filter>Element\Gas\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzSpark.h">
+      <Filter>Element\Gas\Spark</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzSmoke.h">
+      <Filter>Element\Gas\Smoke</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -22,7 +22,7 @@ namespace zz
         mStep.flip();
 
         //mVelocity += math::Vector2(0.0f, 5.0f);
-        if (isFreeFalling)
+        if (mbFreeFalling)
         {
             mVelocity.x *= 0.8f;
         }
@@ -41,7 +41,7 @@ namespace zz
             mVelocityRemainder.x += velXDeltaTimeFloat;
             velXDeltaTime = (int)mVelocityRemainder.x;
 
-            if (fabs(velXDeltaTime) > 0) 
+            if (abs(velXDeltaTime) > 0) 
                 mVelocityRemainder.x = 0;
         }
         else 
@@ -127,7 +127,7 @@ namespace zz
 
         //if (mStopCount != mStopThreshold)
         //{
-            if(!Is())
+            if(!Is() || mbIgnited) 
             {
                 PixelGrid::SetActiveChunks(mPos.x, mPos.y);
                 PixelGrid::SetActiveChunks(startPos.x, startPos.y);
@@ -148,13 +148,13 @@ namespace zz
 
         eElementType targetType = target->GetType();
 
-        if (targetType == eElementType::Empty)
+        if (targetType == eElementType::Empty || targetType == eElementType::Particle)
         {
             setAroundElementFreeFalling(lastPos, depth);
 
             if (isFinal)
             {
-                isFreeFalling = true;
+                mbFreeFalling = true;
                 SwapTarget(targetPos);
                 //SwapElement(target); // 나중에 다시 보자
                 return true;
@@ -170,7 +170,7 @@ namespace zz
             {
                 if (isFinal) 
                 {
-                    swapLiquid(target);
+                    swapLiquid(targetPos, lastPos);
                     return true;
                 }
                 else 
@@ -189,10 +189,10 @@ namespace zz
                 return true;
             }
 
-            if (isFreeFalling) 
+            if (mbFreeFalling) 
             {
                 float absY = max(fabs(mVelocity.y) / 31, 105);
-                mVelocity.x = mVelocity.x < 0 ? -absY : absY; // 나중에 체크
+                mVelocity.x = mVelocity.x < 0 ? -absY : absY; 
             }
 
             math::Vector2 copyVelocity = mVelocity;
@@ -204,7 +204,7 @@ namespace zz
 
             int distance = additionalX * (random() > 0.5 ? mDispersionRate + 2 : mDispersionRate - 1);
 
-            Element* diagonalElement = PixelGrid::GetElement(mPos.x + additionalX, mPos.y + additionalY); // mPos로 할껀지, lastPos로 할껀지 확인
+            Element* diagonalElement = PixelGrid::GetElement(mPos.x + additionalX, mPos.y + additionalY); 
             
             if (isFirst) 
                 mVelocity.y = getAverageVelOrGravity(mVelocity.y, target->GetVelocity().y);
@@ -220,7 +220,7 @@ namespace zz
                     = iterateToAdditional(mPos.x + additionalX, mPos.y + additionalY, distance, lastPos);
                 if (!stoppedDiagonally) 
                 {
-                    isFreeFalling = true;
+                    mbFreeFalling = true;
                     return true;
                 }
             }
@@ -233,12 +233,12 @@ namespace zz
                 if (stoppedSide) mVelocity.x *= -1;
 
                 if (!stoppedSide) {
-                    isFreeFalling = false;
+                    mbFreeFalling = false;
                     return true;
                 }
             }
 
-            isFreeFalling = false;
+            mbFreeFalling = false;
 
             MoveLastPosition(lastPos);
             return true;
@@ -253,10 +253,10 @@ namespace zz
                 MoveLastPosition(lastPos);
                 return true;
             
-            if (isFreeFalling) 
+            if (mbFreeFalling) 
             {
                 float absY = max(fabs(mVelocity.y) / 31, 105);
-                mVelocity.x = mVelocity.x < 0 ? absY : -absY;
+                mVelocity.x = mVelocity.x < 0 ? -absY : +absY;
             }
 
             math::Vector2 copyVelocity = mVelocity;
@@ -284,7 +284,7 @@ namespace zz
                     = iterateToAdditional(mPos.x + additionalX, mPos.y + additionalY, distance, lastPos);
                 if (!stoppedDiagonally)
                 {
-                    isFreeFalling = true;
+                    mbFreeFalling = true;
                     return true;
                 }
             }
@@ -297,12 +297,12 @@ namespace zz
                 if (stoppedSide) mVelocity.x *= -1;
 
                 if (!stoppedSide) {
-                    isFreeFalling = false;
+                    mbFreeFalling = false;
                     return true;
                 }
             }
 
-            isFreeFalling = false;
+            mbFreeFalling = false;
 
             MoveLastPosition(lastPos);
             return true;
@@ -352,8 +352,8 @@ namespace zz
 
     bool Liquid::setElementFreeFalling(Element* element)
     {
-        element->isFreeFalling = random() > element->GetInertialResistance() || element->isFreeFalling;
-        return element->isFreeFalling;
+        element->SetFreeFalling(random() > element->GetInertialResistance() || element->IsFreeFalling());
+        return  element->IsFreeFalling();
     }
 
     bool Liquid::compareDensity(Liquid* target)
@@ -361,13 +361,13 @@ namespace zz
         return ((mDensity > target->GetDensity()) && (target->GetPos().y >= mPos.y));
     }
 
-    void Liquid::swapLiquid(Element* target)  // 이것도 수정해야됨
+    void Liquid::swapLiquid(Position targetPos, Position lastPos)  // 이것도 수정해야됨
     {
         mVelocity.y = 62;
         if (random() > 0.8f) 
             mVelocity.x *= -1;
         
-        MoveLastPosition(target->GetPos());
+        MoveLastPosAndSwapTarget(targetPos, lastPos);
         //SwapElement(target);
     }
 
@@ -404,7 +404,7 @@ namespace zz
                 if (target == nullptr) 
                     return true;
 
-                //boolean acted = actOnOther(neighbor, matrix);
+                //boolean acted = actOnOther(neighbor, matrix);   이거 위치도 한번 확인
                 //if (acted) return false;
 
                 bool isFirst = i == 0;
@@ -427,7 +427,7 @@ namespace zz
                     {
                         if (compareDensity(liquidNeighbor))
                         {
-                            swapLiquid(liquidNeighbor);
+                            swapLiquid(liquidNeighbor->GetPos(), lastPos);
                             return false;
                         }
                     }

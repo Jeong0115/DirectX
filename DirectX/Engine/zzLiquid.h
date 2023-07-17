@@ -22,7 +22,7 @@ namespace zz
         bool setElementFreeFalling(Element* element);   
         void setAroundElementFreeFalling(Position targetPos, int depth);
         bool compareDensity(Liquid* target);
-        void swapLiquid(Element* target);
+        void swapLiquid(Position targetPos, Position lastPos);
         int getAdditional(float val);
         float getAverageVelOrGravity(float vel, float targetVel);
         bool iterateToAdditional(int startingX, int startingY, int distance, Position lastPos);

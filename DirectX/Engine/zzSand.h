@@ -11,6 +11,7 @@ namespace zz
         virtual ~Sand();
 
         virtual Element* Clone() override;
+        virtual bool ReceiveHeat(int heat) override;
 
         bool update = true;
 

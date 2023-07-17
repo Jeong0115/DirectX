@@ -14,7 +14,10 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzSmoke.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzSpark.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzEmptyElement.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzGas.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzImmovableSolid.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzApplication.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzBGScript.cpp" />
@@ -64,6 +67,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)function.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzElementColor.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzEmptyElement.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzGas.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzImmovableSolid.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzApplication.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzBGScript.h" />
@@ -100,7 +104,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzScript.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzShader.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzMovableSolid.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzSmoke.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzSolid.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzSpark.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzTexture.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzTime.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzTransform.h" />

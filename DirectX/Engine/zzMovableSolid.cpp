@@ -25,7 +25,7 @@ namespace zz
         //}
 
         //mVelocity += math::Vector2(0.0f, 5.0f);
-        if (isFreeFalling)
+        if (mbFreeFalling)
             mVelocity.x *= 0.9f;
 
         int yModifier = mVelocity.y < 0 ? -1 : 1;
@@ -114,17 +114,17 @@ namespace zz
 
         transferHeatToNeighbors();
         takeEffectsDamage();
-        //spawnSparkIfIgnited(matrix);
+        spawnSparkIfIgnited();
         //checkLifeSpan(matrix);
-        //modifyColor();
+        checkIgnitedAndSetColor();
         
-        mStopCount = IsStop(startPos) ? mStopCount + 1 : 0;
+        mStopCount = IsStop(startPos) && !mbIgnited ? mStopCount + 1 : 0;
         if (mStopCount > mStopThreshold)
         {
             mStopCount = mStopThreshold;
         }
 
-        if (!Is())
+        if (!Is() || mbIgnited || mbFreeFalling)
         {
             PixelGrid::SetActiveChunks(mPos.x, mPos.y);
             PixelGrid::SetActiveChunks(startPos.x, startPos.y);
@@ -142,7 +142,7 @@ namespace zz
 
             if (isFinal)
             {
-                isFreeFalling = true;
+                mbFreeFalling = true;
                 SwapTarget(targetPos);
             }
             else
@@ -154,13 +154,13 @@ namespace zz
         {
             if (depth > 0) 
             {
-                isFreeFalling = true;
+                mbFreeFalling = true;
                 setAroundElementFreeFalling(lastPos, depth);
                 SwapTarget(targetPos);
             }
             else 
             {
-                isFreeFalling = true;
+                mbFreeFalling = true;
                 MoveLastPosAndSwapTarget(targetPos, lastPos);
                 return true;
             }
@@ -174,7 +174,7 @@ namespace zz
                 MoveLastPosition(lastPos);
                 return true;
             }
-            if (isFreeFalling) 
+            if (mbFreeFalling) 
             {
                 float absY = max(fabs(mVelocity.y) / 31, 105);
                 mVelocity.x = mVelocity.x < 0 ? -absY : absY;
@@ -203,7 +203,7 @@ namespace zz
                 
                 if (!stoppedDiagonally) 
                 {
-                    isFreeFalling = true;
+                    mbFreeFalling = true;
                     return true;
                 }
             }
@@ -219,12 +219,12 @@ namespace zz
 
                 if (!stoppedSide) 
                 {
-                    isFreeFalling = false;
+                    mbFreeFalling = false;
                     return true;
                 }
             }
 
-            isFreeFalling = false;
+            mbFreeFalling = false;
 
             MoveLastPosition(lastPos);
             return true;
@@ -272,8 +272,8 @@ namespace zz
 
     bool MovableSolid::setElementFreeFalling(Element* element)
     {
-        element->isFreeFalling = random() > element->GetInertialResistance() || element->isFreeFalling;
-        return element->isFreeFalling;
+        element->SetFreeFalling(random() > element->GetInertialResistance() || element->IsFreeFalling());
+        return element->IsFreeFalling();
     }
 
     int MovableSolid::getAdditional(float val)

@@ -9,6 +9,8 @@
 #include "zzWater.h"
 #include "zzRock.h"
 #include "zzOil.h"
+#include "zzSpark.h"
+
 #include "zzEmptyElement.h"
 
 #include <minwindef.h>
@@ -71,17 +73,36 @@ namespace zz
             condition.notify_one();
             return res;
         }
-        ~ThreadPool() {
+        ~ThreadPool() { // 맵 밖으로 픽셀이 나간다음 종료하면 여기서 터지는듯??
             {
                 std::unique_lock<std::mutex> lock(queue_mutex);
                 stop = true;
             }
             condition.notify_all();
-            for (std::thread& worker : workers) worker.join();
+            for (std::thread& worker : workers) 
+                worker.join();
         }
         void wait() {
             std::unique_lock<std::mutex> lock(queue_mutex);
             all_idle.wait(lock, [this]() { return this->active == 0; });
+        }
+
+        void Shutdown() {
+            {
+                std::unique_lock<std::mutex> lock(queue_mutex);
+                stop = true;
+            }
+            condition.notify_all();  // 모든 스레드에게 종료 신호를 보냅니다.
+            for (std::thread& worker : workers) {
+                if (worker.joinable()) {
+                    worker.join();  // 각 스레드가 종료될 때까지 기다립니다.
+                }
+            }
+            while (!tasks.empty()) 
+            {
+                tasks.pop();
+            }
+            // 이 시점에서 모든 스레드는 종료되었습니다.
         }
     private:
 
@@ -113,8 +134,9 @@ namespace zz
     float PixelGrid::y = 0.f;
 
     std::bitset<1> PixelGrid::Step = {};
+    std::vector<Element*> PixelGrid::mDeadElement = {};
 
-    ThreadPool pool(20);
+    ThreadPool pool(10);
 
     PixelGrid::PixelGrid()
     {
@@ -133,6 +155,7 @@ namespace zz
         mElementMap.insert({ 'x', new Sand });
         mElementMap.insert({ 'c', new Rock });
         mElementMap.insert({ 'o', new Oil });
+        mElementMap.insert({ 'f', new Spark });
         mElementMap.insert({ 'e', new EmptyElement });
         mSelectElement = mElementMap.find('e')->second;
 
@@ -166,7 +189,7 @@ namespace zz
     void PixelGrid::Update()
     {
         if (Input::GetKeyDown(eKeyCode::Z) || Input::GetKeyDown(eKeyCode::X) || Input::GetKeyDown(eKeyCode::C)
-            || Input::GetKeyDown(eKeyCode::E) || Input::GetKeyDown(eKeyCode::O))
+            || Input::GetKeyDown(eKeyCode::E) || Input::GetKeyDown(eKeyCode::O) || Input::GetKeyDown(eKeyCode::F))
         {
             if ((Input::GetKeyDown(eKeyCode::Z)))
                 mSelectElement = mElementMap.find('z')->second;
@@ -176,6 +199,8 @@ namespace zz
                 mSelectElement = mElementMap.find('c')->second;
             else if ((Input::GetKeyDown(eKeyCode::E)))
                 mSelectElement = mElementMap.find('e')->second;
+            else if ((Input::GetKeyDown(eKeyCode::F)))
+                mSelectElement = mElementMap.find('f')->second;
             else if ((Input::GetKeyDown(eKeyCode::O)))
                 mSelectElement = mElementMap.find('o')->second;
         }
@@ -242,11 +267,22 @@ namespace zz
             Step.flip();
         }
 
+        int a = 0;
         mImage->Update(mPixelColor, mBackHDC, x, y);
+        for (int i = 0; i < mDeadElement.size(); i++) // 먼가 먼가가 문제가 있음
+        {
+            if (mDeadElement[i] == nullptr)
+                int c = 0;
+            delete mDeadElement[i];
+            mDeadElement[i] = nullptr;
+
+        }
+        mDeadElement.clear();
     }
 
-    std::vector<std::vector<Element*>> temp;
-    std::mutex mtx;
+    
+    //std::vector<std::vector<Element*>> temp;
+    //std::mutex mtx;
 
     void PixelGrid::FixedUpdate()
     {
@@ -278,7 +314,7 @@ namespace zz
                 }
             }
 
-            int a = 20;
+            int a = 100;
 
             while (true)
             {
@@ -445,6 +481,7 @@ namespace zz
 
     void PixelGrid::Release()
     {
+        //pool.Shutdown();
         delete mImage;
         DeleteObject(mBackBuffer);
         for (UINT i = 0; i < mHeight; i++)
@@ -516,10 +553,26 @@ namespace zz
         memcpy(&mPixelColor[(y * mWidth + x) * 4], &color, 4);
     }
 
+    void PixelGrid::CreateElement(int x, int y, Element* element)
+    {
+        //delete mElements[y][x];
+        mElements[y][x] = element;
+        mElements[y][x]->SetPos(x, y);
+        memcpy(&mPixelColor[(y * mWidth + x) * 4], mElements[y][x]->GetColor(), 4);
+    }
+    std::mutex mx;
     void PixelGrid::DeleteElement(int x, int y)
     {
+        // 멀티 쓰레드 안전한지 확인
+        
+        mx.lock();
+        mDeadElement.push_back(mElements[y][x]);
+        mx.unlock();
+
         mElements[y][x] = new EmptyElement();
+        mElements[y][x]->SetPos(x, y);
         memcpy(&mPixelColor[(y * mWidth + x) * 4], EMPTY_COLOR, 4);
+       
     }
 
     void PixelGrid::SetImage(int x, int y, std::shared_ptr<Texture> texture, std::shared_ptr<Texture> texture_visual)

@@ -4,7 +4,7 @@ namespace zz
 {
     ImmovableSolid::ImmovableSolid()
     {
-        isFreeFalling = false;
+        mbFreeFalling = false;
     }
 
     ImmovableSolid::~ImmovableSolid()

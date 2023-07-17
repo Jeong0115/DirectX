@@ -1,5 +1,7 @@
 #include "zzElement.h"
 #include "zzPixelGrid.h"
+#include "zzSpark.h"
+#include "zzSmoke.h"
 
 namespace zz
 {
@@ -96,7 +98,7 @@ namespace zz
 
     bool Element::transferHeatToNeighbors()
     {
-        if ((PixelGrid::GetFrameCount() != (UINT)eFrameInfo::Effect) || !shouldApplyHeat()) //return false;
+        if ((PixelGrid::GetFrameCount() != (UINT)eFrameInfo::Effect) || !shouldApplyHeat()) return false;
         for (int y = mPos.y - 1; y <= mPos.y + 1; y++)
         {
             for (int x = mPos.x- 1; x <= mPos.x + 1; x++)
@@ -105,10 +107,11 @@ namespace zz
                 {
                     Element* neighbor = PixelGrid::GetElement(x, y);
 
-                    if (neighbor->GetType() == eElementType::Empty) continue;
+                    
                     if (neighbor != nullptr) 
                     {
-                        neighbor->receiveHeat(100); // 수정
+                        if (neighbor->GetType() == eElementType::Empty) continue; // 수정해야딤
+                        neighbor->ReceiveHeat(mHeatFactor);
                     }
                 }
             }
@@ -116,7 +119,7 @@ namespace zz
         return true;
     }
 
-    bool Element::receiveHeat(int heat) 
+    bool Element::ReceiveHeat(int heat) 
     {
         if (mbIgnited) 
         {
@@ -144,7 +147,7 @@ namespace zz
         if (mHeatResistance <= 0)
         {
             mbIgnited = true;
-            PixelGrid::SetPixelColor(mPos.x, mPos.y, ElementColor::RandomFireColor().color);
+            checkIgnitedAndSetColor();
         }
         else 
         {
@@ -188,28 +191,34 @@ namespace zz
     void Element::die() 
     {
         PixelGrid::DeleteElement(mPos.x, mPos.y);
-        delete this;
+        PixelGrid::SetActiveChunks(mPos.x, mPos.y);
+        //delete this;
     }
 
     void Element::spawnSparkIfIgnited()
     {
-        //if ((PixelGrid::GetFrameCount() != (UINT)eFrameInfo::Effect) || !mbIgnited) 
-        //{
-        //    return;
-        //}
-        //nullptr
-        //Element* upElement = PixelGrid::GetElement(mPos.x, mPos.y);
+        if ((PixelGrid::GetFrameCount() != (UINT)eFrameInfo::Effect) || !mbIgnited) 
+        {
+            return;
+        }
+        Element* upElement = PixelGrid::GetElement(mPos.x, mPos.y);
 
-        ////수정해야됨
-        //if (true/*upNeighbor != null*/) 
-        //{
-        //    if (upNeighbor instanceof EmptyCell) 
-        //    {
-        //        ElementType elementToSpawn = Math.random() > .1 ? ElementType.SPARK : ElementType.SMOKE;
-        //        //                ElementType elementToSpawn = ElementType.SPARK;
-        //        matrix.spawnElementByMatrix(getMatrixX(), getMatrixY() + 1, elementToSpawn);
-        //    }
-        //}
+        if (upElement == nullptr) return;
+
+        if (upElement->GetType() == eElementType::Empty)
+        {
+
+            random() > 0.1f ? PixelGrid::CreateElement(mPos.x, mPos.y, new Spark()) 
+                : PixelGrid::CreateElement(mPos.x, mPos.y, new Smoke());
+        }
+    }
+
+    void Element::checkIgnitedAndSetColor()
+    {
+        if(mbIgnited)
+        {
+            PixelGrid::SetPixelColor(mPos.x, mPos.y, ElementColor::RandomFireColor().color);
+        }
     }
 
 
