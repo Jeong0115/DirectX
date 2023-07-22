@@ -11,7 +11,9 @@ using namespace zz::graphics;
 namespace zz::renderer
 {
     Vertex vertexes[4] = {};
+    Vertex debugVertexes[4] = {};
     std::vector<zz::Camera*> cameras = {};
+    std::vector<DebugMesh> debugMeshs = {};
 
     graphics::ConstantBuffer* constantBuffer[(UINT)eCBType::End] = {};
     Microsoft::WRL::ComPtr<ID3D11SamplerState> samplerStates[(UINT)eSamplerType::End] = {};
@@ -21,57 +23,120 @@ namespace zz::renderer
 
     void LoadBuffer()
     {
-        vertexes[0].pos = Vector3(-0.5f, 0.5f, 0.0f);
-        vertexes[0].color = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
-        vertexes[0].uv = Vector2(0.0f, 0.0f);
+        {
+            vertexes[0].pos = Vector3(-0.5f, 0.5f, 0.0f);
+            vertexes[0].color = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
+            vertexes[0].uv = Vector2(0.0f, 0.0f);
 
-        vertexes[1].pos = Vector3(0.5f, 0.5f, 0.0f);
-        vertexes[1].color = Vector4(0.0f, 1.0f, 0.0f, 1.0f);
-        vertexes[1].uv = Vector2(1.0f, 0.0f);
+            vertexes[1].pos = Vector3(0.5f, 0.5f, 0.0f);
+            vertexes[1].color = Vector4(0.0f, 1.0f, 0.0f, 1.0f);
+            vertexes[1].uv = Vector2(1.0f, 0.0f);
 
-        vertexes[2].pos = Vector3(0.5f, -0.5f, 0.0f);
-        vertexes[2].color = Vector4(0.0f, 0.0f, 1.0f, 1.0f);
-        vertexes[2].uv = Vector2(1.0f, 1.0f);
+            vertexes[2].pos = Vector3(-0.5f, -0.5f, 0.0f);
+            vertexes[2].color = Vector4(0.0f, 0.0f, 1.0f, 1.0f);
+            vertexes[2].uv = Vector2(0.0f, 1.0f);
 
-        vertexes[3].pos = Vector3(-0.5f, -0.5f, 0.0f);
-        vertexes[3].color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-        vertexes[3].uv = Vector2(0.0f, 1.0f);
+            vertexes[3].pos = Vector3(0.5f, -0.5f, 0.0f);
+            vertexes[3].color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+            vertexes[3].uv = Vector2(1.0f, 1.0f);
+        }
+
+        debugVertexes[0].pos = Vector3(-0.5f, 0.5f, 0.0f);
+        debugVertexes[0].color = Vector4(0.0f, 1.0f, 0.0f, 1.0f);
+        debugVertexes[0].uv = Vector2(0.0f, 0.0f);
+
+        debugVertexes[1].pos = Vector3(0.5f, 0.5f, 0.0f);
+        debugVertexes[1].color = Vector4(0.0f, 1.0f, 0.0f, 1.0f);
+        debugVertexes[1].uv = Vector2(1.0f, 0.0f);
+
+        debugVertexes[2].pos = Vector3(0.5f, -0.5f, 0.0f);
+        debugVertexes[2].color = Vector4(0.0f, 1.0f, 0.0f, 1.0f);
+        debugVertexes[2].uv = Vector2(1.0f, 1.0f);
+
+        debugVertexes[3].pos = Vector3(-0.5f, -0.5f, 0.0f);
+        debugVertexes[3].color = Vector4(0.0f, 1.0f, 0.0f, 1.0f);
+        debugVertexes[3].uv = Vector2(0.0f, 1.0f);
+
+
+        {
+            std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
+            mesh->CreateVertexBuffer(vertexes, 4);
+            ResourceManager::Insert(L"RectMesh", mesh);
+
+            std::vector<UINT> indexes = {};
+
+            indexes.push_back(0);
+            indexes.push_back(1);
+            indexes.push_back(2);
+
+            indexes.push_back(1);
+            indexes.push_back(3);
+            indexes.push_back(2);
+
+            mesh->CreateIndexBuffer(indexes.data(), (UINT)indexes.size());
+        }
+
+        {
+            std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
+            mesh->CreateVertexBuffer(debugVertexes, 4);
+
+            std::vector<UINT> indexes = { 0, 1, 2, 3 ,0 };
+            mesh->CreateIndexBuffer(indexes.data(), (UINT)indexes.size());
+
+            ResourceManager::Insert(L"DebugMesh", mesh);
+        }
+
+        debugVertexes[0].color = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
+        debugVertexes[1].color = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
+        debugVertexes[2].color = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
+        debugVertexes[3].color = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
 
         std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
-        mesh->CreateVertexBuffer(vertexes, 4);
-        ResourceManager::Insert(L"RectMesh", mesh);
+        mesh->CreateVertexBuffer(debugVertexes, 4);
 
-        std::vector<UINT> indexes = {};
-
-        indexes.push_back(0);
-        indexes.push_back(1);
-        indexes.push_back(2);
-
-        indexes.push_back(0);
-        indexes.push_back(2);
-        indexes.push_back(3);
-
+        std::vector<UINT> indexes = { 0, 1, 2, 3 ,0 };
         mesh->CreateIndexBuffer(indexes.data(), (UINT)indexes.size());
+
+        ResourceManager::Insert(L"RedDebugMesh", mesh);
+
+
+
 
         constantBuffer[(UINT)eCBType::Transform] = new ConstantBuffer(eCBType::Transform);
         constantBuffer[(UINT)eCBType::Transform]->CreateConstantBuffer(sizeof(TransformCB));
+
+        constantBuffer[(UINT)eCBType::Color] = new ConstantBuffer(eCBType::Color);
+        constantBuffer[(UINT)eCBType::Color]->CreateConstantBuffer(sizeof(TransformCB));
     }
     void LoadShader()
     {
         std::shared_ptr<Shader> shader = std::make_shared<Shader>();
-        shader->CreateShader(eShaderStage::VS, L"TriangleVS.hlsl", "main");
-        shader->CreateShader(eShaderStage::PS, L"TrianglePS.hlsl", "main");
-        ResourceManager::Insert(L"TriangleShader", shader);
+        shader->CreateShader(eShaderStage::VS, L"DebugVS.hlsl", "main");
+        shader->CreateShader(eShaderStage::PS, L"DebugPS.hlsl", "main");
+        shader->SetTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
+        shader->SetRSState(eRSType::WireframeNone);
+        ResourceManager::Insert(L"DebugShader", shader);
 
         std::shared_ptr<Shader> spriteShader = std::make_shared<Shader>();
         spriteShader->CreateShader(eShaderStage::VS, L"SpriteVS.hlsl", "main");
         spriteShader->CreateShader(eShaderStage::PS, L"SpritePS.hlsl", "main");
+
+
         ResourceManager::Insert(L"SpriteShader", spriteShader);  
 
     }
     void LoadResource()
     {
         std::shared_ptr<Shader> spriteShader = ResourceManager::Find<Shader>(L"SpriteShader");
+
+        {
+            std::shared_ptr<Shader> debugShader = ResourceManager::Find<Shader>(L"DebugShader");
+            std::shared_ptr<Material> material = std::make_shared<Material>();
+
+            material = std::make_shared<Material>();
+            material->SetShader(debugShader);
+            ResourceManager::Insert(L"DebugMaterial", material);
+        }
 
         {
             std::shared_ptr<Texture> texture = ResourceManager::Load<Texture>(L"rust", L"..\\Resources\\Texture\\rust.png");
@@ -149,7 +214,7 @@ namespace zz::renderer
             std::shared_ptr<Texture> texture = ResourceManager::Load<Texture>(L"hall_0_0", L"..\\Resources\\Texture\\Mountain\\hall.png");
             std::shared_ptr<Texture> texture_visual = ResourceManager::Load<Texture>(L"hall_visual_0_0", L"..\\Resources\\Texture\\Mountain\\hall_visual.png");
 
-            PixelGrid::SetImage(0, 0, texture, texture_visual);
+            //PixelGrid::SetImage(0, 0, texture, texture_visual);
 
             
       /*      std::shared_ptr<Material> spriteMateiral = std::make_shared<Material>();
@@ -181,7 +246,7 @@ namespace zz::renderer
         {
             std::shared_ptr<Texture> texture = ResourceManager::Load<Texture>(L"hall_br_512_512", L"..\\Resources\\Texture\\Mountain\\hall_br.png");
             std::shared_ptr<Texture> texture_visual = ResourceManager::Load<Texture>(L"hall_br_visual_512_512", L"..\\Resources\\Texture\\Mountain\\hall_br_visual.png");
-            PixelGrid::SetImage(512, 512, texture, texture_visual);
+            //PixelGrid::SetImage(512, 512, texture, texture_visual);
 
             texture = ResourceManager::Load<Texture>(L"hall_br_visual_512_512", L"..\\Resources\\Texture\\Mountain\\hall_br_visual.png");
             std::shared_ptr<Material> spriteMateiral = std::make_shared<Material>();
@@ -193,7 +258,7 @@ namespace zz::renderer
         {
             std::shared_ptr<Texture> texture = ResourceManager::Load<Texture>(L"hall_r_512_0", L"..\\Resources\\Texture\\Mountain\\hall_r.png");
             std::shared_ptr<Texture> texture_visual = ResourceManager::Load<Texture>(L"hall_r_visual_512_0", L"..\\Resources\\Texture\\Mountain\\hall_r_visual.png");
-            PixelGrid::SetImage(512, 0, texture, texture_visual);
+            //PixelGrid::SetImage(512, 0, texture, texture_visual);
 
             texture = ResourceManager::Load<Texture>(L"hall_r_visual_512_0", L"..\\Resources\\Texture\\Mountain\\hall_r_visual.png");
             std::shared_ptr<Material> spriteMateiral = std::make_shared<Material>();
@@ -208,7 +273,7 @@ namespace zz::renderer
         }
         {
             std::shared_ptr<Texture> texture = ResourceManager::Load<Texture>(L"hall_bottom_2_552_512", L"..\\Resources\\Texture\\Mountain\\hall_bottom_2.png");
-            PixelGrid::SetImage(552, 512, texture);
+            //PixelGrid::SetImage(552, 512, texture);
         }
 
 
@@ -241,7 +306,7 @@ namespace zz::renderer
         arrLayout[2].SemanticName = "TEXCOORD";
         arrLayout[2].SemanticIndex = 0;
 
-        std::shared_ptr<Shader> shader = ResourceManager::Find<Shader>(L"TriangleShader");
+        std::shared_ptr<Shader> shader = ResourceManager::Find<Shader>(L"DebugShader");
         GetDevice()->CreateInputLayout(arrLayout, 3, shader->GetVSCode(), shader->GetInputLayoutAddressOf());
 
         shader = ResourceManager::Find<Shader>(L"SpriteShader");
@@ -351,6 +416,11 @@ namespace zz::renderer
         LoadShader();
         LoadResource();
         SetupState();
+    }
+
+    void PushDebugMeshAttribute(DebugMesh mesh)
+    {
+        debugMeshs.push_back(mesh);
     }
 
     void Render()

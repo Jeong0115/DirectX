@@ -15,7 +15,7 @@ namespace zz
             , bool isFinal, bool isFirst, Position lastPos, int depth) override;
 
         int GetDensity() { return mDensity; }
-        virtual Element* Clone() = 0;
+        virtual Element* Clone() { return nullptr; };
 
         int mDensity;
         int mDispersionRate;

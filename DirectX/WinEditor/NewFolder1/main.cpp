@@ -11,8 +11,9 @@
 #include "framework.h"
 #include "WinEditor.h"
 #include "zzApplication.h"
-#include "zzPixelGrid.h"
+#include "zzPixelWorld.h"
 #include "zzRenderer.h"
+#include "zzEditor.h"
 
 
 //#ifdef _DEBUG
@@ -35,7 +36,7 @@ BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
-LRESULT CALLBACK    PixelWndProc(HWND, UINT, WPARAM, LPARAM);
+//LRESULT CALLBACK    PixelWndProc(HWND, UINT, WPARAM, LPARAM);
 
 zz::Application& application = zz::Application::GetInst();
 //#ifdef _DEBUG
@@ -62,7 +63,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_ int       nCmdShow)
 {
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-    //_CrtSetBreakAlloc(88386);
+    //_CrtSetBreakAlloc(143596);
 
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
@@ -70,7 +71,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
     LoadStringW(hInstance, IDC_WINEDITOR, szWindowClass, MAX_LOADSTRING);
     MyRegisterClass(hInstance, szWindowClass, WndProc);
-    MyRegisterClass(hInstance, L"PixelWndProc", PixelWndProc);
+    //MyRegisterClass(hInstance, L"PixelWndProc", PixelWndProc);
 
     if (!InitInstance (hInstance, nCmdShow))
     {
@@ -96,12 +97,15 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         else
         {
             application.Run();
+            
         }
     }
 
     zz::renderer::Release();
     application.Release();
-    zz::PixelGrid::Release();
+    //zz::PixelGrid::Release();
+    zz::PixelWorld::Release();
+    Editor::Release();
     //CoUninitialize();
 
 //#ifdef _DEBUG
@@ -139,8 +143,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
       CW_USEDEFAULT, 0, 1600, 900, nullptr, nullptr, hInstance, nullptr);
 
-   HWND hWnd2 = CreateWindowW(L"PixelWndProc", szTitle, WS_OVERLAPPEDWINDOW,
-       1600, 0, 512, 512, nullptr, nullptr, hInstance, nullptr);
+   //HWND hWnd2 = CreateWindowW(L"PixelWndProc", szTitle, WS_OVERLAPPEDWINDOW,
+   //    1600, 0, 512, 512, nullptr, nullptr, hInstance, nullptr);
 
    if (!hWnd)
    {
@@ -153,9 +157,11 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    ShowWindow(hWnd, nCmdShow);
    
    UpdateWindow(hWnd);
-   PixelGrid::SetHwnd(hWnd2);
-   PixelGrid::Initialize();
+   
    application.Initialize();
+   Editor::Initialize();
+   //PixelGrid::SetHwnd(hWnd2);
+   //PixelGrid::Initialize();
    //InitializeScenes();
    
   
@@ -199,60 +205,60 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     return 0;
 }
 
-LRESULT CALLBACK PixelWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-{
-    switch (message)
-    {
-    case WM_CREATE:
-    {
-        //512 384
-        //HMENU mMenubar = LoadMenu(nullptr, MAKEINTRESOURCE(IDC_CLIENT));
-        //SetMenu(hWnd, mMenubar);
-        //ya::Image* tile = ya::Resources::Load<ya::Image>(L"TileAtlas", L"..\\Resources\\Tile.bmp");
-        RECT rect = { 0, 0,512, 512 };
-        AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, true);
-
-        // 윈도우 크기 변경및 출력 설정
-        SetWindowPos(hWnd
-            , nullptr, 500, -1000
-            , rect.right - rect.left
-            , rect.bottom - rect.top
-            , 0);
-        ShowWindow(hWnd, true);
-    }
-
-    case WM_COMMAND:
-    {
-        int wmId = LOWORD(wParam);
-
-        switch (wmId)
-        {
-        case IDM_ABOUT:
-            DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
-            break;
-        case IDM_EXIT:
-            DestroyWindow(hWnd);
-            break;
-        default:
-            return DefWindowProc(hWnd, message, wParam, lParam);
-        }
-    }
-    break;
-    case WM_PAINT:
-    {
-        PAINTSTRUCT ps;
-        HDC hdc = BeginPaint(hWnd, &ps);
-        EndPaint(hWnd, &ps);
-    }
-    break;
-    case WM_DESTROY:
-        PostQuitMessage(0);
-        break;
-    default:
-        return DefWindowProc(hWnd, message, wParam, lParam);
-    }
-    return 0;
-}
+//LRESULT CALLBACK PixelWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+//{
+//    switch (message)
+//    {
+//    case WM_CREATE:
+//    {
+//        //512 384
+//        //HMENU mMenubar = LoadMenu(nullptr, MAKEINTRESOURCE(IDC_CLIENT));
+//        //SetMenu(hWnd, mMenubar);
+//        //ya::Image* tile = ya::Resources::Load<ya::Image>(L"TileAtlas", L"..\\Resources\\Tile.bmp");
+//        RECT rect = { 0, 0,512, 512 };
+//        AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, true);
+//
+//        // 윈도우 크기 변경및 출력 설정
+//        SetWindowPos(hWnd
+//            , nullptr, 500, -1000
+//            , rect.right - rect.left
+//            , rect.bottom - rect.top
+//            , 0);
+//        ShowWindow(hWnd, true);
+//    }
+//
+//    case WM_COMMAND:
+//    {
+//        int wmId = LOWORD(wParam);
+//
+//        switch (wmId)
+//        {
+//        case IDM_ABOUT:
+//            DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
+//            break;
+//        case IDM_EXIT:
+//            DestroyWindow(hWnd);
+//            break;
+//        default:
+//            return DefWindowProc(hWnd, message, wParam, lParam);
+//        }
+//    }
+//    break;
+//    case WM_PAINT:
+//    {
+//        PAINTSTRUCT ps;
+//        HDC hdc = BeginPaint(hWnd, &ps);
+//        EndPaint(hWnd, &ps);
+//    }
+//    break;
+//    case WM_DESTROY:
+//        PostQuitMessage(0);
+//        break;
+//    default:
+//        return DefWindowProc(hWnd, message, wParam, lParam);
+//    }
+//    return 0;
+//}
 
 INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {

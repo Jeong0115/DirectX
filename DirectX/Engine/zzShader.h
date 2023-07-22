@@ -16,6 +16,11 @@ namespace zz
         bool CreateShader(const eShaderStage stage, const std::wstring& fileName, const std::string& funcName);
         void BindShaders();
 
+        void SetRSState(eRSType type) { mRSType = type; }
+        void SetDSState(eDSType type) { mDSType = type; }
+        void SetBSState(eBSType type) { mBSType = type; }
+        void SetTopology(D3D11_PRIMITIVE_TOPOLOGY topology) { mTopology = topology; }
+
         ID3DBlob* GetVSCode() { return mVSBlob.Get(); }
         ID3D11InputLayout* GetInputLayout(){ return mInputLayout; }
         ID3D11InputLayout** GetInputLayoutAddressOf() { return &mInputLayout; }

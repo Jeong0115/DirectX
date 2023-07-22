@@ -1,5 +1,5 @@
 #include "zzLiquid.h"
-#include "zzPixelGrid.h"
+#include "zzPixelWorld.h"
 
 namespace zz
 {
@@ -17,14 +17,14 @@ namespace zz
     void Liquid::Update()
     {
        
-        if (mStep != PixelGrid::Step) 
-            return;
-        mStep.flip();
+        //if (mStep != PixelGrid::Step) 
+        //    return;
+        //mStep.flip();
 
         //mVelocity += math::Vector2(0.0f, 5.0f);
         if (mbFreeFalling)
         {
-            mVelocity.x *= 0.8f;
+            mVelocity.x *= 0.4f;
         }
 
         int yModifier = mVelocity.y < 0 ? -1 : 1;
@@ -95,7 +95,7 @@ namespace zz
             // 어떻게 할까 수정해야됨
             Position targetPos = Position(mPos.x + (xIncrease * xModifier), mPos.y + (yIncrease * yModifier));
 
-            Element* target = PixelGrid::GetElement(targetPos.x, targetPos.y);
+            Element* target = PixelWorld::GetElement(targetPos.x, targetPos.y);
             if (target != nullptr)
             {
                 if (target == this) continue;
@@ -125,13 +125,13 @@ namespace zz
             mStopCount = mStopThreshold;
         }
 
-        //if (mStopCount != mStopThreshold)
-        //{
-            if(!Is() || mbIgnited) 
-            {
-                PixelGrid::SetActiveChunks(mPos.x, mPos.y);
-                PixelGrid::SetActiveChunks(startPos.x, startPos.y);
-            }
+        ////if (mStopCount != mStopThreshold)
+        ////{
+        //    if(!Is() || mbIgnited) 
+        //    {
+        //        PixelGrid::SetActiveChunks(mPos.x, mPos.y);
+        //        PixelGrid::SetActiveChunks(startPos.x, startPos.y);
+        //    }
         //}
         //if (matrix.useChunks) {
         //    if (isIgnited || !hasNotMovedBeyondThreshold()) {
@@ -155,7 +155,8 @@ namespace zz
             if (isFinal)
             {
                 mbFreeFalling = true;
-                SwapTarget(targetPos);
+                //SwapTarget(targetPos);
+                PixelWorld::SwapElement(mPos.x, mPos.y, targetPos.x, targetPos.y);
                 //SwapElement(target); // 나중에 다시 보자
                 return true;
             }
@@ -185,7 +186,7 @@ namespace zz
 
             if (isFinal) 
             {
-                MoveLastPosition(lastPos);
+                PixelWorld::SwapElement(mPos.x, mPos.y, lastPos.x, lastPos.y);
                 return true;
             }
 
@@ -204,7 +205,7 @@ namespace zz
 
             int distance = additionalX * (random() > 0.5 ? mDispersionRate + 2 : mDispersionRate - 1);
 
-            Element* diagonalElement = PixelGrid::GetElement(mPos.x + additionalX, mPos.y + additionalY); 
+            Element* diagonalElement = PixelWorld::GetElement(mPos.x + additionalX, mPos.y + additionalY); 
             
             if (isFirst) 
                 mVelocity.y = getAverageVelOrGravity(mVelocity.y, target->GetVelocity().y);
@@ -225,7 +226,7 @@ namespace zz
                 }
             }
 
-            Element* sideElement = PixelGrid::GetElement(mPos.x + additionalX, mPos.y);
+            Element* sideElement = PixelWorld::GetElement(mPos.x + additionalX, mPos.y);
             if (sideElement != nullptr && sideElement != diagonalElement) 
             {
                 bool stoppedSide 
@@ -240,7 +241,7 @@ namespace zz
 
             mbFreeFalling = false;
 
-            MoveLastPosition(lastPos);
+            PixelWorld::SwapElement(mPos.x, mPos.y, lastPos.x, lastPos.y);
             return true;
             //moveToLastValid(matrix, lastValidLocation);
         }
@@ -250,7 +251,7 @@ namespace zz
                 return true;
 
             if (isFinal) 
-                MoveLastPosition(lastPos);
+                PixelWorld::SwapElement(mPos.x, mPos.y, lastPos.x, lastPos.y);
                 return true;
             
             if (mbFreeFalling) 
@@ -268,7 +269,7 @@ namespace zz
 
             int distance = additionalX * (random() > 0.5 ? mDispersionRate + 2 : mDispersionRate - 1);
 
-            Element* diagonalElement = PixelGrid::GetElement(mPos.x + additionalX, mPos.y + additionalY); // mPos로 할껀지, lastPos로 할껀지 확인
+            Element* diagonalElement = PixelWorld::GetElement(mPos.x + additionalX, mPos.y + additionalY); // mPos로 할껀지, lastPos로 할껀지 확인
 
             if (isFirst)
                 mVelocity.y = getAverageVelOrGravity(mVelocity.y, target->GetVelocity().y);
@@ -289,7 +290,7 @@ namespace zz
                 }
             }
 
-            Element* sideElement = PixelGrid::GetElement(mPos.x + additionalX, mPos.y);
+            Element* sideElement = PixelWorld::GetElement(mPos.x + additionalX, mPos.y);
             if (sideElement != nullptr && sideElement != diagonalElement)
             {
                 bool stoppedSide
@@ -304,14 +305,14 @@ namespace zz
 
             mbFreeFalling = false;
 
-            MoveLastPosition(lastPos);
+            PixelWorld::SwapElement(mPos.x, mPos.y, lastPos.x, lastPos.y);
             return true;
         }
         else if (target->GetType() == eElementType::Gas) 
         {
             if (isFinal) 
             {
-                MoveLastPosition(lastPos);
+                PixelWorld::SwapElement(mPos.x, mPos.y, lastPos.x, lastPos.y);
                 return true;
             }
             return false;
@@ -327,25 +328,25 @@ namespace zz
 
         if (targetPos.x < 1 || targetPos.y < 0) return;
 
-        Element* rightElement = PixelGrid::GetElement(targetPos.x + 1, targetPos.y);
+        Element* rightElement = PixelWorld::GetElement(targetPos.x + 1, targetPos.y);
         if(rightElement != nullptr) 
         {
             if (rightElement->GetType() == eElementType::Solid)
             {
                 bool isFalling = setElementFreeFalling(rightElement);
-                if (isFalling)
-                    PixelGrid::SetActiveChunks(targetPos.x + 1, targetPos.y);
+               /* if (isFalling)
+                    PixelGrid::SetActiveChunks(targetPos.x + 1, targetPos.y);*/
             }
         }
 
-        Element* leftElement = PixelGrid::GetElement(targetPos.x - 1, targetPos.y);
+        Element* leftElement = PixelWorld::GetElement(targetPos.x - 1, targetPos.y);
         if (leftElement != nullptr)
         {
             if (leftElement->GetType() == eElementType::Solid)
             {
                 bool isFalling = setElementFreeFalling(leftElement);
-                if (isFalling)
-                    PixelGrid::SetActiveChunks(targetPos.x - 1, targetPos.y);
+                //if (isFalling)
+                //    PixelGrid::SetActiveChunks(targetPos.x - 1, targetPos.y);
             }
         }
     }
@@ -367,7 +368,8 @@ namespace zz
         if (random() > 0.8f) 
             mVelocity.x *= -1;
         
-        MoveLastPosAndSwapTarget(targetPos, lastPos);
+        PixelWorld::SwapElement(mPos.x, mPos.y, targetPos.x, targetPos.y);
+        PixelWorld::SwapElement(lastPos.x, lastPos.y, targetPos.x, targetPos.y);
         //SwapElement(target);
     }
 
@@ -400,7 +402,7 @@ namespace zz
             {
                 int modifiedX = startingX + i * distanceModifier;
 
-                Element* target = PixelGrid::GetElement(modifiedX, startingY);
+                Element* target = PixelWorld::GetElement(modifiedX, startingY);
                 if (target == nullptr) 
                     return true;
 
@@ -414,7 +416,7 @@ namespace zz
                 {
                     if (isFinal)
                     {
-                        SwapTarget(Position(modifiedX, startingY));
+                        PixelWorld::SwapElement(mPos.x, mPos.y, modifiedX, startingY);
                         return false;
                     }
                     lastValidLocation.x = modifiedX;
@@ -438,7 +440,7 @@ namespace zz
                     {
                         return true;
                     }
-                    MoveLastPosition(lastValidLocation);
+                    PixelWorld::SwapElement(mPos.x, mPos.y, lastValidLocation.x, lastValidLocation.y);
                     return false;
                 }
             }

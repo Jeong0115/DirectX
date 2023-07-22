@@ -4,8 +4,8 @@
 #include "zzRenderer.h"
 #include "zzTime.h"
 #include "zzInput.h"
-#include "zzPixelGrid.h"
-
+#include "..\\Editor\\zzEditor.h"
+#include "zzPixelWorld.h"
 namespace zz
 {	
 	Application::Application()
@@ -49,14 +49,15 @@ namespace zz
        //PixelGrid::GetInst().Initialize();
         renderer::Initialize();
         SceneManger::GetInst().Initialize();
+        PixelWorld::Initialize();
 	}
 
 	void Application::Update()
 	{
         Time::Update();
         Input::Update();
+        PixelWorld::Update();
         SceneManger::GetInst().Update();
-        PixelGrid::Update();
 	}
 
 	void Application::LateUpdate()
@@ -67,14 +68,16 @@ namespace zz
 	void Application::Render()
 	{
         //graphicDevice->Draw();
-
+       
         graphicDevice->ClearRenderTarget();
         graphicDevice->UpdateViewPort();
+        
         SceneManger::GetInst().Render();
+        Editor::Run();
+
         //graphicDevice->Draw();
 
         graphicDevice->Present();
-        PixelGrid::Render();
 	}
 
     void Application::Release()

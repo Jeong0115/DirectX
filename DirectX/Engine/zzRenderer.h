@@ -26,7 +26,13 @@ namespace zz::renderer
         Matrix mProjection;
     };
 
+    CBUFFER(ColorCB, CBSLOT_COLOR)
+    {
+        Vector4 color;
+    };
+
     extern Vertex vertexes[];
+    extern Vertex debugVertexes[];
     extern graphics::ConstantBuffer* constantBuffer[(UINT)eCBType::End];
 
     extern Microsoft::WRL::ComPtr<ID3D11SamplerState> samplerState[];
@@ -35,8 +41,11 @@ namespace zz::renderer
     extern Microsoft::WRL::ComPtr<ID3D11BlendState> blendStates[];
 
     extern std::vector<zz::Camera*> cameras;
+    extern std::vector<DebugMesh> debugMeshs;
 
     void Initialize();
     void Render();
     void Release();
+
+    void PushDebugMeshAttribute(DebugMesh mesh);
 }

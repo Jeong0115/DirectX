@@ -107,7 +107,7 @@ namespace zz
         {
             GameObject* object = new GameObject();
             AddGameObject(eLayerType::Player, object);
-            object->GetComponent<Transform>()->SetPosition(Vector3(x + 300, y, 0.0f));
+            object->GetComponent<Transform>()->SetPosition(Vector3(x + 300, y, 0.01f));
             MeshRenderer* mesh = object->AddComponent<MeshRenderer>();
             mesh->SetMaterial(ResourceManager::Find<Material>(L"m_hall_r_visual_512_0"));
             mesh->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));

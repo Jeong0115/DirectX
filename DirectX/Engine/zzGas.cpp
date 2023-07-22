@@ -26,7 +26,7 @@ namespace zz
             mVelocity.y = -64;
         }
 
-        mVelocity.x *= 0.9;
+        mVelocity.x *= 0.9f;
 
         int yModifier = mVelocity.y < 0 ? -1 : 1;
         int xModifier = mVelocity.x < 0 ? -1 : 1;

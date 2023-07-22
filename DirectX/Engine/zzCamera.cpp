@@ -82,7 +82,7 @@ namespace zz
 
         if (type == eProjectionType::OrthoGraphic)
         {
-            float OrthorGraphicRatio = 0.275f;
+            float OrthorGraphicRatio = 1.f;
             width *= OrthorGraphicRatio;
             height *= OrthorGraphicRatio;
 

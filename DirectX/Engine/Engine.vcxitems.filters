@@ -160,6 +160,12 @@
     <Filter Include="Element\Gas\Smoke">
       <UniqueIdentifier>{f5f5240a-5843-4435-a937-7195c361a6e4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Temp">
+      <UniqueIdentifier>{68d27f6e-9fa5-465e-a3ae-80db697e63f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PixelWorld">
+      <UniqueIdentifier>{9b8458f7-0010-41bc-969e-f103864d4249}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzEntity.cpp">
@@ -283,6 +289,23 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)zzSmoke.cpp">
       <Filter>Element\Gas\Smoke</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)tElement.cpp">
+      <Filter>Temp</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)tSand.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzPixelWorld.cpp">
+      <Filter>PixelWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzPixelChunk.cpp">
+      <Filter>PixelWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzPixelUpdater.cpp">
+      <Filter>PixelWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzPixelChunkMap.cpp">
+      <Filter>PixelWorld</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzThreadPool.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzEntity.h">
@@ -433,5 +456,22 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzSmoke.h">
       <Filter>Element\Gas\Smoke</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)tElement.h">
+      <Filter>Temp</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)tSand.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzPixelWorld.h">
+      <Filter>PixelWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzPixelChunk.h">
+      <Filter>PixelWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzPixelUpdater.h">
+      <Filter>PixelWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzPixelChunkMap.h">
+      <Filter>PixelWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzThreadPool.h" />
   </ItemGroup>
 </Project>

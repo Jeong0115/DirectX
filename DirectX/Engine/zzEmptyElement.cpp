@@ -6,6 +6,7 @@ namespace zz
     {
         mColor = ElementColor::Empty;
         mType = eElementType::Empty;
+        SetName(L"Empty");
     }
     EmptyElement::~EmptyElement()
     {

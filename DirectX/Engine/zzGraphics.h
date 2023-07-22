@@ -7,10 +7,13 @@
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "d3dcompiler.lib")
 
+#include "zzMath.h"
+
 #define CB_GETBINDSLOT(name) __CBUFFERBINDSLOT__##name##__
 #define CBUFFER(name, slot) static const int CB_GETBINDSLOT(name) = slot; struct alignas(16) name 
 
 #define CBSLOT_TRANSFORM		0
+#define CBSLOT_COLOR		1
 //#define CBSLOT_PARTICLE			1
 
 enum class eShaderStage
@@ -27,6 +30,7 @@ enum class eShaderStage
 enum class eCBType
 {
     Transform,
+    Color,
     Material,
     End,
 };
@@ -76,4 +80,17 @@ struct GpuBuffer
     }
 
     virtual ~GpuBuffer() = default;
+};
+
+struct DebugMesh
+{
+   // enums::eColliderType type;
+    int temp = 0;
+    zz::math::Vector3 position;
+    zz::math::Vector3 rotation;
+    zz::math::Vector3 scale;
+
+    float radius;
+    float duration;
+    float time;
 };

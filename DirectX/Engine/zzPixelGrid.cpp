@@ -26,88 +26,90 @@
 #include <list>
 #include <type_traits>
 
+
+#include "zzPixelWorld.h"
 namespace zz
 {
-    class ThreadPool {
-    public:
-        std::vector<std::thread> workers;
-        std::queue<std::function<void()>> tasks;
-        std::mutex queue_mutex;
-        std::condition_variable condition;
-        std::condition_variable all_idle;
-        bool stop;
-        std::atomic<int> active{0};
+    //class ThreadPool {
+    //public:
+    //    std::vector<std::thread> workers;
+    //    std::queue<std::function<void()>> tasks;
+    //    std::mutex queue_mutex;
+    //    std::condition_variable condition;
+    //    std::condition_variable all_idle;
+    //    bool stop;
+    //    std::atomic<int> active{0};
 
-        ThreadPool(size_t threads) : stop(false) {
-            for (size_t i = 0; i < threads; ++i)
-            {
-                workers.emplace_back([this] {
-                    for (;;) {
-                        std::function<void()> task;
-                        {
-                            std::unique_lock<std::mutex> lock(this->queue_mutex);
-                            this->condition.wait(lock, [this] { return this->stop || !this->tasks.empty(); });
-                            if (this->stop && this->tasks.empty()) return;
-                            task = std::move(this->tasks.front());
-                            this->tasks.pop();
-                        }
+    //    ThreadPool(size_t threads) : stop(false) {
+    //        for (size_t i = 0; i < threads; ++i)
+    //        {
+    //            workers.emplace_back([this] {
+    //                for (;;) {
+    //                    std::function<void()> task;
+    //                    {
+    //                        std::unique_lock<std::mutex> lock(this->queue_mutex);
+    //                        this->condition.wait(lock, [this] { return this->stop || !this->tasks.empty(); });
+    //                        if (this->stop && this->tasks.empty()) return;
+    //                        task = std::move(this->tasks.front());
+    //                        this->tasks.pop();
+    //                    }
 
-                        task();
-                        --this->active;
-                        if (this->active == 0) all_idle.notify_one();
-                    }
-                    });
-            }
-        }
-        template<class F, class... Args>
-        auto enqueue(F&& f, Args&&... args) -> std::future<typename std::invoke_result<F, Args...>::type> {
-            using return_type = typename std::invoke_result<F, Args...>::type;
-            auto task = std::make_shared<std::packaged_task<return_type()>>(std::bind(std::forward<F>(f), std::forward<Args>(args)...));
-            std::future<return_type> res = task->get_future();
-            {
-                std::unique_lock<std::mutex> lock(queue_mutex);
-                if (stop) throw std::runtime_error("enqueue on stopped ThreadPool");
-                ++this->active;
-                tasks.emplace([task]() { (*task)(); });
-            }
-            condition.notify_one();
-            return res;
-        }
-        ~ThreadPool() { // 맵 밖으로 픽셀이 나간다음 종료하면 여기서 터지는듯??
-            {
-                std::unique_lock<std::mutex> lock(queue_mutex);
-                stop = true;
-            }
-            condition.notify_all();
-            for (std::thread& worker : workers) 
-                worker.join();
-        }
-        void wait() {
-            std::unique_lock<std::mutex> lock(queue_mutex);
-            all_idle.wait(lock, [this]() { return this->active == 0; });
-        }
+    //                    task();
+    //                    --this->active;
+    //                    if (this->active == 0) all_idle.notify_one();
+    //                }
+    //                });
+    //        }
+    //    }
+    //    template<class F, class... Args>
+    //    auto enqueue(F&& f, Args&&... args) -> std::future<typename std::invoke_result<F, Args...>::type> {
+    //        using return_type = typename std::invoke_result<F, Args...>::type;
+    //        auto task = std::make_shared<std::packaged_task<return_type()>>(std::bind(std::forward<F>(f), std::forward<Args>(args)...));
+    //        std::future<return_type> res = task->get_future();
+    //        {
+    //            std::unique_lock<std::mutex> lock(queue_mutex);
+    //            if (stop) throw std::runtime_error("enqueue on stopped ThreadPool");
+    //            ++this->active;
+    //            tasks.emplace([task]() { (*task)(); });
+    //        }
+    //        condition.notify_one();
+    //        return res;
+    //    }
+    //    ~ThreadPool() { // 맵 밖으로 픽셀이 나간다음 종료하면 여기서 터지는듯??
+    //        {
+    //            std::unique_lock<std::mutex> lock(queue_mutex);
+    //            stop = true;
+    //        }
+    //        condition.notify_all();
+    //        for (std::thread& worker : workers) 
+    //            worker.join();
+    //    }
+    //    void wait() {
+    //        std::unique_lock<std::mutex> lock(queue_mutex);
+    //        all_idle.wait(lock, [this]() { return this->active == 0; });
+    //    }
 
-        void Shutdown() {
-            {
-                std::unique_lock<std::mutex> lock(queue_mutex);
-                stop = true;
-            }
-            condition.notify_all();  // 모든 스레드에게 종료 신호를 보냅니다.
-            for (std::thread& worker : workers) {
-                if (worker.joinable()) {
-                    worker.join();  // 각 스레드가 종료될 때까지 기다립니다.
-                }
-            }
-            while (!tasks.empty()) 
-            {
-                tasks.pop();
-            }
-            // 이 시점에서 모든 스레드는 종료되었습니다.
-        }
-    private:
+    //    void Shutdown() {
+    //        {
+    //            std::unique_lock<std::mutex> lock(queue_mutex);
+    //            stop = true;
+    //        }
+    //        condition.notify_all();  // 모든 스레드에게 종료 신호를 보냅니다.
+    //        for (std::thread& worker : workers) {
+    //            if (worker.joinable()) {
+    //                worker.join();  // 각 스레드가 종료될 때까지 기다립니다.
+    //            }
+    //        }
+    //        while (!tasks.empty()) 
+    //        {
+    //            tasks.pop();
+    //        }
+    //        // 이 시점에서 모든 스레드는 종료되었습니다.
+    //    }
+    //private:
 
 
-    };
+    //};
 
     int PixelGrid::mFrameCount = 0;
     UINT PixelGrid::mWidth = 2048;
@@ -136,7 +138,7 @@ namespace zz
     std::bitset<1> PixelGrid::Step = {};
     std::vector<Element*> PixelGrid::mDeadElement = {};
 
-    ThreadPool pool(10);
+    //ThreadPool pool(10);
 
     PixelGrid::PixelGrid()
     {
@@ -149,6 +151,7 @@ namespace zz
 
     void PixelGrid::Initialize()
     {
+        PixelWorld::Initialize();
         Step.set();
 
         mElementMap.insert({ 'z', new Water });
@@ -159,13 +162,13 @@ namespace zz
         mElementMap.insert({ 'e', new EmptyElement });
         mSelectElement = mElementMap.find('e')->second;
 
-        for (UINT i = 0; i < mHeight; i++)
+       /* for (UINT i = 0; i < mHeight; i++)
         {
             for (UINT j = 0; j < mWidth; j++)
             {
                 mElements[i][j] = new EmptyElement();
             }
-        }
+        }*/
 
         mHdc = GetDC(mHwnd);
         BITMAPINFO bmi = { 0 };
@@ -186,8 +189,20 @@ namespace zz
         mImage = new PixelGridColor();
     }
 
+    
+
     void PixelGrid::Update()
     {
+        mFixedTime += Time::DeltaTime();
+        if (mFixedTime >= 1 / 60.f)
+        {
+            PixelWorld::Update();
+            mFixedTime = 0;
+            //FixedUpdate();
+            //Step.flip();
+        }
+        return;
+        
         if (Input::GetKeyDown(eKeyCode::Z) || Input::GetKeyDown(eKeyCode::X) || Input::GetKeyDown(eKeyCode::C)
             || Input::GetKeyDown(eKeyCode::E) || Input::GetKeyDown(eKeyCode::O) || Input::GetKeyDown(eKeyCode::F))
         {
@@ -260,11 +275,12 @@ namespace zz
 
 
         mFixedTime += Time::DeltaTime();
-        if (mFixedTime >= 1.0 / 50.0)
+        if (mFixedTime >= 1/ 60.f)
         {
+            PixelWorld::Update();
             mFixedTime = 0;
-            FixedUpdate();
-            Step.flip();
+            //FixedUpdate();
+            //Step.flip();
         }
 
         int a = 0;
@@ -281,87 +297,89 @@ namespace zz
     }
 
     
+    
     //std::vector<std::vector<Element*>> temp;
     //std::mutex mtx;
 
-    void PixelGrid::FixedUpdate()
-    {
-        increaseFrameCount();
+    //void PixelGrid::FixedUpdate()
+    //{
+    //    return;
+    //    increaseFrameCount();
 
-        LARGE_INTEGER cpuFreq = {};
-        LARGE_INTEGER prevFreq = {};
-        LARGE_INTEGER curFreq = {};
+    //    LARGE_INTEGER cpuFreq = {};
+    //    LARGE_INTEGER prevFreq = {};
+    //    LARGE_INTEGER curFreq = {};
 
-        QueryPerformanceFrequency(&cpuFreq);
-        QueryPerformanceCounter(&prevFreq);
+    //    QueryPerformanceFrequency(&cpuFreq);
+    //    QueryPerformanceCounter(&prevFreq);
 
-        // 멀티 쓰레드 element update
-        {
-            // copyChunksState을 마스크 처럼 쓸까, 아니면 지금 처럼 쓸까
+    //    // 멀티 쓰레드 element update
+    //    {
+    //        // copyChunksState을 마스크 처럼 쓸까, 아니면 지금 처럼 쓸까
 
-            std::bitset<32> copyChunksState[32] = {};
-            std::bitset<32 * 32> chunkMask = { 1, };
+    //        std::bitset<32> copyChunksState[32] = {};
+    //        std::bitset<32 * 32> chunkMask = { 1, };
 
-            for (int ci = 31; ci >= 0; ci--)
-            {
-                for (int cj = 31; cj >= 0; cj--)
-                {
-                    if (mChunks[ci][cj].isActive())
-                    {
-                        mChunks[ci][cj].SetDeath();
-                        copyChunksState[cj].set(ci, true);
-                    }
-                }
-            }
+    //        for (int ci = 31; ci >= 0; ci--)
+    //        {
+    //            for (int cj = 31; cj >= 0; cj--)
+    //            {
+    //                if (mChunks[ci][cj].isActive())
+    //                {
+    //                    mChunks[ci][cj].SetDeath();
+    //                    copyChunksState[cj].set(ci, true);
+    //                }
+    //            }
+    //        }
 
-            int a = 100;
+    //        int a = 100;
 
-            while (true)
-            {
-                if (chunkMask.all()) break;
-                chunkMask.set();
+    //        while (true)
+    //        {
+    //            if (chunkMask.all()) break;
+    //            chunkMask.set();
 
-                int k = 0;
+    //            int k = 0;
 
-                for (int y = 31; y >= 0; y--)
-                {
-                    for (int x = 31; x >= 0; x--)
-                    {
-                        if (copyChunksState[y][x] && chunkMask[y * 32 + x])
-                        {
-                            for (int maskY = y - 1; maskY <= y + 1; maskY++)
-                            {
-                                if (maskY < 0 || maskY > 31) continue;
-                                for (int maskX = x - 1; maskX <= x + 1; maskX++)
-                                {
-                                    if (maskX < 0 || maskX > 31) continue;
-                                    chunkMask[maskY * 32 + maskX] = false;
-                                }
-                            }
+    //            for (int y = 31; y >= 0; y--)
+    //            {
+    //                for (int x = 31; x >= 0; x--)
+    //                {
+    //                    if (copyChunksState[y][x] && chunkMask[y * 32 + x])
+    //                    {
+    //                        for (int maskY = y - 1; maskY <= y + 1; maskY++)
+    //                        {
+    //                            if (maskY < 0 || maskY > 31) continue;
+    //                            for (int maskX = x - 1; maskX <= x + 1; maskX++)
+    //                            {
+    //                                if (maskX < 0 || maskX > 31) continue;
+    //                                chunkMask[maskY * 32 + maskX] = false;
+    //                            }
+    //                        }
 
-                            copyChunksState[y][x] = false;
-                            pool.enqueue(updateChunk, y, x);
-                            k++;
-                            if (k >= a) break;
-                        }
-                    }
-                    if (k >= a) break;
-                }
+    //                        copyChunksState[y][x] = false;
+    //                        pool.enqueue(updateChunk, y, x);
+    //                        k++;
+    //                        if (k >= a) break;
+    //                    }
+    //                }
+    //                if (k >= a) break;
+    //            }
 
-                pool.wait();
-            }
-        }
+    //            pool.wait();
+    //        }
+    //    }
 
 
-        QueryPerformanceCounter(&curFreq);
+    //    QueryPerformanceCounter(&curFreq);
 
-        double latency = (double)(curFreq.QuadPart - prevFreq.QuadPart) / (double)cpuFreq.QuadPart;
-        wchar_t text[100] = {};
+    //    double latency = (double)(curFreq.QuadPart - prevFreq.QuadPart) / (double)cpuFreq.QuadPart;
+    //    wchar_t text[100] = {};
 
-        swprintf_s(text, 100, L"FixedUpdate Latency : %f", latency);
+    //    swprintf_s(text, 100, L"FixedUpdate Latency : %f", latency);
 
-        SetWindowText(mHwnd, text);
-    }
+    //    SetWindowText(mHwnd, text);
+    //}
 
     void PixelGrid::updateChunk(int x, int y)
     {
@@ -405,6 +423,7 @@ namespace zz
 
     void PixelGrid::Render()
     {
+        return;
         if (Input::GetKey(eKeyCode::A))
         {
             x -= 305.0f * (float)Time::DeltaTime();
@@ -560,18 +579,18 @@ namespace zz
         mElements[y][x]->SetPos(x, y);
         memcpy(&mPixelColor[(y * mWidth + x) * 4], mElements[y][x]->GetColor(), 4);
     }
-    std::mutex mx;
+    //std::mutex mx;
     void PixelGrid::DeleteElement(int x, int y)
     {
         // 멀티 쓰레드 안전한지 확인
         
-        mx.lock();
+       /* mx.lock();
         mDeadElement.push_back(mElements[y][x]);
         mx.unlock();
 
         mElements[y][x] = new EmptyElement();
         mElements[y][x]->SetPos(x, y);
-        memcpy(&mPixelColor[(y * mWidth + x) * 4], EMPTY_COLOR, 4);
+        memcpy(&mPixelColor[(y * mWidth + x) * 4], EMPTY_COLOR, 4);*/
        
     }
 
@@ -731,7 +750,7 @@ namespace zz
 
     Element* PixelGrid::GetElement(int x, int y)
     {
-        if (x < 0 || x >= mWidth || y < 0 || y >= mHeight)
+        if (x < 0 || x >= (int)mWidth || y < 0 || y >= (int)mHeight)
         {
             return nullptr;
         }
@@ -740,7 +759,7 @@ namespace zz
             return mElements[y][x];
         }
     }
-
+     
 
     PixelGridColor::PixelGridColor()
         : mHdc(NULL)

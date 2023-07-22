@@ -15,5 +15,6 @@ namespace zz
             , bool isFinal, bool isFirst, Position lastPos, int depth) override;
 
         virtual void Update() override;
+
     };
 }

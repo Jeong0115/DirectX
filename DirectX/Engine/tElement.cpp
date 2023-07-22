@@ -1,23 +1,26 @@
-#include "zzMovableSolid.h"
+#include "tElement.h"
+#include "zzPixelGrid.h"
 #include "zzPixelWorld.h"
 
 namespace zz
 {
-    MovableSolid::MovableSolid()
+    tElement::tElement()
     {
         mStopThreshold = 5;
+
+        SetName(L"tElement");
     }
 
-    MovableSolid::~MovableSolid()
+    tElement::~tElement()
     {
 
     }
 
-    void MovableSolid::Update()
+    void tElement::Update()
     {
-        //if (mStep != PixelGrid::Step)
-        //    return;
-        //mStep.flip();
+        /*if (mStep != PixelGrid::Step)
+            return;
+        mStep.flip();*/
 
         //if (this.owningBody != null) {
         //    stepAsPartOfPhysicsBody(matrix);
@@ -25,7 +28,6 @@ namespace zz
         //}
 
         //mVelocity += math::Vector2(0.0f, 5.0f);
-
         if (mbFreeFalling)
             mVelocity.x *= 0.5f;
 
@@ -93,8 +95,9 @@ namespace zz
                 yIncrease = i;
                 xIncrease = smallerCount;
             }
-            Position targetPos = Position(mPos.x + (xIncrease * xModifier), mPos.y + (yIncrease * yModifier));
 
+            
+            Position targetPos = Position(mPos.x + (xIncrease * xModifier), mPos.y + (yIncrease * yModifier));
             if (targetPos.x > 1000 || targetPos.x < 0 || targetPos.y >1000 || targetPos.y < 0) return;
             Element* target = PixelWorld::GetElement(targetPos.x, targetPos.y);
             if (target != nullptr)
@@ -119,22 +122,22 @@ namespace zz
         spawnSparkIfIgnited();
         //checkLifeSpan(matrix);
         checkIgnitedAndSetColor();
-        
-        mStopCount = IsStop(startPos) && !mbIgnited ? mStopCount + 1 : 0;
-        if (mStopCount > mStopThreshold)
-        {
-            mStopCount = mStopThreshold;
-        }
 
-        if (!Is() || mbIgnited || mbFreeFalling)
-        {
-            /*PixelGrid::SetActiveChunks(mPos.x, mPos.y);
-            PixelGrid::SetActiveChunks(startPos.x, startPos.y);*/
-        }
+        //mStopCount = IsStop(startPos) && !mbIgnited ? mStopCount + 1 : 0;
+        //if (mStopCount > mStopThreshold)
+        //{
+        //    mStopCount = mStopThreshold;
+        //}
+
+        //if (!Is() || mbIgnited || mbFreeFalling)
+        //{
+        //    PixelGrid::SetActiveChunks(mPos.x, mPos.y);
+        //    PixelGrid::SetActiveChunks(startPos.x, startPos.y);
+        //}
 
     }
 
-    bool MovableSolid::InteractElement(Element* target, Position targetPos, bool isFinal, bool isFirst, Position lastPos, int depth)
+    bool tElement::InteractElement(Element* target, Position targetPos, bool isFinal, bool isFirst, Position lastPos, int depth)
     {
         eElementType targetType = target->GetType();
 
@@ -146,39 +149,39 @@ namespace zz
             {
                 mbFreeFalling = true;
                 PixelWorld::SwapElement(mPos.x, mPos.y, targetPos.x, targetPos.y);
+                //SwapTarget(targetPos);
             }
             else
             {
                 return false;
             }
         }
-        else if (targetType == eElementType::Liquid) 
+        else if (targetType == eElementType::Liquid)
         {
-            if (depth > 0) 
+            if (depth > 0)
             {
                 mbFreeFalling = true;
                 setAroundElementFreeFalling(lastPos, depth);
                 PixelWorld::SwapElement(mPos.x, mPos.y, targetPos.x, targetPos.y);
             }
-            else 
+            else
             {
                 mbFreeFalling = true;
                 PixelWorld::SwapElement(mPos.x, mPos.y, targetPos.x, targetPos.y);
-                PixelWorld::SwapElement(targetPos.x, targetPos.y, lastPos.x, lastPos.y);
-                //MoveLastPosAndSwapTarget(targetPos, lastPos);
                 return true;
             }
         }
-        else if (targetType == eElementType::Solid) 
+        else if (targetType == eElementType::Solid)
         {
             if (depth > 0) return true;
 
-            if (isFinal) 
+            if (isFinal)
             {
+                //MoveLastPosition(lastPos);
                 PixelWorld::SwapElement(mPos.x, mPos.y, lastPos.x, lastPos.y);
                 return true;
             }
-            if (mbFreeFalling) 
+            if (mbFreeFalling)
             {
                 float absY = max(fabs(mVelocity.y) / 31, 105);
                 mVelocity.x = mVelocity.x < 0 ? -absY : absY;
@@ -204,8 +207,8 @@ namespace zz
             {
                 bool stoppedDiagonally
                     = InteractElement(diagonalElement, Position(mPos.x + additionalX, mPos.y + additionalY), true, false, lastPos, depth + 1);
-                
-                if (!stoppedDiagonally) 
+
+                if (!stoppedDiagonally)
                 {
                     mbFreeFalling = true;
                     return true;
@@ -215,13 +218,13 @@ namespace zz
             Element* sideElement = PixelWorld::GetElement(mPos.x + additionalX, mPos.y);
             if (sideElement != nullptr && sideElement != diagonalElement)
             {
-                bool stoppedSide 
+                bool stoppedSide
                     = InteractElement(sideElement, Position(mPos.x + additionalX, mPos.y), true, false, lastPos, depth + 1);
-                
-                if (stoppedSide) 
+
+                if (stoppedSide)
                     mVelocity.x *= -1;
 
-                if (!stoppedSide) 
+                if (!stoppedSide)
                 {
                     mbFreeFalling = false;
                     return true;
@@ -233,12 +236,11 @@ namespace zz
             PixelWorld::SwapElement(mPos.x, mPos.y, lastPos.x, lastPos.y);
             return true;
         }
-        else if (targetType == eElementType::Gas) 
+        else if (targetType == eElementType::Gas)
         {
-            if (isFinal) 
+            if (isFinal)
             {
-                PixelWorld::SwapElement(mPos.x, mPos.y, targetPos.x, targetPos.y);
-                PixelWorld::SwapElement(lastPos.x, lastPos.y, targetPos.x, targetPos.y);
+                PixelWorld::SwapElement(mPos.x, mPos.y, lastPos.x, lastPos.y);
                 return true;
             }
             return false;
@@ -248,7 +250,7 @@ namespace zz
 
 
 
-    void MovableSolid::setAroundElementFreeFalling(Position targetPos, int depth)
+    void tElement::setAroundElementFreeFalling(Position targetPos, int depth)
     {
         if (depth > 0) return;
 
@@ -258,8 +260,8 @@ namespace zz
             if (rightElement->GetType() == eElementType::Solid)
             {
                 bool isFalling = setElementFreeFalling(rightElement);
-                /*if (isFalling)
-                    PixelGrid::SetActiveChunks(targetPos.x + 1, targetPos.y);*/
+                if (isFalling)
+                    PixelGrid::SetActiveChunks(targetPos.x + 1, targetPos.y);
             }
         }
 
@@ -269,26 +271,26 @@ namespace zz
             if (leftElement->GetType() == eElementType::Solid)
             {
                 bool isFalling = setElementFreeFalling(leftElement);
-                //if (isFalling)
-                //    PixelGrid::SetActiveChunks(targetPos.x - 1, targetPos.y);
+                if (isFalling)
+                    PixelGrid::SetActiveChunks(targetPos.x - 1, targetPos.y);
             }
         }
     }
 
-    bool MovableSolid::setElementFreeFalling(Element* element)
+    bool tElement::setElementFreeFalling(Element* element)
     {
         element->SetFreeFalling(random() > element->GetInertialResistance() || element->IsFreeFalling());
         return element->IsFreeFalling();
     }
 
-    int MovableSolid::getAdditional(float val)
+    int tElement::getAdditional(float val)
     {
         if (val < -0.1f)        return (int)floor(val);
         else if (val > 0.1f)    return (int)ceil(val);
         else                    return 0;
     }
 
-    float MovableSolid::getAverageVelOrGravity(float vel, float targetVel)
+    float tElement::getAverageVelOrGravity(float vel, float targetVel)
     {
         if (targetVel > 125.f) return 124.f;
 

@@ -13,6 +13,6 @@ namespace zz
         virtual void Update() override;
         virtual bool InteractElement(Element* target, Position targetPos, bool isFinal, bool isFirst, Position lastPos, int depth) override;
 
-        virtual Element* Clone() = 0;
+        virtual Element* Clone() { return nullptr; };
     };
 }

@@ -3,11 +3,12 @@
 #include "zzEngine.h"
 #include "zzPosition.h"
 #include "zzElementColor.h"
+#include "zzEntity.h"
 
 namespace zz
 {
     enum class eElementType { Solid, Liquid, Gas, Particle, Empty, Out };
-    class Element
+    class Element : public Entity
     {
     public:
         
@@ -16,9 +17,9 @@ namespace zz
         Element();
         virtual ~Element();
 
-        virtual void Update() = 0;
-        virtual bool InteractElement(Element* target, Position targetPos, bool isFinal, bool isFirst, Position lastPos, int depth) = 0;
-        virtual Element* Clone() = 0;
+        virtual void Update() {};
+        virtual bool InteractElement(Element* target, Position targetPos, bool isFinal, bool isFirst, Position lastPos, int depth) { return false; }
+        virtual Element* Clone() { return nullptr; }
         
         eElementType CheckTargetType(int targetX, int targetY);
         void SwapElement(Element* target);
@@ -33,7 +34,7 @@ namespace zz
         uint32_t* GetColor() { return &mColor.color; }
         void SetColor(uint32_t color) { mColor.color = color; }
 
-        eElementType GetType() { return mType; }
+        eElementType GetType() const { return mType; }
 
         math::Vector2 GetVelocity() { return mVelocity; }
         void SetVelocity(math::Vector2 velocity) { mVelocity = velocity; }
@@ -52,10 +53,7 @@ namespace zz
         uint32_t xorshift32();
        
         bool isUpdate = false;
-//#ifdef _DEBUG
-//        static int a;
-//        static float sum;
-//#endif
+        ElementColor mColor;
 
     protected:
         bool transferHeatToNeighbors();
@@ -76,7 +74,7 @@ namespace zz
         math::Vector2 mVelocityRemainder;
         float mInertialResistance = 0.f;
 
-        ElementColor mColor;
+       
         Position mPos;
         //int mStopUpdateCnt;
         std::bitset<1> mStep;

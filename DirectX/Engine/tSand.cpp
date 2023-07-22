@@ -1,20 +1,20 @@
-#include "zzSand.h"
+#include "tSand.h"
 #include "zzPixelGrid.h"
 #include "zzTime.h"
 
 namespace zz
 {
-    Sand::Sand()
+    tSand::tSand()
     {
         mColor = ElementColor::RandomSandColor();
-
+        SetName(L"tSand");
         mVelocity = math::Vector2(random() > 0.5 ? -1.f : 1.f, 124.f);
         mFrictionFactor = 0.9f;
         mInertialResistance = .1f;
         //mass = 150;
     }
 
-    Sand::~Sand()
+    tSand::~tSand()
     {
 
     }
@@ -26,13 +26,12 @@ namespace zz
 
 
 
-
-    Element* Sand::Clone()
+    Element* tSand::Clone()
     {
-        return new Sand();
+        return new tSand();
     }
 
-    bool Sand::ReceiveHeat(int heat)
+    bool tSand::ReceiveHeat(int heat)
     {
         return false;
     }

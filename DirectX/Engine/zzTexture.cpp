@@ -1,7 +1,7 @@
 #include "zzTexture.h"
 #include "zzGraphicsDevice.h"
-#include "zzPixelGrid.h"
 
+#include "zzPixelWorld.h"
 namespace zz
 {
     Texture::Texture()
@@ -75,7 +75,7 @@ namespace zz
 
     PixelTexture::PixelTexture()
     {
-        std::vector<uint8_t>& pixelTexture = PixelGrid::GetPixelColor();
+        std::vector<uint8_t>& pixelTexture = PixelWorld::GetPixelColor();
 
         TexMetadata metadata;
         metadata.width = 2048;
@@ -115,7 +115,7 @@ namespace zz
 
     void PixelTexture::BindShader(eShaderStage stage, UINT startSlot)
     {
-        std::vector<uint8_t>& pixelTexture = PixelGrid::GetPixelColor();
+        std::vector<uint8_t>& pixelTexture = PixelWorld::GetPixelColor();
         zz::graphics::GetDevice()->UpdateSubresource(mTexture.Get(), pixelTexture.data());
         Texture::BindShader(stage, startSlot);
     }

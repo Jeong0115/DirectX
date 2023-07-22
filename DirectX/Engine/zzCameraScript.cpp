@@ -12,7 +12,7 @@ namespace zz
         Vector3 pos = tr->GetPosition();
 
 
-        if (Input::GetKey(eKeyCode::W))
+      /*  if (Input::GetKey(eKeyCode::W))
         {
             pos.z += 105.0f * (float)Time::DeltaTime();
             tr->SetPosition(pos);
@@ -41,7 +41,7 @@ namespace zz
         {
             pos.y += 305.0f * (float)Time::DeltaTime();
             tr->SetPosition(pos);
-        }
+        }*/
 
     }
 }
