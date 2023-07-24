@@ -17,6 +17,7 @@ namespace zz
         virtual void Render();
 
         void AddGameObject(eLayerType type, GameObject* gameObject);
+        Layer& GetLayer(eLayerType type) { return mLayers[(UINT)type]; }
 
     private:
         std::vector<Layer> mLayers; // 포인터로 할지 그냥 할지 생각좀 해보자

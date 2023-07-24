@@ -4,7 +4,7 @@
 
 namespace zz
 {
-    struct ElementColor 
+   /* struct ElementColor 
     {
         uint32_t color;
         const ElementColor(uint32_t color) : color(color) {}
@@ -28,9 +28,9 @@ namespace zz
         static inline const ElementColor RandomSandColor();
         static inline const ElementColor RandomFireColor();
 
-    };
+    };*/
 
-    const ElementColor ElementColor::Water  = { 0xA0376259 };
+  /*  const ElementColor ElementColor::Water  = { 0xA0376259 };
     const ElementColor ElementColor::Oil    = { 0xE63D3728 };
     const ElementColor ElementColor::Rock   = { 0xFF808080 };
     const ElementColor ElementColor::Empty  = { 0x00000000 };
@@ -47,6 +47,13 @@ namespace zz
     std::vector<ElementColor> ElementColor::FireColors = { Red, Yellow, Yellow, Orange, Orange, Orange };
 
     inline const ElementColor ElementColor::RandomSandColor() { return SandColors[static_cast<int>(random() * SandColors.size())]; }
-    inline const ElementColor ElementColor::RandomFireColor() { return FireColors[static_cast<int>(random() * FireColors.size())]; }
+    inline const ElementColor ElementColor::RandomFireColor() { return FireColors[static_cast<int>(random() * FireColors.size())]; }*/
 
+
+    uint32_t Sand_0 = { 0xFFFFFF00 };
+    uint32_t Sand_1 = { 0xFFB2C906 };
+    uint32_t Sand_2 = { 0xFFE9FC5A };
+
+    std::vector<uint32_t> SandColors = { Sand_0, Sand_1, Sand_2 };
+    inline uint32_t RandomSandColor() { return SandColors[static_cast<int>(random() * SandColors.size())]; }
 }

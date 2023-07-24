@@ -40,6 +40,7 @@ namespace zz
                             }
                             
                             task();
+                            std::unique_lock<std::mutex> lock(queue_mutex);
                             --active;
                             completed.notify_one();
                         }
@@ -73,7 +74,7 @@ namespace zz
 
         void wait() {
             std::unique_lock<std::mutex> lock(queue_mutex);
-            completed.wait(lock, [this]() { return tasks.empty() && (active == 0); });
+            completed.wait(lock, [&]() { return tasks.empty() && (active == 0); });
         }
 
     

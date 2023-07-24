@@ -2,8 +2,25 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClInclude Include="framework.h" />
+    <ClInclude Include="zzLoadScenes.h">
+      <Filter>Contents\Load</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinEngine.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Contents">
+      <UniqueIdentifier>{c23260eb-0497-4e6e-8066-1847a68011cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contents\Load">
+      <UniqueIdentifier>{6930c4cd-f052-4cc1-ac4b-2ed6e220a245}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contents\Scene">
+      <UniqueIdentifier>{e6d84abf-1700-4920-afce-1713fecf8a7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contents\Scene\PlayScene">
+      <UniqueIdentifier>{76689c3c-9cfb-4f70-87c9-e42663a205e2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

@@ -8,6 +8,9 @@
 #include "zzCamera.h"
 #include "zzCameraScript.h"
 #include "zzBGScript.h"
+#include "zzAnimator.h"
+#include "zzPlayerScript.h"
+#include "zzRenderer.h"
 
 namespace zz
 {
@@ -51,6 +54,9 @@ namespace zz
         camera->GetComponent<Transform>()->SetPosition(Vector3(0.0f, 0.0f, -10.0f));
         Camera* cameraComp = camera->AddComponent<Camera>();
         camera->AddComponent<CameraScript>();
+        cameraComp->TurnLayerMask(eLayerType::UI, false);
+        renderer::cameras.push_back(cameraComp);
+        renderer::mainCamera = cameraComp;
 
         // z값을 다르게 하거나, z값을 같게 한다음 깊이 버퍼를 사용 안할지 생각
         MakeBG(L"M_MountainBG0", Vector3(1066, 512, 1.0f), Vector3(0.f, -20.f, 1.0f)  , 0.f   , 0.f);          // 파란 배경
@@ -60,8 +66,8 @@ namespace zz
         MakeBG(L"M_MountainBG4", Vector3(1024, 512, 1.0f), Vector3(0.f, -120.f, 0.6f) , 0.f   , 0.2f);          // 1번 산
         MakeBG(L"M_MountainBG5", Vector3(1024, 512, 1.0f), Vector3(0.f, -120.f, 0.5f) , 0.f   , 0.2f);          // 1번 산
         
-        float x = 0.f;
-        float y = 0.f;
+        float x = 256;
+        float y = -256;
         {
             GameObject* object = new GameObject();
             AddGameObject(eLayerType::Player, object);
@@ -69,11 +75,18 @@ namespace zz
             MeshRenderer* mesh = object->AddComponent<MeshRenderer>();
             mesh->SetMaterial(ResourceManager::Find<Material>(L"m_hall_background_0_0"));
             mesh->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
+
+            GameObject* object2 = new GameObject();
+            AddGameObject(eLayerType::Player, object2);
+            object2->GetComponent<Transform>()->SetPosition(Vector3(x - 512, y, 0.2f));
+            MeshRenderer* mesh2 = object2->AddComponent<MeshRenderer>();
+            mesh2->SetMaterial(ResourceManager::Find<Material>(L"m_left_entrance_background_-512_0"));
+            mesh2->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
         }
 
         GameObject* object = new GameObject();
         AddGameObject(eLayerType::Player, object);
-        object->GetComponent<Transform>()->SetPosition(Vector3(+1024 - 256, -1024 + 256, 0.05f));
+        object->GetComponent<Transform>()->SetPosition(Vector3(x +1024 - 256, y -1024 + 256, 0.05f));
         MeshRenderer* mesh = object->AddComponent<MeshRenderer>();
         mesh->SetMaterial(ResourceManager::Find<Material>(L"m_PixelTexture"));
         mesh->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
@@ -113,8 +126,10 @@ namespace zz
             mesh->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
         }
 
-        Scene::Initialize();
+        
 
+        // Transform * tr = object->GetComponent<Transform>();
+        //tr->SetScale(Vector3(2048.f, 2048.f, 1.0f));
         //{
         //    GameObject* object = new GameObject();
         //    AddGameObject(eLayerType::Player, object);
@@ -123,9 +138,23 @@ namespace zz
         //    mesh->SetMaterial(ResourceManager::Find<Material>(L"m_rust"));
         //    mesh->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
         //}
+        Scene::Initialize();
+        {
+            GameObject* player = new GameObject();
+            AddGameObject(eLayerType::Player, player);
+            player->GetComponent<Transform>()->SetPosition(Vector3(10.f, -400.f, 0.000f));
+            player->GetComponent<Transform>()->SetScale(Vector3(12.f, 19.f, 1.0f));
+            MeshRenderer* mesh = player->AddComponent<MeshRenderer>();
+            mesh->SetMaterial(ResourceManager::Find<Material>(L"m_SpriteAnimation"));
+            mesh->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
+            PlayerScript* script = player->AddComponent<PlayerScript>();     
+            script->SetCamera(camera);
+            script->Initialize();
+        }
+        
 
-        Transform* tr = object->GetComponent<Transform>();
-        tr->SetScale(Vector3(2048.f, 2048.f, 1.0f));
+
+        
     }
 
     void PlayScene::Update()
@@ -136,6 +165,19 @@ namespace zz
 
     void PlayScene::LateUpdate()
     {
+        Vector3 pos(800, 450, 0.0f);
+        Vector3 pos2(800, 450, 1000.0f);
+        Viewport viewport;
+        viewport.width = 1600.0f;
+        viewport.height = 900.0f;
+        viewport.x = 0;
+        viewport.y = 0;
+        viewport.minDepth = 0.0f;
+        viewport.maxDepth = 1.0f;
+
+        pos = viewport.Unproject(pos, Camera::GetGpuProjectionMatrix(), Camera::GetGpuViewMatrix(), Matrix::Identity);
+        pos2 = viewport.Unproject(pos2, Camera::GetGpuProjectionMatrix(), Camera::GetGpuViewMatrix(), Matrix::Identity);
+
         Scene::LateUpdate();
     }
 

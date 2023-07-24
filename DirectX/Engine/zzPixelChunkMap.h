@@ -35,8 +35,10 @@ namespace zz
         const int mChunkHeight;
         const UINT mHeight;
         const UINT mWidth;
+        const int mYChunkCnt;
+        const int mXChunkCnt;
 
     private:
-        PixelChunk* mChunks[8][8];
+        std::vector<PixelChunk*> mChunks;
     };
 }

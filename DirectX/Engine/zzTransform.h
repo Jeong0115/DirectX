@@ -33,6 +33,11 @@ namespace zz
         Vector3 Right()         { return mRight; }
         Vector3 Up()            { return mUp; }
 
+        void SetParent(Transform* transform)    { mParent = transform; }
+        Transform* GetParent()                  { return mParent; }
+
+        Matrix& GetMatrix() { return mWorld; }
+
     private:
         Vector3 mPosition;
         Vector3 mRotation;
@@ -43,6 +48,8 @@ namespace zz
         Vector3 mRight;
 
         Matrix  mWorld;
+
+        Transform* mParent;
     };
 }
 

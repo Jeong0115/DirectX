@@ -4,14 +4,14 @@
 
 namespace zz
 {
-    class SceneManger
+    class SceneManager
     {
     private:
-        SceneManger();
-        ~SceneManger();
+        SceneManager();
+        ~SceneManager();
 
     public:
-        SINGLETON(SceneManger);
+        SINGLETON(SceneManager);
 
         void Initialize();
         void Update();
@@ -20,6 +20,8 @@ namespace zz
         void Release();
 
         void CreateScene(std::wstring name, Scene* scene);
+
+        Scene* GetActiveScene() { return mActiveScene; }
     private:
         Scene* mActiveScene;
         std::map<std::wstring, Scene*> mScenes;

@@ -59,11 +59,11 @@ namespace zz
 
         // 그냥 포인터 들고 있을지 생각
         Microsoft::WRL::ComPtr<ID3D11RasterizerState> rsState = zz::renderer::rasterizerStates[(UINT)mRSType];
-        Microsoft::WRL::ComPtr<ID3D11DepthStencilState> dsState = zz::renderer::depthStencilStates[(UINT)mDSType];
+        //Microsoft::WRL::ComPtr<ID3D11DepthStencilState> dsState = zz::renderer::depthStencilStates[(UINT)mDSType];
         Microsoft::WRL::ComPtr<ID3D11BlendState> bsState = zz::renderer::blendStates[(UINT)mBSType];
 
         GetDevice()->BindRasterizeState(rsState.Get());
-        GetDevice()->BindDepthStencilState(dsState.Get());
+        //GetDevice()->BindDepthStencilState(dsState.Get());
         GetDevice()->BindBlendState(bsState.Get());
     }
 }

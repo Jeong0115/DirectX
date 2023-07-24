@@ -11,27 +11,35 @@ namespace zz
     {
     }
 
-    //std::mutex as;
+   
     void PixelUpdater::UpdateChunk()
     {
-        //as.lock();
-        //OutputDebugStringW(L"lock\n");
         for (int x = mChunk->mMinX; x < mChunk->mMaxX; x++)
         {
-            for (int y = mChunk->mMinY; y < mChunk->mMaxY; y++) 
+            for (int y = mChunk->mMaxY - 1; y >= mChunk->mMinY; y--)
             {
-                Element* cell = mChunk->GetElement(x + y * mChunk->mWidth);
+                Element& cell = mChunk->GetElement(x + y * mChunk->mWidth);
                 int px = x + mChunk->mStartX;
                 int py = y + mChunk->mStartY;
 
                 UpdateCell(px, py, cell);
             }
         }
-        //as.unlock();
-        //OutputDebugStringW(L"unlock\n");
+        /*for (int x = mChunk->mMinX; x < mChunk->mMaxX; x++)
+        {
+            for (int y = mChunk->mMinY; y < mChunk->mMaxY; y++) 
+            {
+                Element& cell = mChunk->GetElement(x + y * mChunk->mWidth);
+                int px = x + mChunk->mStartX;
+                int py = y + mChunk->mStartY;
+
+                UpdateCell(px, py, cell);
+            }
+        }*/
+
     }
 
-    Element* PixelUpdater::GetElement(int x, int y)
+    Element& PixelUpdater::GetElement(int x, int y)
     {
         if (mChunk->InBounds(x, y)) 
         {
@@ -41,14 +49,14 @@ namespace zz
         return PixelWorld::GetElement(x, y);
     }
 
-    void PixelUpdater::SwapElement(int x, int y, Element* cell)
+    void PixelUpdater::SwapElement(int x, int y, const Element& element)
     {
         if (mChunk->InBounds(x, y)) 
         {
-            return mChunk->SwapElement(x, y, cell);
+            return mChunk->SwapElement(x, y, element);
         }
 
-        return PixelWorld::SwapElement(x, y, cell);
+        return PixelWorld::SwapElement(x, y, element);
     }
 
     void PixelUpdater::SwapElement(int x, int y, int xto, int yto)

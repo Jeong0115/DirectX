@@ -26,6 +26,15 @@ namespace zz::renderer
         Matrix mProjection;
     };
 
+    CBUFFER(AnimatorCB, CBSLOT_ANIMATION2D)
+    {
+        Vector2 spriteLeftTop;
+        Vector2 spriteSize;
+        Vector2 spriteOffset;
+        Vector2 atlasSize;
+        UINT animationType;
+    };
+
     CBUFFER(ColorCB, CBSLOT_COLOR)
     {
         Vector4 color;
@@ -42,6 +51,7 @@ namespace zz::renderer
 
     extern std::vector<zz::Camera*> cameras;
     extern std::vector<DebugMesh> debugMeshs;
+    extern zz::Camera* mainCamera;
 
     void Initialize();
     void Render();

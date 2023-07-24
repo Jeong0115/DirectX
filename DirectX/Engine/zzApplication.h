@@ -22,6 +22,7 @@ namespace zz
 		void LateUpdate();
 		void Render();
         void Release();
+        void Present();
 
 		void SetWindow(HWND hwnd, UINT width, UINT height);
         void SetPixelHwnd(HWND hwnd) { mPixelHwnd = hwnd; }

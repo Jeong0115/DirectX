@@ -6,6 +6,7 @@ namespace zz
         : Resource(eResourceType::Material)
         , mShader(nullptr)
         , mTexture(nullptr)
+        , mMode(eRenderingMode::Transparent)
     {
     }
 

@@ -14,9 +14,6 @@ namespace zz
             None,
         };
 
-        static Matrix GetViewMatrix()       { return View; }
-        static Matrix GetProjectionMatrix() { return Projection; }
-
         Camera();
         ~Camera();
 
@@ -30,13 +27,25 @@ namespace zz
         void RegisterCameraInRenderer();
 
         void TurnLayerMask(eLayerType type, bool enable = true);
-        void EnableLayerMasks() { mLayerMask.set(); }
-        void DisableLayerMasks() { mLayerMask.reset(); }
+        void EnableLayerMasks()     { mLayerMask.set(); }
+        void DisableLayerMasks()    { mLayerMask.reset(); }
 
         void SortGameObjects();
         void RenderOpaque();
         void RenderCutOut();
         void RenderTransparent();
+
+        void EnableDepthStencilState();
+        void DisableDepthStencilState();
+
+        static Matrix& GetGpuViewMatrix()                       { return View; }
+        static void SetGpuViewMatrix(Matrix view)               { View = view; }
+        static Matrix& GetGpuProjectionMatrix()                 { return Projection; }
+        static void SetGpuProjectionMatrix(Matrix projection)   { Projection = projection; }
+
+        float GetSize()                 { return mSize; }
+        Matrix& GetViewMatrix()         { return mView; }
+        Matrix& GetProjectionMatrix()   { return mProjection; }
 
     private:
         static Matrix                       View;

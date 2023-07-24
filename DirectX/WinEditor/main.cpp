@@ -10,12 +10,17 @@
 
 #include "framework.h"
 #include "WinEditor.h"
-#include "zzApplication.h"
-#include "zzPixelWorld.h"
-#include "zzRenderer.h"
+#include "..\Engine\zzApplication.h"
+#include "..\Engine\zzPixelWorld.h"
+#include "..\Engine\zzRenderer.h"
 #include "zzEditor.h"
+//#include "zzLoadScenes.h"
 
-
+//#ifdef _DEBUG
+//#pragma comment(lib, "..\\x64\\Debug\\WinEngine.lib")
+//#else
+//#pragma comment(lib, "..\\x64\\Release\\WinEngine.lib")
+//#endif
 //#ifdef _DEBUG
 //#include <dxgidebug.h>
 //#include <d3d11.h>
@@ -162,7 +167,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    Editor::Initialize();
    //PixelGrid::SetHwnd(hWnd2);
    //PixelGrid::Initialize();
-   //InitializeScenes();
+   //zz::InitializeScenes();
    
   
    return TRUE;

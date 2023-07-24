@@ -36,7 +36,9 @@ namespace zz
     }
     void Editor::Run()
     {
-        Render();
+       Update();
+       LateUpdate();
+       Render();
     }
     void Editor::Update()
     {
@@ -82,10 +84,10 @@ namespace zz
         tr->LateUpdate();
 
 
-        //Camera* mainCamara = renderer::mainCamera;
-
-        //Camera::SetGpuViewMatrix(mainCamara->GetViewMatrix());
-        //Camera::SetGpuProjectionMatrix(mainCamara->GetProjectionMatrix());
+        Camera* mainCamara = renderer::mainCamera;
+        
+        Camera::SetGpuViewMatrix(mainCamara->GetViewMatrix());
+        Camera::SetGpuProjectionMatrix(mainCamara->GetProjectionMatrix());
 
         object->Render();
     }

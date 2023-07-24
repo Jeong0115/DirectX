@@ -112,12 +112,13 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir);$(SolutionDir)WinEngine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)x64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>WinEngine.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <StackReserveSize>1000000</StackReserveSize>
     </Link>
   </ItemDefinitionGroup>
@@ -139,20 +140,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="NewFolder1\framework.h" />
-    <ClInclude Include="NewFolder1\Resource.h" />
-    <ClInclude Include="NewFolder1\targetver.h" />
-    <ClInclude Include="NewFolder1\WinEditor.h" />
+    <ClInclude Include="framework.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="WinEditor.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="NewFolder1\main.cpp" />
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="NewFolder1\WinEditor.rc" />
+    <ResourceCompile Include="WinEditor.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="NewFolder1\small.ico" />
-    <Image Include="NewFolder1\WinEditor.ico" />
+    <Image Include="small.ico" />
+    <Image Include="WinEditor.ico" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Update="C:\Project\DirectX\DirectX\Engine\zzMath.inl">

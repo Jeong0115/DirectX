@@ -4,11 +4,20 @@
 #include "zzApplication.h"
 #include "zzRenderer.h"
 #include "zzScene.h"
-#include "zzSceneManger.h"
+#include "zzSceneManager.h"
 #include "zzMeshRenderer.h"
 
 namespace zz
 {
+    bool CompareZSort(GameObject* a, GameObject* b)
+    {
+        if (a->GetComponent<Transform>()->GetPosition().z
+            <= b->GetComponent<Transform>()->GetPosition().z)
+            return false;
+
+        return true;
+    }
+
     Matrix Camera::View = Matrix::Identity;
     Matrix Camera::Projection = Matrix::Identity;
 
@@ -19,6 +28,12 @@ namespace zz
         , mNear(1.0f)
         , mFar(1000.0f)
         , mSize(1920.f)
+        , mLayerMask{}
+        , mOpaqueGameObjects{}
+        , mCutOutGameObjects{}
+        , mTransparentGameObjects{}
+        , mView(Matrix::Identity)
+        , mProjection(Matrix::Identity)
     {
     }
 
@@ -37,18 +52,31 @@ namespace zz
     {
         CreateViewMatrix();
         CreateProjectionMatrix(mType);
+        RegisterCameraInRenderer();
     }
+
     void Camera::Render()
     {
+        View = mView;
+        Projection = mProjection;
+
+        SortGameObjects();
+        RenderOpaque();
+
+        DisableDepthStencilState();
+        RenderCutOut();
+        RenderTransparent();
+        EnableDepthStencilState();
     }
+
     bool Camera::CreateViewMatrix()
     {
         Transform* tr = GetOwner()->GetComponent<Transform>();
         Vector3 pos = tr->GetPosition();
 
         // View Translate Matrix
-        View = Matrix::Identity;
-        View *= Matrix::CreateTranslation(-pos);
+        mView = Matrix::Identity;
+        mView *= Matrix::CreateTranslation(-pos);
 
         // View Rotation Matrix
         Vector3 up = tr->Up();
@@ -59,7 +87,7 @@ namespace zz
         viewRotate._11 = right.x;	viewRotate._12 = up.x;	viewRotate._13 = foward.x;
         viewRotate._21 = right.y;	viewRotate._22 = up.y;	viewRotate._23 = foward.y;
         viewRotate._31 = right.z;	viewRotate._32 = up.z;	viewRotate._33 = foward.z;
-        View *= viewRotate;
+        mView *= viewRotate;
 
         return true;
     }
@@ -82,15 +110,15 @@ namespace zz
 
         if (type == eProjectionType::OrthoGraphic)
         {
-            float OrthorGraphicRatio = 1.f;
+            float OrthorGraphicRatio = 0.3;
             width *= OrthorGraphicRatio;
             height *= OrthorGraphicRatio;
 
-            Projection = Matrix::CreateOrthographicLH(width, height, mNear, mFar);
+            mProjection = Matrix::CreateOrthographicLH(width, height, mNear, mFar);
         }
         else
         {
-            Projection = Matrix::CreatePerspectiveFieldOfViewLH(XM_2PI / 6.0f, mAspectRatio, mNear, mFar);
+            mProjection = Matrix::CreatePerspectiveFieldOfViewLH(XM_2PI / 6.0f, mAspectRatio, mNear, mFar);
         }
  
 
@@ -109,47 +137,47 @@ namespace zz
 
     void Camera::SortGameObjects()
     {
-        //mOpaqueGameObjects.clear();
-        //mCutOutGameObjects.clear();
-        //mTransparentGameObjects.clear();
+        mOpaqueGameObjects.clear();
+        mCutOutGameObjects.clear();  
+        mTransparentGameObjects.clear(); 
 
-        //Scene* scene = SceneManager::GetActiveScene();
-        //for (size_t i = 0; i < (UINT)eLayerType::End; i++)
-        //{
-        //    if (mLayerMask[i] == true)
-        //    {
-        //        Layer& layer = scene->GetLayer((eLayerType)i);
-        //        const std::vector<GameObject*> gameObjs
-        //            = layer.GetGameObjects();
-        //        // layer에 있는 게임오브젝트를 들고온다.
+        Scene* scene = SceneManager::GetInst().GetActiveScene();
+        for (size_t i = 0; i < (UINT)eLayerType::End; i++)
+        {
+            if (mLayerMask[i] != true)
+            {
+                Layer& layer = scene->GetLayer((eLayerType)i);
+                const std::vector<GameObject*> gameObjs = layer.GetGameObjects();
 
-        //        for (GameObject* obj : gameObjs)
-        //        {
-        //            //렌더러 컴포넌트가 없다면?
-        //            MeshRenderer* mr
-        //                = obj->GetComponent<MeshRenderer>();
-        //            if (mr == nullptr)
-        //                continue;
 
-        //            std::shared_ptr<Material> mt = mr->GetMaterial();
-        //            eRenderingMode mode = mt->GetRenderingMode();
-        //            switch (mode)
-        //            {
-        //            case ya::graphics::eRenderingMode::Opaque:
-        //                mOpaqueGameObjects.push_back(obj);
-        //                break;
-        //            case ya::graphics::eRenderingMode::CutOut:
-        //                mCutOutGameObjects.push_back(obj);
-        //                break;
-        //            case ya::graphics::eRenderingMode::Transparent:
-        //                mTransparentGameObjects.push_back(obj);
-        //                break;
-        //            default:
-        //                break;
-        //            }
-        //        }
-        //    }
-        //}
+                for (GameObject* obj : gameObjs)
+                {
+                    MeshRenderer* mr = obj->GetComponent<MeshRenderer>();
+                    if (mr == nullptr)
+                        continue;
+
+                    std::shared_ptr<Material> mt = mr->GetMaterial();
+                    eRenderingMode mode = mt->GetRenderingMode();
+                    switch (mode)
+                    {
+                    case eRenderingMode::Opaque:
+                        mOpaqueGameObjects.push_back(obj);
+                        break;
+                    case eRenderingMode::CutOut:
+                        mCutOutGameObjects.push_back(obj);
+                        break;
+                    case eRenderingMode::Transparent:
+                        mTransparentGameObjects.push_back(obj);
+                        break;
+                    default:
+                        break;
+                    }
+                }
+            }
+        }
+
+        std::sort(mCutOutGameObjects.begin(), mCutOutGameObjects.end(), CompareZSort);
+        std::sort(mTransparentGameObjects.begin(), mTransparentGameObjects.end(), CompareZSort);
     }
     void Camera::RenderOpaque()
     {
@@ -180,5 +208,17 @@ namespace zz
 
             gameObj->Render();
         }
+    }
+
+    void Camera::EnableDepthStencilState()
+    {
+        Microsoft::WRL::ComPtr<ID3D11DepthStencilState> dsState = renderer::depthStencilStates[(UINT)eDSType::Less];
+        graphics::GetDevice()->BindDepthStencilState(dsState.Get());
+    }
+
+    void Camera::DisableDepthStencilState()
+    {
+        Microsoft::WRL::ComPtr<ID3D11DepthStencilState> dsState = renderer::depthStencilStates[(UINT)eDSType::None];
+        graphics::GetDevice()->BindDepthStencilState(dsState.Get());
     }
 }

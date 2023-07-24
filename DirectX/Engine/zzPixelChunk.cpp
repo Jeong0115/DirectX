@@ -1,17 +1,16 @@
 #include "zzPixelChunk.h"
 #include "zzPixelWorld.h"
-#include "zzEmptyElement.h"
 #include "zzRenderer.h"
 #define _DEST(x) std::get<2>(x)
 
 namespace zz
 {
-    std::mutex PixelChunk::tempMutex;
+  
     PixelChunk::PixelChunk(size_t width, size_t height, int x, int y)
         : mWidth((int)width)
         , mHeight((int)height)
-        , mStartX(x )
-        , mStartY(y )
+        , mStartX(x)
+        , mStartY(y)
         , mMinX((int)width)
         , mMinY((int)height)
         , mMaxX(-1)
@@ -20,27 +19,23 @@ namespace zz
         , m_maxXw(-1), m_maxYw(-1)
         , mElementCount(0)
     {
-        mElements = new Element * [height * width];
-
-        for (int i = 0; i < height * width; i++)
+        mElements = new Element[mWidth * mHeight];
+        for (int i = 0; i < mWidth * mHeight; i++)
         {
-            mElements[i] = new EmptyElement();
-            mElements[i]->SetPos(Position(mStartX + i % mWidth, mStartY + i / mWidth));
+            //mElements[i] = EMPTY;
+            mElements[i].x = mStartX + i % mWidth;
+            mElements[i].y = mStartY + i / mWidth;
         }
     }
 
     PixelChunk::~PixelChunk()
     {
-        for (int i = 0; i < mHeight * mWidth; i++)
-            delete mElements[i];
-
         delete[] mElements;
     }
 
-    std::mutex asd;
     void PixelChunk::MoveElements()
     {
-        //if (mElementCount == 0) return;
+        if (mElementCount == 0) return;
         /*for (size_t i = 0; i < mChanges.size(); i++) 
         {
             if (!IsEmpty(_DEST(mChanges[i]))) 
@@ -58,7 +53,6 @@ namespace zz
             return;
         }
 
-        int c = mChanges.size();
         std::sort(mChanges.begin(), mChanges.end(), [](auto& a, auto& b) { return _DEST(a) < _DEST(b); });
 
         size_t iprev = 0;
@@ -69,20 +63,12 @@ namespace zz
         {
             if (_DEST(mChanges[i + 1]) != _DEST(mChanges[i])) 
             {
-                if (std::get<0>(mChanges[i]) == nullptr)
-                {
-                    
-                    return;
-                }
                 size_t rand = iprev + randi((int)(i - iprev));
 
                 auto [chunk, src, dst] = mChanges[rand];
 
-                if (chunk == nullptr)
-                    int a = 0;
-
                 
-                Element* dstEle = GetElement(dst);
+                Element dstEle = GetElement(dst);
                 SwapElement(dst, chunk->GetElement(src));
                 chunk->SwapElement(src, dstEle);
 
@@ -98,56 +84,56 @@ namespace zz
 
     }
 
-    Element* PixelChunk::GetElement(size_t index)
+    Element& PixelChunk::GetElement(size_t index)
     {
         return mElements[index];
 
     }
 
-    void PixelChunk::SwapElement(size_t index, Element* cell)
+    void PixelChunk::SwapElement(size_t index, const Element& element)
     {
-        Element* dest = mElements[index];
+        Element& dest = mElements[index];
 
-        if (dest->GetType() == eElementType::Empty && cell->GetType() != eElementType::Empty) 
+        if (dest.Type == eElementType::EMPTY && element.Type != eElementType::EMPTY)
         {
             mElementCount++;
         }
 
-        else if (dest->GetType() != eElementType::Empty && cell->GetType() == eElementType::Empty)
+        else if (dest.Type != eElementType::EMPTY && element.Type == eElementType::EMPTY)
         {
             mElementCount--;
         }
 
-        mElements[index] = cell;
-        cell->SetPos(Position((int)(mStartX + index % mWidth), (int)(mStartY + index / mWidth)));
+        mElements[index] = element;
 
-        memcpy(&PixelWorld::GetPixelColor()[(mStartX + index % mWidth + ((mStartY + index / mWidth) * 2048)) * 4], &cell->mColor, 4);
+        //cell.x = mStartX + index % mWidth;
+        //cell.y = mStartY + index / mWidth;
+
+        memcpy(&PixelWorld::GetPixelColor()[(mStartX + index % mWidth + ((mStartY + index / mWidth) * 2048)) * 4], &element.Color, 4);
 
         KeepAlive(index);
     }
 
 
 
-    void PixelChunk::InsertElement(size_t index, Element* element)  // 수정해라
+    void PixelChunk::InsertElement(size_t index, const Element& element)  // 수정해라
     {
-        Element* dest = mElements[index];
+        Element& dest = mElements[index];
 
-        if (dest->GetType() == eElementType::Empty && element->GetType() != eElementType::Empty)
+        if (dest.Type == eElementType::EMPTY && element.Type != eElementType::EMPTY)
         {
             mElementCount++;
         }
 
-        else if (dest->GetType() != eElementType::Empty && element->GetType() == eElementType::Empty)
+        else if (dest.Type != eElementType::EMPTY && element.Type == eElementType::EMPTY)
         {
             mElementCount--;
         }
-
-        delete mElements[index];
+        
         mElements[index] = element;
 
-        element->SetPos(Position((int)(mStartX + index % mWidth), (int)(mStartY + index / mWidth)));
-
-        memcpy(&PixelWorld::GetPixelColor()[(mStartX + index % mWidth + ((mStartY + index / mWidth) * 2048)) * 4], &element->mColor, 4);
+        //element->SetPos(Position((int)(mStartX + index % mWidth), (int)(mStartY + index / mWidth)));
+        memcpy(&PixelWorld::GetPixelColor()[(mStartX + index % mWidth + ((mStartY + index / mWidth) * 2048)) * 4], &element.Color, 4);
 
         KeepAlive(index);
     }
@@ -190,11 +176,12 @@ namespace zz
 
         if (mMaxX <= -1) return;
         DebugMesh mesh = {};
-        mesh.position = math::Vector3((mMaxX + mMinX) / 2.f + mStartX - 256.f, -((mMaxY + mMinY) / 2.f + mStartY - 256.f), 0.0f);
+        mesh.position = math::Vector3((mMaxX + mMinX) / 2.f + mStartX, -((mMaxY + mMinY) / 2.f + mStartY ), 0.0f);
         //mesh.position = math::Vector3(0,0, 0.0f);
         mesh.scale = math::Vector3((float)(mMaxX - mMinX), (float)(mMaxY - mMinY), 1.0f);
         mesh.rotation = math::Vector3::Zero;
 
+        std::unique_lock lock(mu);
         renderer::PushDebugMeshAttribute(mesh);
     }
 }

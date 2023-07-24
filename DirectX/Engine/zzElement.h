@@ -1,102 +1,134 @@
 #pragma once
 
 #include "zzEngine.h"
-#include "zzPosition.h"
 #include "zzElementColor.h"
-#include "zzEntity.h"
 
 namespace zz
 {
-    enum class eElementType { Solid, Liquid, Gas, Particle, Empty, Out };
-    class Element : public Entity
+    
+
+    enum class eElementType
     {
-    public:
-        
-        enum class eFrameInfo { Effect = 1, Reaction = 3 };
-
-        Element();
-        virtual ~Element();
-
-        virtual void Update() {};
-        virtual bool InteractElement(Element* target, Position targetPos, bool isFinal, bool isFirst, Position lastPos, int depth) { return false; }
-        virtual Element* Clone() { return nullptr; }
-        
-        eElementType CheckTargetType(int targetX, int targetY);
-        void SwapElement(Element* target);
-        void MoveLastPosition(Position pos);
-        void SwapTarget(Position targetPos);
-        void MoveLastPosAndSwapTarget(Position targetPos, Position lastPos);
-
-        void SetPos(Position pos) { mPos = pos; }
-        void SetPos(int x, int y) { mPos = Position(x, y); }
-        Position GetPos() { return mPos; }
-
-        uint32_t* GetColor() { return &mColor.color; }
-        void SetColor(uint32_t color) { mColor.color = color; }
-
-        eElementType GetType() const { return mType; }
-
-        math::Vector2 GetVelocity() { return mVelocity; }
-        void SetVelocity(math::Vector2 velocity) { mVelocity = velocity; }
-
-        
-        bool Is() { return mStopCount >= mStopThreshold; }
-        bool IsFreeFalling() { return mbFreeFalling; }
-        void SetFreeFalling(bool fall) { mbFreeFalling = fall; }
-        
-        float GetInertialResistance() { return mInertialResistance; }
-        float GetFrictionFactor() { return mFrictionFactor; }
-
-        bool IsStop(Position startPos) { return startPos == mPos; }
-        void SetDead() { die(); }
-        virtual bool ReceiveHeat(int heat);
-        uint32_t xorshift32();
-       
-        bool isUpdate = false;
-        ElementColor mColor;
-
-    protected:
-        bool transferHeatToNeighbors();
-        bool shouldApplyHeat() { return mbIgnited || mbHeated; }
-        
-        bool receiveCooling(int cooling);
-        void checkIfIgnited();
-        void takeEffectsDamage();
-        void takeFireDamage();
-        void checkIfDead();
-        void die();
-        void spawnSparkIfIgnited();
-        void checkIgnitedAndSetColor();
-
-        bool mbFreeFalling = true;
-
-        math::Vector2 mVelocity;
-        math::Vector2 mVelocityRemainder;
-        float mInertialResistance = 0.f;
-
-       
-        Position mPos;
-        //int mStopUpdateCnt;
-        std::bitset<1> mStep;
-
-        eElementType mType;
-        float mFrictionFactor = 1.f;
-        int mStopCount = 0;
-        int mStopThreshold = 2;
-        bool mbIgnited;
-        int mHeatResistance;
-        int mHeatFactor;
-        int mFireDamage;
-        int mHealth;
-    private:
-        bool isSurrounded();
-
-    private:
-        
-        bool mbHeated;
-        
-        
-        
-        int resetFlammabilityResistance;
+        EMPTY,
+        SOLID,
+        LIQUID,
+        GAS,
     };
+
+    enum class eElementMove
+    {
+        NONE                = 0b00000000,
+        MOVE_DOWN_SOLID     = 0b00000001,
+        MOVE_DOWN_LIQUID    = 0b00000010,
+        MOVE_DOWN_SIDE      = 0b00000100,
+        MOVE_UP             = 0b00001000,
+        MOVE_SIDE           = 0b00010000,
+    };
+
+    enum class eElementColor : uint32_t
+    {
+        EMPTY = 0x00000000,
+        SAND = 0xFFFFFF00,
+        WATER = 0xA0376259,
+        ROCK = 0xFF808080,
+    };
+
+    inline eElementMove operator|(eElementMove a, eElementMove b)
+    {
+        return eElementMove(int(a) | int(b));
+    }
+
+    struct Element
+    {
+        Element() {}
+
+        Element(eElementType type, eElementMove move, uint32_t color, std::wstring name, math::Vector2 vel)
+            : Type(type), Move(move), Color(color), Name(name), Velocity(vel)
+        {
+
+        }
+        
+        Element(const Element& other)
+            : Type(other.Type), Move(other.Move), x(other.x), y(other.y), Name(other.Name)
+            , Velocity(other.Velocity)
+        {
+            if (other.Name == L"Sand")
+            {
+                Color = RandomSandColor();
+            }
+            else Color = other.Color;
+        }
+
+        Element& operator=(const Element& other)
+        {
+            Type = other.Type;
+            Move = other.Move;
+            Name = other.Name;
+            Velocity = other.Velocity;
+            if (other.Name == L"Sand")
+            {
+                Color = RandomSandColor();
+            }
+            else Color = other.Color;
+            return *this;
+        }
+
+        eElementType    Type = eElementType::EMPTY;
+        eElementMove    Move = eElementMove::NONE;
+        uint32_t        Color = (uint32_t)eElementColor::EMPTY;
+        std::wstring    Name = L"Empty";
+        math::Vector2   Velocity = { 0.f, 0.f };
+
+        int x = 0;
+        int y = 0;
+    };
+
+
+    inline bool operator&(eElementMove a, eElementMove b)
+    {
+        return (int)a & (int)b;
+    }
+
+    Element EMPTY, SAND, WATER, ROCK;
+
+
+
+    void InitializeElement()
+    {
+        EMPTY =
+        {
+            eElementType::EMPTY,
+            eElementMove::NONE,
+            (uint32_t)eElementColor::EMPTY,
+            L"Empty",
+            math::Vector2(0.f, 0.f)
+        };
+
+        SAND =
+        {
+            eElementType::SOLID,
+            eElementMove::MOVE_DOWN_SOLID | eElementMove::MOVE_DOWN_SIDE,
+            (uint32_t)eElementColor::SAND,
+            L"Sand",
+            math::Vector2(2.f, 2.f)
+        };
+
+        WATER =
+        {
+            eElementType::LIQUID,
+            eElementMove::MOVE_DOWN_LIQUID | eElementMove::MOVE_SIDE,
+            (uint32_t)eElementColor::WATER,
+            L"Water",
+            math::Vector2(2.f, 20.f)
+        };
+
+        ROCK =
+        {
+            eElementType::SOLID,
+            eElementMove::NONE,
+            (uint32_t)eElementColor::ROCK,
+            L"Rock",
+            math::Vector2(0.f, 0.f)
+        };
+    }
 }

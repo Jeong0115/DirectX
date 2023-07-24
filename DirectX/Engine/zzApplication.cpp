@@ -1,5 +1,5 @@
 #include "zzApplication.h"
-#include "zzSceneManger.h"
+#include "zzSceneManager.h"
 #include "zzResourceManager.h"
 #include "zzRenderer.h"
 #include "zzTime.h"
@@ -47,9 +47,9 @@ namespace zz
         Input::Initialize();
 
        //PixelGrid::GetInst().Initialize();
-        renderer::Initialize();
-        SceneManger::GetInst().Initialize();
         PixelWorld::Initialize();
+        renderer::Initialize();
+        SceneManager::GetInst().Initialize();
 	}
 
 	void Application::Update()
@@ -57,12 +57,12 @@ namespace zz
         Time::Update();
         Input::Update();
         PixelWorld::Update();
-        SceneManger::GetInst().Update();
+        SceneManager::GetInst().Update();
 	}
 
 	void Application::LateUpdate()
 	{
-        SceneManger::GetInst().LateUpdate();
+        SceneManager::GetInst().LateUpdate();
 	}
 
 	void Application::Render()
@@ -72,18 +72,24 @@ namespace zz
         graphicDevice->ClearRenderTarget();
         graphicDevice->UpdateViewPort();
         
-        SceneManger::GetInst().Render();
+       // SceneManager::GetInst().Render();
+        renderer::Render();
         Editor::Run();
-
+        Present();
         //graphicDevice->Draw();
 
-        graphicDevice->Present();
+       
 	}
 
     void Application::Release()
     {
-        SceneManger::GetInst().Release();
+        SceneManager::GetInst().Release();
         //graphicDevice.release();
+    }
+
+    void Application::Present()
+    {
+        graphicDevice->Present();
     }
 
 	void Application::SetWindow(HWND hwnd, UINT width, UINT height)
@@ -103,7 +109,7 @@ namespace zz
 
         RECT rt = { 0, 0, (LONG)width , (LONG)height };
         AdjustWindowRect(&rt, WS_OVERLAPPEDWINDOW, true); // true? false?
-        SetWindowPos(mHwnd, nullptr, 30, 30, rt.right - rt.left, rt.bottom - rt.top, 0);
+        SetWindowPos(mHwnd, nullptr, 30, -1000, rt.right - rt.left, rt.bottom - rt.top, 0);
         ShowWindow(mHwnd, true);
         UpdateWindow(mHwnd);
 	}

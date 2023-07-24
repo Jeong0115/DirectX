@@ -160,11 +160,17 @@
     <Filter Include="Element\Gas\Smoke">
       <UniqueIdentifier>{f5f5240a-5843-4435-a937-7195c361a6e4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Temp">
-      <UniqueIdentifier>{68d27f6e-9fa5-465e-a3ae-80db697e63f7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="PixelWorld">
       <UniqueIdentifier>{9b8458f7-0010-41bc-969e-f103864d4249}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\Animation">
+      <UniqueIdentifier>{5de830db-ee19-40e3-ab23-e52bfcb632d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Component\Animator">
+      <UniqueIdentifier>{a5f70619-7441-478d-b4cd-2647786bd661}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Component\Script\Player">
+      <UniqueIdentifier>{c644f2a5-6ad4-4b77-9221-8a672b8a2855}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -195,7 +201,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)zzConstantBuffer.cpp">
       <Filter>Graphics\ConstantBuffer</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)zzSceneManger.cpp">
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzSceneManager.cpp">
       <Filter>Manager\SceneManager</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzLayer.cpp">
@@ -215,9 +221,6 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzMeshRenderer.cpp">
       <Filter>Scene\Component\MeshRenderer</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)zzPlayScene.cpp">
-      <Filter>Scene\Scene\PlayScene</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzResourceManager.cpp">
       <Filter>Manager\ResourceManager</Filter>
@@ -241,9 +244,6 @@
       <Filter>Scene\Component\Camera</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzPixelGrid.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)zzElement.cpp">
-      <Filter>Element\Base</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzSand.cpp">
       <Filter>Element\Solid\Movable\Sand</Filter>
     </ClCompile>
@@ -289,10 +289,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)zzSmoke.cpp">
       <Filter>Element\Gas\Smoke</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)tElement.cpp">
-      <Filter>Temp</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)tSand.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzPixelWorld.cpp">
       <Filter>PixelWorld</Filter>
     </ClCompile>
@@ -306,6 +302,18 @@
       <Filter>PixelWorld</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzThreadPool.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzAnimator.cpp">
+      <Filter>Scene\Component\Animator</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzAnimation.cpp">
+      <Filter>Resource\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzPlayScene.cpp">
+      <Filter>Scene\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzPlayerScript.cpp">
+      <Filter>Scene\Component\Script\Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzEntity.h">
@@ -353,7 +361,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzConstantBuffer.h">
       <Filter>Graphics\ConstantBuffer</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)zzSceneManger.h">
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzSceneManager.h">
       <Filter>Manager\SceneManager</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzLayer.h">
@@ -373,9 +381,6 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzMeshRenderer.h">
       <Filter>Scene\Component\MeshRenderer</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)zzPlayScene.h">
-      <Filter>Scene\Scene\PlayScene</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzResourceManager.h">
       <Filter>Manager\ResourceManager</Filter>
@@ -399,9 +404,6 @@
       <Filter>Scene\Component\Camera</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzPixelGrid.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)zzElement.h">
-      <Filter>Element\Base</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzSand.h">
       <Filter>Element\Solid\Movable\Sand</Filter>
     </ClInclude>
@@ -456,10 +458,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzSmoke.h">
       <Filter>Element\Gas\Smoke</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)tElement.h">
-      <Filter>Temp</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)tSand.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzPixelWorld.h">
       <Filter>PixelWorld</Filter>
     </ClInclude>
@@ -473,5 +471,20 @@
       <Filter>PixelWorld</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzThreadPool.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzElement.h">
+      <Filter>PixelWorld</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzAnimator.h">
+      <Filter>Scene\Component\Animator</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzAnimation.h">
+      <Filter>Resource\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzPlayScene.h">
+      <Filter>Scene\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzPlayerScript.h">
+      <Filter>Scene\Component\Script\Player</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

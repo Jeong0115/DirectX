@@ -1,37 +1,35 @@
-#include "zzSceneManger.h"
+#include "zzSceneManager.h"
 #include "zzPlayScene.h"
 
 namespace zz
 {
-    SceneManger::SceneManger()
+    SceneManager::SceneManager()
         : mActiveScene(nullptr)
     {
     }
 
-    SceneManger::~SceneManger()
+    SceneManager::~SceneManager()
     {
     }
 
-    void SceneManger::Initialize()
+    void SceneManager::Initialize()
     {
-        mActiveScene = new PlayScene();
-        mScenes.insert(std::make_pair(L"PlayScene", mActiveScene));
-        mActiveScene->Initialize();
+        CreateScene(L"PlayScene", new PlayScene());
     }
-    void SceneManger::Update()
+    void SceneManager::Update()
     {
         mActiveScene->Update();
     }
-    void SceneManger::LateUpdate()
+    void SceneManager::LateUpdate()
     {
         mActiveScene->LateUpdate();
     }
-    void SceneManger::Render()
+    void SceneManager::Render()
     {
         mActiveScene->Render();
     }
 
-    void SceneManger::Release()
+    void SceneManager::Release()
     {
         for (auto iter : mScenes)
         {
@@ -40,7 +38,7 @@ namespace zz
         }
     }
 
-    void SceneManger::CreateScene(std::wstring name, Scene* scene)
+    void SceneManager::CreateScene(std::wstring name, Scene* scene)
     {
         mScenes.insert(std::make_pair(name, scene));
         mActiveScene = scene;

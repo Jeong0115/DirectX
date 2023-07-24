@@ -9,6 +9,7 @@ namespace zz
         Particle,
         MeshRenderer,
         Script,
+        Animator,
         Camera,
         End,
     };
@@ -29,6 +30,7 @@ namespace zz
         Shader,
         Material,
         Mesh,
+        Animation,
         End,
     };
 }

@@ -27,7 +27,8 @@ namespace zz
         uint8_t* GetPixels() { return mImage.GetImages()->pixels; }
         DXGI_FORMAT GetFormat() { return mImage.GetImages()->format; }
         UINT GetImageSize() { return (UINT)mImage.GetImages()->width * (UINT)mImage.GetImages()->height; }
-        UINT GetImageWidth() { return (UINT)mImage.GetImages()->width; }
+        UINT GetImageWidth() { return (UINT)mImage.GetMetadata().width; }
+        UINT GetImageHeight() { return (UINT)mImage.GetMetadata().height; }
 
     protected:
         ScratchImage mImage;

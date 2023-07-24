@@ -14,6 +14,7 @@
 
 #define CBSLOT_TRANSFORM		0
 #define CBSLOT_COLOR		1
+#define CBSLOT_ANIMATION2D		3
 //#define CBSLOT_PARTICLE			1
 
 enum class eShaderStage
@@ -32,6 +33,7 @@ enum class eCBType
     Transform,
     Color,
     Material,
+    Animator,
     End,
 };
 
@@ -39,6 +41,14 @@ enum class eSamplerType
 {
     Point,
     Anisotropic,
+    End,
+};
+
+enum class eRenderingMode
+{
+    Opaque,
+    CutOut,
+    Transparent,
     End,
 };
 

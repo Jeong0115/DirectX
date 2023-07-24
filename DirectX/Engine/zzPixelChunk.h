@@ -13,20 +13,18 @@ namespace zz
         void MoveElements();
 
         size_t GetIndex(int x, int y) { 
-            int a = (x - mStartX) + (y - mStartY) * mWidth;
-            if (a < 0)
-                int c = 0;
+
             return (x - mStartX) + (y - mStartY) * mWidth;
         }
 
-        Element* GetElement(int x, int y) { return GetElement(GetIndex(x, y)); }
-        Element* GetElement(size_t index);
+        Element& GetElement(int x, int y) { return GetElement(GetIndex(x, y)); }
+        Element& GetElement(size_t index);
 
-        void SwapElement(int x, int y, Element* cell) { SwapElement(GetIndex(x, y), cell); }   
-        void SwapElement( size_t index, Element* cell);
+        void SwapElement(int x, int y, const Element& element) { SwapElement(GetIndex(x, y), element); }
+        void SwapElement( size_t index, const Element& element);
 
-        void InsertElement(int x, int y, Element* element) { InsertElement(GetIndex(x, y), element); }
-        void InsertElement(size_t index, Element* element);
+        void InsertElement(int x, int y, const Element& element) { InsertElement(GetIndex(x, y), element); }
+        void InsertElement(size_t index, const Element& element);
 
         void ResiterChanges(PixelChunk* source, int x, int y, int toX, int toY);
 
@@ -37,7 +35,7 @@ namespace zz
 
         bool InBounds(int x, int y) { return x >= mStartX && x < mStartX + mWidth && y >= mStartY && y < mStartY + mHeight;}
         bool IsEmpty(int x, int y) { return IsEmpty(GetIndex(x, y)); }
-        bool IsEmpty(size_t index) { return GetElement(index)->GetType() == eElementType::Empty; }
+        bool IsEmpty(size_t index) { return GetElement(index).Type == eElementType::EMPTY; }
 
 
     public:
@@ -56,7 +54,7 @@ namespace zz
     private:
         std::vector<std::tuple<PixelChunk*, size_t, size_t>> mChanges;
         std::mutex resiterMutex;
-        Element** mElements;
+        Element* mElements;
         static std::mutex tempMutex;
     private:
         int m_minXw, m_minYw,

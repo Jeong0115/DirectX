@@ -151,6 +151,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="framework.h" />
+    <ClInclude Include="zzLoadScenes.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinEngine.cpp" />

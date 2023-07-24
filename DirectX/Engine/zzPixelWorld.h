@@ -31,10 +31,10 @@ namespace zz
         static std::pair<int, int> GetChunkMapLocation(int x, int y);
         static void RemoveEmptyChunks();
 
-        static Element* GetElement(int x, int y) { return GetChunk(x, y)->GetElement(x, y); }
-        static void SwapElement(int x, int y, Element* element);
+        static Element& GetElement(int x, int y) { return GetChunk(x, y)->GetElement(x, y); }
+        static void SwapElement(int x, int y, const Element& element);
         static void SwapElement(int x, int y, int xto, int yto);
-        static void InsertElement(int x, int y, Element* element);
+        static void InsertElement(int x, int y, const Element& element);
 
         static void KeepAlive(int x, int y) { if (PixelChunk* chunk = GetChunk(x, y)) { chunk->KeepAlive(x, y); }}
 
@@ -42,6 +42,7 @@ namespace zz
         static bool IsEmpty(int x, int y) { return InBounds(x, y) && GetChunk(x, y)->IsEmpty(x, y);}
 
         static void DrawPixels();
+        static void SetImage(int x, int y, std::shared_ptr<class Texture> texture, std::shared_ptr<class Texture> texture_visual);
 
         static std::vector<uint8_t>& GetPixelColor() { return mPixelColor; }
         static std::vector<PixelChunkMap*> mChunkMaps;
@@ -52,8 +53,8 @@ namespace zz
         
         static std::unordered_map<std::pair<int, int>, PixelChunkMap*, pair_hash> mChunkMapLookUp;
 
-        static std::map<char, Element*> mElementMap;
-        static Element* mSelectElement;
+        static std::map<char, Element> mElementMap;
+        static Element mSelectElement;
 
         static std::vector<uint8_t> mPixelColor;
         static class PixelGridColor* mImage;    
