@@ -1,6 +1,9 @@
 #include "zzInput.h"
 #include "zzApplication.h"
-
+#include "zzCamera.h"
+#include "zzRenderer.h"
+#include "zzGameObject.h"
+#include "zzUICamera.h"
 namespace zz
 {
     int ASCII[(UINT)eKeyCode::END] =
@@ -9,12 +12,16 @@ namespace zz
         'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L',
         'Z', 'X', 'C', 'V', 'B', 'N', 'M',
 
+        '0', '1', '2', '3', '4',
+        '5', '6', '7', '8', '9',
+
         VK_UP, VK_DOWN, VK_LEFT ,VK_RIGHT, VK_SPACE,
         VK_LBUTTON, VK_RBUTTON,
     };
 
     std::vector<Input::Key> Input::mKeys;
-    Vector2 Input::mMousePos = Vector2::Zero;
+    Vector3 Input::mMouseWorldPos = Vector3::Zero;
+    Vector3 Input::mMouseUIPos = Vector3::Zero;
 
     void Input::Initialize()
     {
@@ -62,8 +69,18 @@ namespace zz
             Application& application = Application::GetInst();
 
             ScreenToClient(application.GetHwnd(), &mousePos);
-            mMousePos.x = (float)mousePos.x;
-            mMousePos.y = (float)mousePos.y;
+
+            Vector3 pos((float)mousePos.x, (float)mousePos.y, 0.0f);
+            Viewport viewport;
+            viewport.width = 1600.0f;
+            viewport.height = 900.0f;
+            viewport.x = 0;
+            viewport.y = 0;
+            viewport.minDepth = 0.0f;
+            viewport.maxDepth = 1.0f;  
+
+            mMouseUIPos = Vector3((float)pos.x * 0.4f, 360.f - ((float)pos.y * 0.4f), 1.0f);
+            mMouseWorldPos = viewport.Unproject(pos, Camera::GetGpuProjectionMatrix(), Camera::GetGpuViewMatrix(), Matrix::Identity);
         }
         else
         {
@@ -82,5 +99,17 @@ namespace zz
                 mKeys[i].bPressed = false;
             }
         }
+    }
+
+    UINT Input::IsInputNumberKey()
+    {
+        for (UINT i = (UINT)eKeyCode::Num1; i < (UINT)eKeyCode::Num9; i++)
+        {
+            if (mKeys[i].state == eKeyState::Down)
+            {
+                return i - (UINT)eKeyCode::Num0;
+            }
+        }
+        return 0;
     }
 }

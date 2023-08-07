@@ -27,8 +27,6 @@ cbuffer Color : register(b1)
     float4 color;
 }
 
-
-
 VSOut main(VSIn In)
 {
     VSOut Out = (VSOut) 0.0f;

@@ -5,6 +5,7 @@ namespace zz
     Animator::Animator()
         : Component(eComponentType::Animator)
         , mbLoop(false)
+        , mActiveAnimation(nullptr)
     {
     }
     Animator::~Animator()

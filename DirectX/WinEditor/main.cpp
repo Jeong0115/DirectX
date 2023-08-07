@@ -14,6 +14,7 @@
 #include "..\Engine\zzPixelWorld.h"
 #include "..\Engine\zzRenderer.h"
 #include "zzEditor.h"
+
 //#include "zzLoadScenes.h"
 
 //#ifdef _DEBUG
@@ -156,6 +157,10 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
       return FALSE;
    }
 
+   //HCURSOR hCursor = LoadCursor(NULL, IDC_CROSS);
+   //SetCursor(hCursor);
+   //SetClassLongPtr(hWnd, GCLP_HCURSOR, (LONG_PTR)hCursor);
+   ShowCursor(FALSE);
    application.SetWindow(hWnd, 1600, 900);
    
    

@@ -11,6 +11,7 @@ namespace zz
         Script,
         Animator,
         Camera,
+        UICollider,
         End,
     };
 
@@ -20,8 +21,26 @@ namespace zz
         BG,
         Player,
         Monster,
+        
+        Object,
         UI,
         End,
+    };
+
+    enum class eUIType
+    {
+        NoneCollider,
+        ItemSlot,
+        SpellSlot,
+
+        Item,
+        Spell,
+
+        Highligt,
+
+        Mouse,
+
+        End
     };
 
     enum class eResourceType

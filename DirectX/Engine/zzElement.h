@@ -64,6 +64,8 @@ namespace zz
             Type = other.Type;
             Move = other.Move;
             Name = other.Name;
+            x = other.x;
+            y = other.y;
             Velocity = other.Velocity;
             if (other.Name == L"Sand")
             {
@@ -79,8 +81,8 @@ namespace zz
         std::wstring    Name = L"Empty";
         math::Vector2   Velocity = { 0.f, 0.f };
 
-        int x = 0;
-        int y = 0;
+        float x = 0;
+        float y = 0;
     };
 
 
@@ -119,7 +121,7 @@ namespace zz
             eElementMove::MOVE_DOWN_LIQUID | eElementMove::MOVE_SIDE,
             (uint32_t)eElementColor::WATER,
             L"Water",
-            math::Vector2(2.f, 20.f)
+            math::Vector2(5.f, 2.f)
         };
 
         ROCK =

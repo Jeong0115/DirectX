@@ -47,6 +47,7 @@ namespace zz
         for (GameObject* gameObject : mGameObjects)
         {
             gameObject->Render();
+            
         }
     }
 

@@ -12,6 +12,7 @@ namespace zz
         , mPosition(Vector3::Zero)
         , mRotation(Vector3::Zero)
         , mScale(Vector3::One)
+        , mParent(nullptr)
     {
     }
 
@@ -38,9 +39,7 @@ namespace zz
         rotation *= Matrix::CreateRotationY(mRotation.y);
         rotation *= Matrix::CreateRotationZ(mRotation.z);
 
-        Matrix position;
-        position.Translation(mPosition);
-
+        Matrix position = Matrix::CreateTranslation(mPosition);
         mWorld = scale * rotation * position;
 
         mUp = Vector3::TransformNormal(Vector3::Up, rotation);
@@ -49,8 +48,11 @@ namespace zz
 
         if (mParent)
         {
-            mWorld *= mParent->mWorld;
-        }
+            Matrix parentScale = Matrix::CreateScale(mParent->mScale);
+            Matrix in = parentScale.Invert();
+            Matrix out = in * mParent->mWorld;
+            mWorld *= out;
+        }     
     }
 
     void Transform::Render()

@@ -23,3 +23,13 @@
 #include "zzMath.h"
 
 #include "function.h"
+
+#define NOMINMAX
+
+#ifdef _DEBUG
+#pragma comment(lib, "..\\External\\Box2d\\lib\\Debug\\box2d.lib")
+#endif
+#ifdef _DEBUG
+#pragma comment(lib, "..\\External\\OpenCV\\lib\\Debug\\opencv_world480d.lib")
+#endif
+// #include "../External/Box2d/include/box2d.h"

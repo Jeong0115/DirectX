@@ -40,6 +40,11 @@ namespace zz::renderer
         Vector4 color;
     };
 
+    CBUFFER(FlipCB, CBSLOT_FLIP)
+    {
+        Vector4 flip;
+    };
+
     extern Vertex vertexes[];
     extern Vertex debugVertexes[];
     extern graphics::ConstantBuffer* constantBuffer[(UINT)eCBType::End];

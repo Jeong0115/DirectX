@@ -14,9 +14,12 @@
 
 #include "zzThreadPool.h"
 #include "zzTexture.h"
+#include <algorithm>
+
+#include "zzInput.h"
 
 namespace zz
-{
+{  
     std::vector<uint8_t> PixelWorld::mPixelColor(2048 * 2048 * 4);
     const UINT PixelWorld::mChunkMapWidth = 512;
     const UINT PixelWorld::mChunkMapHeight = 512;
@@ -28,6 +31,8 @@ namespace zz
     std::vector<PixelChunkMap*> PixelWorld::mChunkMaps = {};
     std::unordered_map<std::pair<int, int>, PixelChunkMap*, pair_hash> PixelWorld::mChunkMapLookUp = {};
     ThreadPool PixelWorld::threadPool(4);
+
+    std::vector<std::vector<Box2dWorld::StaticElementInfo>>* PixelWorld::mStaticElements = {};
 
     PixelWorld::PixelWorld()
     {
@@ -54,7 +59,7 @@ namespace zz
         mElementMap.insert({ 'c', ROCK });
         //mElementMap.insert({ 'o', new Oil });
         //mElementMap.insert({ 'f', new Spark });
-        mElementMap.insert({ 'e', EMPTY });
+        mElementMap.insert({ 'e', {eElementType::EMPTY, eElementMove::NONE, (uint32_t)eElementColor::EMPTY, L"DeleteEmpty", math::Vector2(0.f, 0.f)} });
         mSelectElement = mElementMap.find('e')->second;
 
         /*for (int i = 60; i <= 75; i++)
@@ -72,28 +77,37 @@ namespace zz
                 InsertElement(i, j, ROCK);
             }
         }*/
-
-    }
+        Box2dWorld::Initialize();
+    } 
 
     void PixelWorld::Update()
     {
         renderer::debugMeshs.clear();
         //RemoveEmptyChunks();
         DrawPixels();
+        if(mStaticElements != nullptr)
+        {
+            for (int i = 0; i < mStaticElements->size(); i++)
+            {
+                DeleteStaticElement((*mStaticElements)[i], i);
+            }
+        }
 
+        Box2dWorld::Update();
 
-        
+        for (int i = 0; i < mStaticElements->size(); i++)
+        {
+            MoveStaticElement((*mStaticElements)[i]);
+        }
+               
         for (int i = 0; i < 4; i++)
         {
             for (PixelChunkMap* chunkMap : mChunkMaps)
             {
-                //threadPool.enqueue(std::bind(&PixelChunkMap::UpdateStep, chunkMap, i));
                 chunkMap->UpdateStep(i);
-
             };
             threadPool.wait();
         }
-
 
         for (int i = 0; i < 4; i++)
         {
@@ -111,6 +125,8 @@ namespace zz
         threadPool.wait();
 
         mImage->Update(mPixelColor, NULL, 0, 0);
+
+        
     }
 
     void PixelWorld::Release()
@@ -213,6 +229,43 @@ namespace zz
         }
     }
 
+    void PixelWorld::MoveStaticElement(std::vector<Box2dWorld::StaticElementInfo>& elements)
+    {
+        for (auto& element : elements)
+        {
+            if (PixelChunk* chunk = GetChunk(element.x, element.y))
+            {
+                chunk->RegisterElement(element.x, element.y, element.element);
+            }
+        }
+    }
+
+    void PixelWorld::DeleteStaticElement(std::vector<Box2dWorld::StaticElementInfo>& elements, int index)
+    {
+        bool cal = false;
+        std::vector<std::pair<int, int>> empty;
+        int i = 0;
+        for (auto& element : elements)
+        {
+            if (PixelChunk* chunk = GetChunk(element.x, element.y))
+            {
+                if (!chunk->TakeElement(element.x, element.y))
+                {
+                    cal = true;
+                    elements[i].element =  EMPTY;
+                    empty.push_back({ element.x, element.y });
+                }
+            }
+            i++;
+           
+        }
+        if (cal)
+        {
+            Box2dWorld::ReconstructBody(index);
+            cal = false;
+        }
+    }
+
 
     bool PixelWorld::InBounds(int x, int y)
     {
@@ -243,54 +296,15 @@ namespace zz
                 mSelectElement = mElementMap.find('o')->second;*/
         }
 
-        if (Input::GetKey(eKeyCode::LBUTTON) || Input::GetKey(eKeyCode::RBUTTON))
+        
+        if (Input::GetKey(eKeyCode::LBUTTON) || Input::GetKey(eKeyCode::RBUTTON) || Input::GetKeyDown(eKeyCode::A) || Input::GetKeyDown(eKeyCode::T))
         {
             HWND Hwnd = Application::GetInst().GetHwnd();
             HWND nowHwnd = GetFocus();
 
             if (nowHwnd == Hwnd)
             {
-                POINT mousePos = {};
-                GetCursorPos(&mousePos);
-                ScreenToClient(Hwnd, &mousePos);
-
-                Vector3 pos(mousePos.x, mousePos.y, 0.0f);
-                Viewport viewport;
-                viewport.width = 1600.0f;
-                viewport.height = 900.0f;
-                viewport.x = 0;
-                viewport.y = 0;
-                viewport.minDepth = 0.0f;
-                viewport.maxDepth = 1.0f;
-
-                pos = viewport.Unproject(pos, Camera::GetGpuProjectionMatrix(), Camera::GetGpuViewMatrix(), Matrix::Identity);
-
-                //float x = (2.0f * mousePos.x) / 1600.f - 1.0f;
-                //float y = 1.0f - (2.0f * mousePos.y) / 900.f;
-
-                //Vector3 pos = Vector3(x, y, 1.0f);
-
-                //Matrix inverseVP = (Camera::GetGpuProjectionMatrix() * Camera::GetGpuViewMatrix()).Invert();
-                //Matrix mouse = Matrix::CreateTranslation(pos);
-
-                //Matrix worldPos = (mouse * inverseVP);
-                //Vector3 worldPosVec = Vector3(worldPos._41, worldPos._42, worldPos._43);
-                //worldPosVec /= worldPos._44;
-
-                //Vector3 pos = Vector3(mousePos.x, mousePos.y, 1.0f);
-                //Matrix mouse;
-                //mouse.Translation(pos);
-
-                //Matrix matrix = Camera::GetGpuProjectionMatrix() * Camera::GetGpuViewMatrix();
-                //matrix.Invert();
-
-                //Matrix temp = mouse* matrix;
-                //mousePos.x += -800;
-                //mousePos.y = (450 - (int)mousePos.y);
-          
-                //mousePos.x += (1024 / 2  - 256);   //+1024 - 256, -1024 + 256
-                //mousePos.y = ( - 1024 / 2 + 256 + 512) - mousePos.y;
-
+                Vector3 pos = Input::GetMouseWorldPos();
 
                 if (pos.x >= 5 && pos.y <= -5)
                 {
@@ -304,15 +318,23 @@ namespace zz
                             }
                         }
                     }
-                    else
+                    else if (Input::GetKey(eKeyCode::RBUTTON))
                     {
-                        for (int y = (int)pos.y - 0; y < pos.y + 1; y++)
+                        for (int y = (int)pos.y - 1; y < pos.y + 1; y++)
                         {
-                            for (int x = (int)pos.x - 0; x < pos.x + 1; x++)
+                            for (int x = (int)pos.x - 1; x < pos.x + 1; x++)
                             {
                                 InsertElement(x, -y, mSelectElement);
                             }
                         }
+                    }
+                    else if (Input::GetKeyDown(eKeyCode::A))
+                    {
+                        Box2dWorld::Draw(pos.x, -pos.y);
+                    }
+                    else
+                    {
+                        Box2dWorld::Draw2(pos.x, -pos.y);
                     }
                 }
             }
@@ -338,7 +360,7 @@ namespace zz
 
     void PixelWorld::SetImage(int x, int y, std::shared_ptr<Texture> texture, std::shared_ptr<Texture> texture_visual)
     {
-        //return;
+        return;
 
         if (x < 0 || y < 0) return;
         uint8_t* texPixels = texture->GetPixels();

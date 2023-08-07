@@ -1,6 +1,7 @@
 #include "zzPixelChunk.h"
 #include "zzPixelWorld.h"
 #include "zzRenderer.h"
+
 #define _DEST(x) std::get<2>(x)
 
 namespace zz
@@ -52,7 +53,6 @@ namespace zz
             
             return;
         }
-
         std::sort(mChanges.begin(), mChanges.end(), [](auto& a, auto& b) { return _DEST(a) < _DEST(b); });
 
         size_t iprev = 0;
@@ -80,8 +80,6 @@ namespace zz
         }
 
         mChanges.clear();
-       
-
     }
 
     Element& PixelChunk::GetElement(size_t index)
@@ -138,10 +136,49 @@ namespace zz
         KeepAlive(index);
     }
 
+    void PixelChunk::RegisterElement(size_t index, const Element& element)
+    {
+        Element& dest = mElements[index];
+
+        if (dest.Type != eElementType::EMPTY)
+        {
+            mElementCount--;
+        }
+
+        mElements[index] = element;
+
+        //element->SetPos(Position((int)(mStartX + index % mWidth), (int)(mStartY + index / mWidth)));
+        memcpy(&PixelWorld::GetPixelColor()[(mStartX + index % mWidth + ((mStartY + index / mWidth) * 2048)) * 4], &element.Color, 4);
+
+    }
+
+    void PixelChunk::DelteElement(size_t index)
+    {
+
+        mElements[index] = EMPTY;
+        mElementCount--;
+        memcpy(&PixelWorld::GetPixelColor()[(mStartX + index % mWidth + ((mStartY + index / mWidth) * 2048)) * 4], &mElements[index].Color, 4);
+
+        KeepAlive(index);
+    }
+
+    bool PixelChunk::TakeElement(size_t index)
+    {
+        if (mElements[index].Name == L"DeleteEmpty")
+        {
+            return false;
+        }
+        else
+        {
+            mElements[index] = EMPTY;
+            memcpy(&PixelWorld::GetPixelColor()[(mStartX + index % mWidth + ((mStartY + index / mWidth) * 2048)) * 4], &mElements[index].Color, 4);
+
+            return true;
+        }
+    }
+
     void PixelChunk::ResiterChanges(PixelChunk* source, int x, int y, int toX, int toY)
     {     
-        //std::lock_guard<std::mutex> lock(resiterMutex);
-
         mElementCount++;
         if (source == nullptr)
         {
@@ -153,20 +190,17 @@ namespace zz
         
     }
 
-    std::mutex mu;
     void PixelChunk::KeepAlive(size_t index)
     {
         int x = (int)(index % mWidth);
         int y = (int)(index / mWidth);
 
-        //mu.lock();
-        m_minXw = std::clamp(min(x - 2, m_minXw), 0, mWidth);
-        m_minYw = std::clamp(min(y - 2, m_minYw), 0, mHeight);
-        m_maxXw = std::clamp(max(x + 2, m_maxXw), 0, mWidth);
-        m_maxYw = std::clamp(max(y + 2, m_maxYw), 0, mHeight);
-        //mu.unlock();
+        m_minXw = std::clamp(std::min(x - 2, m_minXw), 0, mWidth);
+        m_minYw = std::clamp(std::min(y - 2, m_minYw), 0, mHeight);
+        m_maxXw = std::clamp(std::max(x + 2, m_maxXw), 0, mWidth);
+        m_maxYw = std::clamp(std::max(y + 2, m_maxYw), 0, mHeight);
     }
-
+        
     void PixelChunk::UpdateRect()
     {      
         mMinX = m_minXw;  m_minXw = mWidth;
@@ -181,7 +215,6 @@ namespace zz
         mesh.scale = math::Vector3((float)(mMaxX - mMinX), (float)(mMaxY - mMinY), 1.0f);
         mesh.rotation = math::Vector3::Zero;
 
-        std::unique_lock lock(mu);
         renderer::PushDebugMeshAttribute(mesh);
     }
 }

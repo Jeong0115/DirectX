@@ -6,6 +6,8 @@
 #include "zzInput.h"
 #include "..\\Editor\\zzEditor.h"
 #include "zzPixelWorld.h"
+#include "zzInventoryManager.h"
+
 namespace zz
 {	
 	Application::Application()
@@ -31,7 +33,6 @@ namespace zz
         //}
 
         //delete graphicDevice;
-       
 	}
 
     void Application::Run()
@@ -49,6 +50,7 @@ namespace zz
        //PixelGrid::GetInst().Initialize();
         PixelWorld::Initialize();
         renderer::Initialize();
+        InventoryManager::Initialize();
         SceneManager::GetInst().Initialize();
 	}
 
@@ -56,12 +58,14 @@ namespace zz
 	{
         Time::Update();
         Input::Update();
+        InventoryManager::Update();
         PixelWorld::Update();
         SceneManager::GetInst().Update();
 	}
 
 	void Application::LateUpdate()
 	{
+        InventoryManager::LateUpdate();
         SceneManager::GetInst().LateUpdate();
 	}
 
@@ -84,6 +88,7 @@ namespace zz
     void Application::Release()
     {
         SceneManager::GetInst().Release();
+        InventoryManager::Release();
         //graphicDevice.release();
     }
 

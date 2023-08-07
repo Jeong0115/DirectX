@@ -23,6 +23,11 @@ cbuffer Animator : register(b3)
     uint animationType;
 }
 
+cbuffer Flip : register(b4)
+{
+    float4 flip;
+}
+
 Texture2D albedoTexture : register(t0);
 Texture2D atlasTexture : register(t12);
 
@@ -33,13 +38,25 @@ float4 main(VSOut In) : SV_TARGET
 {
     float4 color = (float4) 0.0f;
     
-    color = albedoTexture.Sample(pointSampler, In.UV);
+    //color = albedoTexture.Sample(pointSampler, In.UV);
+    
+    float2 UV;
+    
+    if(flip.x == 1)
+    {
+    
+        UV = float2(1.0 - In.UV.x, In.UV.y);
+        UV.x = UV.x - (SpriteSize.x / AtlasSize.x);
+    }
+    else
+    {
+        UV = In.UV;
+    }
     
     if (animationType == 1)
     {
-        float2 UV = (SpriteLeftTop / AtlasSize + SpriteOffset / AtlasSize) + (SpriteSize / AtlasSize * In.UV);
+        UV = (SpriteLeftTop / AtlasSize + SpriteOffset / AtlasSize) + (SpriteSize / AtlasSize * UV);
    
-        
         color = atlasTexture.Sample(pointSampler, UV);
     }
     

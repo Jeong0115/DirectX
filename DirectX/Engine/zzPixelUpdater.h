@@ -62,17 +62,29 @@ namespace zz
             if (posY == y) return false;
             
             SwapElement(x, y, x, posY);
+            cell.Velocity.x = 2;
             return true;
         }
         bool MoveDownLiquid(int x, int y, Element& cell)
         {
-            const Element& target = GetElement(x, y + 1);
-            if (target.Type == eElementType::EMPTY)
+            float posY = y;
+            for (int i = 1; i <= cell.Velocity.y; i++)
             {
-                SwapElement(x, y, x, y + 1);
-                return true;
+                const Element& target = GetElement(x, y + i);
+                if (target.Type == eElementType::EMPTY )
+                {
+                    posY = y + i;
+                }
+                else
+                {
+                    break;
+                }
             }
-            return false;
+
+            if (posY == y) return false;
+
+            SwapElement(x, y, x, posY);
+            return true;
         }
 
         bool MoveDown(int x, int y, Element& cell) 
@@ -92,11 +104,8 @@ namespace zz
             for(int i = 1; i <= cell.Velocity.x; i++)
             {
                 const Element& target = GetElement(x + i * dir, y);
-                if (i != 1 && (target.Type == eElementType::EMPTY || target.Type == eElementType::LIQUID))
-                {
-                    posX = x + i * dir;
-                }
-                else if (target.Type == eElementType::EMPTY)
+
+                if (target.Type == eElementType::EMPTY)
                 {
                     posX = x + i * dir;
                 }
@@ -106,9 +115,33 @@ namespace zz
                 }
             }
 
-            if(posX == x) return false;
+            if (posX == x)
+            {
+                dir *= -1;
+                float posX = x;
+                for (int i = 1; i <= cell.Velocity.x; i++)
+                {
+                    const Element& target = GetElement(x + i * dir, y);
 
-            SwapElement(x, y, posX, y );
+                    if (target.Type == eElementType::EMPTY)
+                    {
+                        posX = x + i * dir;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                SwapElement(x, y, posX, y);
+                return true;
+            }
+
+            if (posX == x) return false;
+
+            SwapElement(x, y, posX, y);
             return true;
         }
 
@@ -131,7 +164,53 @@ namespace zz
                     return true;
                 }
             }
-            return false;
+
+            float posX = x;
+            for (int i = 1; i <= cell.Velocity.x; i++)
+            {
+                const Element& target = GetElement(x + i * dir, y);
+
+                if (target.Type == eElementType::EMPTY || target.Type == eElementType::LIQUID)
+                {
+                    posX = x + i * dir;
+                }
+                else
+                {
+                    break;
+                    cell.Velocity.x--;
+                }
+            }
+
+            if (posX == x)
+            {
+                dir *= -1;
+                float posX = x;
+                for (int i = 1; i <= cell.Velocity.x; i++)
+                {
+                    const Element& target = GetElement(x + i * dir, y);
+
+                    if (target.Type == eElementType::EMPTY || target.Type == eElementType::LIQUID)
+                    {
+                        posX = x + i * dir;
+                    }
+                    else
+                    {
+                        break;
+                        //cell.Velocity.x--;
+                    }
+                }
+            }
+            else
+            {
+                cell.Velocity.x--;
+                SwapElement(x, y, posX, y);
+                return true;
+            }
+
+            if (posX == x) return false;
+
+            SwapElement(x, y, posX, y);
+            return true;
         }
     };
 }

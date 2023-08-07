@@ -2,7 +2,7 @@
 
 #include "zzEntity.h"
 #include "zzComponent.h"
-//#include <type_traits>
+
 namespace zz
 {
     template<class T>
@@ -25,8 +25,7 @@ namespace zz
         virtual void Update();
         virtual void LateUpdate();
         virtual void Render();
-
-        //template <class T, class = class std::enable_if<std::is_base_of<Component, T>::value>::type>   
+ 
         template<DerivedFromComponent T>
         T* GetComponent(/*const std::wstring name = "no_select"*/)
         {

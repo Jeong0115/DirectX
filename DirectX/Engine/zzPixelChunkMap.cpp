@@ -86,7 +86,6 @@ namespace zz
 
         }
     }
-
     void PixelChunkMap::UpdateStep1()
     {
         for (int i = 0; i < 8; i += 2)
@@ -98,12 +97,13 @@ namespace zz
 
                 //SimplePixelUpdater(mChunks[j * mChunkWidth + i]).UpdateChunk();
 
-                //DebugMesh mesh = {};
-                //mesh.temp = 1;
-                //mesh.position = math::Vector3(mChunks[j * mChunkWidth + i]->mStartX + 32.f - 256.f, -mChunks[j * mChunkWidth + i]->mStartY - 32.f + 256.f, 0.01f);
-                //mesh.scale = math::Vector3(64, 64, 1.0f);
-                //mesh.rotation = math::Vector3::Zero;
-                //renderer::PushDebugMeshAttribute(mesh);
+
+                DebugMesh mesh = {};
+                mesh.temp = 1;
+                mesh.position = math::Vector3(mChunks[j * mXChunkCnt + i]->mStartX + 32, -mChunks[j * mXChunkCnt + i]->mStartY - 32, 0.01f);
+                mesh.scale = math::Vector3(64, 64, 1.0f);
+                mesh.rotation = math::Vector3::Zero;
+                renderer::PushDebugMeshAttribute(mesh);
             }
         }
     }
@@ -116,7 +116,12 @@ namespace zz
                 if (mChunks[j * mXChunkCnt + i]->mElementCount == 0) continue;
                 //SimplePixelUpdater(mChunks[j * mChunkWidth + i]).UpdateChunk();
                 PixelWorld::threadPool.enqueue([=]() {SimplePixelUpdater updater(mChunks[j * mXChunkCnt + i]); updater.UpdateChunk(); });
-
+                DebugMesh mesh = {};
+                mesh.temp = 1;
+                mesh.position = math::Vector3(mChunks[j * mXChunkCnt + i]->mStartX + 32, -mChunks[j * mXChunkCnt + i]->mStartY - 32, 0.01f);
+                mesh.scale = math::Vector3(64, 64, 1.0f);
+                mesh.rotation = math::Vector3::Zero;
+                renderer::PushDebugMeshAttribute(mesh);
             }
         }
     }
@@ -128,7 +133,12 @@ namespace zz
             {
                 if (mChunks[j * mXChunkCnt + i]->mElementCount == 0) continue;
                 PixelWorld::threadPool.enqueue([=]() {SimplePixelUpdater updater(mChunks[j * mXChunkCnt + i]); updater.UpdateChunk(); });
-
+                DebugMesh mesh = {};
+                mesh.temp = 1;
+                mesh.position = math::Vector3(mChunks[j * mXChunkCnt + i]->mStartX + 32, -mChunks[j * mXChunkCnt + i]->mStartY - 32, 0.01f);
+                mesh.scale = math::Vector3(64, 64, 1.0f);
+                mesh.rotation = math::Vector3::Zero;
+                renderer::PushDebugMeshAttribute(mesh);
             }
         }
     }
@@ -141,6 +151,12 @@ namespace zz
                 if (mChunks[j * mXChunkCnt + i]->mElementCount == 0) continue;
                 PixelWorld::threadPool.enqueue([=]() {SimplePixelUpdater updater(mChunks[j * mXChunkCnt + i]); updater.UpdateChunk(); });
                 //SimplePixelUpdater(mChunks[j * mChunkWidth + i]).UpdateChunk();
+                DebugMesh mesh = {};
+                mesh.temp = 1;
+                mesh.position = math::Vector3(mChunks[j * mXChunkCnt + i]->mStartX + 32, -mChunks[j * mXChunkCnt + i]->mStartY - 32, 0.01f);
+                mesh.scale = math::Vector3(64, 64, 1.0f);
+                mesh.rotation = math::Vector3::Zero;
+                renderer::PushDebugMeshAttribute(mesh);
             }
         }
     }

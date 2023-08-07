@@ -6,11 +6,19 @@
 #include "zzMaterial.h"
 #include "zzInput.h"
 #include "zzCamera.h"
+#include "zzMainCamera.h"
+#include "zzUICamera.h"
 #include "zzCameraScript.h"
 #include "zzBGScript.h"
 #include "zzAnimator.h"
-#include "zzPlayerScript.h"
+#include "zzWandScript.h"
 #include "zzRenderer.h"
+#include "zzCursorScript.h"
+#include "zzInventoryBG.h"
+#include "zzInventoryBox.h"
+#include "zzPlayer.h"
+#include "zzPlayerArm.h"
+#include "zzInventoryManager.h"
 
 namespace zz
 {
@@ -45,18 +53,26 @@ namespace zz
             script->SetParallaxScale(parallaxScale);
         }
     }   
-
+    
     void PlayScene::Initialize()
-    {
-        
+    {       
         camera = new GameObject();
         AddGameObject(eLayerType::Camera, camera);
         camera->GetComponent<Transform>()->SetPosition(Vector3(0.0f, 0.0f, -10.0f));
-        Camera* cameraComp = camera->AddComponent<Camera>();
+        MainCamera* cameraComp = camera->AddComponent<MainCamera>();
         camera->AddComponent<CameraScript>();
         cameraComp->TurnLayerMask(eLayerType::UI, false);
         renderer::cameras.push_back(cameraComp);
         renderer::mainCamera = cameraComp;
+
+        {
+            GameObject* uiCamera = new GameObject();
+        	AddGameObject(eLayerType::Camera, uiCamera);
+            uiCamera->GetComponent<Transform>()->SetPosition(Vector3(320.f, 180.f, -1.0f));
+        	UICamera* uiCameraComp = uiCamera->AddComponent<UICamera>();
+            renderer::cameras.push_back(uiCameraComp);
+        	//camera->AddComponent<CameraScript>();
+        }
 
         // z값을 다르게 하거나, z값을 같게 한다음 깊이 버퍼를 사용 안할지 생각
         MakeBG(L"M_MountainBG0", Vector3(1066, 512, 1.0f), Vector3(0.f, -20.f, 1.0f)  , 0.f   , 0.f);          // 파란 배경
@@ -126,8 +142,12 @@ namespace zz
             mesh->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
         }
 
-        
+#pragma region UI
 
+
+
+
+#pragma endregion
         // Transform * tr = object->GetComponent<Transform>();
         //tr->SetScale(Vector3(2048.f, 2048.f, 1.0f));
         //{
@@ -140,26 +160,34 @@ namespace zz
         //}
         Scene::Initialize();
         {
-            GameObject* player = new GameObject();
-            AddGameObject(eLayerType::Player, player);
-            player->GetComponent<Transform>()->SetPosition(Vector3(10.f, -400.f, 0.000f));
-            player->GetComponent<Transform>()->SetScale(Vector3(12.f, 19.f, 1.0f));
-            MeshRenderer* mesh = player->AddComponent<MeshRenderer>();
-            mesh->SetMaterial(ResourceManager::Find<Material>(L"m_SpriteAnimation"));
-            mesh->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
-            PlayerScript* script = player->AddComponent<PlayerScript>();     
-            script->SetCamera(camera);
-            script->Initialize();
+            Player* player;
+            player = new Player();
+            AddGameObject(eLayerType::Player, player);           
+            player->GetComponent<Transform>()->SetPosition(Vector3(10.f, -300.f, 0.000f));
+            player->GetComponent<Transform>()->SetScale(Vector3(12.f, 19.f, 1.0f));    
+            player->SetCamera(camera);
+           
+            
+            PlayerArm* player_arm = new PlayerArm();
+
+            player_arm->SetPlayer(player);
+            player->SetArm(player_arm);
+
+            player->Initialize();
+
+            InventoryManager::SetPlayer(player);
+            InventoryManager::CreateStartItems();
+            InventoryManager::Test();
+
+
         }
-        
-
-
+       
         
     }
 
     void PlayScene::Update()
     {
-
+        
         Scene::Update();
     }
 

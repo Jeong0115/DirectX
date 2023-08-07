@@ -15,6 +15,7 @@
 #define CBSLOT_TRANSFORM		0
 #define CBSLOT_COLOR		1
 #define CBSLOT_ANIMATION2D		3
+#define CBSLOT_FLIP		4
 //#define CBSLOT_PARTICLE			1
 
 enum class eShaderStage
@@ -34,6 +35,7 @@ enum class eCBType
     Color,
     Material,
     Animator,
+    Flip,
     End,
 };
 

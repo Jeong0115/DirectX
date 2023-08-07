@@ -10,6 +10,9 @@ namespace zz
         A, S, D, F, G, H, J, K, L,
         Z, X, C, V, B, N, M,
 
+        Num0, Num1, Num2, Num3, Num4,
+        Num5, Num6, Num7, Num8, Num9,
+
         UP, DOWN, LEFT, RIGHT, SPACE,
         LBUTTON, RBUTTON,
         END,
@@ -36,6 +39,9 @@ namespace zz
         static void Initialize();
         static void Update();
 
+        // 인벤토리 장착 아이템 변경 함수, 범용적으로 쓸거면 수정해야됨
+        static UINT IsInputNumberKey();
+
         inline static eKeyState GetKeyState(eKeyCode keyCode)
         {
             return mKeys[(UINT)keyCode].state;
@@ -57,10 +63,13 @@ namespace zz
             return mKeys[static_cast<UINT>(keyCode)].state == eKeyState::Up;
         }
 
-        static __forceinline Vector2 GetMousePos() { return mMousePos; }
+        static __forceinline Vector3 GetMouseWorldPos() { return mMouseWorldPos; }
+        static __forceinline Vector3 GetMouseUIPos() { return mMouseUIPos; }
+
 
     private:
         static std::vector<Key> mKeys;
-        static Vector2 mMousePos;
+        static Vector3 mMouseWorldPos;
+        static Vector3 mMouseUIPos;
     };
 }

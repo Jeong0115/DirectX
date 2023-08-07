@@ -5,6 +5,7 @@
 #include "zzPixelChunk.h"
 #include "zzPixelChunkMap.h"
 #include "zzThreadPool.h"
+#include "zzBox2dWorld.h"
 
 namespace zz
 {
@@ -19,6 +20,15 @@ namespace zz
     class PixelWorld
     {
     public:
+        struct move
+        {
+            float x;
+            float y;
+            Element& element;
+            float prevX;
+            float prevY;
+
+        };
         PixelWorld();
         ~PixelWorld();
 
@@ -35,6 +45,9 @@ namespace zz
         static void SwapElement(int x, int y, const Element& element);
         static void SwapElement(int x, int y, int xto, int yto);
         static void InsertElement(int x, int y, const Element& element);
+        static void MoveStaticElement(std::vector<Box2dWorld::StaticElementInfo>& elements);
+        static void DeleteStaticElement(std::vector<Box2dWorld::StaticElementInfo>& elements, int index);
+        static void SetStaticElements(std::vector<std::vector<Box2dWorld::StaticElementInfo>>* staticElements) { mStaticElements = staticElements; }
 
         static void KeepAlive(int x, int y) { if (PixelChunk* chunk = GetChunk(x, y)) { chunk->KeepAlive(x, y); }}
 
@@ -61,5 +74,6 @@ namespace zz
 
         static const UINT mChunkMapWidth;
         static const UINT mChunkMapHeight;
+        static std::vector<std::vector<Box2dWorld::StaticElementInfo>>* mStaticElements;
     };
 }

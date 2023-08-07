@@ -25,6 +25,7 @@ namespace zz
                 UpdateCell(px, py, cell);
             }
         }
+        
         /*for (int x = mChunk->mMinX; x < mChunk->mMaxX; x++)
         {
             for (int y = mChunk->mMinY; y < mChunk->mMaxY; y++) 

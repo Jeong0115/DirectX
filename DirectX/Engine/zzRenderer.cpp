@@ -22,6 +22,9 @@ namespace zz::renderer
     Microsoft::WRL::ComPtr<ID3D11DepthStencilState> depthStencilStates[(UINT)eDSType::End] = {};
     Microsoft::WRL::ComPtr<ID3D11BlendState> blendStates[(UINT)eBSType::End] = {};
 
+    void LoadUIResource();
+    void LoadItemTextureResource();
+
     void LoadBuffer()
     {
         {
@@ -108,6 +111,9 @@ namespace zz::renderer
 
         constantBuffer[(UINT)eCBType::Animator] = new ConstantBuffer(eCBType::Animator);
         constantBuffer[(UINT)eCBType::Animator]->CreateConstantBuffer(sizeof(AnimatorCB));
+
+        constantBuffer[(UINT)eCBType::Flip] = new ConstantBuffer(eCBType::Flip);
+        constantBuffer[(UINT)eCBType::Flip]->CreateConstantBuffer(sizeof(FlipCB));
     }
     void LoadShader()
     {
@@ -131,7 +137,19 @@ namespace zz::renderer
     }
     void LoadResource()
     {
+        LoadUIResource();
+        LoadItemTextureResource();
         std::shared_ptr<Shader> spriteShader = ResourceManager::Find<Shader>(L"SpriteShader");
+
+        {
+            std::shared_ptr<Texture> texture = ResourceManager::Load<Texture>(L"mouse_cursor", L"..\\Resources\\Texture\\Mouse\\mouse_cursor.png");
+            std::shared_ptr<Material> material = std::make_shared<Material>();
+
+            material = std::make_shared<Material>();
+            material->SetShader(spriteShader);
+            material->SetTexture(texture);
+            ResourceManager::Insert(L"m_mouse_cursor", material);
+        }
 
         {
             std::shared_ptr<Shader> debugShader = ResourceManager::Find<Shader>(L"DebugShader");
@@ -168,6 +186,14 @@ namespace zz::renderer
             spriteMateiral2->SetShader(spriteShader);
             spriteMateiral2->SetTexture(texture);
             ResourceManager::Insert(L"M_MountainBG0", spriteMateiral2);
+        }
+        {
+            std::shared_ptr<Texture> texture = ResourceManager::Load<Texture>(L"rust", L"..\\Resources\\Texture\\rust.png");
+
+            std::shared_ptr<Material> spriteMateiral2 = std::make_shared<Material>();
+            spriteMateiral2->SetShader(spriteShader);
+            spriteMateiral2->SetTexture(texture);
+            ResourceManager::Insert(L"m_rust", spriteMateiral2);
         }
         {
             std::shared_ptr<Texture> texture = ResourceManager::Load<Texture>(L"T_MountainBG1", L"..\\Resources\\Texture\\parallax_clounds_01.png");
@@ -439,8 +465,10 @@ namespace zz::renderer
         SetupState();
     }
 
+    std::mutex debugMutex;
     void PushDebugMeshAttribute(DebugMesh mesh)
     {
+        std::unique_lock lock(debugMutex);
         debugMeshs.push_back(mesh);
     }
 
@@ -464,6 +492,54 @@ namespace zz::renderer
             delete buff;
             buff = nullptr;
         }
+    }
+
+    void LoadUIResource()
+    {
+        std::shared_ptr<Shader> spriteShader = ResourceManager::Find<Shader>(L"SpriteShader");
+        std::shared_ptr<Material> material;
+
+        std::shared_ptr<Texture> inventory_box = ResourceManager::Load<Texture>(L"inventory_box", L"..\\Resources\\Texture\\Inventory\\full_inventory_box.png");   
+        material = std::make_shared<Material>();
+        material->SetShader(spriteShader);
+        material->SetTexture(inventory_box);
+        ResourceManager::Insert(L"m_inventory_box", material);
+
+        std::shared_ptr<Texture> inventory_box_highlihgt = ResourceManager::Load<Texture>(L"inventory_box_highlihgt", L"..\\Resources\\Texture\\Inventory\\full_inventory_box_highlight.png");
+        material = std::make_shared<Material>();
+        material->SetShader(spriteShader);
+        material->SetTexture(inventory_box_highlihgt);
+        ResourceManager::Insert(L"m_inventory_box_highlihgt", material);
+
+        std::shared_ptr<Texture> mouse_cursor = ResourceManager::Load<Texture>(L"mouse_cursor", L"..\\Resources\\Texture\\Mouse\\mouse_cursor.png");
+        material = std::make_shared<Material>();
+        material->SetShader(spriteShader);
+        material->SetTexture(mouse_cursor);
+        ResourceManager::Insert(L"m_mouse_cursor", material);
+
+        std::shared_ptr<Texture> highlight = ResourceManager::Load<Texture>(L"highlight", L"..\\Resources\\Texture\\Inventory\\highlight.png");
+        material = std::make_shared<Material>();
+        material->SetShader(spriteShader);
+        material->SetTexture(highlight);
+        ResourceManager::Insert(L"m_highlight", material);
+    }
+
+    void LoadItemTextureResource()
+    {
+        std::shared_ptr<Shader> spriteShader = ResourceManager::Find<Shader>(L"SpriteShader");
+        std::shared_ptr<Material> material;
+
+        std::shared_ptr<Texture> BlastWand_0585 = ResourceManager::Load<Texture>(L"BlastWand_0585", L"..\\Resources\\Texture\\Wand\\BlastWand_0585.png");
+        material = std::make_shared<Material>();
+        material->SetShader(spriteShader);
+        material->SetTexture(BlastWand_0585);
+        ResourceManager::Insert(L"m_BlastWand_0585", material);
+
+        std::shared_ptr<Texture> BoltWand_0997 = ResourceManager::Load<Texture>(L"BoltWand_0997", L"..\\Resources\\Texture\\Wand\\BoltWand_0997.png");
+        material = std::make_shared<Material>();
+        material->SetShader(spriteShader);
+        material->SetTexture(BoltWand_0997);
+        ResourceManager::Insert(L"m_BoltWand_0997", material);
     }
 }
 

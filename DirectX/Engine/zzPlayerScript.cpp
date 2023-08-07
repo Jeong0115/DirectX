@@ -7,6 +7,8 @@
 #include "zzTexture.h"
 #include "zzResourceManager.h"
 #include "zzAnimator.h"
+#include "zzRenderer.h"
+#include "zzApplication.h"
 
 namespace zz
 {
@@ -26,7 +28,7 @@ namespace zz
 
         mAnimator = GetOwner()->AddComponent<Animator>();
 
-        mAnimator->Create(L"Player_Idle", texture, Vector2(0.0f, 1.0f), Vector2(12.0f, 19.0f), 6, Vector2::Zero, 0.2f);
+        mAnimator->Create(L"Player_Idle", texture, Vector2(0.0f, 1.0f), Vector2(12.0f, 19.0f), 6, Vector2::Zero, 0.1f);
         mAnimator->Create(L"Player_Walk", texture, Vector2(0.0f, 21.f), Vector2(12.0f, 19.0f), 6, Vector2::Zero, 0.105f);
         mAnimator->Create(L"Player_Jump_Up", texture, Vector2(0.0f, 41.f), Vector2(12.0f, 19.0f), 3, Vector2::Zero, 0.082f);
         mAnimator->Create(L"Player_Jump_Fall", texture, Vector2(0.0f, 61.f), Vector2(12.0f, 19.0f), 3, Vector2::Zero, 0.082f);
@@ -108,12 +110,36 @@ namespace zz
             else tr->SetPosition(pos);
         }
 
-       
-
         
-        Vector3 cPos = mCamera->GetComponent<Transform>()->GetPosition();
-        cPos.x = pos.x;
-        cPos.y = pos.y;
-        mCamera->GetComponent<Transform>()->SetPosition(cPos);
+        renderer::FlipCB flipCB = {};
+   
+        HWND Hwnd = Application::GetInst().GetHwnd();
+        POINT mousePos = {};
+        GetCursorPos(&mousePos);
+        ScreenToClient(Hwnd, &mousePos);
+
+        if (mousePos.x >= 800)
+        {
+            flipCB.flip.x = 0;
+        }
+        else
+        {
+            flipCB.flip.x = 1;
+        }
+
+
+        graphics::ConstantBuffer* cb = renderer::constantBuffer[(UINT)eCBType::Flip];
+        cb->SetBufferData(&flipCB);
+        cb->BindConstantBuffer(eShaderStage::PS);
+
+
+
+        if(mCamera != nullptr)
+        {
+            Vector3 cPos = mCamera->GetComponent<Transform>()->GetPosition();
+            cPos.x = pos.x;
+            cPos.y = pos.y;
+            mCamera->GetComponent<Transform>()->SetPosition(cPos);
+        }
     }
 }

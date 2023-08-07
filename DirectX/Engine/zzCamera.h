@@ -17,48 +17,33 @@ namespace zz
         Camera();
         ~Camera();
 
-        virtual void Initialize()   override;
-        virtual void Update()       override;
-        virtual void LateUpdate()   override;
-        virtual void Render()       override;
+        virtual void Initialize();
+        virtual void Update();
+        virtual void LateUpdate();
+        virtual void Render();
 
         bool CreateViewMatrix();
         bool CreateProjectionMatrix(eProjectionType type);
         void RegisterCameraInRenderer();
 
-        void TurnLayerMask(eLayerType type, bool enable = true);
-        void EnableLayerMasks()     { mLayerMask.set(); }
-        void DisableLayerMasks()    { mLayerMask.reset(); }
-
-        void SortGameObjects();
-        void RenderOpaque();
-        void RenderCutOut();
-        void RenderTransparent();
-
         void EnableDepthStencilState();
         void DisableDepthStencilState();
 
-        static Matrix& GetGpuViewMatrix()                       { return View; }
-        static void SetGpuViewMatrix(Matrix view)               { View = view; }
-        static Matrix& GetGpuProjectionMatrix()                 { return Projection; }
-        static void SetGpuProjectionMatrix(Matrix projection)   { Projection = projection; }
+        static Matrix& GetGpuViewMatrix() { return View; }
+        static void SetGpuViewMatrix(Matrix view) { View = view; }
+        static Matrix& GetGpuProjectionMatrix() { return Projection; }
+        static void SetGpuProjectionMatrix(Matrix projection) { Projection = projection; }
 
-        float GetSize()                 { return mSize; }
-        Matrix& GetViewMatrix()         { return mView; }
-        Matrix& GetProjectionMatrix()   { return mProjection; }
+        float GetSize() { return mSize; }
+        Matrix& GetViewMatrix() { return mView; }
+        Matrix& GetProjectionMatrix() { return mProjection; }
 
-    private:
+    protected:
         static Matrix                       View;
         static Matrix                       Projection;
 
         Matrix                              mView;
         Matrix                              mProjection;
-
-        std::bitset<(UINT)eLayerType::End>  mLayerMask;
-
-        std::vector<GameObject*>            mOpaqueGameObjects;
-        std::vector<GameObject*>            mCutOutGameObjects;
-        std::vector<GameObject*>            mTransparentGameObjects;
 
         eProjectionType                     mType;
 
