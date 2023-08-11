@@ -12,6 +12,7 @@ namespace zz
         , mSpread(0.f)
         , mSpells{}
         , mTip(Vector3::Zero)
+        , mInfoBox(nullptr)
     {
     }
 
@@ -28,6 +29,9 @@ namespace zz
     {
     }
     void Wand::Render()
+    {
+    }
+    void Wand::UseEquipment()
     {
     }
 }

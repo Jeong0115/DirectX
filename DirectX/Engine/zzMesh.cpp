@@ -67,6 +67,11 @@ namespace zz
 
     void Mesh::Render()
     {
-        graphics::GetDevice()->DrawIndexed(mIndexCnt, 0, 0);
+        graphics::GetDevice()->DrawIndexed(mIndexCnt, 0, 0);    
+    }
+
+    void Mesh::RenderInstanced(UINT startIndexLocation)
+    {
+        graphics::GetDevice()->DrawIndexedInstanced(mIndexCnt, startIndexLocation, 0, 0, 0);
     }
 }

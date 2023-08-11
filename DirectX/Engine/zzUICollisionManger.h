@@ -24,6 +24,7 @@ namespace zz
         static void LayerCollision(eUIType left, eUIType right);
         static void ColliderCollision(UICollider* left, UICollider* right);
         static bool Intersect(UICollider* left, UICollider* right);
+        static void ResetCollision();
 
         static void SetCollisionUI(eUIType left, eUIType right, bool enable);
         static void Clear();

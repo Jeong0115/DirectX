@@ -128,7 +128,7 @@ namespace zz
         }
 
 
-        graphics::ConstantBuffer* cb = renderer::constantBuffer[(UINT)eCBType::Flip];
+        ConstantBuffer* cb = renderer::constantBuffer[(UINT)eCBType::Flip];
         cb->SetBufferData(&flipCB);
         cb->BindConstantBuffer(eShaderStage::PS);
 

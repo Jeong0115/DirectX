@@ -47,6 +47,15 @@ namespace zz
             return comp;
         }
 
+        eState GetState() { return mState; }
+        bool IsDead() {
+            return (mState == eState::Dead); 
+        }
+
+    protected:
+        void SetState(eState state) { mState = state; }
+        friend class EventManager;
+
     private:
         eState mState;
         std::vector<Component*> mComponents;

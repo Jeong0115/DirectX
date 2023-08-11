@@ -20,4 +20,7 @@ namespace zz
     void Equipment::Render()
     {
     }
+    void Equipment::UseEquipment()
+    {
+    }
 }

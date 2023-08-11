@@ -119,6 +119,62 @@ namespace zz
         }
     }
 
+    void UICollisionManger::ResetCollision()
+    {
+        const auto& inventoryUI = InventoryManager::GetInventoryUI();
+        std::map<UINT64, bool>::iterator iter;
+
+        for (UINT column = 0; column < (UINT)eUIType::End; column++)
+        {
+            for (UINT row = column; row < (UINT)eUIType::End; row++)
+            {
+                if (mMatrix[column][row] == true)
+                {
+                    const std::vector<UI*>& lefts = inventoryUI[(UINT)column];
+                    const std::vector<UI*>& rights = inventoryUI[(UINT)row];
+
+                    for (UI* leftObj : lefts)
+                    {
+                        UICollider* leftCol = leftObj->GetComponent<UICollider>();
+
+                        if (leftCol == nullptr)
+                        {
+                            continue;
+                        }
+
+                        for (UI* rightObj : rights)
+                        {
+                            UICollider* rightCol = rightObj->GetComponent<UICollider>();
+
+                            if (rightCol == nullptr || leftObj == rightObj)
+                            {
+                                continue;
+                            }
+
+                            ColliderID ID;
+
+                            ID.left = leftCol->GetColliderID();
+                            ID.right = rightCol->GetColliderID();
+
+                            iter = mCollisionMap.find(ID.id);
+
+                            if (iter == mCollisionMap.end())
+                            {
+                                continue;
+                            }
+                            else if (iter->second)
+                            {
+                                leftCol->OnCollisionExit(rightCol);
+                                rightCol->OnCollisionExit(leftCol);
+                                iter->second = false;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     void UICollisionManger::SetCollisionUI(eUIType left, eUIType right, bool enable)
     {
         UINT row = -1;

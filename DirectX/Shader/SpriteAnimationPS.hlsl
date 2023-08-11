@@ -1,4 +1,4 @@
-
+#include "Common.hlsli"
 
 struct VSIn
 {
@@ -13,26 +13,6 @@ struct VSOut
     float4 Color : COLOR;
     float2 UV : TEXCOORD;
 };
-
-cbuffer Animator : register(b3)
-{
-    float2 SpriteLeftTop;
-    float2 SpriteSize;
-    float2 SpriteOffset;
-    float2 AtlasSize;
-    uint animationType;
-}
-
-cbuffer Flip : register(b4)
-{
-    float4 flip;
-}
-
-Texture2D albedoTexture : register(t0);
-Texture2D atlasTexture : register(t12);
-
-SamplerState pointSampler : register(s0);
-SamplerState anisotropicSampler : register(s1);
 
 float4 main(VSOut In) : SV_TARGET
 {

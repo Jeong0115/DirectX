@@ -61,4 +61,7 @@ namespace zz
     {
         GameObject::Render();
     }
+    void BlastWand_0585::UseEquipment()
+    {
+    }
 }

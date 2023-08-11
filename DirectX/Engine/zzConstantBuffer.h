@@ -1,7 +1,7 @@
 #pragma once
 #include "zzGraphics.h"
 
-namespace zz::graphics
+namespace zz
 {
     class ConstantBuffer : public GpuBuffer
     {

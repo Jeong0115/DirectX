@@ -141,7 +141,7 @@
 //
 //        eElementType targetType = target->GetType();
 //
-//        if (targetType == eElementType::Empty || targetType == eElementType::Particle)
+//        if (targetType == eElementType::Empty || targetType == eElementType::TempParticle)
 //        {
 //            if (isFinal) 
 //            {
@@ -413,7 +413,7 @@
 //
 //            if (target == nullptr) continue;
 //
-//            if (target->GetType() == eElementType::Empty || target->GetType() == eElementType::Particle) 
+//            if (target->GetType() == eElementType::Empty || target->GetType() == eElementType::TempParticle) 
 //            {
 //                if (isFinal) 
 //                {

@@ -16,7 +16,7 @@ namespace zz
         virtual void LateUpdate();
         virtual void Render();
 
-        void AddGameObject(eLayerType type, GameObject* gameObject);
+        void AddGameObject(GameObject* gameObject, eLayerType type);
         Layer& GetLayer(eLayerType type) { return mLayers[(UINT)type]; }
 
     private:

@@ -15,6 +15,8 @@ namespace zz
         virtual void LateUpdate();
         virtual void Render();
 
+        virtual void UseEquipment();
+
         Vector3 GetInitialPos() { return mInitialPosition; }
 
     protected:

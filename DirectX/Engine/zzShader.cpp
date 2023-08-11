@@ -40,6 +40,11 @@ namespace zz
             GetDevice()->CompileFromfile(fullPath, funcName, "vs_5_0", mVSBlob.GetAddressOf());
             GetDevice()->CreateVertexShader(mVSBlob->GetBufferPointer(), mVSBlob->GetBufferSize(), mVS.GetAddressOf());
         }
+        else if (stage == eShaderStage::GS)
+        {
+            GetDevice()->CompileFromfile(fullPath, funcName, "gs_5_0", mGSBlob.GetAddressOf());
+            GetDevice()->CreateGeometryShader(mGSBlob->GetBufferPointer(), mGSBlob->GetBufferSize(), mGS.GetAddressOf());
+        }
         else if (stage == eShaderStage::PS)
         {
             GetDevice()->CompileFromfile(fullPath, funcName, "ps_5_0", mPSBlob.GetAddressOf());
@@ -55,6 +60,7 @@ namespace zz
         GetDevice()->BindPrimitiveTopology(mTopology); // 위치 고민해보자
 
         GetDevice()->BindVertexShader(mVS.Get());
+        GetDevice()->BindGeometryShader(mGS.Get());
         GetDevice()->BindPixelShader(mPS.Get());
 
         // 그냥 포인터 들고 있을지 생각

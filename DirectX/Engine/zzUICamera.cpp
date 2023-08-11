@@ -53,4 +53,9 @@ namespace zz
             }
         }
     }
+
+    void UICamera::TurnLayerMask(eUIType type, bool enable)
+    {
+        mUIMask.set((UINT)type, enable);
+    }
 }

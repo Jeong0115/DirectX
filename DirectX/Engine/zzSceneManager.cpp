@@ -3,8 +3,10 @@
 
 namespace zz
 {
+    Scene* SceneManager::mActiveScene = {};
+    std::map<std::wstring, Scene*> SceneManager::mScenes = {};
+
     SceneManager::SceneManager()
-        : mActiveScene(nullptr)
     {
     }
 

@@ -23,6 +23,7 @@ namespace zz
     {
         if(mTexture != nullptr)
             mTexture->BindShader(eShaderStage::PS, 0); // 나중에 함수 이름 바꾸자
+
         mShader->BindShaders();
     }
 

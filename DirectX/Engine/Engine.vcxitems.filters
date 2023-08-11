@@ -241,6 +241,45 @@
     <Filter Include="UI\ItemTextureHighlight">
       <UniqueIdentifier>{58cd1e62-3e2d-48ed-9f48-4a6d398d8691}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Spell">
+      <UniqueIdentifier>{a1e0faa0-856b-4e02-8480-87e8431c92b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Spell\Base">
+      <UniqueIdentifier>{00a0a4fe-f793-4764-a7a3-ca9493a9f4df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Spell\Attack">
+      <UniqueIdentifier>{4662bc87-5cbc-4fa4-aa64-3625cc487c8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Spell\Attack\Base">
+      <UniqueIdentifier>{addbcecc-ee09-487b-9d32-d0f29233b6fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Spell\Attack\SparkBolt">
+      <UniqueIdentifier>{ac57409f-2c48-45c2-919d-8d56576def88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Spell\Particle">
+      <UniqueIdentifier>{579539c4-70b1-46fd-85c9-8a81d912f362}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Manager\EventManager">
+      <UniqueIdentifier>{73039cfa-c4d1-4ead-933e-1b975d52ea03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Inventory\InfoBox">
+      <UniqueIdentifier>{206c5b2a-a349-4cfb-ac9f-b266e62e501d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Inventory\InfoBox\InfoBoxTexture">
+      <UniqueIdentifier>{bf2b841e-aa10-4086-bd1e-0ddb60d83573}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\StructedBuffer">
+      <UniqueIdentifier>{0463dad5-700a-47a0-a7ff-2588c3de68f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Component\ParticleSystem">
+      <UniqueIdentifier>{48b9acf4-bedd-4b67-b80e-95dd3269c450}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\ComputeShader">
+      <UniqueIdentifier>{00e24653-df7c-4e84-82e4-6884865566d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\ComputeShader\ParticleShader">
+      <UniqueIdentifier>{d6f30488-7940-4c90-82e6-fad2c417f2f9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzEntity.cpp">
@@ -445,6 +484,42 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzItemTextureHighlight.cpp">
       <Filter>UI\ItemTextureHighlight</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzSpell.cpp">
+      <Filter>Spell\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzAttackSpell.cpp">
+      <Filter>Spell\Attack\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzSparkBolt.cpp">
+      <Filter>Spell\Attack\SparkBolt</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzParticle.cpp">
+      <Filter>Spell\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzEventManager.cpp">
+      <Filter>Manager\EventManager</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)function.cpp">
+      <Filter>Common\Header</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzInfoBox.cpp">
+      <Filter>UI\Inventory\InfoBox</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzInfoBoxTexture.cpp">
+      <Filter>UI\Inventory\InfoBox\InfoBoxTexture</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzStructedBuffer.cpp">
+      <Filter>Graphics\StructedBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzParticleSystem.cpp">
+      <Filter>Scene\Component\ParticleSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzComputeShader.cpp">
+      <Filter>Resource\ComputeShader</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzParticleShader.cpp">
+      <Filter>Resource\ComputeShader\ParticleShader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -680,6 +755,39 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzItemTextureHighlight.h">
       <Filter>UI\ItemTextureHighlight</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzSpell.h">
+      <Filter>Spell\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzAttackSpell.h">
+      <Filter>Spell\Attack\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzSparkBolt.h">
+      <Filter>Spell\Attack\SparkBolt</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzParticle.h">
+      <Filter>Spell\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzEventManager.h">
+      <Filter>Manager\EventManager</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzInfoBox.h">
+      <Filter>UI\Inventory\InfoBox</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzInfoBoxTexture.h">
+      <Filter>UI\Inventory\InfoBox\InfoBoxTexture</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzStructedBuffer.h">
+      <Filter>Graphics\StructedBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzParticleSystem.h">
+      <Filter>Scene\Component\ParticleSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzComputeShader.h">
+      <Filter>Resource\ComputeShader</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzParticleShader.h">
+      <Filter>Resource\ComputeShader\ParticleShader</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

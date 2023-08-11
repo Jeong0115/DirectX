@@ -24,6 +24,7 @@ namespace zz::renderer
         Matrix mWorld;
         Matrix mView;
         Matrix mProjection;
+        Matrix WorldViewProj;
     };
 
     CBUFFER(AnimatorCB, CBSLOT_ANIMATION2D)
@@ -45,9 +46,15 @@ namespace zz::renderer
         Vector4 flip;
     };
 
+    CBUFFER(ParticleCB, CBSLOT_PARTICLE)
+    {
+        UINT elementCount;
+        float deltaTime;
+    };
+
     extern Vertex vertexes[];
     extern Vertex debugVertexes[];
-    extern graphics::ConstantBuffer* constantBuffer[(UINT)eCBType::End];
+    extern ConstantBuffer* constantBuffer[(UINT)eCBType::End];
 
     extern Microsoft::WRL::ComPtr<ID3D11SamplerState> samplerState[];
     extern Microsoft::WRL::ComPtr<ID3D11RasterizerState> rasterizerStates[];
@@ -57,6 +64,7 @@ namespace zz::renderer
     extern std::vector<zz::Camera*> cameras;
     extern std::vector<DebugMesh> debugMeshs;
     extern zz::Camera* mainCamera;
+    extern zz::Camera* uiCamera;
 
     void Initialize();
     void Render();

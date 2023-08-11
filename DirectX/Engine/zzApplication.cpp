@@ -1,12 +1,12 @@
 #include "zzApplication.h"
 #include "zzSceneManager.h"
-#include "zzResourceManager.h"
 #include "zzRenderer.h"
 #include "zzTime.h"
 #include "zzInput.h"
 #include "..\\Editor\\zzEditor.h"
 #include "zzPixelWorld.h"
 #include "zzInventoryManager.h"
+#include "zzEventManager.h"
 
 namespace zz
 {	
@@ -51,7 +51,7 @@ namespace zz
         PixelWorld::Initialize();
         renderer::Initialize();
         InventoryManager::Initialize();
-        SceneManager::GetInst().Initialize();
+        SceneManager::Initialize();
 	}
 
 	void Application::Update()
@@ -60,13 +60,13 @@ namespace zz
         Input::Update();
         InventoryManager::Update();
         PixelWorld::Update();
-        SceneManager::GetInst().Update();
+        SceneManager::Update();
 	}
 
 	void Application::LateUpdate()
 	{
         InventoryManager::LateUpdate();
-        SceneManager::GetInst().LateUpdate();
+        SceneManager::LateUpdate();
 	}
 
 	void Application::Render()
@@ -82,12 +82,12 @@ namespace zz
         Present();
         //graphicDevice->Draw();
 
-       
+        EventManager::Update();
 	}
 
     void Application::Release()
     {
-        SceneManager::GetInst().Release();
+        SceneManager::Release();
         InventoryManager::Release();
         //graphicDevice.release();
     }

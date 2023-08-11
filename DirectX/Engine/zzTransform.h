@@ -29,6 +29,10 @@ namespace zz
         Vector3 GetRotation()   { return mRotation; }
         Vector3 GetScale()      { return mScale; }
 
+        // 부모가 있을 때 사용하는 메서드
+        Vector3 GetWorldPosition();
+        Vector3 GetWorldRotation();
+
         Vector3 Foward()        { return mFoward; }
         Vector3 Right()         { return mRight; }
         Vector3 Up()            { return mUp; }

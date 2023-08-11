@@ -218,6 +218,30 @@ namespace zz::graphics
 
         return true;
     }
+
+    bool GraphicsDevice::CreateShaderResourceView(ID3D11Resource* pResource, const D3D11_SHADER_RESOURCE_VIEW_DESC* pDesc, ID3D11ShaderResourceView** ppSRView)
+    {
+        if (FAILED(mDevice->CreateShaderResourceView(pResource, pDesc, ppSRView)))
+            return false;
+
+        return true;
+    }
+
+    bool GraphicsDevice::CreateRenderTargetView(ID3D11Resource* pResource, const D3D11_RENDER_TARGET_VIEW_DESC* pDesc, ID3D11RenderTargetView** ppRTView)
+    {
+        if (FAILED(mDevice->CreateRenderTargetView(pResource, pDesc, ppRTView)))
+            return false;
+
+        return true;
+    }
+
+    bool GraphicsDevice::CreateUnordedAccessView(ID3D11Resource* pResource, const D3D11_UNORDERED_ACCESS_VIEW_DESC* pDesc, ID3D11UnorderedAccessView** ppUAView)
+    {
+        if (FAILED(mDevice->CreateUnorderedAccessView(pResource, pDesc, ppUAView)))
+            return false;
+
+        return true;
+    }
     
     bool GraphicsDevice::CompileFromfile(const std::wstring& fileName, const std::string& funcName, const std::string& version, ID3DBlob** ppCode)
     {
@@ -246,9 +270,25 @@ namespace zz::graphics
         return true;
     }
 
+    bool GraphicsDevice::CreateGeometryShader(const void* pShaderBytecode, SIZE_T BytecodeLength, ID3D11GeometryShader** ppGeometryShader)
+    {
+        if (FAILED(mDevice->CreateGeometryShader(pShaderBytecode, BytecodeLength, nullptr, ppGeometryShader)))
+            return false;
+
+        return true;
+    }
+
     bool GraphicsDevice::CreatePixelShader(const void* pShaderBytecode, SIZE_T BytecodeLength, ID3D11PixelShader** ppPixelShader)
     {
         if (FAILED(mDevice->CreatePixelShader(pShaderBytecode, BytecodeLength, nullptr, ppPixelShader)))
+            return false;
+
+        return true;
+    }
+
+    bool GraphicsDevice::CreateComputeShader(const void* pShaderBytecode, SIZE_T BytecodeLength, ID3D11ComputeShader** ppComputeShader)
+    {
+        if (FAILED(mDevice->CreateComputeShader(pShaderBytecode, BytecodeLength, nullptr, ppComputeShader)))
             return false;
 
         return true;
@@ -279,9 +319,34 @@ namespace zz::graphics
         mContext->VSSetShader(pVetexShader, 0, 0);
     }
 
+    void GraphicsDevice::BindHullShader(ID3D11HullShader* pHullShader)
+    {
+        mContext->HSSetShader(pHullShader, 0, 0);
+    }
+
+    void GraphicsDevice::BindDomainShader(ID3D11DomainShader* pDomainShader)
+    {
+        mContext->DSSetShader(pDomainShader, 0, 0);
+    }
+
+    void GraphicsDevice::BindGeometryShader(ID3D11GeometryShader* pGeometryShader)
+    {
+        mContext->GSSetShader(pGeometryShader, 0, 0);
+    }
+
     void GraphicsDevice::BindPixelShader(ID3D11PixelShader* pPixelShader)
     {
         mContext->PSSetShader(pPixelShader, 0, 0);
+    }
+
+    void GraphicsDevice::BindComputeShader(ID3D11ComputeShader* pComputeShader)
+    {
+        mContext->CSSetShader(pComputeShader, 0, 0);
+    }
+
+    void GraphicsDevice::Dispatch(UINT ThreadGroupCountX, UINT ThreadGroupCountY, UINT ThreadGroupCountZ)
+    {
+        mContext->Dispatch(ThreadGroupCountX, ThreadGroupCountY, ThreadGroupCountZ);
     }
 
     void GraphicsDevice::SetConstantBuffer(ID3D11Buffer* buffer, void* data, UINT size)
@@ -333,6 +398,22 @@ namespace zz::graphics
         mContext->GSSetConstantBuffers((UINT)type, 1, &buffer);
         mContext->PSSetConstantBuffers((UINT)type, 1, &buffer);
         mContext->CSSetConstantBuffers((UINT)type, 1, &buffer);
+    }
+
+    void GraphicsDevice::BindBuffer(ID3D11Buffer* buffer, void* data, UINT size)
+    {
+        D3D11_MAPPED_SUBRESOURCE sub = {};
+        mContext->Map(buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &sub);
+        memcpy(sub.pData, data, size);
+        mContext->Unmap(buffer, 0);
+    }
+
+    void GraphicsDevice::BindStagingBuffer(ID3D11Buffer* buffer, void* data, UINT size)
+    {
+        D3D11_MAPPED_SUBRESOURCE sub = {};
+        mContext->Map(buffer, 0, D3D11_MAP_WRITE, 0, &sub);
+        memcpy(sub.pData, data, size);
+        mContext->Unmap(buffer, 0);
     }
 
     void GraphicsDevice::BindSamplerState(eShaderStage stage, UINT StartSlot, ID3D11SamplerState** ppSamplers)
@@ -401,6 +482,11 @@ namespace zz::graphics
         }
     }
 
+    void GraphicsDevice::BindUnorderedAccess(UINT slot, ID3D11UnorderedAccessView** ppUnorderedAccessViews, const UINT* pUAVInitialCounts)
+    {
+        mContext->CSSetUnorderedAccessViews(slot, 1, ppUnorderedAccessViews, pUAVInitialCounts);
+    }
+
     void GraphicsDevice::BindViewPort(D3D11_VIEWPORT* viewPort)
     {
         mContext->RSSetViewports(1, viewPort);
@@ -421,9 +507,19 @@ namespace zz::graphics
         mContext->OMSetBlendState(pBlendState, nullptr, 0xffffffff);
     }
 
+    void GraphicsDevice::CopyResource(ID3D11Resource* pDstResource, ID3D11Resource* pSrcResource)
+    {
+        mContext->CopyResource(pDstResource, pSrcResource);
+    }
+
     void GraphicsDevice::DrawIndexed(UINT IndexCount, UINT StartIndexLocation, INT BaseVertexLocation)
     {
         mContext->DrawIndexed(IndexCount, StartIndexLocation, BaseVertexLocation);
+    }
+
+    void GraphicsDevice::DrawIndexedInstanced(UINT IndexCountPerInstance, UINT InstanceCount, UINT StartIndexLocation, INT BaseVertexLocation, UINT StartInstanceLocation)
+    {
+        mContext->DrawIndexedInstanced(IndexCountPerInstance, InstanceCount, StartIndexLocation, BaseVertexLocation, StartInstanceLocation);
     }
 
     void GraphicsDevice::ClearRenderTarget()

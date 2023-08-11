@@ -16,6 +16,7 @@ namespace zz
         virtual void Render()       override;
 
         void RenderUI();
+        void TurnLayerMask(eUIType type, bool enable);
 
         void EnableUIMasks() { mUIMask.set(); }
         void DisableUIMasks() { mUIMask.reset(); }

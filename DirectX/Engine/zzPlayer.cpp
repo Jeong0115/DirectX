@@ -10,6 +10,7 @@
 #include "zzApplication.h"
 #include "zzMeshRenderer.h"
 #include "zzMaterial.h"
+#include "zzInventoryManager.h"
 
 namespace zz
 {
@@ -51,6 +52,11 @@ namespace zz
 
     void Player::Update()
     {
+        if (Input::GetKeyDown(eKeyCode::TAB))
+        {
+            InventoryManager::SetOpenOrCloseInventory();
+        }
+
         Transform* tr = GetComponent<Transform>();
         Vector3 pos = tr->GetPosition();
 
@@ -140,7 +146,13 @@ namespace zz
         mPlayerArm->Update();
 
         if(mEquipment != nullptr)
+        {
             mEquipment->Update();
+            if (Input::GetKeyDown(eKeyCode::LBUTTON))
+            {
+                mEquipment->UseEquipment();
+            }
+        }
     }
 
     void Player::LateUpdate()
@@ -167,7 +179,7 @@ namespace zz
             flipCB.flip.x = 1;
         }
 
-        graphics::ConstantBuffer* cb = renderer::constantBuffer[(UINT)eCBType::Flip];
+        ConstantBuffer* cb = renderer::constantBuffer[(UINT)eCBType::Flip];
         cb->SetBufferData(&flipCB);
         cb->BindConstantBuffer(eShaderStage::PS);
 

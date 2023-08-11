@@ -13,96 +13,125 @@
 #define CBUFFER(name, slot) static const int CB_GETBINDSLOT(name) = slot; struct alignas(16) name 
 
 #define CBSLOT_TRANSFORM		0
-#define CBSLOT_COLOR		1
+#define CBSLOT_COLOR		    1
 #define CBSLOT_ANIMATION2D		3
-#define CBSLOT_FLIP		4
-//#define CBSLOT_PARTICLE			1
+#define CBSLOT_FLIP		        4
+#define CBSLOT_PARTICLE			5
 
-enum class eShaderStage
+namespace zz
 {
-    VS,
-    HS,
-    DS,
-    GS,
-    PS,
-    CS,
-    End,
-};
-
-enum class eCBType
-{
-    Transform,
-    Color,
-    Material,
-    Animator,
-    Flip,
-    End,
-};
-
-enum class eSamplerType
-{
-    Point,
-    Anisotropic,
-    End,
-};
-
-enum class eRenderingMode
-{
-    Opaque,
-    CutOut,
-    Transparent,
-    End,
-};
-
-enum class eRSType
-{
-    SolidBack,
-    SolidFront,
-    SolidNone,
-    WireframeNone,
-    End,
-};
-
-enum class eDSType
-{
-    Less,
-    Greater,
-    NoWrite,
-    None,
-    End,
-};
-
-enum class eBSType
-{
-    Default,
-    AlphaBlend,
-    OneOne,
-    End,
-};
-
-struct GpuBuffer
-{
-    Microsoft::WRL::ComPtr<ID3D11Buffer> buffer;
-    D3D11_BUFFER_DESC desc;
-
-    GpuBuffer()
-        : buffer(nullptr)
-        , desc{}
+    enum class eShaderStage
     {
-    }
+        VS,
+        HS,
+        DS,
+        GS,
+        PS,
+        CS,
+        End,
+    };
 
-    virtual ~GpuBuffer() = default;
-};
+    enum class eCBType
+    {
+        Transform,
+        Color,
+        Material,
+        Animator,
+        Flip,
+        Particle,
+        End,
+    };
 
-struct DebugMesh
-{
-   // enums::eColliderType type;
-    int temp = 0;
-    zz::math::Vector3 position;
-    zz::math::Vector3 rotation;
-    zz::math::Vector3 scale;
+    enum class eSamplerType
+    {
+        Point,
+        Anisotropic,
+        End,
+    };
 
-    float radius;
-    float duration;
-    float time;
-};
+    enum class eRenderingMode
+    {
+        Opaque,
+        CutOut,
+        Transparent,
+        End,
+    };
+
+    enum class eRSType
+    {
+        SolidBack,
+        SolidFront,
+        SolidNone,
+        WireframeNone,
+        End,
+    };
+
+    enum class eDSType
+    {
+        Less,
+        Greater,
+        NoWrite,
+        None,
+        End,
+    };
+
+    enum class eBSType
+    {
+        Default,
+        AlphaBlend,
+        OneOne,
+        End,
+    };
+
+    enum class eViewType
+    {
+        None,
+        SRV,
+        UAV,
+        End,
+    };
+
+    struct GpuBuffer
+    {
+        Microsoft::WRL::ComPtr<ID3D11Buffer> buffer;
+        D3D11_BUFFER_DESC desc;
+
+        GpuBuffer()
+            : buffer(nullptr)
+            , desc{}
+        {
+        }
+
+        virtual ~GpuBuffer() = default;
+    };
+
+    struct DebugMesh
+    {
+        // enums::eColliderType type;
+        int temp = 0;
+        math::Vector3 position;
+        math::Vector3 rotation;
+        math::Vector3 scale;
+
+        float radius;
+        float duration;
+        float time;
+    };
+
+    struct Particle
+    {
+        math::Vector4 position;
+        math::Vector4 velocity;
+
+        float endTime;
+        float time;
+        float speed;
+
+        UINT active;
+    };
+
+    struct ParticleShared
+    {
+        UINT sharedActiveCount;
+    };
+}

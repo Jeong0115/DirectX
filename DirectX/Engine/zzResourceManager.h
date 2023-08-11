@@ -21,7 +21,7 @@ namespace zz
 		}
 
 		template <typename T>
-		static std::shared_ptr<T> Load(const std::wstring& key, const std::wstring& path)
+		static std::shared_ptr<T> Load(const std::wstring& key, const std::wstring& path = L"")
 		{
             std::shared_ptr<T> resource = ResourceManager::Find<T>(key);
 			if (resource != nullptr)

@@ -11,19 +11,17 @@ namespace zz
         ~SceneManager();
 
     public:
-        SINGLETON(SceneManager);
+        static void Initialize();
+        static void Update();
+        static void LateUpdate();
+        static void Render();
+        static void Release();
 
-        void Initialize();
-        void Update();
-        void LateUpdate();
-        void Render();
-        void Release();
+        static void CreateScene(std::wstring name, Scene* scene);
 
-        void CreateScene(std::wstring name, Scene* scene);
-
-        Scene* GetActiveScene() { return mActiveScene; }
+        static Scene* GetActiveScene() { return mActiveScene; }
     private:
-        Scene* mActiveScene;
-        std::map<std::wstring, Scene*> mScenes;
+        static Scene* mActiveScene;
+        static std::map<std::wstring, Scene*> mScenes;
     };
 }

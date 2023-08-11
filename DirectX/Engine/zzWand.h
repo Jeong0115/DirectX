@@ -1,6 +1,7 @@
 #pragma once
 
 #include "zzEquipment.h"
+#include "zzInfoBox.h"
 
 namespace zz
 {
@@ -15,7 +16,12 @@ namespace zz
         virtual void LateUpdate();
         virtual void Render();
 
+        virtual void UseEquipment();
+
         UINT GetCapacity() { return mCapacity; }
+
+        void SetInfoBox(InfoBox* infoBox) { mInfoBox = infoBox; }
+        InfoBox* GetInfoBox() { return mInfoBox; }
 
         void SetSpell(GameObject* spell, UINT index) { mSpells[index] = spell; }
 
@@ -33,6 +39,7 @@ namespace zz
 
         std::vector<GameObject*> mSpells;
 
-        
+    private:
+        InfoBox* mInfoBox;
     };
 }

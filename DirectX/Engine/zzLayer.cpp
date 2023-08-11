@@ -44,10 +44,19 @@ namespace zz
 
     void Layer::Render()
     {
-        for (GameObject* gameObject : mGameObjects)
+        std::vector<GameObject*>::iterator iter = mGameObjects.begin();
+
+        for (; iter != mGameObjects.end(); )
         {
-            gameObject->Render();
-            
+            if ((*iter)->IsDead())
+            {
+                iter = mGameObjects.erase(iter);
+            }
+            else
+            {
+                (*iter)->Render();
+                iter++;
+            }
         }
     }
 

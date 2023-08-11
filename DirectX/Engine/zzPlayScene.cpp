@@ -19,6 +19,7 @@
 #include "zzPlayer.h"
 #include "zzPlayerArm.h"
 #include "zzInventoryManager.h"
+#include "zzParticleSystem.h"
 
 namespace zz
 {
@@ -37,7 +38,7 @@ namespace zz
         for (int i = 0; i < 2; i++)
         {
             GameObject* bg = new GameObject();
-            AddGameObject(eLayerType::BG, bg);
+            AddGameObject(bg, eLayerType::BG);
 
             MeshRenderer* meshRenderer = bg->AddComponent<MeshRenderer>();
             meshRenderer->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
@@ -57,7 +58,7 @@ namespace zz
     void PlayScene::Initialize()
     {       
         camera = new GameObject();
-        AddGameObject(eLayerType::Camera, camera);
+        AddGameObject(camera, eLayerType::Camera);
         camera->GetComponent<Transform>()->SetPosition(Vector3(0.0f, 0.0f, -10.0f));
         MainCamera* cameraComp = camera->AddComponent<MainCamera>();
         camera->AddComponent<CameraScript>();
@@ -67,42 +68,46 @@ namespace zz
 
         {
             GameObject* uiCamera = new GameObject();
-        	AddGameObject(eLayerType::Camera, uiCamera);
+        	AddGameObject(uiCamera, eLayerType::Camera);
             uiCamera->GetComponent<Transform>()->SetPosition(Vector3(320.f, 180.f, -1.0f));
         	UICamera* uiCameraComp = uiCamera->AddComponent<UICamera>();
             renderer::cameras.push_back(uiCameraComp);
+            renderer::uiCamera = uiCameraComp;
         	//camera->AddComponent<CameraScript>();
         }
 
-        // z값을 다르게 하거나, z값을 같게 한다음 깊이 버퍼를 사용 안할지 생각
-        MakeBG(L"M_MountainBG0", Vector3(1066, 512, 1.0f), Vector3(0.f, -20.f, 1.0f)  , 0.f   , 0.f);          // 파란 배경
-        MakeBG(L"M_MountainBG1", Vector3(1066, 512, 1.0f), Vector3(0.f, 0.f, 0.9f)    , 8.f   , 1.f);         // 0번 구름
-        MakeBG(L"M_MountainBG2", Vector3(800, 512, 1.0f) , Vector3(0.f, -100.f, 0.8f) , 0.f   , 0.6f);          // 0번 산
-        MakeBG(L"M_MountainBG3", Vector3(1130, 512, 1.0f), Vector3(0.f, 0.f, 0.7f)    , 15.f  , 1.f);          // 1번 구름
-        MakeBG(L"M_MountainBG4", Vector3(1024, 512, 1.0f), Vector3(0.f, -120.f, 0.6f) , 0.f   , 0.2f);          // 1번 산
-        MakeBG(L"M_MountainBG5", Vector3(1024, 512, 1.0f), Vector3(0.f, -120.f, 0.5f) , 0.f   , 0.2f);          // 1번 산
+       //// z값을 다르게 하거나, z값을 같게 한다음 깊이 버퍼를 사용 안할지 생각
+       //MakeBG(L"M_MountainBG0", Vector3(1066, 512, 1.0f), Vector3(0.f, -20.f, 1.0f)  , 0.f   , 0.f);          // 파란 배경
+       //MakeBG(L"M_MountainBG1", Vector3(1066, 512, 1.0f), Vector3(0.f, 0.f, 0.9f)    , 8.f   , 1.f);         // 0번 구름
+       //MakeBG(L"M_MountainBG2", Vector3(800, 512, 1.0f) , Vector3(0.f, -100.f, 0.8f) , 0.f   , 0.6f);          // 0번 산
+       //MakeBG(L"M_MountainBG3", Vector3(1130, 512, 1.0f), Vector3(0.f, 0.f, 0.7f)    , 15.f  , 1.f);          // 1번 구름
+       //MakeBG(L"M_MountainBG4", Vector3(1024, 512, 1.0f), Vector3(0.f, -120.f, 0.6f) , 0.f   , 0.2f);          // 1번 산
+       //MakeBG(L"M_MountainBG5", Vector3(1024, 512, 1.0f), Vector3(0.f, -120.f, 0.5f) , 0.f   , 0.2f);          // 1번 산
         
         float x = 256;
         float y = -256;
         {
             GameObject* object = new GameObject();
-            AddGameObject(eLayerType::Player, object);
+            AddGameObject(object, eLayerType::Player);
             object->GetComponent<Transform>()->SetPosition(Vector3(x, y, 0.2f));
+            object->GetComponent<Transform>()->SetScale(Vector3(512.f, 512.f, 1.0f));
             MeshRenderer* mesh = object->AddComponent<MeshRenderer>();
             mesh->SetMaterial(ResourceManager::Find<Material>(L"m_hall_background_0_0"));
             mesh->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
 
             GameObject* object2 = new GameObject();
-            AddGameObject(eLayerType::Player, object2);
+            AddGameObject(object2, eLayerType::Player);
             object2->GetComponent<Transform>()->SetPosition(Vector3(x - 512, y, 0.2f));
+            object2->GetComponent<Transform>()->SetScale(Vector3(512.f, 512.f, 1.0f));
             MeshRenderer* mesh2 = object2->AddComponent<MeshRenderer>();
             mesh2->SetMaterial(ResourceManager::Find<Material>(L"m_left_entrance_background_-512_0"));
             mesh2->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
         }
 
         GameObject* object = new GameObject();
-        AddGameObject(eLayerType::Player, object);
+        AddGameObject(object, eLayerType::Player);
         object->GetComponent<Transform>()->SetPosition(Vector3(x +1024 - 256, y -1024 + 256, 0.05f));
+        object->GetComponent<Transform>()->SetScale(Vector3(2048.f, 2048.f, 1.0f));
         MeshRenderer* mesh = object->AddComponent<MeshRenderer>();
         mesh->SetMaterial(ResourceManager::Find<Material>(L"m_PixelTexture"));
         mesh->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
@@ -126,8 +131,9 @@ namespace zz
         //}
         {
             GameObject* object = new GameObject();
-            AddGameObject(eLayerType::Player, object);
+            AddGameObject(object, eLayerType::Player);
             object->GetComponent<Transform>()->SetPosition(Vector3(x + 300, y - 331, 0.0f));
+            object->GetComponent<Transform>()->SetScale(Vector3(88.f, 150.f, 1.0f));
             MeshRenderer* mesh = object->AddComponent<MeshRenderer>();
             mesh->SetMaterial(ResourceManager::Find<Material>(L"m_hall_br_visual_512_512"));
             mesh->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
@@ -135,8 +141,9 @@ namespace zz
         
         {
             GameObject* object = new GameObject();
-            AddGameObject(eLayerType::Player, object);
+            AddGameObject(object, eLayerType::Player);
             object->GetComponent<Transform>()->SetPosition(Vector3(x + 300, y, 0.01f));
+            object->GetComponent<Transform>()->SetScale(Vector3(88.f, 512.f, 1.0f));
             MeshRenderer* mesh = object->AddComponent<MeshRenderer>();
             mesh->SetMaterial(ResourceManager::Find<Material>(L"m_hall_r_visual_512_0"));
             mesh->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
@@ -162,12 +169,19 @@ namespace zz
         {
             Player* player;
             player = new Player();
-            AddGameObject(eLayerType::Player, player);           
+            AddGameObject(player, eLayerType::Player);
             player->GetComponent<Transform>()->SetPosition(Vector3(10.f, -300.f, 0.000f));
             player->GetComponent<Transform>()->SetScale(Vector3(12.f, 19.f, 1.0f));    
-            player->SetCamera(camera);
+           // player->SetCamera(camera);
+            //player->AddComponent<ParticleSystem>();
            
             
+            GameObject* aa = new GameObject();;
+            AddGameObject(aa, eLayerType::Player);
+            aa->GetComponent<Transform>()->SetPosition(Vector3(0.f, 0.f, 0.000f));
+            aa->GetComponent<Transform>()->SetScale(Vector3(12.f, 12.f, 1.0f));
+            aa->AddComponent<ParticleSystem>();
+
             PlayerArm* player_arm = new PlayerArm();
 
             player_arm->SetPlayer(player);

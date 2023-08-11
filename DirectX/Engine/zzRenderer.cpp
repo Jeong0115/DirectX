@@ -2,6 +2,7 @@
 #include "zzTexture.h"
 #include "zzResourceManager.h"
 #include "zzMaterial.h"
+#include "zzParticleShader.h"
 
 #include "zzPixelWorld.h"
 
@@ -10,13 +11,12 @@ using namespace zz::graphics;
 
 namespace zz::renderer
 {
-    Vertex vertexes[4] = {};
-    Vertex debugVertexes[4] = {};
     zz::Camera* mainCamera = nullptr;
+    zz::Camera* uiCamera = nullptr;
     std::vector<zz::Camera*> cameras = {};
     std::vector<DebugMesh> debugMeshs = {};
 
-    graphics::ConstantBuffer* constantBuffer[(UINT)eCBType::End] = {};
+    ConstantBuffer* constantBuffer[(UINT)eCBType::End] = {};
     Microsoft::WRL::ComPtr<ID3D11SamplerState> samplerStates[(UINT)eSamplerType::End] = {};
     Microsoft::WRL::ComPtr<ID3D11RasterizerState> rasterizerStates[(UINT)eRSType::End] = {};
     Microsoft::WRL::ComPtr<ID3D11DepthStencilState> depthStencilStates[(UINT)eDSType::End] = {};
@@ -24,9 +24,13 @@ namespace zz::renderer
 
     void LoadUIResource();
     void LoadItemTextureResource();
+    void LoadSpellResource();
 
     void LoadBuffer()
     {
+        Vertex vertexes[4] = {};
+        Vertex debugVertexes[4] = {};
+
         {
             vertexes[0].pos = Vector3(-0.5f, 0.5f, 0.0f);
             vertexes[0].color = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
@@ -103,6 +107,21 @@ namespace zz::renderer
 
         ResourceManager::Insert(L"RedDebugMesh", mesh);
 
+        {
+            std::vector<Vertex> pointVertexes = {};
+            std::vector<UINT> pointIndexes = {};
+
+            Vertex v = {};
+            v.pos = Vector3(0.0f, 0.0f, 0.0f);
+            pointVertexes.push_back(v);
+            pointIndexes.push_back(0);
+            std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
+            mesh->CreateVertexBuffer(pointVertexes.data(), pointVertexes.size());
+            mesh->CreateIndexBuffer(pointIndexes.data(), pointIndexes.size());
+            mesh->SetName(L"PointMesh");
+            ResourceManager::Insert(L"PointMesh", mesh);
+        }
+
         constantBuffer[(UINT)eCBType::Transform] = new ConstantBuffer(eCBType::Transform);
         constantBuffer[(UINT)eCBType::Transform]->CreateConstantBuffer(sizeof(TransformCB));
 
@@ -114,6 +133,9 @@ namespace zz::renderer
 
         constantBuffer[(UINT)eCBType::Flip] = new ConstantBuffer(eCBType::Flip);
         constantBuffer[(UINT)eCBType::Flip]->CreateConstantBuffer(sizeof(FlipCB));
+
+        constantBuffer[(UINT)eCBType::Particle] = new ConstantBuffer(eCBType::Particle);
+        constantBuffer[(UINT)eCBType::Particle]->CreateConstantBuffer(sizeof(ParticleCB));
     }
     void LoadShader()
     {
@@ -134,11 +156,26 @@ namespace zz::renderer
         spriteAnimationShader->CreateShader(eShaderStage::PS, L"SpriteAnimationPS.hlsl", "main");
         ResourceManager::Insert(L"SpriteAnimationShader", spriteAnimationShader);
 
+        std::shared_ptr<ParticleShader> psSystemShader = std::make_shared<ParticleShader>();
+        psSystemShader->Create(L"ParticleCS.hlsl", "main");
+        ResourceManager::Insert(L"ParticleSystemShader", psSystemShader);
+
+        std::shared_ptr<Shader> paritcleShader = std::make_shared<Shader>();
+        paritcleShader->CreateShader(eShaderStage::VS, L"ParticleVS.hlsl", "main");
+        paritcleShader->CreateShader(eShaderStage::GS, L"ParticleGS.hlsl", "main");
+        paritcleShader->CreateShader(eShaderStage::PS, L"ParticlePS.hlsl", "main");
+        paritcleShader->SetRSState(eRSType::SolidNone);
+        paritcleShader->SetDSState(eDSType::NoWrite);
+        paritcleShader->SetBSState(eBSType::AlphaBlend);
+        paritcleShader->SetTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
+        ResourceManager::Insert(L"ParticleShader", paritcleShader);
+
     }
     void LoadResource()
     {
         LoadUIResource();
         LoadItemTextureResource();
+        LoadSpellResource();
         std::shared_ptr<Shader> spriteShader = ResourceManager::Find<Shader>(L"SpriteShader");
 
         {
@@ -358,6 +395,9 @@ namespace zz::renderer
 
         shader = ResourceManager::Find<Shader>(L"SpriteAnimationShader");
         GetDevice()->CreateInputLayout(arrLayout, 3, shader->GetVSCode(), shader->GetInputLayoutAddressOf());
+
+        shader = ResourceManager::Find<Shader>(L"ParticleShader");
+        GetDevice()->CreateInputLayout(arrLayout, 3, shader->GetVSCode(), shader->GetInputLayoutAddressOf());
     }
     void CreateSamplerState()
     {
@@ -522,6 +562,12 @@ namespace zz::renderer
         material->SetShader(spriteShader);
         material->SetTexture(highlight);
         ResourceManager::Insert(L"m_highlight", material);
+
+        std::shared_ptr<Texture> info_box = ResourceManager::Load<Texture>(L"info_box", L"..\\Resources\\Texture\\Inventory\\info_box.png");
+        material = std::make_shared<Material>();
+        material->SetShader(spriteShader);
+        material->SetTexture(info_box);
+        ResourceManager::Insert(L"m_info_box", material);
     }
 
     void LoadItemTextureResource()
@@ -540,6 +586,30 @@ namespace zz::renderer
         material->SetShader(spriteShader);
         material->SetTexture(BoltWand_0997);
         ResourceManager::Insert(L"m_BoltWand_0997", material);
+    }
+
+    void LoadSpellResource()
+    {
+        std::shared_ptr<Shader> spriteShader = ResourceManager::Find<Shader>(L"SpriteShader");
+        std::shared_ptr<Material> material;
+
+        ResourceManager::Load<Texture>(L"SparkBolt", L"..\\Resources\\Texture\\Spell\\SparkBolt\\spark.png");
+        ResourceManager::Load<Texture>(L"Explosion_SparkBolt", L"..\\Resources\\Texture\\Spell\\SparkBolt\\explosion_008_pink.png");
+        ResourceManager::Load<Texture>(L"Muzzle_SparkBolt", L"..\\Resources\\Texture\\Spell\\SparkBolt\\muzzle_large_pink.png");
+
+        std::shared_ptr<Texture> Particle_Pink = ResourceManager::Load<Texture>(L"Particle_Pink", L"..\\Resources\\Texture\\Spell\\SparkBolt\\plasma_fading_pink.png");
+        material = std::make_shared<Material>();
+        material->SetShader(spriteShader);
+        material->SetTexture(Particle_Pink);
+        ResourceManager::Insert(L"m_Particle_Pink", material);
+
+        std::shared_ptr<Shader> ParticleShader = ResourceManager::Find<Shader>(L"ParticleShader");
+        material = std::make_shared<Material>();
+        material->SetShader(ParticleShader);
+        material->SetTexture(Particle_Pink);
+        ResourceManager::Insert(L"ParticleMaterial", material);
+
+
     }
 }
 

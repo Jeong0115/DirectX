@@ -23,13 +23,16 @@ namespace zz
         Monster,
         
         Object,
+        Particle,
         UI,
         End,
     };
 
     enum class eUIType
     {
-        NoneCollider,
+        BG,
+        InfoBox,
+
         ItemSlot,
         SpellSlot,
 
@@ -50,6 +53,14 @@ namespace zz
         Material,
         Mesh,
         Animation,
+        ComputeShader,
+        End,
+    };
+
+    enum class eEventType
+    {
+        Create_Object,
+        Delete_Object,
         End,
     };
 }

@@ -64,10 +64,35 @@ namespace zz
         renderer::TransformCB trCB = {};
         trCB.mWorld = mWorld;
         trCB.mView = Camera::GetGpuViewMatrix();
-        trCB.mProjection = Camera::GetGpuProjectionMatrix();
+        trCB.mProjection = Camera::GetGpuProjectionMatrix();       
+        trCB.WorldViewProj = trCB.mWorld * trCB.mView * trCB.mProjection;
 
         ConstantBuffer* cb = renderer::constantBuffer[(UINT)eCBType::Transform];
         cb->SetBufferData(&trCB);
         cb->BindConstantBuffer(eShaderStage::VS);
+        cb->BindConstantBuffer(eShaderStage::HS);
+        cb->BindConstantBuffer(eShaderStage::DS);
+        cb->BindConstantBuffer(eShaderStage::GS);
+        cb->BindConstantBuffer(eShaderStage::PS);
+    }
+
+    Vector3 Transform::GetWorldPosition()
+    {
+        if (mParent == nullptr)
+        {
+            return mPosition;
+        }
+
+        return mPosition + mParent->GetWorldPosition();
+    }
+
+    Vector3 Transform::GetWorldRotation()
+    {
+        if (mParent == nullptr)
+        {
+            return mRotation;
+        }
+
+        return mRotation + mParent->GetWorldRotation();
     }
 }

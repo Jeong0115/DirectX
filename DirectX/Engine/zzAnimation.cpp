@@ -80,7 +80,7 @@ namespace zz
         data.atlasSize = mSprites[mIndex].atlasSize;
         data.animationType = 1;
 
-        graphics::ConstantBuffer* cb = renderer::constantBuffer[(UINT)eCBType::Animator];
+        ConstantBuffer* cb = renderer::constantBuffer[(UINT)eCBType::Animator];
         cb->SetBufferData(&data);
 
         cb->BindConstantBuffer(eShaderStage::VS);

@@ -72,37 +72,47 @@ namespace zz
         mCutOutGameObjects.clear();  
         mTransparentGameObjects.clear(); 
 
-        Scene* scene = SceneManager::GetInst().GetActiveScene();
+        Scene* scene = SceneManager::GetActiveScene();
         for (size_t i = 0; i < (UINT)eLayerType::End; i++)
         {
             if (mLayerMask[i] == true)
             {
                 Layer& layer = scene->GetLayer((eLayerType)i);
-                const std::vector<GameObject*> gameObjs = layer.GetGameObjects();
+                std::vector<GameObject*>& gameObjs = layer.GetGameObjects();
+                auto iter = gameObjs.begin();
 
-
-                for (GameObject* obj : gameObjs)
+                for (; iter != gameObjs.end();)
                 {
-                    MeshRenderer* mr = obj->GetComponent<MeshRenderer>();
-                    if (mr == nullptr)
+                    if ((*iter)->IsDead())
+                    {
+                        iter = gameObjs.erase(iter);
                         continue;
+                    }
+
+                    MeshRenderer* mr = (*iter)->GetComponent<MeshRenderer>();
+                    if (mr == nullptr)
+                    {
+                        iter++;
+                        continue;
+                    }
 
                     std::shared_ptr<Material> mt = mr->GetMaterial();
                     eRenderingMode mode = mt->GetRenderingMode();
                     switch (mode)
                     {
                     case eRenderingMode::Opaque:
-                        mOpaqueGameObjects.push_back(obj);
+                        mOpaqueGameObjects.push_back((*iter));
                         break;
                     case eRenderingMode::CutOut:
-                        mCutOutGameObjects.push_back(obj);
+                        mCutOutGameObjects.push_back((*iter));
                         break;
                     case eRenderingMode::Transparent:
-                        mTransparentGameObjects.push_back(obj);
+                        mTransparentGameObjects.push_back((*iter));
                         break;
                     default:
                         break;
                     }
+                    iter++;
                 }
             }
         }

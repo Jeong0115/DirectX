@@ -6,6 +6,11 @@
 #include "zzMeshRenderer.h"
 #include "zzMaterial.h"
 
+#include "zzSparkBolt.h"
+#include "zzInput.h"
+#include "zzSceneManager.h"
+#include "zzScene.h"
+
 namespace zz
 {
     BoltWand_0997::BoltWand_0997()
@@ -61,5 +66,23 @@ namespace zz
     void BoltWand_0997::Render()
     {
         GameObject::Render();
+    }
+
+    void BoltWand_0997::UseEquipment()
+    {
+        Vector3 pos = GetComponent<Transform>()->GetWorldPosition();
+        Vector3 mousePos = Input::GetMouseWorldPos();
+
+        Vector3 direction = mousePos - pos;
+        direction.Normalize();
+        direction.z = 0.f;
+
+        SparkBolt* attackSpell = new SparkBolt();
+        attackSpell->Initialize();
+        attackSpell->SetDirection(direction);
+        attackSpell->GetComponent<Transform>()->SetPosition(pos.x + mTip.x / 2, pos.y, pos.z);
+        attackSpell->GetComponent<Transform>()->SetRotation(GetComponent<Transform>()->GetWorldRotation());
+
+        SceneManager::GetActiveScene()->AddGameObject(attackSpell, eLayerType::Object);
     }
 }

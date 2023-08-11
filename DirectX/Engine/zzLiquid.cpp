@@ -148,7 +148,7 @@
 //
 //        eElementType targetType = target->GetType();
 //
-//        if (targetType == eElementType::Empty || targetType == eElementType::Particle)
+//        if (targetType == eElementType::Empty || targetType == eElementType::TempParticle)
 //        {
 //            setAroundElementFreeFalling(lastPos, depth);
 //
