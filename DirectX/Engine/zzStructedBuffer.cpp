@@ -116,11 +116,11 @@ namespace zz
 
         if (size == 0)
         {
-            GetDevice()->BindBuffer(mStagingBuffer.Get(), data, mSize * mStride);
+            GetDevice()->ReadBuffer(mStagingBuffer.Get(), data, mSize * mStride);
         }
         else
         {
-            GetDevice()->BindBuffer(mStagingBuffer.Get(), data, size);
+            GetDevice()->ReadBuffer(mStagingBuffer.Get(), data, size);
         }
     }
 

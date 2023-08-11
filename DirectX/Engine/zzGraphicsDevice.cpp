@@ -408,6 +408,14 @@ namespace zz::graphics
         mContext->Unmap(buffer, 0);
     }
 
+    void GraphicsDevice::ReadBuffer(ID3D11Buffer* buffer, void* data, UINT size)
+    {
+        D3D11_MAPPED_SUBRESOURCE sub = {};
+        mContext->Map(buffer, 0, D3D11_MAP_READ, 0, &sub);
+        memcpy(data, sub.pData, size); 
+        mContext->Unmap(buffer, 0);
+    }
+
     void GraphicsDevice::BindStagingBuffer(ID3D11Buffer* buffer, void* data, UINT size)
     {
         D3D11_MAPPED_SUBRESOURCE sub = {};

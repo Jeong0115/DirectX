@@ -123,7 +123,7 @@ namespace zz
         math::Vector4 position;
         math::Vector4 velocity;
 
-        float endTime;
+        float lifeTime;
         float time;
         float speed;
 
@@ -132,6 +132,13 @@ namespace zz
 
     struct ParticleShared
     {
-        UINT sharedActiveCount;
+        math::Vector4 curPosition;
+        math::Vector4 distance;
+
+        float index;
+        float angle;
+
+        UINT SetActiveCount;
+        UINT RemainingActiveCount;
     };
 }

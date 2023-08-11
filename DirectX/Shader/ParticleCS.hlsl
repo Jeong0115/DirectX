@@ -1,7 +1,7 @@
 #include "Common.hlsli"
 
 RWStructuredBuffer<Particle> ParticleBuffer : register(u0);
-RWStructuredBuffer<ParticleShared> ParticleSharedBuffer : register(u1);
+RWStructuredBuffer<Projectile> ProjectileBuffer : register(u1);
 
 [numthreads(128, 1, 1)]
 void main(uint3 DTid : SV_DispatchThreadID)
@@ -9,18 +9,48 @@ void main(uint3 DTid : SV_DispatchThreadID)
     if (elementCount <= DTid.x)
         return;
     
-    if (ParticleBuffer[DTid.x].active == 1)
+    Particle particle = ParticleBuffer[DTid.x];
+    
+    if (particle.active == 1)
     {
-        ParticleBuffer[DTid.x].position += ParticleBuffer[DTid.x].velocity * ParticleBuffer[DTid.x].speed * deltaTime;
-    }
-    else if (ParticleSharedBuffer[0].ActiveSharedCount > 0)
-    {
-        int result;
-        InterlockedAdd(ParticleSharedBuffer[0].ActiveSharedCount, -1, result);
+        particle.lifeTime -= deltaTime;
         
-        if (result > 0)
+        if (particle.lifeTime <= 0)
         {
-            ParticleBuffer[DTid.x].active = 1;
+            particle.active = 0;
+            ParticleBuffer[DTid.x] = particle;
+            return;
+        }
+        else
+        {
+            particle.position += particle.velocity * particle.speed * deltaTime;
+            ParticleBuffer[DTid.x] = particle;
+        }
+    }
+    else if (ProjectileBuffer[0].RemainingActiveCount > 0)
+    {
+        int count;
+        InterlockedAdd(ProjectileBuffer[0].RemainingActiveCount, -1, count);
+        
+        if (count > 0)
+        {
+            Projectile projectile = ProjectileBuffer[0];
+            
+            particle.position = projectile.curPosition - (projectile.distance * ((float) count / projectile.SetActiveCount));
+            
+            int index = projectile.index + projectile.SetActiveCount - count;
+            
+            float2 vel = float2(5.0f, sin(index / 10.0f) * 3.f);
+            float angle = projectile.angle;
+            
+            particle.velocity.x = vel.x * cos(angle) - vel.y * sin(angle);
+            particle.velocity.y = vel.x * sin(angle) + vel.y * cos(angle);
+            
+            particle.active = 1;
+            particle.lifeTime = 0.7f;
+            particle.speed = 5.0f;
+            
+            ParticleBuffer[DTid.x] = particle;
         }
     }
 }

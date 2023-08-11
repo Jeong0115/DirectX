@@ -6,8 +6,7 @@
 #include "zzMaterial.h"
 #include "zzResourceManager.h"
 #include "zzTime.h"
-#include "zzParticle.h"
-#include "zzSceneManager.h"
+#include "zzParticleSystem.h"
 
 namespace zz
 {
@@ -32,6 +31,8 @@ namespace zz
         ani->PlayAnimation(L"SparkBolt_Idle", true);
 
         GetComponent<Transform>()->SetScale(10.f, 10.f, 1.0f);
+
+        AddComponent<ParticleSystem>();
             
         GameObject::Initialize();
     }
@@ -47,46 +48,46 @@ namespace zz
         Vector3 curPos;
         float angle = tr->GetRotation().z;
 
-        curPos = prevPos + mDirection * 1000.f * (float)Time::DeltaTime();
+        curPos = prevPos + mDirection * 700.f * (float)Time::DeltaTime();
 
         tr->SetPosition(curPos);
 
-        float moveX = curPos.x - prevPos.x;
-        float moveY = curPos.y - prevPos.y;
+        //float moveX = curPos.x - prevPos.x;
+        //float moveY = curPos.y - prevPos.y;
 
-        float count = max(fabs(moveX), fabs(moveY));
+        //float count = max(fabs(moveX), fabs(moveY));
 
-        for (int i = 0; i < count; i++)
-        {
-            Vector3 vel = { random() , sin(c += 0.1f) / 1.7f, 0.f};
+        //for (int i = 0; i < count; i++)
+        //{
+        //    Vector3 vel = { random() , sin(c += 0.1f) / 1.7f, 0.f};
 
-            Vector3 calVel;
-            calVel.x = vel.x * cos(angle) - vel.y * sin(angle);
-            calVel.y = vel.x * sin(angle) + vel.y * cos(angle);
+        //    Vector3 calVel;
+        //    calVel.x = vel.x * cos(angle) - vel.y * sin(angle);
+        //    calVel.y = vel.x * sin(angle) + vel.y * cos(angle);
 
-            TempParticle* particle = new TempParticle();
-            particle->SetVelocity(calVel);
-            particle->SetLifeTime(random() / 10.f);
-            particle->GetComponent<Transform>()->SetPosition(prevPos);
+        //    TempParticle* particle = new TempParticle();
+        //    particle->SetVelocity(calVel);
+        //    particle->SetLifeTime(random() / 10.f);
+        //    particle->GetComponent<Transform>()->SetPosition(prevPos);
 
-            CreateObject(particle, eLayerType::Particle);
+        //    CreateObject(particle, eLayerType::Particle);
 
-            prevPos.x += moveX / count;
-            prevPos.y += moveY / count;
-        }
-        
-        if(random() >= 0.3f)
-        {
-            Vector3 vel = { random() / 10.f , random() * (random() >= 0.5f ? 1 : -1), 0.f };
-            TempParticle* particle = new TempParticle();
-            particle->SetVelocity(vel);
-            particle->SetLifeTime(random());
-            particle->GetComponent<Transform>()->SetPosition(curPos);
+        //    prevPos.x += moveX / count;
+        //    prevPos.y += moveY / count;
+        //}
+        //
+        //if(random() >= 0.3f)
+        //{
+        //    Vector3 vel = { random() / 10.f , random() * (random() >= 0.5f ? 1 : -1), 0.f };
+        //    TempParticle* particle = new TempParticle();
+        //    particle->SetVelocity(vel);
+        //    particle->SetLifeTime(random());
+        //    particle->GetComponent<Transform>()->SetPosition(curPos);
 
-            CreateObject(particle, eLayerType::Particle);
-        }
+        //    CreateObject(particle, eLayerType::Particle);
+        //}
 
-        if (mT >= 2.0f)
+        if (mT >= 2.5f)
         {
             DeleteObject(this, eLayerType::Object);
         }

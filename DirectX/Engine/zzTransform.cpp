@@ -35,7 +35,7 @@ namespace zz
         Matrix scale = Matrix::CreateScale(mScale);
 
         Matrix rotation;
-        rotation = Matrix::CreateRotationX(mRotation.x);
+        rotation = Matrix::CreateRotationX(mRotation.x);    
         rotation *= Matrix::CreateRotationY(mRotation.y);
         rotation *= Matrix::CreateRotationZ(mRotation.z);
 

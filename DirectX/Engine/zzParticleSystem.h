@@ -29,5 +29,8 @@ namespace zz
 
         float   mLifeTime;
         float   mTime;
+
+        Vector4 mPrevPos;
+        UINT mIndex;
     };
 }

@@ -18,6 +18,8 @@ namespace zz
         , mEndSize(Vector4::One)
         , mLifeTime(0.f)
         , mTime(0.f)
+        , mPrevPos(Vector4::Zero)
+        , mIndex(0)
     {
         std::shared_ptr<Mesh> mesh = ResourceManager::Find<Mesh>(L"PointMesh");
         SetMesh(mesh);
@@ -27,32 +29,10 @@ namespace zz
 
         mCS = ResourceManager::Find<ParticleShader>(L"ParticleSystemShader");
 
-        Particle particles[1000] = {};
-        for (size_t i = 0; i < 1000; i++)
-        {
-            Vector4 pos = Vector4::Zero;
-            pos.x += 00 ;    
-            pos.y += 00 ;
-
-            int sign = rand() % 2;
-            if (sign == 0)
-                pos.x *= -1.0f;
-            sign = rand() % 2;
-            if (sign == 0)
-                pos.y *= -1.0f;
-
-            particles[i].velocity =
-                Vector4(cosf((float)i * (XM_2PI / (float)1000))
-                    , sinf((float)i * (XM_2PI / 1000.f))
-                    , 0.0f, 1.0f);
-
-            particles[i].position = pos;
-            particles[i].speed = 10.0f;
-            particles[i].active = 1;
-        }
+        Particle particles[500] = {};
 
         mBuffer = new StructedBuffer();
-        mBuffer->Create(sizeof(Particle), 1000, eViewType::UAV, particles);
+        mBuffer->Create(sizeof(Particle), 500, eViewType::UAV, particles, true);
 
         mSharedBuffer = new StructedBuffer();
         mSharedBuffer->Create(sizeof(ParticleShared), 1, eViewType::UAV, nullptr, true);
@@ -64,6 +44,8 @@ namespace zz
 
     void ParticleSystem::Initialize()
     {
+        Vector3 pos = GetOwner()->GetComponent<Transform>()->GetPosition();
+        mPrevPos = Vector4(pos.x, pos.y, pos.z, 0.0f);
     }
 
     void ParticleSystem::Update()
@@ -72,26 +54,22 @@ namespace zz
 
     void ParticleSystem::LateUpdate()
     {
-        float AliveTime = 1.0f / 1.0f;
-        mTime += (float)Time::DeltaTime();
+        Vector3 curPos = GetOwner()->GetComponent<Transform>()->GetPosition();
 
-        if (mTime > AliveTime)
-        {
-            float f = (mTime / AliveTime);
-            UINT AliveCount = (UINT)f;
-            mTime = f - floor(f);
+        ParticleShared shareData = {};
+        shareData.curPosition = Vector4((int)curPos.x, (int)curPos.y, (int)curPos.z, 0.0f);
+        shareData.distance = shareData.curPosition - mPrevPos;
+        shareData.distance.z = 0;
+        shareData.angle = GetOwner()->GetComponent<Transform>()->GetRotation().z;
+        mPrevPos = shareData.curPosition;
 
-            ParticleShared shareData = {};
-            shareData.sharedActiveCount = 100;
-            mSharedBuffer->SetData(&shareData, 1);
-        }
-        else
-        {
-            ParticleShared shareData = {};
-            shareData.sharedActiveCount = 0;
-            mSharedBuffer->SetData(&shareData, 1);
-        }
+        UINT count = (UINT)max(fabs(shareData.distance.x), fabs(shareData.distance.y));
+        shareData.SetActiveCount = count;
+        shareData.RemainingActiveCount = count;
+        shareData.index = mIndex;
+        mIndex += count;
 
+        mSharedBuffer->SetData(&shareData, 1);
 
         mCS->SetParticleBuffer(mBuffer);
         mCS->SetSharedBuffer(mSharedBuffer);
@@ -101,12 +79,14 @@ namespace zz
     void ParticleSystem::Render()
     {
         GetOwner()->GetComponent<Transform>()->BindConstantBuffer();
+
         mBuffer->BindSRV(eShaderStage::VS, 14);
         mBuffer->BindSRV(eShaderStage::GS, 14);
         mBuffer->BindSRV(eShaderStage::PS, 14);
 
+        GetMesh()->BindBuffer();
         GetMaterial()->Binds();
-        GetMesh()->RenderInstanced(1000);
+        GetMesh()->RenderInstanced(500);
 
         mBuffer->Clear();
     }

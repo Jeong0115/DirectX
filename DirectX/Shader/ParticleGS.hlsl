@@ -3,6 +3,7 @@
 struct VSOut
 {
     float4 CenterPos : SV_Position;
+    float4 offset : POSITION;
     uint Instance : SV_InstanceID;
 };
 
@@ -19,13 +20,11 @@ void main(point VSOut In[1], inout TriangleStream<GSOut> output)
         return;
     
     GSOut Out[4] = { (GSOut) 0.0f, (GSOut) 0.0f, (GSOut) 0.0f, (GSOut) 0.0f };
-       
-    float4 offset = mul(float4(0.5f, 0.5f, 0.0f, 0.0f), WorldViewProj);
-    
-    Out[0].Pos = In[0].CenterPos + offset;
-    Out[1].Pos = In[0].CenterPos + float4(-offset.x, offset.y, 0.0f, 0.0f);
-    Out[2].Pos = In[0].CenterPos + float4(offset.x, -offset.y, 0.0f, 0.0f);
-    Out[3].Pos = In[0].CenterPos - offset;
+        
+    Out[0].Pos = In[0].CenterPos + float4(-In[0].offset.x, In[0].offset.y, 0.0f, 0.0f);
+    Out[1].Pos = In[0].CenterPos + In[0].offset;
+    Out[2].Pos = In[0].CenterPos + float4(In[0].offset.x, -In[0].offset.y, 0.0f, 0.0f);
+    Out[3].Pos = In[0].CenterPos - In[0].offset;
     
     Out[0].UV = float2(0.0f, 0.0f);
     Out[1].UV = float2(1.0f, 0.0f);

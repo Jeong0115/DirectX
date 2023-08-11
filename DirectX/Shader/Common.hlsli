@@ -43,15 +43,22 @@ struct Particle
     float4 position;
     float4 velocity;
     
-    float endTime;
+    float lifeTime;
     float time;
     float speed;
     uint active;
 };
 
-struct ParticleShared
+struct Projectile
 {
-    uint ActiveSharedCount;
+    float4 curPosition;
+    float4 distance;
+    
+    float index;
+    float angle;
+    
+    uint SetActiveCount;
+    uint RemainingActiveCount;
 };
 
 StructuredBuffer<Particle> particles : register(t14);

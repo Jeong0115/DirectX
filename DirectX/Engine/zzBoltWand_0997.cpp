@@ -78,10 +78,11 @@ namespace zz
         direction.z = 0.f;
 
         SparkBolt* attackSpell = new SparkBolt();
-        attackSpell->Initialize();
         attackSpell->SetDirection(direction);
         attackSpell->GetComponent<Transform>()->SetPosition(pos.x + mTip.x / 2, pos.y, pos.z);
         attackSpell->GetComponent<Transform>()->SetRotation(GetComponent<Transform>()->GetWorldRotation());
+        attackSpell->Initialize();
+
 
         SceneManager::GetActiveScene()->AddGameObject(attackSpell, eLayerType::Object);
     }

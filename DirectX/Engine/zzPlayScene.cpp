@@ -172,15 +172,15 @@ namespace zz
             AddGameObject(player, eLayerType::Player);
             player->GetComponent<Transform>()->SetPosition(Vector3(10.f, -300.f, 0.000f));
             player->GetComponent<Transform>()->SetScale(Vector3(12.f, 19.f, 1.0f));    
-           // player->SetCamera(camera);
+            player->SetCamera(camera);
             //player->AddComponent<ParticleSystem>();
            
             
-            GameObject* aa = new GameObject();;
-            AddGameObject(aa, eLayerType::Player);
-            aa->GetComponent<Transform>()->SetPosition(Vector3(0.f, 0.f, 0.000f));
-            aa->GetComponent<Transform>()->SetScale(Vector3(12.f, 12.f, 1.0f));
-            aa->AddComponent<ParticleSystem>();
+            //GameObject* aa = new GameObject();;
+            //AddGameObject(aa, eLayerType::Player);
+            //aa->GetComponent<Transform>()->SetPosition(Vector3(0.f, 0.f, 0.000f));
+            //aa->GetComponent<Transform>()->SetScale(Vector3(12.f, 12.f, 1.0f));
+            //aa->AddComponent<ParticleSystem>();
 
             PlayerArm* player_arm = new PlayerArm();
 

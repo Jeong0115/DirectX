@@ -54,6 +54,7 @@ namespace zz::graphics
         void BindConstantBuffer(eShaderStage stage, eCBType type, ID3D11Buffer* buffer);
         void BindsConstantBuffer(eShaderStage stage, eCBType type, ID3D11Buffer* buffer);
         void BindBuffer(ID3D11Buffer* buffer, void* data, UINT size);
+        void ReadBuffer(ID3D11Buffer* buffer, void* data, UINT size);
         void BindStagingBuffer(ID3D11Buffer* buffer, void* data, UINT size);
         void BindSamplerState(eShaderStage stage, UINT StartSlot, ID3D11SamplerState** ppSamplers);
         void BindShaderResource(eShaderStage stage, UINT startSlot, ID3D11ShaderResourceView** ppSRV);
