@@ -46,6 +46,10 @@ namespace zz
         {
             return mChunk->GetElement(x, y);
         }
+        else if (!PixelWorld::InBounds(x, y))
+        {
+            return EMPTY;
+        }
 
         return PixelWorld::GetElement(x, y);
     }

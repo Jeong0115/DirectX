@@ -392,7 +392,7 @@ namespace zz
         }
 
         // Display the image
-        cv::imshow("Image with triangle", img);
+
 
        // cv::waitKey(0);
        

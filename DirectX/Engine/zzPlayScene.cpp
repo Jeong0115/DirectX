@@ -62,6 +62,7 @@ namespace zz
         camera->GetComponent<Transform>()->SetPosition(Vector3(0.0f, 0.0f, -10.0f));
         MainCamera* cameraComp = camera->AddComponent<MainCamera>();
         camera->AddComponent<CameraScript>();
+        cameraComp->SetSize(0.25f);
         cameraComp->TurnLayerMask(eLayerType::UI, false);
         renderer::cameras.push_back(cameraComp);
         renderer::mainCamera = cameraComp;
@@ -69,8 +70,9 @@ namespace zz
         {
             GameObject* uiCamera = new GameObject();
         	AddGameObject(uiCamera, eLayerType::Camera);
-            uiCamera->GetComponent<Transform>()->SetPosition(Vector3(320.f, 180.f, -1.0f));
+            uiCamera->GetComponent<Transform>()->SetPosition(Vector3(400.f, 225.f, -1.0f));
         	UICamera* uiCameraComp = uiCamera->AddComponent<UICamera>();
+            uiCameraComp->SetSize(0.5f);
             renderer::cameras.push_back(uiCameraComp);
             renderer::uiCamera = uiCameraComp;
         	//camera->AddComponent<CameraScript>();

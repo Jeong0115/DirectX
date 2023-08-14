@@ -57,7 +57,7 @@ namespace zz
             inventoryBox->SetSlotIndex(i);
             mItemSlots.push_back(inventoryBox);
             mInventoryUI[(UINT)eUIType::ItemSlot].push_back(inventoryBox);
-            inventoryBox->GetComponent<Transform>()->SetPosition(29.5f + i * 20.f, 330.f, 1.0f);
+            inventoryBox->GetComponent<Transform>()->SetPosition(29.5f + i * 20.f, 412.5f, 1.0f);
         }
 
         for (int i = 0; i < 4; i++)
@@ -66,7 +66,7 @@ namespace zz
             inventoryBox->SetSlotIndex(i + 4);
             mItemSlots.push_back(inventoryBox);
             mInventoryUI[(UINT)eUIType::ItemSlot].push_back(inventoryBox);
-            inventoryBox->GetComponent<Transform>()->SetPosition(111.5f + i * 20.f, 330.f, 1.0f);
+            inventoryBox->GetComponent<Transform>()->SetPosition(111.5f + i * 20.f, 412.5f, 1.0f);
         }
 
         for (UINT i = 0; i < (UINT)eUIType::End; i++)

@@ -74,11 +74,11 @@ namespace zz
         //float height = (float)(rect.bottom - rect.top);
         float width = 1600;
         float height = 900;
-        mAspectRatio = width / height;
+        
 
         if (type == eProjectionType::OrthoGraphic)
         {
-            float OrthorGraphicRatio = 0.4;
+            float OrthorGraphicRatio = mSize;
             width *= OrthorGraphicRatio;
             height *= OrthorGraphicRatio;
 
@@ -86,6 +86,7 @@ namespace zz
         }
         else
         {
+            mAspectRatio = width / height;
             mProjection = Matrix::CreatePerspectiveFieldOfViewLH(XM_2PI / 6.0f, mAspectRatio, mNear, mFar);
         }
 

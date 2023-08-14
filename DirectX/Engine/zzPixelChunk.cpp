@@ -73,7 +73,7 @@ namespace zz
                 chunk->SwapElement(src, dstEle);
 
                 //InsertElement(dst, chunk->GetElement(src));
-                //chunk->InsertElement(src, new EmptyElement());
+                //chunk->InsertElement(src, new Empty   Element());
 
                 iprev = i + 1;
             }

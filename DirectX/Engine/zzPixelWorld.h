@@ -41,13 +41,16 @@ namespace zz
         static std::pair<int, int> GetChunkMapLocation(int x, int y);
         static void RemoveEmptyChunks();
 
-        static Element& GetElement(int x, int y) { return GetChunk(x, y)->GetElement(x, y); }
+        static Element& GetElement(int x, int y) { 
+            return GetChunk(x, y)->GetElement(x, y); 
+        }
         static void SwapElement(int x, int y, const Element& element);
         static void SwapElement(int x, int y, int xto, int yto);
         static void InsertElement(int x, int y, const Element& element);
         static void MoveStaticElement(std::vector<Box2dWorld::StaticElementInfo>& elements);
         static void DeleteStaticElement(std::vector<Box2dWorld::StaticElementInfo>& elements, int index);
         static void SetStaticElements(std::vector<std::vector<Box2dWorld::StaticElementInfo>>* staticElements) { mStaticElements = staticElements; }
+        static void CreateNewWorld();
 
         static void KeepAlive(int x, int y) { if (PixelChunk* chunk = GetChunk(x, y)) { chunk->KeepAlive(x, y); }}
 

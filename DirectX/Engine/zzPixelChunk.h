@@ -7,9 +7,6 @@ namespace zz
     class PixelChunk
     {
     public:
-        
-
-
         PixelChunk(size_t width, size_t height, int x, int y);
         ~PixelChunk();
 

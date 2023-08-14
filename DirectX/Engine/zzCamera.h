@@ -34,6 +34,7 @@ namespace zz
         static Matrix& GetGpuProjectionMatrix() { return Projection; }
         static void SetGpuProjectionMatrix(Matrix projection) { Projection = projection; }
 
+        void SetSize(float size) { mSize = size; }
         float GetSize() { return mSize; }
         Matrix& GetViewMatrix() { return mView; }
         Matrix& GetProjectionMatrix() { return mProjection; }

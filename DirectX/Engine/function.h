@@ -16,7 +16,7 @@ namespace zz
 
     __forceinline int randi(int max)
     {
-        std::uniform_int_distribution<> distr(0, max);
+        std::uniform_int_distribution<int> distr(0, max);
         return distr(i_gen);
     }
 

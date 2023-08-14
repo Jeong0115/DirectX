@@ -18,6 +18,9 @@
 
 #include "zzInput.h"
 
+#define STB_HERRINGBONE_WANG_TILE_IMPLEMENTATION
+#include "..\External\Herringbone\include\stb_herringbone_wang_tile.h"
+
 namespace zz
 {  
     std::vector<uint8_t> PixelWorld::mPixelColor(2048 * 2048 * 4);
@@ -62,21 +65,15 @@ namespace zz
         mElementMap.insert({ 'e', {eElementType::EMPTY, eElementMove::NONE, (uint32_t)eElementColor::EMPTY, L"DeleteEmpty", math::Vector2(0.f, 0.f)} });
         mSelectElement = mElementMap.find('e')->second;
 
-        /*for (int i = 60; i <= 75; i++)
-        {
-            for (int j = 20; j <= 30; j++)
-            {
-                InsertElement(i, j, SAND);
-            }
-        }
 
-        for (int i = 50; i <= 200; i++)
+        for (int i = 0; i <= 100; i++)
         {
-            for (int j = 50; j <= 55; j++)
+            for (int j = 350; j <= 400; j++)
             {
                 InsertElement(i, j, ROCK);
             }
-        }*/
+        }
+        CreateNewWorld();
         Box2dWorld::Initialize();
     } 
 
@@ -85,20 +82,20 @@ namespace zz
         renderer::debugMeshs.clear();
         //RemoveEmptyChunks();
         DrawPixels();
-        if(mStaticElements != nullptr)
-        {
-            for (int i = 0; i < mStaticElements->size(); i++)
-            {
-                DeleteStaticElement((*mStaticElements)[i], i);
-            }
-        }
+        //if(mStaticElements != nullptr)
+        //{
+        //    for (int i = 0; i < mStaticElements->size(); i++)
+        //    {
+        //        DeleteStaticElement((*mStaticElements)[i], i);
+        //    }
+        //}
 
-        Box2dWorld::Update();
+        //Box2dWorld::Update();
 
-        for (int i = 0; i < mStaticElements->size(); i++)
-        {
-            MoveStaticElement((*mStaticElements)[i]);
-        }
+        //for (int i = 0; i < mStaticElements->size(); i++)
+        //{
+        //    MoveStaticElement((*mStaticElements)[i]);
+        //}
                
         for (int i = 0; i < 4; i++)
         {
@@ -264,6 +261,116 @@ namespace zz
             Box2dWorld::ReconstructBody(index);
             cal = false;
         }
+    }
+
+    void PixelWorld::CreateNewWorld()
+    {
+        srand(time(NULL));
+
+        int x = 260;
+        int y = 260;
+
+        cv::Mat tilesetImage = cv::imread("..\\Resources\\Texture\\WangTiles\\Coalmine\\coalmine.png", cv::IMREAD_COLOR);
+        cv::cvtColor(tilesetImage, tilesetImage, cv::COLOR_BGR2RGB);
+        stbhw_tileset tileset;
+
+        stbhw_build_tileset_from_image(&tileset, (unsigned char*)tilesetImage.data, tilesetImage.cols * 3, tilesetImage.cols, tilesetImage.rows);
+        unsigned char* map = (unsigned char*)malloc(3 * x * y);
+        stbhw_generate_image(&tileset, NULL, map, x*3, x, y);
+
+        cv::Mat generatedImage(x, y, CV_8UC3, map);
+
+        int p = 0;
+        int q = 0;
+
+
+        cv::Mat rock = cv::imread("..\\Resources\\Texture\\Material\\rock.png", cv::IMREAD_COLOR);
+        cv::cvtColor(rock, rock, cv::COLOR_BGR2RGB);
+
+        cv::Mat earth = cv::imread("..\\Resources\\Texture\\Material\\earth.png", cv::IMREAD_COLOR);
+        cv::cvtColor(earth, earth, cv::COLOR_BGR2RGB);
+
+        for (int i = 0; i < y; i++)
+        {
+            for (int j = 0; j < x; j++)
+            {
+
+                cv::Vec3b a = generatedImage.at<cv::Vec3b>(i, j);
+                
+                uint32_t color = 0xFF000000;
+                color |= (a[0] << 16);  
+                color |= (a[1] << 8); 
+                color |= a[2];
+
+                if (color == 0xFFFFFFFF)
+                {
+                    for (int k = i * 10; k < i * 10 + 10; k++)
+                    {
+                        for (int l = j * 10; l < j * 10 + 10; l++)
+                        {
+                            cv::Vec3b rockColor;
+                            if (randi(2) == 0)
+                            {
+                                rockColor = rock.at<cv::Vec3b>(p++, q);
+                            }
+                            else
+                            {
+                                rockColor = earth.at<cv::Vec3b>(p++, q);
+                            }
+
+                            uint32_t color = 0xFF000000;
+                            color |= (rockColor[0] << 16);
+                            color |= (rockColor[1] << 8);
+                            color |= rockColor[2];
+
+                            Element rock = ROCK;
+                            rock.Color = color;
+                            InsertElement(l, k, rock);
+
+                            if (p >= 45)
+                            {
+                                p = 0;
+                                q++;
+
+                                if (q >= 48)
+                                {
+                                    q = 0;
+                                }
+                            }
+                        }
+                    }
+                }
+                else if (color == 0xFF2F554C)
+                {
+                    
+                    for (int k = i * 10; k < i * 10 + 10; k++)
+                    {
+                        for (int l = j * 10; l < j * 10 + 10; l++)
+                        {
+                            InsertElement(l, k, WATER);
+                        }
+                    }
+                }
+                else if (color == 0xFF505052 || color == 0xFF3B3B3C)
+                {
+
+                    for (int k = i * 10; k < i * 10 + 10; k++)
+                    {
+                        for (int l = j * 10; l < j * 10 + 10; l++)
+                        {
+                            InsertElement(l, k, SAND);
+                        }
+                    }
+                }
+            }
+        }
+        // BGR 형식으로 변환 (imshow를 위해)
+        cv::cvtColor(generatedImage, generatedImage, cv::COLOR_RGB2BGR);
+        cv::resize(generatedImage, generatedImage, cv::Size(), 2,2, cv::INTER_NEAREST);
+
+        cv::imshow("Generated Map", generatedImage);
+        //cv::waitKey(0);
+        free(map);
     }
 
 
@@ -502,3 +609,12 @@ namespace zz
         }
     }
 }
+
+
+
+
+
+
+
+
+
