@@ -224,6 +224,15 @@ namespace zz::renderer
             spriteMateiral2->SetTexture(texture);
             ResourceManager::Insert(L"M_MountainBG0", spriteMateiral2);
         }
+
+        {
+            std::shared_ptr<Texture> texture = ResourceManager::Load<Texture>(L"background_coalmine", L"..\\Resources\\Texture\\Coalmine\\background_coalmine.png");
+
+            std::shared_ptr<Material> spriteMateiral2 = std::make_shared<Material>();
+            spriteMateiral2->SetShader(spriteShader);
+            spriteMateiral2->SetTexture(texture);
+            ResourceManager::Insert(L"m_background_coalmine", spriteMateiral2);
+        }
         {
             std::shared_ptr<Texture> texture = ResourceManager::Load<Texture>(L"rust", L"..\\Resources\\Texture\\rust.png");
 
@@ -349,6 +358,8 @@ namespace zz::renderer
             std::shared_ptr<Texture> texture = ResourceManager::Load<Texture>(L"hall_bottom_2_552_512", L"..\\Resources\\Texture\\Mountain\\hall_bottom_2.png");
             //PixelGrid::SetImage(552, 512, texture);
         }
+
+
 
 
 #pragma endregion

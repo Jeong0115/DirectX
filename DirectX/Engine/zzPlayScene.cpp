@@ -89,21 +89,21 @@ namespace zz
         float x = 256;
         float y = -256;
         {
-            GameObject* object = new GameObject();
-            AddGameObject(object, eLayerType::Player);
-            object->GetComponent<Transform>()->SetPosition(Vector3(x, y, 0.2f));
-            object->GetComponent<Transform>()->SetScale(Vector3(512.f, 512.f, 1.0f));
-            MeshRenderer* mesh = object->AddComponent<MeshRenderer>();
-            mesh->SetMaterial(ResourceManager::Find<Material>(L"m_hall_background_0_0"));
-            mesh->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
+            //GameObject* object = new GameObject();
+            //AddGameObject(object, eLayerType::Player);
+            //object->GetComponent<Transform>()->SetPosition(Vector3(x, y, 0.2f));
+            //object->GetComponent<Transform>()->SetScale(Vector3(512.f, 512.f, 1.0f));
+            //MeshRenderer* mesh = object->AddComponent<MeshRenderer>();
+            //mesh->SetMaterial(ResourceManager::Find<Material>(L"m_hall_background_0_0"));
+            //mesh->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
 
-            GameObject* object2 = new GameObject();
-            AddGameObject(object2, eLayerType::Player);
-            object2->GetComponent<Transform>()->SetPosition(Vector3(x - 512, y, 0.2f));
-            object2->GetComponent<Transform>()->SetScale(Vector3(512.f, 512.f, 1.0f));
-            MeshRenderer* mesh2 = object2->AddComponent<MeshRenderer>();
-            mesh2->SetMaterial(ResourceManager::Find<Material>(L"m_left_entrance_background_-512_0"));
-            mesh2->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
+            //GameObject* object2 = new GameObject();
+            //AddGameObject(object2, eLayerType::Player);
+            //object2->GetComponent<Transform>()->SetPosition(Vector3(x - 512, y, 0.2f));
+            //object2->GetComponent<Transform>()->SetScale(Vector3(512.f, 512.f, 1.0f));
+            //MeshRenderer* mesh2 = object2->AddComponent<MeshRenderer>();
+            //mesh2->SetMaterial(ResourceManager::Find<Material>(L"m_left_entrance_background_-512_0"));
+            //mesh2->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
         }
 
         GameObject* object = new GameObject();
@@ -113,6 +113,21 @@ namespace zz
         MeshRenderer* mesh = object->AddComponent<MeshRenderer>();
         mesh->SetMaterial(ResourceManager::Find<Material>(L"m_PixelTexture"));
         mesh->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
+
+        for (int y = 0; y < 8; y++)
+        {
+            for (int x = 0; x < 4; x++)
+            {
+                GameObject* bg = new GameObject();
+                AddGameObject(bg, eLayerType::BG);
+                bg->GetComponent<Transform>()->SetPosition(Vector3(x + 256 - 256 + 512 * x, y - 128 + 256 - 256 * y, 1.0f));
+                bg->GetComponent<Transform>()->SetScale(Vector3(512.f, 256.f, 1.0f));
+                MeshRenderer* bgmesh = bg->AddComponent<MeshRenderer>();
+                bgmesh->SetMaterial(ResourceManager::Find<Material>(L"m_background_coalmine"));
+                bgmesh->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
+            }
+        }
+
 
         {
             //GameObject* object = new GameObject();
@@ -174,7 +189,7 @@ namespace zz
             AddGameObject(player, eLayerType::Player);
             player->GetComponent<Transform>()->SetPosition(Vector3(10.f, -300.f, 0.000f));
             player->GetComponent<Transform>()->SetScale(Vector3(12.f, 19.f, 1.0f));    
-            player->SetCamera(camera);
+            //player->SetCamera(camera);
             //player->AddComponent<ParticleSystem>();
            
             

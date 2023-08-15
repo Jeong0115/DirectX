@@ -270,75 +270,232 @@ namespace zz
         int x = 260;
         int y = 260;
 
-        cv::Mat tilesetImage = cv::imread("..\\Resources\\Texture\\WangTiles\\Coalmine\\coalmine.png", cv::IMREAD_COLOR);
-        cv::cvtColor(tilesetImage, tilesetImage, cv::COLOR_BGR2RGB);
+        cv::Mat wangTileImage = cv::imread("..\\Resources\\Texture\\WangTiles\\Coalmine\\coalmine.png", cv::IMREAD_COLOR);
+        cv::cvtColor(wangTileImage, wangTileImage, cv::COLOR_BGR2RGB);
         stbhw_tileset tileset;
 
-        stbhw_build_tileset_from_image(&tileset, (unsigned char*)tilesetImage.data, tilesetImage.cols * 3, tilesetImage.cols, tilesetImage.rows);
-        unsigned char* map = (unsigned char*)malloc(3 * x * y);
-        stbhw_generate_image(&tileset, NULL, map, x*3, x, y);
+        stbhw_build_tileset_from_image(&tileset, (unsigned char*)wangTileImage.data, wangTileImage.cols * 3, wangTileImage.cols, wangTileImage.rows);
+        unsigned char* tileData = (unsigned char*)malloc(3 * x * y);
 
-        cv::Mat generatedImage(x, y, CV_8UC3, map);
+        stbhw_generate_image(&tileset, NULL, tileData, x*3, x, y);
+        cv::Mat randTileImage(x, y, CV_8UC3, tileData);
 
-        int p = 0;
-        int q = 0;
-
-
-        cv::Mat rock = cv::imread("..\\Resources\\Texture\\Material\\rock.png", cv::IMREAD_COLOR);
+        cv::Mat rock = cv::imread("..\\Resources\\Texture\\Material\\edge\\rock.png", cv::IMREAD_COLOR);
         cv::cvtColor(rock, rock, cv::COLOR_BGR2RGB);
 
-        cv::Mat earth = cv::imread("..\\Resources\\Texture\\Material\\earth.png", cv::IMREAD_COLOR);
-        cv::cvtColor(earth, earth, cv::COLOR_BGR2RGB);
+        cv::Mat edge_rock_land = cv::imread("..\\Resources\\Texture\\Material\\edge\\edge_rock_land.png", cv::IMREAD_COLOR);
+        cv::cvtColor(edge_rock_land, edge_rock_land, cv::COLOR_BGR2RGB);
+
+        cv::Mat edge_rock_wall_temp = cv::imread("..\\Resources\\Texture\\Material\\edge\\edge_rock_wall_temp.png", cv::IMREAD_COLOR);
+        cv::cvtColor(edge_rock_wall_temp, edge_rock_wall_temp, cv::COLOR_BGR2RGB);
+
+        cv::Mat edge_rock_slope = cv::imread("..\\Resources\\Texture\\Material\\edge\\edge_rock_slope.png", cv::IMREAD_COLOR);
+        cv::cvtColor(edge_rock_slope, edge_rock_slope, cv::COLOR_BGR2RGB);
+
+        cv::Mat edge_rock_convex = cv::imread("..\\Resources\\Texture\\Material\\edge\\edge_rock_convex.png", cv::IMREAD_COLOR);
+        cv::cvtColor(edge_rock_convex, edge_rock_convex, cv::COLOR_BGR2RGB);
+
+
+        cv::Scalar white(255, 255, 255);
+
+        cv::Mat mask;
+        cv::inRange(randTileImage, white, white, mask);
+
+        std::bitset<4> surrounding;
+
+        int dx[] = { 0, 1, 0,-1 };
+        int dy[] = { -1,0, 1, 0 };
 
         for (int i = 0; i < y; i++)
         {
             for (int j = 0; j < x; j++)
-            {
-
-                cv::Vec3b a = generatedImage.at<cv::Vec3b>(i, j);
-                
-                uint32_t color = 0xFF000000;
-                color |= (a[0] << 16);  
-                color |= (a[1] << 8); 
-                color |= a[2];
+            {           
+                uint32_t color = Vec3bToColor(randTileImage.at<cv::Vec3b>(i, j));
 
                 if (color == 0xFFFFFFFF)
                 {
-                    for (int k = i * 10; k < i * 10 + 10; k++)
+                    for (int dir = 0; dir < 4; dir++)
                     {
-                        for (int l = j * 10; l < j * 10 + 10; l++)
+                        if (j + dx[dir] >= 0 && j + dx[dir] < mask.cols && i + dy[dir] >= 0 && i + dy[dir] < mask.rows)
                         {
-                            cv::Vec3b rockColor;
-                            if (randi(2) == 0)
+                            surrounding[dir] = (mask.at<uchar>(i + dy[dir], j + dx[dir]) > 0) ? 1 : 0;
+                        }
+                    }
+
+                    if (surrounding.count() == 4)
+                    {
+                        int rand = randi(7);
+                        cv::Rect rect(rand * 10, 0, 10, 10);
+                        cv::Mat rotateImg;
+
+                        rock(rect).copyTo(rotateImg);
+
+                        InsertElementFromImage(i, j, rotateImg);
+                    }
+                    else if (surrounding.count() == 3)
+                    {
+                        int rand = randi(7);
+                        bool flip = randi(1) > 0 ? true : false;
+
+                        cv::Rect rect(rand * 10, 0, 10, 10);
+                        cv::Mat rotateImg;
+
+                        if (!surrounding[0])
+                        {
+                            edge_rock_land(rect).copyTo(rotateImg);
+
+                            if (flip)
                             {
-                                rockColor = rock.at<cv::Vec3b>(p++, q);
+                                cv::flip(rotateImg, rotateImg, 1);
+                            }
+                        }
+                        else if (!surrounding[1])
+                        {
+                            cv::transpose(edge_rock_land(rect), rotateImg);
+                            cv::flip(rotateImg, rotateImg, 1);
+                            if (flip)
+                            {
+                                cv::flip(rotateImg, rotateImg, 0);
+                            }
+                        }
+                        else if (!surrounding[2])
+                        {
+                            edge_rock_land(rect).copyTo(rotateImg);
+                            cv::flip(rotateImg, rotateImg, 0);
+
+                            if (flip)
+                            {
+                                cv::flip(rotateImg, rotateImg, 1);
+                            }
+                        }
+                        else if (!surrounding[3])
+                        {
+                            cv::transpose(edge_rock_land(rect), rotateImg);
+
+                            if (flip)
+                            {
+                                cv::flip(rotateImg, rotateImg, 0);
+                            }
+                        }
+
+                        InsertElementFromImage(i, j, rotateImg);
+                    }
+                    else if (surrounding.count() == 2)
+                    {
+                        int rand = randi(5);
+                        bool flip = randi(1) > 0 ? true : false;
+                        cv::Rect rect(rand * 10, 0, 10, 10);
+                        cv::Mat rotateImg;
+
+                        if (surrounding[1] && surrounding[2])
+                        {
+                            edge_rock_slope(rect).copyTo(rotateImg);
+
+                            if (flip)
+                            {
+                                cv::transpose(rotateImg, rotateImg);
+                            }
+                        }
+                        else if (surrounding[2] && surrounding[3])
+                        {
+                            edge_rock_slope(rect).copyTo(rotateImg);
+                            cv::flip(rotateImg, rotateImg, 1);
+
+                            if (flip)
+                            {
+                                cv::transpose(rotateImg, rotateImg);
+                                cv::flip(rotateImg, rotateImg, -1);
+                            }
+                        }
+                        else if (surrounding[3] && surrounding[0])
+                        {
+                            edge_rock_slope(rect).copyTo(rotateImg);
+                            cv::flip(rotateImg, rotateImg, -1);
+
+                            if (flip)
+                            {
+                                cv::transpose(rotateImg, rotateImg);
+                            }
+                        }
+                        else if (surrounding[0] && surrounding[1])
+                        {
+                            edge_rock_slope(rect).copyTo(rotateImg);
+                            cv::flip(rotateImg, rotateImg, 0);
+
+                            if (flip)
+                            {
+                                cv::transpose(rotateImg, rotateImg);
+                                cv::flip(rotateImg, rotateImg, -1);
+                            }
+                        }
+                        else
+                        {
+                            rand = randi(7);
+                            rect = cv::Rect(rand * 10, 0, 10, 10);
+
+                            if (surrounding[0] && surrounding[2])
+                            {
+                                edge_rock_wall_temp(rect).copyTo(rotateImg);
+                                cv::transpose(rotateImg, rotateImg);
+
+                                if (flip)
+                                {
+                                    cv::flip(rotateImg, rotateImg, 0);
+                                }
+
                             }
                             else
                             {
-                                rockColor = earth.at<cv::Vec3b>(p++, q);
-                            }
+                                edge_rock_wall_temp(rect).copyTo(rotateImg);
 
-                            uint32_t color = 0xFF000000;
-                            color |= (rockColor[0] << 16);
-                            color |= (rockColor[1] << 8);
-                            color |= rockColor[2];
-
-                            Element rock = ROCK;
-                            rock.Color = color;
-                            InsertElement(l, k, rock);
-
-                            if (p >= 45)
-                            {
-                                p = 0;
-                                q++;
-
-                                if (q >= 48)
+                                if (flip)
                                 {
-                                    q = 0;
+                                    cv::flip(rotateImg, rotateImg, 1);
                                 }
                             }
                         }
+
+                        InsertElementFromImage(i, j, rotateImg);
                     }
+                    else if (surrounding.count() == 1)
+                    {
+                        int rand = randi(5);
+                        cv::Rect rect(rand * 10, 0, 10, 10);
+                        cv::Mat rotateImg;
+
+                        if (surrounding[2])
+                        {
+                            rotateImg = edge_rock_convex(rect).clone();
+                        }
+                        else if (surrounding[3])
+                        {
+                            cv::transpose(edge_rock_convex(rect), rotateImg);
+                            cv::flip(rotateImg, rotateImg, 1);
+                        }
+                        else if (surrounding[0])
+                        {
+                            edge_rock_convex(rect).copyTo(rotateImg);
+                            cv::flip(rotateImg, rotateImg, -1);
+                        }
+                        else if (surrounding[1])
+                        {
+                            cv::transpose(edge_rock_convex(rect), rotateImg);
+                            cv::flip(rotateImg, rotateImg, 0);
+                        }
+
+                        InsertElementFromImage(i, j, rotateImg);
+                    }
+                    else
+                    {
+                        int rand = randi(7);
+                        cv::Rect rect(rand * 10, 0, 10, 10);
+                        cv::Mat rotateImg;
+
+                        rock(rect).copyTo(rotateImg);
+
+                        InsertElementFromImage(i, j, rotateImg);
+                    }
+
                 }
                 else if (color == 0xFF2F554C)
                 {
@@ -364,13 +521,42 @@ namespace zz
                 }
             }
         }
-        // BGR 형식으로 변환 (imshow를 위해)
-        cv::cvtColor(generatedImage, generatedImage, cv::COLOR_RGB2BGR);
-        cv::resize(generatedImage, generatedImage, cv::Size(), 2,2, cv::INTER_NEAREST);
 
-        cv::imshow("Generated Map", generatedImage);
-        //cv::waitKey(0);
-        free(map);
+        cv::cvtColor(randTileImage, randTileImage, cv::COLOR_RGB2BGR);
+        cv::resize(randTileImage, randTileImage, cv::Size(), 2,2, cv::INTER_NEAREST);
+
+        cv::imshow("Generated Map", randTileImage);
+
+        free(tileData);
+    }
+
+    void PixelWorld::InsertElementFromImage(int y, int x, const cv::Mat& image)
+    {
+        for (int i = y * 10; i < y * 10 + 10; i++)
+        {
+            for (int j = x * 10; j < x * 10 + 10; j++)
+            {
+                cv::Vec3b colorVec = image.at<cv::Vec3b>(i % 10, j % 10);
+                uint32_t color = Vec3bToColor(colorVec);
+
+                if (color != 0xFF000000) 
+                {
+                    Element rock = ROCK;
+                    rock.Color = color;
+                    InsertElement(j, i, rock);
+                }
+            }
+        }
+    }
+
+    uint32_t PixelWorld::Vec3bToColor(const cv::Vec3b& vec3b)
+    {
+        uint32_t color = 0xFF000000;
+        color |= (vec3b[0] << 16);
+        color |= (vec3b[1] << 8);
+        color |= vec3b[2];
+
+        return color;
     }
 
 

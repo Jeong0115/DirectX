@@ -50,7 +50,10 @@ namespace zz
         static void MoveStaticElement(std::vector<Box2dWorld::StaticElementInfo>& elements);
         static void DeleteStaticElement(std::vector<Box2dWorld::StaticElementInfo>& elements, int index);
         static void SetStaticElements(std::vector<std::vector<Box2dWorld::StaticElementInfo>>* staticElements) { mStaticElements = staticElements; }
+        
         static void CreateNewWorld();
+        static void InsertElementFromImage(int y, int x, const cv::Mat& image);
+        static uint32_t Vec3bToColor(const cv::Vec3b& vec3b);
 
         static void KeepAlive(int x, int y) { if (PixelChunk* chunk = GetChunk(x, y)) { chunk->KeepAlive(x, y); }}
 
