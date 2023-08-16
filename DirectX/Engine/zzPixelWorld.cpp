@@ -79,6 +79,7 @@ namespace zz
 
     void PixelWorld::Update()
     {
+        //return;
         renderer::debugMeshs.clear();
         //RemoveEmptyChunks();
         DrawPixels();
@@ -295,6 +296,9 @@ namespace zz
         cv::Mat edge_rock_convex = cv::imread("..\\Resources\\Texture\\Material\\edge\\edge_rock_convex.png", cv::IMREAD_COLOR);
         cv::cvtColor(edge_rock_convex, edge_rock_convex, cv::COLOR_BGR2RGB);
 
+        cv::Mat edge_rock_alone = cv::imread("..\\Resources\\Texture\\Material\\edge\\edge_rock_alone.png", cv::IMREAD_COLOR);
+        cv::cvtColor(edge_rock_alone, edge_rock_alone, cv::COLOR_BGR2RGB);
+
 
         cv::Scalar white(255, 255, 255);
 
@@ -487,11 +491,26 @@ namespace zz
                     }
                     else
                     {
-                        int rand = randi(7);
+                        int rand = randi(3);
                         cv::Rect rect(rand * 10, 0, 10, 10);
                         cv::Mat rotateImg;
 
-                        rock(rect).copyTo(rotateImg);
+                        edge_rock_alone(rect).copyTo(rotateImg);
+
+                        if (randi(1) > 0)
+                        {
+                            cv::transpose(rotateImg, rotateImg);
+                        }
+
+                        rand = randi(2);
+                        if (rand == 2)
+                        {
+                            cv::flip(rotateImg, rotateImg, -1);
+                        }
+                        else
+                        {
+                            cv::flip(rotateImg, rotateImg, rand);
+                        }
 
                         InsertElementFromImage(i, j, rotateImg);
                     }

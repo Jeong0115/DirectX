@@ -37,15 +37,6 @@ namespace zz
     void PixelChunk::MoveElements()
     {
         if (mElementCount == 0) return;
-        /*for (size_t i = 0; i < mChanges.size(); i++) 
-        {
-            if (!IsEmpty(_DEST(mChanges[i]))) 
-            {
-                mChanges[i] = mChanges.back(); mChanges.pop_back();
-                i--;
-            }
-        }*/
-        //std::lock_guard<std::mutex> lock(tempMutex);
         
         mElementCount -= mChanges.size();
         if (mChanges.size() == 0) 
@@ -71,9 +62,6 @@ namespace zz
                 Element dstEle = GetElement(dst);
                 SwapElement(dst, chunk->GetElement(src));
                 chunk->SwapElement(src, dstEle);
-
-                //InsertElement(dst, chunk->GetElement(src));
-                //chunk->InsertElement(src, new Empty   Element());
 
                 iprev = i + 1;
             }

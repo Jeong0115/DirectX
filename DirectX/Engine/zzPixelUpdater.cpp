@@ -25,18 +25,7 @@ namespace zz
                 UpdateCell(px, py, cell);
             }
         }
-        
-        /*for (int x = mChunk->mMinX; x < mChunk->mMaxX; x++)
-        {
-            for (int y = mChunk->mMinY; y < mChunk->mMaxY; y++) 
-            {
-                Element& cell = mChunk->GetElement(x + y * mChunk->mWidth);
-                int px = x + mChunk->mStartX;
-                int py = y + mChunk->mStartY;
-
-                UpdateCell(px, py, cell);
-            }
-        }*/
+       
 
     }
 

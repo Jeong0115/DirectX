@@ -40,40 +40,40 @@ namespace zz
 
     struct Element
     {
-        Element() {}
+        //Element() {}
 
-        Element(eElementType type, eElementMove move, uint32_t color, std::wstring name, math::Vector2 vel)
-            : Type(type), Move(move), Color(color), Name(name), Velocity(vel)
-        {
+        //Element(eElementType type, eElementMove move, uint32_t color, std::wstring name, math::Vector2 vel)
+        //    : Type(type), Move(move), Color(color), Name(name), Velocity(vel)
+        //{
 
-        }
-        
-        Element(const Element& other)
-            : Type(other.Type), Move(other.Move), x(other.x), y(other.y), Name(other.Name)
-            , Velocity(other.Velocity)
-        {
-            if (other.Name == L"Sand")
-            {
-                Color = RandomSandColor();
-            }
-            else Color = other.Color;
-        }
+        //}
+        //
+        //Element(const Element& other)
+        //    : Type(other.Type), Move(other.Move), x(other.x), y(other.y), Name(other.Name)
+        //    , Velocity(other.Velocity)
+        //{
+        //    if (other.Name == L"Sand")
+        //    {
+        //        Color = RandomSandColor();
+        //    }
+        //    else Color = other.Color;
+        //}
 
-        Element& operator=(const Element& other)
-        {
-            Type = other.Type;
-            Move = other.Move;
-            Name = other.Name;
-            x = other.x;
-            y = other.y;
-            Velocity = other.Velocity;
-            if (other.Name == L"Sand")
-            {
-                Color = RandomSandColor();
-            }
-            else Color = other.Color;
-            return *this;
-        }
+        //Element& operator=(const Element& other)
+        //{
+        //    Type = other.Type;
+        //    Move = other.Move;
+        //    Name = other.Name;
+        //    x = other.x;
+        //    y = other.y;
+        //    Velocity = other.Velocity;
+        //    if (other.Name == L"Sand")
+        //    {
+        //        Color = RandomSandColor();
+        //    }
+        //    else Color = other.Color;
+        //    return *this;
+        //}
 
         eElementType    Type = eElementType::EMPTY;
         eElementMove    Move = eElementMove::NONE;
