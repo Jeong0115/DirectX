@@ -14,6 +14,7 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzExplosion_128.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)function.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzAttackSpell.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzBoltWand_0997.cpp" />
@@ -25,7 +26,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)zzItemTexture.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzItemTextureHighlight.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzMouse.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)zzParticle.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzParticleShader.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzParticleSystem.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzSparkBolt.cpp" />
@@ -104,6 +104,7 @@
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)CommonInclude.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)define.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzExplosion_128.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)function.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzAttackSpell.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzBoltWand_0997.h" />
@@ -115,7 +116,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzItemTexture.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzItemTextureHighlight.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzMouse.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)zzParticle.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzParticleShader.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzParticleSystem.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzSparkBolt.h" />

@@ -166,6 +166,10 @@ namespace zz
             mesh->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
         }
 
+        //Explosion_128* bomb = new Explosion_128();
+        //AddGameObject(bomb, eLayerType::Effect);
+        //bomb->GetComponent<Transform>()->SetPosition(Vector3(0.f,0.f, 0.1f));
+
 #pragma region UI
 
 

@@ -83,7 +83,6 @@ namespace zz
         attackSpell->GetComponent<Transform>()->SetRotation(GetComponent<Transform>()->GetWorldRotation());
         attackSpell->Initialize();
 
-
         SceneManager::GetActiveScene()->AddGameObject(attackSpell, eLayerType::Object);
     }
 }

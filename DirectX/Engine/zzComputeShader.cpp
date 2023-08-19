@@ -8,6 +8,9 @@ namespace zz
         , mThreadGroupCountX(x)
         , mThreadGroupCountY(y)
         , mThreadGroupCountZ(z)
+        , mGroupX(0)
+        , mGroupY(0)
+        , mGroupZ(0)
     {
     }
         
@@ -35,7 +38,7 @@ namespace zz
         Binds();
 
         graphics::GetDevice()->BindComputeShader(mCS.Get());
-        graphics::GetDevice()->Dispatch(mGroupX, mGroupY, mGroupZ);
+        graphics::GetDevice()->Dispatch(mGroupX, mGroupY, mGroupZ); 
 
         Clear();
     }

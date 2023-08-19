@@ -10,15 +10,9 @@ namespace zz
         PixelChunk(size_t width, size_t height, int x, int y);
         ~PixelChunk();
 
-        void MoveElements();
+        void Update();
 
-        size_t GetIndex(int x, int y) { return (x - mStartX) + (y - mStartY) * mWidth; }
-
-        Element& GetElement(int x, int y) { return GetElement(GetIndex(x, y)); }
-        Element& GetElement(size_t index);
-
-        void SwapElement(int x, int y, const Element& element) { SwapElement(GetIndex(x, y), element); }
-        void SwapElement( size_t index, const Element& element);
+        void SwapElement(Element& dstElement, int dstX, int dstY, Element& srcElement, int srcX, int srcY);
 
         void InsertElement(int x, int y, const Element& element) { InsertElement(GetIndex(x, y), element); }
         void InsertElement(size_t index, const Element& element);
@@ -36,12 +30,25 @@ namespace zz
             
         void KeepAlive(int x, int y) { KeepAlive(GetIndex(x, y)); }
         void KeepAlive(size_t index);
+        void TKA(int x, int y);
+        void TempKeepAlive(int x, int y);
 
         void UpdateRect();
 
+        Element& GetElement(int x, int y);
+        Element& GetInChunkElement(size_t index) { return mElements[index]; }
+
+        bool MoveDownSolid(int x, int y, Element& element);
+        bool MoveDownLiquid(int x, int y, Element& elemen);
+        bool MoveDown(int x, int y, Element& element);
+        bool MoveSide(int x, int y, Element& element);
+        bool MoveDownSide(int x, int y, Element& element);
+
         bool InBounds(int x, int y) { return x >= mStartX && x < mStartX + mWidth && y >= mStartY && y < mStartY + mHeight;}
         bool IsEmpty(int x, int y) { return IsEmpty(GetIndex(x, y)); }
-        bool IsEmpty(size_t index) { return GetElement(index).Type == eElementType::EMPTY; }
+        bool IsEmpty(size_t index) { return GetInChunkElement(index).Type == eElementType::EMPTY; }
+
+        size_t GetIndex(int x, int y) { return (x - mStartX) + (y - mStartY) * mWidth; };
 
 
     public:
@@ -59,8 +66,9 @@ namespace zz
 
     private:
         std::vector<std::tuple<PixelChunk*, size_t, size_t>> mChanges;
-        std::mutex resiterMutex;
+        std::mutex mDirtyBoxMutex;
         Element* mElements;
+        std::bitset<1> mUpdateDir;
 
     private:
         int m_minXw, m_minYw,

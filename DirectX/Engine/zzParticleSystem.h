@@ -17,20 +17,17 @@ namespace zz
         virtual void LateUpdate()   override;
         virtual void Render()       override;
 
+        void CreateStructedBuffer(UINT size, UINT stride, eViewType type, void* data, bool isStaging, UINT uavSlot, int tempType);
+        void SetStructedBufferData(void* data, UINT bufferCount, int tempType);
+        void SetParticleShader(std::shared_ptr<ParticleShader> shader) { mCS = shader; }
+
     private:
         StructedBuffer* mBuffer;
         StructedBuffer* mSharedBuffer;
 
         std::shared_ptr<ParticleShader> mCS;
 
-        UINT    mCount;
-        Vector4 mStartSize;
-        Vector4 mEndSize;
+        UINT    mBufferSlot;
 
-        float   mLifeTime;
-        float   mTime;
-
-        Vector4 mPrevPos;
-        UINT mIndex;
     };
 }

@@ -13,39 +13,36 @@ namespace zz
         : mBuffer(nullptr)
         , mSharedBuffer(nullptr)
         , mCS(nullptr)
-        , mCount(0)
-        , mStartSize(Vector4::One)
-        , mEndSize(Vector4::One)
-        , mLifeTime(0.f)
-        , mTime(0.f)
-        , mPrevPos(Vector4::Zero)
-        , mIndex(0)
+        , mBufferSlot(0)
     {
-        std::shared_ptr<Mesh> mesh = ResourceManager::Find<Mesh>(L"PointMesh");
-        SetMesh(mesh);
+        SetMesh(ResourceManager::Find<Mesh>(L"PointMesh"));
 
-        std::shared_ptr<Material> material = ResourceManager::Find<Material>(L"ParticleMaterial");
-        SetMaterial(material);
+        //{
+ 
+        //    mCS = ResourceManager::Find<ParticleShader>(L"ParticleSystemAnimationShader");
 
-        mCS = ResourceManager::Find<ParticleShader>(L"ParticleSystemShader");
+        //    ParticleAnimation particles[500] = {};
 
-        Particle particles[500] = {};
+        //    mBuffer = new StructedBuffer();
+        //    mBuffer->Create(sizeof(ParticleAnimation), 500, eViewType::UAV, particles, true);
+        //    mBuffer->SetUAVSlot(2);
+        //    
+        //    mSharedBuffer = new StructedBuffer();
+        //    mSharedBuffer->Create(sizeof(ParticleAnimationShared), 1, eViewType::UAV, nullptr, true);
+        //    mSharedBuffer->SetUAVSlot(3);
 
-        mBuffer = new StructedBuffer();
-        mBuffer->Create(sizeof(Particle), 500, eViewType::UAV, particles, true);
 
-        mSharedBuffer = new StructedBuffer();
-        mSharedBuffer->Create(sizeof(ParticleShared), 1, eViewType::UAV, nullptr, true);
+        //}
     }
 
     ParticleSystem::~ParticleSystem()
     {
+        delete mBuffer;
+        delete mSharedBuffer;
     }
 
     void ParticleSystem::Initialize()
     {
-        Vector3 pos = GetOwner()->GetComponent<Transform>()->GetPosition();
-        mPrevPos = Vector4(pos.x, pos.y, pos.z, 0.0f);
     }
 
     void ParticleSystem::Update()
@@ -54,22 +51,19 @@ namespace zz
 
     void ParticleSystem::LateUpdate()
     {
-        Vector3 curPos = GetOwner()->GetComponent<Transform>()->GetPosition();
 
-        ParticleShared shareData = {};
-        shareData.curPosition = Vector4((int)curPos.x, (int)curPos.y, (int)curPos.z, 0.0f);
-        shareData.distance = shareData.curPosition - mPrevPos;
-        shareData.distance.z = 0;
-        shareData.angle = GetOwner()->GetComponent<Transform>()->GetRotation().z;
-        mPrevPos = shareData.curPosition;
+        //else if (mTempOption == 1)
+        //{
+        //    //ParticleAnimationShared shareData = {};
+        //    //shareData.curPosition = Vector4((int)curPos.x, (int)curPos.y, (int)curPos.z, 0.0f);
+        //    //shareData.gravity = Vector4(0.0f, -5.0f, 0.0f, 0.0f);
+        //    //shareData.SetActiveCount = 1;
+        //    //shareData.RemainingActiveCount = 1;
+        //    //shareData.durtaion = 0.06f;
+        //    //shareData.maxAnimationCnt = 12;
 
-        UINT count = (UINT)max(fabs(shareData.distance.x), fabs(shareData.distance.y));
-        shareData.SetActiveCount = count;
-        shareData.RemainingActiveCount = count;
-        shareData.index = mIndex;
-        mIndex += count;
-
-        mSharedBuffer->SetData(&shareData, 1);
+        //    //mSharedBuffer->SetData(&shareData, 1);  
+        //}
 
         mCS->SetParticleBuffer(mBuffer);
         mCS->SetSharedBuffer(mSharedBuffer);
@@ -80,14 +74,42 @@ namespace zz
     {
         GetOwner()->GetComponent<Transform>()->BindConstantBuffer();
 
-        mBuffer->BindSRV(eShaderStage::VS, 14);
-        mBuffer->BindSRV(eShaderStage::GS, 14);
-        mBuffer->BindSRV(eShaderStage::PS, 14);
-
+        mBuffer->BindSRV(eShaderStage::VS);
+        mBuffer->BindSRV(eShaderStage::GS);
+        mBuffer->BindSRV(eShaderStage::PS);
+        
         GetMesh()->BindBuffer();
         GetMaterial()->Binds();
-        GetMesh()->RenderInstanced(500);
+        GetMesh()->RenderInstanced(mBuffer->GetStride());
 
         mBuffer->Clear();
+    }
+
+    void ParticleSystem::CreateStructedBuffer(UINT size, UINT stride, eViewType type, void* data, bool isStaging, UINT uavSlot, int tempType)
+    {
+        if(tempType == 0)
+        {
+            mBuffer = new StructedBuffer();
+            mBuffer->Create(size, stride, eViewType::UAV, data, true);
+            mBuffer->SetUAVSlot(uavSlot);
+            mBuffer->SetSRVSlot(14);
+        }
+        else if (tempType == 1)
+        {
+            mSharedBuffer = new StructedBuffer();
+            mSharedBuffer->Create(size, stride, eViewType::UAV, data, true);
+            mSharedBuffer->SetUAVSlot(uavSlot);
+        }
+    }
+    void ParticleSystem::SetStructedBufferData(void* data, UINT bufferCount, int tempType)
+    {
+        if(tempType == 0)
+        {
+            mBuffer->SetData(data, mBuffer->GetStride());
+        }
+        else if (tempType == 1)
+        {
+            mSharedBuffer->SetData(data, mSharedBuffer->GetStride());
+        }
     }
 }

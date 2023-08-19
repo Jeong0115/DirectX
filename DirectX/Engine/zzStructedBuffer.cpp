@@ -113,7 +113,7 @@ namespace zz
     void StructedBuffer::GetData(void* data, UINT size)
     {
         GetDevice()->CopyResource(mStagingBuffer.Get(), buffer.Get());
-
+        
         if (size == 0)
         {
             GetDevice()->ReadBuffer(mStagingBuffer.Get(), data, mSize * mStride);
@@ -124,17 +124,15 @@ namespace zz
         }
     }
 
-    void StructedBuffer::BindSRV(eShaderStage stage, UINT slot)
+    void StructedBuffer::BindSRV(eShaderStage stage)
     {
-        mSRVSlot = slot;
-        GetDevice()->BindShaderResource(stage, slot, mSRV.GetAddressOf());
+        GetDevice()->BindShaderResource(stage, mSRVSlot, mSRV.GetAddressOf());
     }
 
-    void StructedBuffer::BindUAV(UINT slot)
+    void StructedBuffer::BindUAV()
     {
-        mUAVslot = slot;
         UINT i = -1; // 나중에 한번 확인 
-        GetDevice()->BindUnorderedAccess(slot, mUAV.GetAddressOf(), &i);
+        GetDevice()->BindUnorderedAccess(mUAVslot, mUAV.GetAddressOf(), &i);
     }
 
     void StructedBuffer::Clear()

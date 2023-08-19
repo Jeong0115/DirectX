@@ -31,15 +31,16 @@ namespace zz
         };
 
         Animator();
-        ~Animator();
+        virtual ~Animator();
 
-        virtual void Initialize();
-        virtual void Update();
-        virtual void LateUpdate();
-        virtual void Render();
+        virtual void Initialize()   override;
+        virtual void Update()       override;
+        virtual void LateUpdate()   override;
+        virtual void Render()       override;
 
         void Create(const std::wstring& name, std::shared_ptr<Texture> atlas, Vector2 leftTop
             , Vector2 size, UINT columnLength, Vector2 offset = Vector2::Zero, float duration = 0.1f);
+
         Animation* FindAnimation(const std::wstring& name);
         Events* FindEvents(const std::wstring& name);
         void PlayAnimation(const std::wstring& name, bool loop);

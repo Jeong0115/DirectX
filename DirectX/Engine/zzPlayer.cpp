@@ -11,6 +11,7 @@
 #include "zzMeshRenderer.h"
 #include "zzMaterial.h"
 #include "zzInventoryManager.h"
+#include "zzExplosion_128.h"
 
 namespace zz
 {
@@ -52,6 +53,12 @@ namespace zz
 
     void Player::Update()
     {
+        if (Input::GetKeyDown(eKeyCode::B))
+        {
+            Explosion_128* bomb = new Explosion_128();
+            bomb->GetComponent<Transform>()->SetPosition(Input::GetMouseWorldPos());
+            CreateObject(bomb, eLayerType::Effect);
+        }
         if (Input::GetKeyDown(eKeyCode::TAB))
         {
             InventoryManager::SetOpenOrCloseInventory();

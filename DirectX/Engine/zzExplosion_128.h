@@ -1,26 +1,22 @@
 #pragma once
 
-#include "zzAttackSpell.h"
+#include "zzGameObject.h"
 
 namespace zz
 {
-    class SparkBolt : public AttackSpell
+    class Explosion_128 : public GameObject
     {
     public:
-        SparkBolt();
-        ~SparkBolt();
+        Explosion_128();
+        ~Explosion_128();
 
         virtual void Initialize()   override;
         virtual void Update()       override;
         virtual void LateUpdate()   override;
         virtual void Render()       override;
 
+        void EndAnimation();
     private:
-        class ParticleSystem* particle;
-
-        double mT = 0.0;
-        float c = 0.0f;
-        Vector4 mPrevPos;
-        UINT mIndex = 0;
+        bool mbFirstFrame;
     };
 }

@@ -29,6 +29,13 @@ namespace zz
             float prevY;
 
         };
+
+        enum class RotateOption
+        {
+            Right90,
+            Right180,
+            Right270,
+        };
         PixelWorld();
         ~PixelWorld();
 
@@ -42,11 +49,15 @@ namespace zz
         static void RemoveEmptyChunks();
 
         static Element& GetElement(int x, int y) { 
-            return GetChunk(x, y)->GetElement(x, y); 
+            if (GetChunk(x, y) == nullptr)
+                return ROCK;
+            else
+                return GetChunk(x, y)->GetElement(x, y); 
         }
         static void SwapElement(int x, int y, const Element& element);
         static void SwapElement(int x, int y, int xto, int yto);
         static void InsertElement(int x, int y, const Element& element);
+        static void DeleteElement(int x, int y);
         static void MoveStaticElement(std::vector<Box2dWorld::StaticElementInfo>& elements);
         static void DeleteStaticElement(std::vector<Box2dWorld::StaticElementInfo>& elements, int index);
         static void SetStaticElements(std::vector<std::vector<Box2dWorld::StaticElementInfo>>* staticElements) { mStaticElements = staticElements; }
@@ -54,6 +65,7 @@ namespace zz
         static void CreateNewWorld();
         static void InsertElementFromImage(int y, int x, const cv::Mat& image);
         static uint32_t Vec3bToColor(const cv::Vec3b& vec3b);
+        static void RoatateImage(RotateOption option, cv::Mat& image);
 
         static void KeepAlive(int x, int y) { if (PixelChunk* chunk = GetChunk(x, y)) { chunk->KeepAlive(x, y); }}
 
@@ -66,6 +78,8 @@ namespace zz
         static std::vector<uint8_t>& GetPixelColor() { return mPixelColor; }
         static std::vector<PixelChunkMap*> mChunkMaps;
         static ThreadPool threadPool;
+
+        static uint16_t FrameCount;
     private:
         static PixelChunkMap* CreateChunkMap(std::pair<int, int> location);
 

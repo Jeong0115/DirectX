@@ -93,7 +93,7 @@ namespace zz
             for (int j = 0; j < 8; j += 2)
             {
                 if (mChunks[j * mXChunkCnt + i]->mElementCount == 0) continue;
-                PixelWorld::threadPool.enqueue([=]() {SimplePixelUpdater updater(mChunks[j * mXChunkCnt + i]); updater.UpdateChunk(); });
+                PixelWorld::threadPool.enqueue([=]() {mChunks[j * mXChunkCnt + i]->Update(); });
 
                 //SimplePixelUpdater(mChunks[j * mChunkWidth + i]).UpdateChunk();
 
@@ -115,7 +115,7 @@ namespace zz
             {
                 if (mChunks[j * mXChunkCnt + i]->mElementCount == 0) continue;
                 //SimplePixelUpdater(mChunks[j * mChunkWidth + i]).UpdateChunk();
-                PixelWorld::threadPool.enqueue([=]() {SimplePixelUpdater updater(mChunks[j * mXChunkCnt + i]); updater.UpdateChunk(); });
+                PixelWorld::threadPool.enqueue([=]() {mChunks[j * mXChunkCnt + i]->Update(); });
                 DebugMesh mesh = {};
                 mesh.temp = 1;
                 mesh.position = math::Vector3(mChunks[j * mXChunkCnt + i]->mStartX + 32, -mChunks[j * mXChunkCnt + i]->mStartY - 32, 0.01f);
@@ -132,7 +132,7 @@ namespace zz
             for (int j = 0; j < 8; j += 2)
             {
                 if (mChunks[j * mXChunkCnt + i]->mElementCount == 0) continue;
-                PixelWorld::threadPool.enqueue([=]() {SimplePixelUpdater updater(mChunks[j * mXChunkCnt + i]); updater.UpdateChunk(); });
+                PixelWorld::threadPool.enqueue([=]() {mChunks[j * mXChunkCnt + i]->Update(); });
                 DebugMesh mesh = {};
                 mesh.temp = 1;
                 mesh.position = math::Vector3(mChunks[j * mXChunkCnt + i]->mStartX + 32, -mChunks[j * mXChunkCnt + i]->mStartY - 32, 0.01f);
@@ -149,7 +149,7 @@ namespace zz
             for (int j = 1; j < 8; j += 2)
             {
                 if (mChunks[j * mXChunkCnt + i]->mElementCount == 0) continue;
-                PixelWorld::threadPool.enqueue([=]() {SimplePixelUpdater updater(mChunks[j * mXChunkCnt + i]); updater.UpdateChunk(); });
+                PixelWorld::threadPool.enqueue([=]() {mChunks[j * mXChunkCnt + i]->Update(); });
                 //SimplePixelUpdater(mChunks[j * mChunkWidth + i]).UpdateChunk();
                 DebugMesh mesh = {};
                 mesh.temp = 1;
@@ -168,7 +168,7 @@ namespace zz
             for (int j = 0; j < 8; j += 2)
             {
                 if (mChunks[j * mXChunkCnt + i]->mElementCount == 0) continue;
-                PixelWorld::threadPool.enqueue([=]() {mChunks[j * mXChunkCnt + i]->MoveElements(); });
+                //PixelWorld::threadPool.enqueue([=]() {mChunks[j * mXChunkCnt + i]->MoveElements(); });
                 //mChunks[j * mChunkWidth + i]->MoveElements();
             }
         }
@@ -180,7 +180,7 @@ namespace zz
             for (int j = 1; j < 8; j += 2)
             {
                 if (mChunks[j * mXChunkCnt + i]->mElementCount == 0) continue;
-                PixelWorld::threadPool.enqueue([=]() {mChunks[j * mXChunkCnt + i]->MoveElements(); });
+                //PixelWorld::threadPool.enqueue([=]() {mChunks[j * mXChunkCnt + i]->MoveElements(); });
                 //mChunks[j * mChunkWidth + i]->MoveElements();
             }
         }
@@ -192,7 +192,7 @@ namespace zz
             for (int j = 0; j < 8; j += 2)
             {
                 if (mChunks[j * mXChunkCnt + i]->mElementCount == 0) continue;
-                PixelWorld::threadPool.enqueue([=]() {mChunks[j * mXChunkCnt + i]->MoveElements(); });
+                //PixelWorld::threadPool.enqueue([=]() {mChunks[j * mXChunkCnt + i]->MoveElements(); });
                 //mChunks[j * mChunkWidth + i]->MoveElements();
             }
         }
@@ -205,7 +205,7 @@ namespace zz
             {
                 if (mChunks[j * mXChunkCnt + i]->mElementCount == 0) continue;
                 //mChunks[j * mChunkWidth + i]->MoveElements();
-                PixelWorld::threadPool.enqueue([=]() {mChunks[j * mXChunkCnt + i]->MoveElements(); });
+               // PixelWorld::threadPool.enqueue([=]() {mChunks[j * mXChunkCnt + i]->MoveElements(); });
             }
         }
     }

@@ -18,8 +18,8 @@ namespace zz
 
     void ParticleShader::Binds()
     {
-        mParticleBuffer->BindUAV(0);
-        mSharedBuffer->BindUAV(1);
+        mParticleBuffer->BindUAV();
+        mSharedBuffer->BindUAV();
 
         mGroupX = mParticleBuffer->GetStride() / mThreadGroupCountX + 1;
         mGroupY = 1;

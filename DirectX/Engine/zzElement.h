@@ -81,6 +81,11 @@ namespace zz
         std::wstring    Name = L"Empty";
         math::Vector2   Velocity = { 0.f, 0.f };
 
+        uint16_t ElementFrameCount = 0;
+
+        uint8_t MaxMove = 5;
+        uint8_t CurMove = 5;
+
         float x = 0;
         float y = 0;
     };

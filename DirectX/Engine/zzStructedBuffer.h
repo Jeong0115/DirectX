@@ -14,8 +14,11 @@ namespace zz
         bool CreateStagingBuffer();
         void SetData(void* data, UINT bufferCount);
         void GetData(void* data, UINT size);
-        void BindSRV(eShaderStage stage, UINT slot);
-        void BindUAV(UINT slot);
+        void BindSRV(eShaderStage stage);
+        void BindUAV();
+
+        void SetSRVSlot(UINT slot) { mSRVSlot = slot; }
+        void SetUAVSlot(UINT slot) { mUAVslot = slot; }
 
         void Clear();
 

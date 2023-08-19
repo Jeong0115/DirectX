@@ -2,6 +2,7 @@
 #include "zzAnimator.h"
 #include "zzTransform.h"
 #include "zzMeshRenderer.h"
+#include "zzMesh.h"
 #include "zzTexture.h"
 #include "zzMaterial.h"
 #include "zzResourceManager.h"
@@ -11,6 +12,7 @@
 namespace zz
 {
     SparkBolt::SparkBolt()
+        : mPrevPos(Vector4::Zero)
     {
     }
 
@@ -32,12 +34,19 @@ namespace zz
 
         GetComponent<Transform>()->SetScale(10.f, 10.f, 1.0f);
 
-        AddComponent<ParticleSystem>();
-            
+        particle = AddComponent<ParticleSystem>();
+        particle->SetMaterial(ResourceManager::Find<Material>(L"ParticleMaterial"));
+
+        std::shared_ptr<Mesh> mesh2 = ResourceManager::Find<Mesh>(L"PointMesh");
+        particle->SetMesh(mesh2);
+        particle->SetParticleShader(ResourceManager::Find<ParticleShader>(L"ParticleSystemShader"));
+
+        Particle particles[500] = {};
+        particle->CreateStructedBuffer(sizeof(Particle), 500, eViewType::UAV, particles, true, 0, 0);
+        particle->CreateStructedBuffer(sizeof(ParticleShared), 1, eViewType::UAV, nullptr, true, 1, 1);
+
         GameObject::Initialize();
     }
-
-    
 
     void SparkBolt::Update()
     {
@@ -45,47 +54,13 @@ namespace zz
 
         Transform* tr = GetComponent<Transform>();
         Vector3 prevPos = tr->GetPosition();
+        mPrevPos = Vector4(prevPos.x, prevPos.y, prevPos.z, 0.0f);
         Vector3 curPos;
         float angle = tr->GetRotation().z;
 
         curPos = prevPos + mDirection * 700.f * (float)Time::DeltaTime();
 
         tr->SetPosition(curPos);
-
-        //float moveX = curPos.x - prevPos.x;
-        //float moveY = curPos.y - prevPos.y;
-
-        //float count = max(fabs(moveX), fabs(moveY));
-
-        //for (int i = 0; i < count; i++)
-        //{
-        //    Vector3 vel = { random() , sin(c += 0.1f) / 1.7f, 0.f};
-
-        //    Vector3 calVel;
-        //    calVel.x = vel.x * cos(angle) - vel.y * sin(angle);
-        //    calVel.y = vel.x * sin(angle) + vel.y * cos(angle);
-
-        //    TempParticle* particle = new TempParticle();
-        //    particle->SetVelocity(calVel);
-        //    particle->SetLifeTime(random() / 10.f);
-        //    particle->GetComponent<Transform>()->SetPosition(prevPos);
-
-        //    CreateObject(particle, eLayerType::Particle);
-
-        //    prevPos.x += moveX / count;
-        //    prevPos.y += moveY / count;
-        //}
-        //
-        //if(random() >= 0.3f)
-        //{
-        //    Vector3 vel = { random() / 10.f , random() * (random() >= 0.5f ? 1 : -1), 0.f };
-        //    TempParticle* particle = new TempParticle();
-        //    particle->SetVelocity(vel);
-        //    particle->SetLifeTime(random());
-        //    particle->GetComponent<Transform>()->SetPosition(curPos);
-
-        //    CreateObject(particle, eLayerType::Particle);
-        //}
 
         if (mT >= 2.5f)
         {
@@ -96,6 +71,22 @@ namespace zz
 
     void SparkBolt::LateUpdate()
     {
+        Vector3 curPos = GetComponent<Transform>()->GetPosition();
+
+        ParticleShared shareData = {};
+        shareData.curPosition = Vector4((int)curPos.x, (int)curPos.y, (int)curPos.z, 0.0f);
+        shareData.distance = shareData.curPosition - mPrevPos;
+        shareData.distance.z = 0;
+        shareData.angle = GetComponent<Transform>()->GetRotation().z;
+        mPrevPos = shareData.curPosition;
+
+        UINT count = (UINT)std::max(fabs(shareData.distance.x), fabs(shareData.distance.y));
+        shareData.SetActiveCount = count;
+        shareData.RemainingActiveCount = count;
+        shareData.index = mIndex;
+        mIndex += count;
+        particle->SetStructedBufferData(&shareData, 1, 1);
+
         GameObject::LateUpdate();
     }
 

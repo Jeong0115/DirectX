@@ -256,9 +256,6 @@
     <Filter Include="Spell\Attack\SparkBolt">
       <UniqueIdentifier>{ac57409f-2c48-45c2-919d-8d56576def88}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Spell\Particle">
-      <UniqueIdentifier>{579539c4-70b1-46fd-85c9-8a81d912f362}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Manager\EventManager">
       <UniqueIdentifier>{73039cfa-c4d1-4ead-933e-1b975d52ea03}</UniqueIdentifier>
     </Filter>
@@ -279,6 +276,12 @@
     </Filter>
     <Filter Include="Resource\ComputeShader\ParticleShader">
       <UniqueIdentifier>{d6f30488-7940-4c90-82e6-fad2c417f2f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\GameObject\Effect">
+      <UniqueIdentifier>{d1109ae9-b9f9-4138-adf3-afc7e951ce56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\GameObject\Effect\Explosion">
+      <UniqueIdentifier>{cd57352f-637c-4440-b54c-0aa6c4dafec4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -494,9 +497,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)zzSparkBolt.cpp">
       <Filter>Spell\Attack\SparkBolt</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)zzParticle.cpp">
-      <Filter>Spell\Particle</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzEventManager.cpp">
       <Filter>Manager\EventManager</Filter>
     </ClCompile>
@@ -520,6 +520,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzParticleShader.cpp">
       <Filter>Resource\ComputeShader\ParticleShader</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzExplosion_128.cpp">
+      <Filter>Scene\GameObject\Effect\Explosion</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -765,9 +768,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzSparkBolt.h">
       <Filter>Spell\Attack\SparkBolt</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)zzParticle.h">
-      <Filter>Spell\Particle</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzEventManager.h">
       <Filter>Manager\EventManager</Filter>
     </ClInclude>
@@ -788,6 +788,9 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzParticleShader.h">
       <Filter>Resource\ComputeShader\ParticleShader</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzExplosion_128.h">
+      <Filter>Scene\GameObject\Effect\Explosion</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

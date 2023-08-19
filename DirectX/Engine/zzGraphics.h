@@ -17,6 +17,7 @@
 #define CBSLOT_ANIMATION2D		3
 #define CBSLOT_FLIP		        4
 #define CBSLOT_PARTICLE			5
+#define CBSLOT_NOISE			6
 
 namespace zz
 {
@@ -39,6 +40,7 @@ namespace zz
         Animator,
         Flip,
         Particle,
+        Noise,
         End,
     };
 
@@ -137,6 +139,32 @@ namespace zz
 
         float index;
         float angle;
+
+        UINT SetActiveCount;
+        UINT RemainingActiveCount;
+    };
+
+    struct ParticleAnimation
+    {
+        math::Vector4 position;
+        math::Vector4 velocity;
+
+        float imageRate;
+        float lifeTime;
+        float time;
+        float speed;
+
+        UINT active;
+        UINT animationIndex;
+    };
+
+    struct ParticleAnimationShared
+    {
+        math::Vector4 curPosition;
+        math::Vector4 gravity;
+
+        float maxAnimationCnt;
+        float durtaion;
 
         UINT SetActiveCount;
         UINT RemainingActiveCount;

@@ -23,6 +23,7 @@ namespace zz
         Monster,
         
         Object,
+        Effect,
         Particle,
         UI,
         End,

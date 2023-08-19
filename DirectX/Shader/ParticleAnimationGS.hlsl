@@ -17,7 +17,7 @@ struct GSOut
 [maxvertexcount(6)]
 void main(point VSOut In[1], inout TriangleStream<GSOut> output)
 {
-    if (particles[In[0].Instance].active == 0)
+    if (particlesAnimation[In[0].Instance].active == 0)
         return;
     
     GSOut Out[4] = { (GSOut) 0.0f, (GSOut) 0.0f, (GSOut) 0.0f, (GSOut) 0.0f };

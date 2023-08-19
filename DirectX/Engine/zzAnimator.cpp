@@ -40,6 +40,13 @@ namespace zz
 
             mActiveAnimation->Reset();
         }
+        else if (mActiveAnimation->IsComplete() && !mbLoop)
+        {
+            Events* events
+                = FindEvents(mActiveAnimation->GetKey());
+            if (events)
+                events->endEvent();
+        }
 
         mActiveAnimation->LateUpdate();
     }
@@ -75,14 +82,23 @@ namespace zz
         std::map<std::wstring, Animation*>::iterator iter = mAnimations.find(name);
 
         if (iter == mAnimations.end())
+        {
             return nullptr;
+        }
 
         return iter->second;
     }
 
     Animator::Events* Animator::FindEvents(const std::wstring& name)
     {
-        return nullptr;
+        std::map<std::wstring, Events*>::iterator iter = mEvents.find(name);
+
+        if (iter == mEvents.end())
+        {
+            return nullptr;
+        }
+
+        return iter->second;
     }
 
     void Animator::PlayAnimation(const std::wstring& name, bool loop)

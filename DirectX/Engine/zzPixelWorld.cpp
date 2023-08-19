@@ -34,7 +34,7 @@ namespace zz
     std::vector<PixelChunkMap*> PixelWorld::mChunkMaps = {};
     std::unordered_map<std::pair<int, int>, PixelChunkMap*, pair_hash> PixelWorld::mChunkMapLookUp = {};
     ThreadPool PixelWorld::threadPool(4);
-
+    uint16_t PixelWorld::FrameCount = 0;
     std::vector<std::vector<Box2dWorld::StaticElementInfo>>* PixelWorld::mStaticElements = {};
 
     PixelWorld::PixelWorld()
@@ -65,14 +65,6 @@ namespace zz
         mElementMap.insert({ 'e', {eElementType::EMPTY, eElementMove::NONE, (uint32_t)eElementColor::EMPTY, L"DeleteEmpty", math::Vector2(0.f, 0.f)} });
         mSelectElement = mElementMap.find('e')->second;
 
-
-        for (int i = 0; i <= 100; i++)
-        {
-            for (int j = 350; j <= 400; j++)
-            {
-                InsertElement(i, j, ROCK);
-            }
-        }
         CreateNewWorld();
         Box2dWorld::Initialize();
     } 
@@ -106,15 +98,16 @@ namespace zz
             };
             threadPool.wait();
         }
+        FrameCount++;
 
-        for (int i = 0; i < 4; i++)
-        {
-            for (PixelChunkMap* chunkMap : mChunkMaps)
-            {
-                chunkMap->MoveElementStep(i);
-            }
-            threadPool.wait();
-        }
+        //for (int i = 0; i < 4; i++)
+        //{
+        //    for (PixelChunkMap* chunkMap : mChunkMaps)
+        //    {
+        //        chunkMap->MoveElementStep(i);
+        //    }
+        //    threadPool.wait();
+        //}
 
         for (PixelChunkMap* chunkMap : mChunkMaps)
         {
@@ -122,9 +115,7 @@ namespace zz
         }
         threadPool.wait();
 
-        mImage->Update(mPixelColor, NULL, 0, 0);
-
-        
+        mImage->Update(mPixelColor, NULL, 0, 0);     
     }
 
     void PixelWorld::Release()
@@ -184,39 +175,39 @@ namespace zz
 
     void PixelWorld::SwapElement(int x, int y, const Element& element)
     {
-        if (PixelChunk* chunk = GetChunk(x, y))
+        /*if (PixelChunk* chunk = GetChunk(x, y))
         {
             chunk->SwapElement(x, y, element);
-        }
+        }*/
     }
 
 
     void PixelWorld::SwapElement(int x, int y, int xto, int yto)
     {
  
-        if (PixelChunk* src = GetChunk(x, y))
-        {
-            if (PixelChunk* dst = GetChunk(xto, yto))  // 수정예정
-            {
-                if (x == xto && y == yto) // 왜 이것땜에 모래가 물 으로 가라앉았다가 말까 할까...
-                {
-                    return;
-                }
-               
-                int pingX = 0, pingY = 0; 
+        //if (PixelChunk* src = GetChunk(x, y))
+        //{
+        //    if (PixelChunk* dst = GetChunk(xto, yto))  // 수정예정
+        //    {
+        //        if (x == xto && y == yto) // 왜 이것땜에 모래가 물 으로 가라앉았다가 말까 할까...
+        //        {
+        //            return;
+        //        }
+        //       
+        //        int pingX = 0, pingY = 0; 
 
-                if (x == src->mStartX)                           pingX = -1;
-                if (x == src->mStartX + src->mWidth - 1)      pingX = 1;
-                if (y == src->mStartY)                           pingY = -1;
-                if (y == src->mStartY + src->mHeight - 1)     pingY = 1;
+        //        if (x == src->mStartX)                           pingX = -1;
+        //        if (x == src->mStartX + src->mWidth - 1)      pingX = 1;
+        //        if (y == src->mStartY)                           pingY = -1;
+        //        if (y == src->mStartY + src->mHeight - 1)     pingY = 1;
 
-                if (pingX != 0)               PixelWorld::KeepAlive(x + pingX, y);
-                if (pingY != 0)               PixelWorld::KeepAlive(x, y + pingY);
-                if (pingX != 0 && pingY != 0) PixelWorld::KeepAlive(x + pingX, y + pingY);
+        //        if (pingX != 0)               PixelWorld::KeepAlive(x + pingX, y);
+        //        if (pingY != 0)               PixelWorld::KeepAlive(x, y + pingY);
+        //        if (pingX != 0 && pingY != 0) PixelWorld::KeepAlive(x + pingX, y + pingY);
 
-                dst->ResiterChanges(src, x, y, xto, yto);
-            }
-        }
+        //        dst->ResiterChanges(src, x, y, xto, yto);
+        //    }
+        //}
     }
 
     void PixelWorld::InsertElement(int x, int y, const Element& element)
@@ -224,6 +215,14 @@ namespace zz
         if (PixelChunk* chunk = GetChunk(x, y))
         {
             chunk->InsertElement(x, y, element);
+        }
+    }
+
+    void PixelWorld::DeleteElement(int x, int y)
+    {
+        if (PixelChunk* chunk = GetChunk(x, y))
+        {
+            chunk->InsertElement(x, y, EMPTY);
         }
     }
 
@@ -299,11 +298,33 @@ namespace zz
         cv::Mat edge_rock_alone = cv::imread("..\\Resources\\Texture\\Material\\edge\\edge_rock_alone.png", cv::IMREAD_COLOR);
         cv::cvtColor(edge_rock_alone, edge_rock_alone, cv::COLOR_BGR2RGB);
 
+        cv::Mat wood = cv::imread("..\\Resources\\Texture\\Material\\edge\\wood.png", cv::IMREAD_COLOR);
+        cv::cvtColor(wood, wood, cv::COLOR_BGR2RGB);
+
+        cv::Mat edge_wood_temp = cv::imread("..\\Resources\\Texture\\Material\\edge\\edge_wood_temp.png", cv::IMREAD_COLOR);
+        cv::cvtColor(edge_wood_temp, edge_wood_temp, cv::COLOR_BGR2RGB);
+
+        cv::Mat edge_wood_land = cv::imread("..\\Resources\\Texture\\Material\\edge\\edge_wood_land.png", cv::IMREAD_COLOR);
+        cv::cvtColor(edge_wood_land, edge_wood_land, cv::COLOR_BGR2RGB);
+
+        cv::Mat edge_wood_corner = cv::imread("..\\Resources\\Texture\\Material\\edge\\edge_wood_corner.png", cv::IMREAD_COLOR);
+        cv::cvtColor(edge_wood_corner, edge_wood_corner, cv::COLOR_BGR2RGB);
+
+        cv::Mat wood_vertical_temp = cv::imread("..\\Resources\\Texture\\Material\\edge\\wood_vertical_temp.png", cv::IMREAD_COLOR);
+        cv::cvtColor(wood_vertical_temp, wood_vertical_temp, cv::COLOR_BGR2RGB);
 
         cv::Scalar white(255, 255, 255);
 
         cv::Mat mask;
         cv::inRange(randTileImage, white, white, mask);
+
+        cv::Scalar color_wood(65, 63, 36);
+        cv::Scalar color_wood_vertical(65, 63, 58);
+
+        cv::Mat mask_wood;
+        cv::inRange(randTileImage, color_wood, color_wood_vertical, mask_wood);
+
+        mask = mask | mask_wood;
 
         std::bitset<4> surrounding;
 
@@ -516,6 +537,110 @@ namespace zz
                     }
 
                 }
+                else if (color == 0xFF413F24)
+                {
+                    for (int dir = 0; dir < 4; dir++)
+                    {
+                        if (j + dx[dir] >= 0 && j + dx[dir] < mask.cols && i + dy[dir] >= 0 && i + dy[dir] < mask.rows)
+                        {
+                            surrounding[dir] = (mask.at<uchar>(i + dy[dir], j + dx[dir]) > 0) ? 1 : 0;
+                        }
+                    }
+
+                    if (surrounding.count() >= 3)
+                    {
+                        int rand = randi(3);
+                        cv::Rect rect(rand * 10, 0, 10, 10);
+                        cv::Mat rotateImg;
+
+                        edge_wood_land(rect).copyTo(rotateImg);
+
+                        InsertElementFromImage(i, j, rotateImg);
+                    }
+                    if (surrounding.count() == 2)
+                    {
+                        int rand = 0;
+                        cv::Rect rect(rand * 10, 0, 10, 10);
+                        cv::Mat rotateImg;
+                        edge_wood_corner(rect).copyTo(rotateImg);
+
+                        if (surrounding[2] && surrounding[3])
+                        {
+                            cv::flip(rotateImg, rotateImg, 1);
+                        }
+                        else if (surrounding[3] && surrounding[0])
+                        {
+                            cv::flip(rotateImg, rotateImg, -1);
+                        }
+                        else if (surrounding[0] && surrounding[1])
+                        {
+                            cv::flip(rotateImg, rotateImg, 0);
+                        }
+                        else if (surrounding[1] && surrounding[2])
+                        {
+
+                        }
+                        else
+                        {
+                            edge_wood_land(rect).copyTo(rotateImg);
+                        }
+                        InsertElementFromImage(i, j, rotateImg);
+                    }
+                    else if(surrounding.count() == 1)
+                    {
+                        int rand = 0;
+                        cv::Rect rect(rand * 10, 0, 10, 10);
+                        cv::Mat rotateImg;
+                        edge_wood_temp(rect).copyTo(rotateImg);
+
+                        if (surrounding[3])
+                        {
+                            RoatateImage(RotateOption::Right90, rotateImg);
+                            cv::flip(rotateImg, rotateImg, 0);
+                        }
+                        else if (surrounding[0])
+                        {
+                            RoatateImage(RotateOption::Right180, rotateImg);
+                        }
+                        else if (surrounding[1])
+                        {
+                            RoatateImage(RotateOption::Right270, rotateImg);
+                        }
+
+                        InsertElementFromImage(i, j, rotateImg);
+                    }
+                    else
+                    {
+                        int rand = randi(3);
+                        cv::Rect rect(rand * 10, 0, 10, 10);
+                        cv::Mat rotateImg;
+
+                        wood(rect).copyTo(rotateImg);
+
+                        InsertElementFromImage(i, j, rotateImg);
+                    }
+                }
+                else if (color == 0xFF413f3A)
+                {
+                    for (int dir = 0; dir < 4; dir++)
+                    {
+                        if (j + dx[dir] >= 0 && j + dx[dir] < mask_wood.cols && i + dy[dir] >= 0 && i + dy[dir] < mask_wood.rows)
+                        {
+                            surrounding[dir] = (mask_wood.at<uchar>(i + dy[dir], j + dx[dir]) > 0) ? 1 : 0;
+                        }
+                    }
+
+                    if (true)
+                    {
+                        int rand = 0;
+                        cv::Rect rect(rand * 10, 0, 10, 10);
+                        cv::Mat rotateImg;
+
+                        wood_vertical_temp(rect).copyTo(rotateImg);
+
+                        InsertElementFromImage(i, j, rotateImg);
+                    }
+                }
                 else if (color == 0xFF2F554C)
                 {
                     
@@ -558,7 +683,7 @@ namespace zz
                 cv::Vec3b colorVec = image.at<cv::Vec3b>(i % 10, j % 10);
                 uint32_t color = Vec3bToColor(colorVec);
 
-                if (color != 0xFF000000) 
+                if (color != 0xFF000000 && color != 0xFFFFFFFF)
                 {
                     Element rock = ROCK;
                     rock.Color = color;
@@ -578,6 +703,30 @@ namespace zz
         return color;
     }
 
+    void PixelWorld::RoatateImage(RotateOption option, cv::Mat& image)
+    {
+        switch (option)
+        {
+        case RotateOption::Right90:
+        {
+            cv::transpose(image, image);
+            cv::flip(image, image, 1);
+            break;
+        }
+        case RotateOption::Right180:
+        {
+            cv::flip(image, image, -1);
+            break;
+        }
+        case RotateOption::Right270:
+        {
+            cv::transpose(image, image);
+            cv::flip(image, image, 0);
+            break;
+        }
+        default: break;
+        }
+    }
 
     bool PixelWorld::InBounds(int x, int y)
     {

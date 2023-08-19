@@ -52,6 +52,11 @@ namespace zz::renderer
         float deltaTime;
     };
 
+    CBUFFER(NoiseCB, CBSLOT_NOISE)
+    {
+        Vector4 textureSize;
+    };
+
     extern Vertex vertexes[];
     extern Vertex debugVertexes[];
     extern ConstantBuffer* constantBuffer[(UINT)eCBType::End];

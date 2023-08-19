@@ -12,14 +12,14 @@ struct VSOut
     float4 offset : POSITION;
     uint Instance : SV_InstanceID;
 };
-row_major float4x4 CreateWorldMatrix(float3 position1, float scale, float rotation);
+row_major float4x4 CreateWorldMatrix(float3 position1, float3 scale, float rotation);
 
 VSOut main(VSIn In)
-{  
+{
     VSOut Out = (VSOut) 0.0f;
      
-    row_major float4x4 worldViewProj 
-        = mul(mul(CreateWorldMatrix(particles[In.Instance].position.xyz, 10.0f, 0.0f), mView), mProjection);
+    row_major float4x4 worldViewProj
+        = mul(mul(CreateWorldMatrix(particlesAnimation[In.Instance].position.xyz, float3(16.0f, 16.0f, 1.0f), 0.0f), mView), mProjection);
 
     Out.CenterPos = mul(float4(In.CenterPos, 1.0f), worldViewProj);
     Out.offset = mul(float4(0.5f, 0.5f, 0.0f, 0.0f), worldViewProj);
@@ -28,13 +28,13 @@ VSOut main(VSIn In)
     return Out;
 }
 
-row_major float4x4 CreateWorldMatrix(float3 position1, float scale, float rotation)
+row_major float4x4 CreateWorldMatrix(float3 position1, float3 scale, float rotation)
 {
     row_major float4x4 scaleMatrix =
     {
-        scale, 0.0f, 0.0f, 0.0f,
-        0.0f, scale, 0.0f, 0.0f,
-        0.0f, 0.0f, scale, 0.0f,
+        scale.x, 0.0f, 0.0f, 0.0f,
+        0.0f, scale.y, 0.0f, 0.0f,
+        0.0f, 0.0f, scale.z, 0.0f,
         0.0f, 0.0f, 0.0f, 1.0f
     };
     

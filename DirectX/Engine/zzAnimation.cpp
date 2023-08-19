@@ -84,6 +84,7 @@ namespace zz
         cb->SetBufferData(&data);
 
         cb->BindConstantBuffer(eShaderStage::VS);
+
         cb->BindConstantBuffer(eShaderStage::PS);
     }
     void Animation::Reset()

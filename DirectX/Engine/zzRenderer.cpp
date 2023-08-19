@@ -23,8 +23,10 @@ namespace zz::renderer
     Microsoft::WRL::ComPtr<ID3D11BlendState> blendStates[(UINT)eBSType::End] = {};
 
     void LoadUIResource();
-    void LoadItemTextureResource();
+    void LoadWandTextureResource();
     void LoadSpellResource();
+    void LoadEffectResource();
+    void LoadParticleResource();
 
     void LoadBuffer()
     {
@@ -136,6 +138,9 @@ namespace zz::renderer
 
         constantBuffer[(UINT)eCBType::Particle] = new ConstantBuffer(eCBType::Particle);
         constantBuffer[(UINT)eCBType::Particle]->CreateConstantBuffer(sizeof(ParticleCB));
+
+        constantBuffer[(UINT)eCBType::Noise] = new ConstantBuffer(eCBType::Noise);
+        constantBuffer[(UINT)eCBType::Noise]->CreateConstantBuffer(sizeof(NoiseCB));
     }
     void LoadShader()
     {
@@ -170,11 +175,27 @@ namespace zz::renderer
         paritcleShader->SetTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
         ResourceManager::Insert(L"ParticleShader", paritcleShader);
 
+        std::shared_ptr<ParticleShader> psSystemAnimationShader = std::make_shared<ParticleShader>();
+        psSystemAnimationShader->Create(L"ParticleAnimationCS.hlsl", "main");
+        ResourceManager::Insert(L"ParticleSystemAnimationShader", psSystemAnimationShader);
+
+        std::shared_ptr<Shader> paritcleAnimationShader = std::make_shared<Shader>();
+        paritcleAnimationShader->CreateShader(eShaderStage::VS, L"ParticleAnimationVS.hlsl", "main");
+        paritcleAnimationShader->CreateShader(eShaderStage::GS, L"ParticleAnimationGS.hlsl", "main");
+        paritcleAnimationShader->CreateShader(eShaderStage::PS, L"ParticleAnimationPS.hlsl", "main");
+        paritcleAnimationShader->SetRSState(eRSType::SolidNone);
+        paritcleAnimationShader->SetDSState(eDSType::NoWrite);
+        paritcleAnimationShader->SetBSState(eBSType::AlphaBlend);
+        paritcleAnimationShader->SetTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
+        ResourceManager::Insert(L"ParticleAnimationShader", paritcleAnimationShader);
+
     }
     void LoadResource()
     {
+        LoadParticleResource();
         LoadUIResource();
-        LoadItemTextureResource();
+        LoadWandTextureResource();
+        LoadEffectResource();
         LoadSpellResource();
         std::shared_ptr<Shader> spriteShader = ResourceManager::Find<Shader>(L"SpriteShader");
 
@@ -407,8 +428,20 @@ namespace zz::renderer
         shader = ResourceManager::Find<Shader>(L"SpriteAnimationShader");
         GetDevice()->CreateInputLayout(arrLayout, 3, shader->GetVSCode(), shader->GetInputLayoutAddressOf());
 
+        D3D11_INPUT_ELEMENT_DESC particleLayout[1] = {};
+
+        particleLayout[0].AlignedByteOffset = 0;
+        particleLayout[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+        particleLayout[0].InputSlot = 0;
+        particleLayout[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+        particleLayout[0].SemanticName = "POSITION";
+        particleLayout[0].SemanticIndex = 0;
+
         shader = ResourceManager::Find<Shader>(L"ParticleShader");
-        GetDevice()->CreateInputLayout(arrLayout, 3, shader->GetVSCode(), shader->GetInputLayoutAddressOf());
+        GetDevice()->CreateInputLayout(particleLayout, 1, shader->GetVSCode(), shader->GetInputLayoutAddressOf());
+
+        shader = ResourceManager::Find<Shader>(L"ParticleAnimationShader");
+        GetDevice()->CreateInputLayout(particleLayout, 1, shader->GetVSCode(), shader->GetInputLayoutAddressOf());
     }
     void CreateSamplerState()
     {
@@ -525,6 +558,27 @@ namespace zz::renderer
 
     void Render()
     {
+        std::shared_ptr<Texture> texture
+            = ResourceManager::Find<Texture>(L"Noise01");
+
+        texture->BindShader(eShaderStage::VS, 1);
+        texture->BindShader(eShaderStage::HS, 1);
+        texture->BindShader(eShaderStage::DS, 1);
+        texture->BindShader(eShaderStage::GS, 1);
+        texture->BindShader(eShaderStage::PS, 1);
+        texture->BindShader(eShaderStage::CS, 1);
+
+        ConstantBuffer* cb = constantBuffer[(UINT)eCBType::Noise];
+        NoiseCB data = {};
+        data.textureSize.x = texture->GetImageWidth();
+        data.textureSize.y = texture->GetImageHeight();
+
+        cb->SetBufferData(&data);
+        cb->BindConstantBuffer(eShaderStage::VS);
+        cb->BindConstantBuffer(eShaderStage::GS);
+        cb->BindConstantBuffer(eShaderStage::PS);
+        cb->BindConstantBuffer(eShaderStage::CS);
+
         for (Camera* camera : cameras)
         {
             if (camera == nullptr) continue;
@@ -581,7 +635,7 @@ namespace zz::renderer
         ResourceManager::Insert(L"m_info_box", material);
     }
 
-    void LoadItemTextureResource()
+    void LoadWandTextureResource()
     {
         std::shared_ptr<Shader> spriteShader = ResourceManager::Find<Shader>(L"SpriteShader");
         std::shared_ptr<Material> material;
@@ -621,6 +675,30 @@ namespace zz::renderer
         ResourceManager::Insert(L"ParticleMaterial", material);
 
 
+    }
+
+    void LoadEffectResource()
+    {
+        std::shared_ptr<Shader> spriteShader = ResourceManager::Find<Shader>(L"SpriteShader");
+        std::shared_ptr<Material> material;
+
+        ResourceManager::Load<Texture>(L"explosion_128", L"..\\Resources\\Texture\\Effect\\explosion_128.png");
+        ResourceManager::Load<Texture>(L"explosion_128_poof", L"..\\Resources\\Texture\\Effect\\explosion_128_poof.png");
+    }
+
+    void LoadParticleResource()
+    {
+        std::shared_ptr<Shader> spriteShader = ResourceManager::Find<Shader>(L"SpriteShader");
+        std::shared_ptr<Shader> ParticleAnimationShader = ResourceManager::Find<Shader>(L"ParticleAnimationShader");
+        std::shared_ptr<Material> material;
+
+        ResourceManager::Load<Texture>(L"Noise01", L"..\\Resources\\noise\\noise_01.png");
+
+        std::shared_ptr<Texture> fire_falling = ResourceManager::Load<Texture>(L"fire_falling", L"..\\Resources\\Texture\\Particle\\fire_falling.png");
+        material = std::make_shared<Material>();
+        material->SetShader(ParticleAnimationShader);
+        material->SetTexture(fire_falling);
+        ResourceManager::Insert(L"m_fire_falling", material);
     }
 }
 

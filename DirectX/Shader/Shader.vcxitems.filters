@@ -7,11 +7,11 @@
     <Filter Include="PS">
       <UniqueIdentifier>{c80fcfb2-d5d7-4c02-a9dc-2437bed6efab}</UniqueIdentifier>
     </Filter>
-    <Filter Include="CS">
-      <UniqueIdentifier>{dbfa27d8-8246-4f8f-9c3d-598d19ff77a7}</UniqueIdentifier>
+    <Filter Include="ParticleAnimation">
+      <UniqueIdentifier>{b277a1b9-8411-4dd9-a69a-15abf8ee9884}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GS">
-      <UniqueIdentifier>{0c225709-fa76-4bc2-85cf-50b11d647d1b}</UniqueIdentifier>
+    <Filter Include="Particle">
+      <UniqueIdentifier>{7f71d6a9-1991-4b52-807c-7772f2519243}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -33,17 +33,29 @@
     <FxCompile Include="$(MSBuildThisFileDirectory)SpriteAnimationPS.hlsl">
       <Filter>PS</Filter>
     </FxCompile>
-    <FxCompile Include="$(MSBuildThisFileDirectory)ParticleGS.hlsl">
-      <Filter>GS</Filter>
+    <FxCompile Include="$(MSBuildThisFileDirectory)ParticleAnimationCS.hlsl">
+      <Filter>ParticleAnimation</Filter>
     </FxCompile>
-    <FxCompile Include="$(MSBuildThisFileDirectory)ParticleVS.hlsl">
-      <Filter>VS</Filter>
+    <FxCompile Include="$(MSBuildThisFileDirectory)ParticleAnimationGS.hlsl">
+      <Filter>ParticleAnimation</Filter>
     </FxCompile>
-    <FxCompile Include="$(MSBuildThisFileDirectory)ParticleCS.hlsl">
-      <Filter>CS</Filter>
+    <FxCompile Include="$(MSBuildThisFileDirectory)ParticleAnimationVS.hlsl">
+      <Filter>ParticleAnimation</Filter>
+    </FxCompile>
+    <FxCompile Include="$(MSBuildThisFileDirectory)ParticleAnimationPS.hlsl">
+      <Filter>ParticleAnimation</Filter>
     </FxCompile>
     <FxCompile Include="$(MSBuildThisFileDirectory)ParticlePS.hlsl">
-      <Filter>PS</Filter>
+      <Filter>Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="$(MSBuildThisFileDirectory)ParticleCS.hlsl">
+      <Filter>Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="$(MSBuildThisFileDirectory)ParticleGS.hlsl">
+      <Filter>Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="$(MSBuildThisFileDirectory)ParticleVS.hlsl">
+      <Filter>Particle</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
