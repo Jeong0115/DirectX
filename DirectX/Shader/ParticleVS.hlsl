@@ -1,4 +1,5 @@
 #include "Common.hlsli"
+#include "Particle.hlsli"
 
 struct VSIn
 {
@@ -12,14 +13,15 @@ struct VSOut
     float4 offset : POSITION;
     uint Instance : SV_InstanceID;
 };
-row_major float4x4 CreateWorldMatrix(float3 position1, float scale, float rotation);
+row_major float4x4 CreateWorldMatrix(float4 position, float4 scale, float rotation);
 
 VSOut main(VSIn In)
 {  
     VSOut Out = (VSOut) 0.0f;
-     
+    Particle particle = particles[In.Instance];
+    
     row_major float4x4 worldViewProj 
-        = mul(mul(CreateWorldMatrix(particles[In.Instance].position.xyz, 10.0f, 0.0f), mView), mProjection);
+        = mul(mul(CreateWorldMatrix(particle.position, particle.scale, 0.0f), mView), mProjection);
 
     Out.CenterPos = mul(float4(In.CenterPos, 1.0f), worldViewProj);
     Out.offset = mul(float4(0.5f, 0.5f, 0.0f, 0.0f), worldViewProj);
@@ -28,13 +30,13 @@ VSOut main(VSIn In)
     return Out;
 }
 
-row_major float4x4 CreateWorldMatrix(float3 position1, float scale, float rotation)
+row_major float4x4 CreateWorldMatrix(float4 position, float4 scale, float rotation)
 {
     row_major float4x4 scaleMatrix =
     {
-        scale, 0.0f, 0.0f, 0.0f,
-        0.0f, scale, 0.0f, 0.0f,
-        0.0f, 0.0f, scale, 0.0f,
+        scale.x, 0.0f, 0.0f, 0.0f,
+        0.0f, scale.y, 0.0f, 0.0f,
+        0.0f, 0.0f, scale.z, 0.0f,
         0.0f, 0.0f, 0.0f, 1.0f
     };
     
@@ -54,7 +56,7 @@ row_major float4x4 CreateWorldMatrix(float3 position1, float scale, float rotati
         1.0f, 0.0f, 0.0f, 0.0f,
         0.0f, 1.0f, 0.0f, 0.0f,
         0.0f, 0.0f, 1.0f, 0.0f,
-        position1.x, position1.y, position1.z, 1.0f
+        position.x, position.y, position.z, 1.0f
     };
 
     return mul(mul(scaleMatrix, rotationMatrix), translationMatrix);

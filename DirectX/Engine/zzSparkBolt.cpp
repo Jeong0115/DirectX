@@ -34,16 +34,14 @@ namespace zz
 
         GetComponent<Transform>()->SetScale(10.f, 10.f, 1.0f);
 
-        particle = AddComponent<ParticleSystem>();
-        particle->SetMaterial(ResourceManager::Find<Material>(L"ParticleMaterial"));
-
-        std::shared_ptr<Mesh> mesh2 = ResourceManager::Find<Mesh>(L"PointMesh");
-        particle->SetMesh(mesh2);
-        particle->SetParticleShader(ResourceManager::Find<ParticleShader>(L"ParticleSystemShader"));
+        mParticle = AddComponent<ParticleSystem>();
+        mParticle->SetMaterial(ResourceManager::Find<Material>(L"ParticleMaterial"));
+        mParticle->SetMesh(ResourceManager::Find<Mesh>(L"PointMesh"));
+        mParticle->SetParticleShader(ResourceManager::Find<ParticleShader>(L"ParticleSystemShader"));
 
         Particle particles[500] = {};
-        particle->CreateStructedBuffer(sizeof(Particle), 500, eViewType::UAV, particles, true, 0, 0);
-        particle->CreateStructedBuffer(sizeof(ParticleShared), 1, eViewType::UAV, nullptr, true, 1, 1);
+        mParticle->CreateStructedBuffer(sizeof(Particle), 500, eViewType::UAV, particles, true, 0, 14, 0);
+        mParticle->CreateStructedBuffer(sizeof(ParticleShared), 1, eViewType::UAV, nullptr, true, 1, 14, 1);
 
         GameObject::Initialize();
     }
@@ -85,7 +83,7 @@ namespace zz
         shareData.RemainingActiveCount = count;
         shareData.index = mIndex;
         mIndex += count;
-        particle->SetStructedBufferData(&shareData, 1, 1);
+        mParticle->SetStructedBufferData(&shareData, 1, 1);
 
         GameObject::LateUpdate();
     }

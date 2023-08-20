@@ -22,6 +22,16 @@ namespace zz
         return distr(i_gen);
     }
 
+    std::random_device f_rd;
+    std::mt19937 f_gen(f_rd());
+
+    // [0.0f, max)
+    __forceinline float randf(float max)
+    {
+        std::uniform_real_distribution<float> distr(0, max);
+        return distr(f_gen);
+    }
+
     uint32_t emptyColor = 0x00000000;
     uint32_t whiteColor = 0xFFFFFFFF;
 

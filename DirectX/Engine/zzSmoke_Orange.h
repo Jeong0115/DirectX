@@ -4,21 +4,19 @@
 
 namespace zz
 {
-    class Explosion_128 : public GameObject
+    class Smoke_Orange : public GameObject
     {
     public:
-        Explosion_128();
-        virtual ~Explosion_128();
+        Smoke_Orange();
+        virtual ~Smoke_Orange();
 
         virtual void Initialize()   override;
         virtual void Update()       override;
         virtual void LateUpdate()   override;
         virtual void Render()       override;
 
-        void EndAnimation();
     private:
-        bool mbFirstFrame;
-
-        class ParticleSystem* mParticle;
+        float mTime;
     };
 }
+

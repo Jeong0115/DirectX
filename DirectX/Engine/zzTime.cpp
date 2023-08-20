@@ -38,8 +38,8 @@ namespace zz
 		}
 
 #ifdef _DEBUG
-		if (mDeltaTime > (1. / 100.))
-			mDeltaTime = (1. / 100.);
+		//if (mDeltaTime > (1. / 30.))
+		//	mDeltaTime = (1. / 30.);
 #endif
 
 	}

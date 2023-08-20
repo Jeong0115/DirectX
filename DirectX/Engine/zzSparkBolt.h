@@ -16,7 +16,7 @@ namespace zz
         virtual void Render()       override;
 
     private:
-        class ParticleSystem* particle;
+        class ParticleSystem* mParticle;
 
         double mT = 0.0;
         float c = 0.0f;

@@ -7,6 +7,7 @@ namespace zz
 {
     GameObject::GameObject()
         : mState(eState::Active)
+        , mbActive(true)
     {
         AddComponent<Transform>();
     }

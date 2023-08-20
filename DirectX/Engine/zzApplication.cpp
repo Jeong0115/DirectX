@@ -7,6 +7,7 @@
 #include "zzPixelWorld.h"
 #include "zzInventoryManager.h"
 #include "zzEventManager.h"
+#include "zzObjectPoolManager.h"
 
 namespace zz
 {	
@@ -52,6 +53,7 @@ namespace zz
         renderer::Initialize();
         InventoryManager::Initialize();
         SceneManager::Initialize();
+        ObjectPoolManager::Initialize();
 	}
 
 	void Application::Update()
@@ -87,6 +89,8 @@ namespace zz
 
     void Application::Release()
     {
+        ObjectPoolManager::Release();
+
         SceneManager::Release();
         InventoryManager::Release();
         //graphicDevice.release();

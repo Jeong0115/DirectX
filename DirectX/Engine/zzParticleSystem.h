@@ -17,7 +17,7 @@ namespace zz
         virtual void LateUpdate()   override;
         virtual void Render()       override;
 
-        void CreateStructedBuffer(UINT size, UINT stride, eViewType type, void* data, bool isStaging, UINT uavSlot, int tempType);
+        void CreateStructedBuffer(UINT size, UINT stride, eViewType type, void* data, bool isStaging, UINT uavSlot, UINT srvSlot, int tempType);
         void SetStructedBufferData(void* data, UINT bufferCount, int tempType);
         void SetParticleShader(std::shared_ptr<ParticleShader> shader) { mCS = shader; }
 

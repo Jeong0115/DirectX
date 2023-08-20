@@ -26,8 +26,11 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)zzItemTexture.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzItemTextureHighlight.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzMouse.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzObjectPoolManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzParticleShader.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzParticleSystem.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzRigidBody.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzSmoke_Orange.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzSparkBolt.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzSpell.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzStructedBuffer.cpp" />
@@ -116,8 +119,11 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzItemTexture.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzItemTextureHighlight.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzMouse.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzObjectPoolManager.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzParticleShader.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzParticleSystem.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzRigidBody.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzSmoke_Orange.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzSparkBolt.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzSpell.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzStructedBuffer.h" />

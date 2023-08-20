@@ -1,4 +1,5 @@
 #include "Common.hlsli"
+#include "Particle.hlsli"
 
 RWStructuredBuffer<ParticleAnimation> ParticleBuffer : register(u2);
 RWStructuredBuffer<ParticleAnimationShared> SharedBuffer : register(u3);
@@ -66,17 +67,18 @@ void main(uint3 DTid : SV_DispatchThreadID)
             
             float2 vel = float2(0.0f, random.x * 10.f);
             
-            particle.position.x += random.y * 30.f * (random.w > 0 ? 1 : -1);
+            particle.position.x += random.y * 30.f * (random.w > 0.5f ? 1 : -1);
             particle.position.y += random.z * 30.f;
             
             particle.velocity.x = 0.0f;
             particle.velocity.y = 100.f;
             
             particle.active = 1;
-            particle.lifeTime = 2.0f;
+            particle.lifeTime = 10.0f;
             particle.time = 0.0f;
             particle.speed = 1.0f;
             particle.index = 0.0f;
+            particle.scale = float4(16.0f, 16.0f, 1.0f, 0.0f);
             
             ParticleBuffer[DTid.x] = particle;
         }

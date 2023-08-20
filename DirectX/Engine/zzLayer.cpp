@@ -16,6 +16,7 @@ namespace zz
             delete gameObject;
             gameObject = nullptr;
         }
+        int c = 0;
     }
 
     void Layer::Initialize()
@@ -30,7 +31,10 @@ namespace zz
     {
         for (GameObject* gameObject : mGameObjects)
         {
-            gameObject->Update();
+            if (gameObject->GetActive())
+            {
+                gameObject->Update();
+            }
         }
     }
 
@@ -38,7 +42,10 @@ namespace zz
     {
         for (GameObject* gameObject : mGameObjects)
         {
-            gameObject->LateUpdate();
+            if (gameObject->GetActive())
+            {
+                gameObject->LateUpdate();
+            }
         }
     }
 
@@ -52,7 +59,7 @@ namespace zz
             {
                 iter = mGameObjects.erase(iter);
             }
-            else
+            else if ((*iter)->GetActive())
             {
                 (*iter)->Render();
                 iter++;

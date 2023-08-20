@@ -88,31 +88,37 @@ namespace zz
                         iter = gameObjs.erase(iter);
                         continue;
                     }
+                    else if ((*iter)->GetActive())
+                    {
+                        MeshRenderer* mr = (*iter)->GetComponent<MeshRenderer>();
+                        if (mr == nullptr)
+                        {
+                            iter++;
+                            continue;
+                        }
 
-                    MeshRenderer* mr = (*iter)->GetComponent<MeshRenderer>();
-                    if (mr == nullptr)
+                        std::shared_ptr<Material> mt = mr->GetMaterial();
+                        eRenderingMode mode = mt->GetRenderingMode();
+                        switch (mode)
+                        {
+                        case eRenderingMode::Opaque:
+                            mOpaqueGameObjects.push_back((*iter));
+                            break;
+                        case eRenderingMode::CutOut:
+                            mCutOutGameObjects.push_back((*iter));
+                            break;
+                        case eRenderingMode::Transparent:
+                            mTransparentGameObjects.push_back((*iter));
+                            break;
+                        default:
+                            break;
+                        }
+                        iter++;
+                    }
+                    else
                     {
                         iter++;
-                        continue;
                     }
-
-                    std::shared_ptr<Material> mt = mr->GetMaterial();
-                    eRenderingMode mode = mt->GetRenderingMode();
-                    switch (mode)
-                    {
-                    case eRenderingMode::Opaque:
-                        mOpaqueGameObjects.push_back((*iter));
-                        break;
-                    case eRenderingMode::CutOut:
-                        mCutOutGameObjects.push_back((*iter));
-                        break;
-                    case eRenderingMode::Transparent:
-                        mTransparentGameObjects.push_back((*iter));
-                        break;
-                    default:
-                        break;
-                    }
-                    iter++;
                 }
             }
         }

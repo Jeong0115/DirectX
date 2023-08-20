@@ -692,13 +692,19 @@ namespace zz::renderer
         std::shared_ptr<Shader> ParticleAnimationShader = ResourceManager::Find<Shader>(L"ParticleAnimationShader");
         std::shared_ptr<Material> material;
 
-        ResourceManager::Load<Texture>(L"Noise01", L"..\\Resources\\noise\\noise_01.png");
+        ResourceManager::Load<Texture>(L"Noise01", L"..\\Resources\\Texture\\noise_01.png");
 
         std::shared_ptr<Texture> fire_falling = ResourceManager::Load<Texture>(L"fire_falling", L"..\\Resources\\Texture\\Particle\\fire_falling.png");
         material = std::make_shared<Material>();
         material->SetShader(ParticleAnimationShader);
         material->SetTexture(fire_falling);
         ResourceManager::Insert(L"m_fire_falling", material);
+
+        std::shared_ptr<Texture> smoke_orange = ResourceManager::Load<Texture>(L"smoke_orange", L"..\\Resources\\Texture\\Particle\\smoke_orange.png");
+        material = std::make_shared<Material>();
+        material->SetShader(ParticleAnimationShader);
+        material->SetTexture(smoke_orange);
+        ResourceManager::Insert(L"m_smoke_orange", material);
     }
 }
 

@@ -1,4 +1,5 @@
 #include "Common.hlsli"
+#include "Particle.hlsli"
 
 RWStructuredBuffer<Particle> ParticleBuffer : register(u0);
 RWStructuredBuffer<Projectile> ProjectileBuffer : register(u1);
@@ -49,6 +50,7 @@ void main(uint3 DTid : SV_DispatchThreadID)
             particle.active = 1;
             particle.lifeTime = 0.7f;
             particle.speed = 5.0f;
+            particle.scale = float4(1.0f, 1.0f, 1.0f, 0.0f);
             
             ParticleBuffer[DTid.x] = particle;
         }

@@ -41,7 +41,6 @@ namespace zz
         renderer::ParticleCB data = {};
         data.elementCount = mParticleBuffer->GetStride();
         data.deltaTime = (float)Time::DeltaTime();
-
         cb->SetBufferData(&data);
         cb->BindConstantBuffer(eShaderStage::CS);
     }

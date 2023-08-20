@@ -6,6 +6,7 @@ namespace zz
     {
         None,
         Transform,
+        RigidBody,
         Particle,
         MeshRenderer,
         Script,

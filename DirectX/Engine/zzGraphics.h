@@ -124,6 +124,7 @@ namespace zz
     {
         math::Vector4 position;
         math::Vector4 velocity;
+        math::Vector4 scale;
 
         float lifeTime;
         float time;
@@ -148,6 +149,7 @@ namespace zz
     {
         math::Vector4 position;
         math::Vector4 velocity;
+        math::Vector4 scale;
 
         float imageRate;
         float lifeTime;

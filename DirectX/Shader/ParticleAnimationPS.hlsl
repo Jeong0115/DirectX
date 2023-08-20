@@ -1,4 +1,5 @@
 #include "Common.hlsli"
+#include "Particle.hlsli"
 
 struct GSOut
 {

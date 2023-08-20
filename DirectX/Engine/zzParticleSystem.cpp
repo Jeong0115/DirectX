@@ -85,14 +85,14 @@ namespace zz
         mBuffer->Clear();
     }
 
-    void ParticleSystem::CreateStructedBuffer(UINT size, UINT stride, eViewType type, void* data, bool isStaging, UINT uavSlot, int tempType)
+    void ParticleSystem::CreateStructedBuffer(UINT size, UINT stride, eViewType type, void* data, bool isStaging, UINT uavSlot, UINT srvSlot, int tempType)
     {
         if(tempType == 0)
         {
             mBuffer = new StructedBuffer();
             mBuffer->Create(size, stride, eViewType::UAV, data, true);
             mBuffer->SetUAVSlot(uavSlot);
-            mBuffer->SetSRVSlot(14);
+            mBuffer->SetSRVSlot(srvSlot);
         }
         else if (tempType == 1)
         {

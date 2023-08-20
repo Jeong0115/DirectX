@@ -283,6 +283,15 @@
     <Filter Include="Scene\GameObject\Effect\Explosion">
       <UniqueIdentifier>{cd57352f-637c-4440-b54c-0aa6c4dafec4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scene\GameObject\Effect\Smoke_Orange">
+      <UniqueIdentifier>{712eea2f-e28a-4186-812a-4ddacec486aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Component\RigidBody">
+      <UniqueIdentifier>{1944a4c2-ff10-4f56-a76e-26771cbf458a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Manager\ObjectPoolManager">
+      <UniqueIdentifier>{cea95f48-5eda-412e-b72e-5e3f9899c803}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzEntity.cpp">
@@ -524,6 +533,13 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)zzExplosion_128.cpp">
       <Filter>Scene\GameObject\Effect\Explosion</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzSmoke_Orange.cpp">
+      <Filter>Scene\GameObject\Effect\Smoke_Orange</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzRigidBody.cpp">
+      <Filter>Scene\Component\RigidBody</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzObjectPoolManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzEntity.h">
@@ -792,5 +808,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzExplosion_128.h">
       <Filter>Scene\GameObject\Effect\Explosion</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzSmoke_Orange.h">
+      <Filter>Scene\GameObject\Effect\Smoke_Orange</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzRigidBody.h">
+      <Filter>Scene\Component\RigidBody</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzObjectPoolManager.h" />
   </ItemGroup>
 </Project>

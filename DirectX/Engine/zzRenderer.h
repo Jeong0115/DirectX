@@ -50,6 +50,7 @@ namespace zz::renderer
     {
         UINT elementCount;
         float deltaTime;
+        //float elapsedTime;
     };
 
     CBUFFER(NoiseCB, CBSLOT_NOISE)

@@ -63,5 +63,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)Common.hlsli" />
+    <None Include="$(MSBuildThisFileDirectory)Particle.hlsli" />
   </ItemGroup>
 </Project>
