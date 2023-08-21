@@ -539,7 +539,9 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)zzRigidBody.cpp">
       <Filter>Scene\Component\RigidBody</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)zzObjectPoolManager.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzObjectPoolManager.cpp">
+      <Filter>Manager\ObjectPoolManager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzEntity.h">
@@ -814,6 +816,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzRigidBody.h">
       <Filter>Scene\Component\RigidBody</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)zzObjectPoolManager.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzObjectPoolManager.h">
+      <Filter>Manager\ObjectPoolManager</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

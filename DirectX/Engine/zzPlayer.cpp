@@ -21,11 +21,17 @@ namespace zz
         , mAnimator(nullptr)
         , vel(0.f)
         , mEquipmentInitialPos(Vector3::Zero)
+        , mPlayerArm(nullptr)
     {
     }
 
     Player::~Player()
     {
+        if (mPlayerArm != nullptr)
+        {
+            delete mPlayerArm;
+            mPlayerArm = nullptr;
+        }
     }
 
     void Player::Initialize()

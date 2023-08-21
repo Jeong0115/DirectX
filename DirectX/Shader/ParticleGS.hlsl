@@ -5,12 +5,14 @@ struct VSOut
 {
     float4 CenterPos : SV_Position;
     float4 offset : POSITION;
+    float4 Color : COLOR;
     uint Instance : SV_InstanceID;
 };
 
 struct GSOut
 {
     float4 Pos : SV_Position;
+    float4 Color : COLOR;
     float2 UV : TEXCOORD;
     uint Instance : SV_InstanceID;
 };
@@ -37,6 +39,11 @@ void main(point VSOut In[1], inout TriangleStream<GSOut> output)
     Out[1].Instance = In[0].Instance;
     Out[2].Instance = In[0].Instance;
     Out[3].Instance = In[0].Instance;
+    
+    Out[0].Color = In[0].Color;
+    Out[1].Color = In[0].Color;
+    Out[2].Color = In[0].Color;
+    Out[3].Color = In[0].Color;
     
     output.Append(Out[0]);
     output.Append(Out[1]);

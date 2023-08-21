@@ -14,10 +14,12 @@ namespace zz
     SparkBolt::SparkBolt()
         : mPrevPos(Vector4::Zero)
     {
+        int a = 0;
     }
 
     SparkBolt::~SparkBolt()
     {
+        int a = 0;
     }
 
     void SparkBolt::Initialize()
@@ -26,7 +28,7 @@ namespace zz
         mesh->SetMaterial(ResourceManager::Find<Material>(L"m_SpriteAnimation"));
         mesh->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
 
-        std::shared_ptr<Texture> texture = ResourceManager::Load<Texture>(L"SparkBolt");
+        std::shared_ptr<Texture> texture = ResourceManager::Find<Texture>(L"SparkBolt");
 
         Animator* ani = AddComponent<Animator>();
         ani->Create(L"SparkBolt_Idle", texture, Vector2(0.0f, 1.0f), Vector2(10.0f, 10.0f), 2, Vector2::Zero, 0.2f);
@@ -54,8 +56,6 @@ namespace zz
         Vector3 prevPos = tr->GetPosition();
         mPrevPos = Vector4(prevPos.x, prevPos.y, prevPos.z, 0.0f);
         Vector3 curPos;
-        float angle = tr->GetRotation().z;
-
         curPos = prevPos + mDirection * 700.f * (float)Time::DeltaTime();
 
         tr->SetPosition(curPos);

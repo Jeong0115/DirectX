@@ -10,6 +10,7 @@
 #include <deque>
 #include <condition_variable>
 #include <type_traits>
+#include <Windows.h>
 
 namespace zz
 {
@@ -27,7 +28,9 @@ namespace zz
         ThreadPool(size_t threads) : stop(false), active(0) {
             for (size_t i = 0; i < threads; ++i) {
                 workers.emplace_back(
-                    [this] {
+                    [this/*, i*/] {
+                        //DWORD_PTR mask = 1ULL << i;
+                        //SetThreadAffinityMask(GetCurrentThread(), mask);
                         for (;;) {
                             std::function<void()> task;
                             {

@@ -33,7 +33,7 @@ namespace zz
 
     std::vector<PixelChunkMap*> PixelWorld::mChunkMaps = {};
     std::unordered_map<std::pair<int, int>, PixelChunkMap*, pair_hash> PixelWorld::mChunkMapLookUp = {};
-    ThreadPool PixelWorld::threadPool(4);
+    ThreadPool PixelWorld::threadPool(1);
     uint16_t PixelWorld::FrameCount = 0;
     std::vector<std::vector<Box2dWorld::StaticElementInfo>>* PixelWorld::mStaticElements = {};
 
@@ -44,6 +44,7 @@ namespace zz
 
     PixelWorld::~PixelWorld()
     {
+        int c = 0;
     }
 
     void PixelWorld::Initialize()

@@ -51,8 +51,7 @@ namespace zz
         for (const DebugMesh& mesh : renderer::debugMeshs)
         {
             DebugRender(mesh);
-        }
-        
+        }       
     }
 
     void Editor::Release()

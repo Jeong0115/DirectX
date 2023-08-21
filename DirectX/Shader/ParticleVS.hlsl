@@ -11,6 +11,7 @@ struct VSOut
 {
     float4 CenterPos : SV_Position;
     float4 offset : POSITION;
+    float4 Color : COLOR;
     uint Instance : SV_InstanceID;
 };
 row_major float4x4 CreateWorldMatrix(float4 position, float4 scale, float rotation);
@@ -25,6 +26,7 @@ VSOut main(VSIn In)
 
     Out.CenterPos = mul(float4(In.CenterPos, 1.0f), worldViewProj);
     Out.offset = mul(float4(0.5f, 0.5f, 0.0f, 0.0f), worldViewProj);
+    Out.Color = particle.color;
     Out.Instance = In.Instance;
     
     return Out;

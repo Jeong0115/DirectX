@@ -34,6 +34,7 @@ namespace zz
     PixelChunk::~PixelChunk()
     {
         delete[] mElements;
+        mElements = nullptr;
     }
 
 

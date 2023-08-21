@@ -23,7 +23,7 @@ namespace zz
 	Application::~Application()
 	{
         //graphicDevice.release();
-
+        
         //ID3D11Debug* debugDevice = nullptr;
         ////graphics::GetDevice()->GetD3D11Device()->QueryInterface(__uuidof(ID3D11Debug), reinterpret_cast<void**>(&debugDevice));
 
@@ -48,7 +48,6 @@ namespace zz
         Time::Initialize();
         Input::Initialize();
 
-       //PixelGrid::GetInst().Initialize();
         PixelWorld::Initialize();
         renderer::Initialize();
         InventoryManager::Initialize();
@@ -72,28 +71,22 @@ namespace zz
 	}
 
 	void Application::Render()
-	{
-        //graphicDevice->Draw();
-       
+	{    
         graphicDevice->ClearRenderTarget();
         graphicDevice->UpdateViewPort();
         
-       // SceneManager::GetInst().Render();
         renderer::Render();
         Editor::Run();
         Present();
-        //graphicDevice->Draw();
 
         EventManager::Update();
 	}
 
     void Application::Release()
     {
-        ObjectPoolManager::Release();
-
         SceneManager::Release();
         InventoryManager::Release();
-        //graphicDevice.release();
+        ObjectPoolManager::Release();
     }
 
     void Application::Present()

@@ -15,6 +15,7 @@ namespace zz
 {
     Explosion_128::Explosion_128()
         : mbFirstFrame(true)
+        , mParticle(nullptr)
     {
     }
 
@@ -100,7 +101,7 @@ namespace zz
             for (int i = 0; i < rand; i++)
             {
                 Smoke_Orange* smoke = ObjectPoolManager::GetObjectInPool<Smoke_Orange>();
-                smoke->GetComponent<Transform>()->SetPosition(GetComponent<Transform>()->GetPosition());
+                smoke->SetPosition(GetComponent<Transform>()->GetPosition());
             }
         }
 

@@ -15,8 +15,12 @@ namespace zz
         virtual void LateUpdate()   override;
         virtual void Render()       override;
 
+        void SetPosition(Vector3 pos);
+
     private:
         float mTime;
+        class ParticleSystem* mParticle;
+        Vector3 mPrevPos;
     };
 }
 

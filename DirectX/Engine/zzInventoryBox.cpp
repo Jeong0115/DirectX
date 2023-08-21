@@ -14,9 +14,22 @@ namespace zz
         , mItemTexture(nullptr)
     {
     }
+
     InventoryBox::~InventoryBox()
     {
+        if (mItem != nullptr)
+        {
+            delete mItem;
+            mItem = nullptr;
+        }
+
+        if (mItemTexture != nullptr)
+        {
+            delete mItemTexture;
+            mItemTexture = nullptr;
+        }
     }
+
     void InventoryBox::Initialize()
     {
         MeshRenderer* mesh = AddComponent<MeshRenderer>();

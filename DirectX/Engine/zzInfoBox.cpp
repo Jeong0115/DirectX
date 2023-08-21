@@ -18,6 +18,11 @@ namespace zz
 
     InfoBox::~InfoBox()
     {
+        if (mWandtexture != nullptr)
+        {
+            delete mWandtexture;
+            mWandtexture = nullptr;
+        }
     }
 
     void InfoBox::Initialize()

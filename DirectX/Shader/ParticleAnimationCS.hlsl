@@ -48,8 +48,6 @@ void main(uint3 DTid : SV_DispatchThreadID)
         
         if (count > 0)
         {
-            float4 random = (float4) 0.f;
-            
             ParticleAnimationShared sharedBuffer = SharedBuffer[0];            
             particle.position = sharedBuffer.curPosition;
             
@@ -57,15 +55,13 @@ void main(uint3 DTid : SV_DispatchThreadID)
             uv.x += deltaTime * 154.216f;
             uv.y += sin((uv.x + deltaTime * 126.276f) * 3.141592f + 2.f * 10.f) * 0.5f;
             
-            random = float4
+            float4 random = float4
             (
                   GaussianBlur(uv + float2(0.f, 0.f)).x
                 , GaussianBlur(uv + float2(0.1f, 0.f)).x
                 , GaussianBlur(uv + float2(0.2f, 0.f)).x
                 , GaussianBlur(uv + float2(0.3f, 0.f)).x
             );
-            
-            float2 vel = float2(0.0f, random.x * 10.f);
             
             particle.position.x += random.y * 30.f * (random.w > 0.5f ? 1 : -1);
             particle.position.y += random.z * 30.f;

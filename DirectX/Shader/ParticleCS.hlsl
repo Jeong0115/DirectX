@@ -35,21 +35,33 @@ void main(uint3 DTid : SV_DispatchThreadID)
         
         if (count > 0)
         {
+            float2 uv = float2((float) DTid.x / elementCount, 0.5f);
+            uv.x += deltaTime * 154.216f;
+            uv.y += sin((uv.x + deltaTime * 126.276f) * 3.141592f + 2.f * 10.f) * 0.5f;
+            
+            float4 random = float4
+            (
+                  GaussianBlur(uv + float2(0.f, 0.f)).x
+                , GaussianBlur(uv + float2(0.1f, 0.f)).x
+                , GaussianBlur(uv + float2(0.2f, 0.f)).x
+                , GaussianBlur(uv + float2(0.3f, 0.f)).x
+
+            );
             Projectile projectile = ProjectileBuffer[0];
             
             particle.position = projectile.curPosition - (projectile.distance * ((float) count / projectile.SetActiveCount));
             
             int index = projectile.index + projectile.SetActiveCount - count;
-            
-            float2 vel = float2(5.0f, sin(index / 10.0f) * 3.f);
+             
             float angle = projectile.angle;
             
-            particle.velocity.x = vel.x * cos(angle) - vel.y * sin(angle);
-            particle.velocity.y = vel.x * sin(angle) + vel.y * cos(angle);
+            particle.velocity.x = (random.x + 1.f) * cos(angle) * (random.w > 0.5f ? 1 : -1);
+            particle.velocity.y = random.y * sin(angle);
             
+            particle.color = projectile.color;
             particle.active = 1;
-            particle.lifeTime = 0.7f;
-            particle.speed = 5.0f;
+            particle.lifeTime = 0.1f;
+            particle.speed = 1.0f;
             particle.scale = float4(1.0f, 1.0f, 1.0f, 0.0f);
             
             ParticleBuffer[DTid.x] = particle;

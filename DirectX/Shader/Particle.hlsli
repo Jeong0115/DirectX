@@ -4,6 +4,7 @@ struct Particle
     float4 position;
     float4 velocity;
     float4 scale;
+    float4 color;
     
     float lifeTime;
     float time;
@@ -15,6 +16,7 @@ struct Projectile
 {
     float4 curPosition;
     float4 distance;
+    float4 color;
     
     float index;
     float angle;
@@ -67,7 +69,6 @@ static float GaussianFilter[5][5] =
     0.003f, 0.0133f, 0.0219f, 0.0133f, 0.003f,
 
 };
-
 
 float4 GaussianBlur(float2 UV)
 {

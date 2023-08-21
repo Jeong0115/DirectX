@@ -153,7 +153,7 @@ namespace zz
     {
         for (UINT i = 0; i < (UINT)eUIType::End; i++)
         {
-            for (auto uiObject : mInventoryUI[i])
+            for (auto& uiObject : mInventoryUI[i])
             {
                 delete uiObject;
             }
@@ -225,7 +225,7 @@ namespace zz
 
                     ItemTexture* item = new ItemTexture(eUIType::Item);
                     item->CreateItemTexture(material_name, mItemSlots[i]->GetComponent<Transform>()->GetPosition(), textureScale);
-
+                    
                     equipment->GetComponent<Transform>()->SetParent(mPlayer->GetPlayerArm()->GetComponent<Transform>());
                     mItemSlots[i]->SetItem(equipment, item);
 

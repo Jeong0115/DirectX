@@ -125,6 +125,7 @@ namespace zz
         math::Vector4 position;
         math::Vector4 velocity;
         math::Vector4 scale;
+        math::Vector4 color;
 
         float lifeTime;
         float time;
@@ -137,6 +138,7 @@ namespace zz
     {
         math::Vector4 curPosition;
         math::Vector4 distance;
+        math::Vector4 color;
 
         float index;
         float angle;
