@@ -11,7 +11,7 @@
 //    {
 //    }
 //
-//    void ImmovableSolid::Update()
+//    void ImmovableSolid::UpdateUI()
 //    {
 //        //applyHeatToNeighborsIfIgnited(matrix);
 //        //takeEffectsDamage(matrix);

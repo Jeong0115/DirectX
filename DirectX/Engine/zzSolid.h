@@ -10,7 +10,7 @@
 //        Solid();
 //        virtual ~Solid();
 //
-//        virtual void Update() {};
+//        virtual void UpdateUI() {};
 //        virtual Element* Clone() { return nullptr; };
 //        virtual bool InteractElement(Element* target, Position targetPos, bool isFinal, bool isFirst, Position lastPos, int depth) { return false; };
 //    };

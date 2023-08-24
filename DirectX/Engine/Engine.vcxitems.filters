@@ -31,26 +31,8 @@
     <Filter Include="Scene\Layer">
       <UniqueIdentifier>{2b73ba5d-ca78-4ba7-981d-fc4778d1e243}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scene\GameObject">
-      <UniqueIdentifier>{f7ec4d14-97f5-47aa-9c52-f71503ea0191}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene\Component">
-      <UniqueIdentifier>{9402beab-cf01-4e9e-8dd1-6a9f295bde4a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene\Component\Base">
-      <UniqueIdentifier>{2530ca1b-50a0-4a2f-9ef8-dec89dde7ee0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Scene\Scene\Base">
       <UniqueIdentifier>{15528161-1041-47d5-8ce0-aba8c9796955}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene\GameObject\Base">
-      <UniqueIdentifier>{d0e3d960-04d8-407c-a667-dc2db214e16d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene\Component\Transform">
-      <UniqueIdentifier>{a1bf01eb-46c7-414c-ae45-f196efa45229}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene\Component\MeshRenderer">
-      <UniqueIdentifier>{85c0df24-4171-4660-b45f-b1af55684ea1}</UniqueIdentifier>
     </Filter>
     <Filter Include="Scene\Scene\PlayScene">
       <UniqueIdentifier>{4ca0343a-d00e-400f-b3cd-86c97be25565}</UniqueIdentifier>
@@ -81,12 +63,6 @@
     </Filter>
     <Filter Include="Resource\Material">
       <UniqueIdentifier>{a55c6cf9-8f62-4211-84ce-d5e381d6efd1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene\Component\Script">
-      <UniqueIdentifier>{0cc6caae-b32e-4329-85c1-b540c7fcf12f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene\Component\Camera">
-      <UniqueIdentifier>{bb8d0172-2335-4d19-8e18-28d6894b0234}</UniqueIdentifier>
     </Filter>
     <Filter Include="Graphics">
       <UniqueIdentifier>{bd06b5b0-6b45-415b-a98d-9717d8d9850d}</UniqueIdentifier>
@@ -166,17 +142,8 @@
     <Filter Include="Resource\Animation">
       <UniqueIdentifier>{5de830db-ee19-40e3-ab23-e52bfcb632d9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scene\Component\Animator">
-      <UniqueIdentifier>{a5f70619-7441-478d-b4cd-2647786bd661}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene\Component\Script\Player">
-      <UniqueIdentifier>{c644f2a5-6ad4-4b77-9221-8a672b8a2855}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Box2dWorld">
       <UniqueIdentifier>{4961fd9a-eec0-4869-9071-2a2bc93c05af}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene\Component\Script\Wand">
-      <UniqueIdentifier>{201cfd53-bc61-4bd8-80ef-969c424e37df}</UniqueIdentifier>
     </Filter>
     <Filter Include="UI">
       <UniqueIdentifier>{46c98f6c-b6fe-4fb2-a58e-963abae3eda3}</UniqueIdentifier>
@@ -187,56 +154,14 @@
     <Filter Include="Manager\InventoryManager">
       <UniqueIdentifier>{e679f939-66fb-45ac-b5b2-695e4bb0b18b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scene\GameObject\Player">
-      <UniqueIdentifier>{4a4fa22a-3160-48fe-a20c-4161eb7b6323}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene\GameObject\Player\PlayerArm">
-      <UniqueIdentifier>{e5dfa335-8a24-4f46-8b24-bb5f8ff2eb20}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene\GameObject\Player\PlayerBody">
-      <UniqueIdentifier>{d2237bbd-d139-465d-bc38-746721f63c67}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene\GameObject\Equipment">
-      <UniqueIdentifier>{4c4ac0af-b5c1-415a-ac73-d3de576dca7e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene\GameObject\Equipment\Wand">
-      <UniqueIdentifier>{69ecb260-2f56-49b9-8852-495cfb982cef}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene\GameObject\Equipment\Wand\Base">
-      <UniqueIdentifier>{c30a2ba7-9ac2-4ed0-8955-000b9bd94a87}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene\GameObject\Equipment\Base">
-      <UniqueIdentifier>{78f07279-5df1-4967-9004-ef54a850baf3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Manager\UICollisionManager">
-      <UniqueIdentifier>{d1fa5ff3-cff4-45c6-b766-2adad6ee1f5f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene\Component\UICollider">
-      <UniqueIdentifier>{98999ec4-a034-42f6-85e8-8960143ee3a9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="UI\Base">
       <UniqueIdentifier>{2fdca9f5-ee47-4fcb-a9bd-243c803d74ab}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene\Component\Camera\MainCamera">
-      <UniqueIdentifier>{0ae3d3ac-cbfe-464f-85d7-1cb21a1039c3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene\Component\Camera\UICamera">
-      <UniqueIdentifier>{44be276c-3273-4ebc-85b8-c09ec2f40f1d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene\Component\Camera\Base">
-      <UniqueIdentifier>{4063dd8d-27de-42bf-9b9f-de5af62983f8}</UniqueIdentifier>
     </Filter>
     <Filter Include="UI\Mouse">
       <UniqueIdentifier>{c0dbdc52-0580-48fc-b1cc-b41a3a2313ed}</UniqueIdentifier>
     </Filter>
     <Filter Include="UI\Inventory\ItemTexture">
       <UniqueIdentifier>{aded8c0f-26a6-4bba-9141-5aae184923e8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene\GameObject\Equipment\Wand\BoltWand0997">
-      <UniqueIdentifier>{e1529bcd-033e-4eba-b294-2da01b2e041c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene\GameObject\Equipment\Wand\BlastWand0585">
-      <UniqueIdentifier>{f23ee366-5e06-4b73-98a0-c3a139630619}</UniqueIdentifier>
     </Filter>
     <Filter Include="UI\ItemTextureHighlight">
       <UniqueIdentifier>{58cd1e62-3e2d-48ed-9f48-4a6d398d8691}</UniqueIdentifier>
@@ -268,29 +193,110 @@
     <Filter Include="Graphics\StructedBuffer">
       <UniqueIdentifier>{0463dad5-700a-47a0-a7ff-2588c3de68f0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scene\Component\ParticleSystem">
-      <UniqueIdentifier>{48b9acf4-bedd-4b67-b80e-95dd3269c450}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Resource\ComputeShader">
       <UniqueIdentifier>{00e24653-df7c-4e84-82e4-6884865566d5}</UniqueIdentifier>
     </Filter>
     <Filter Include="Resource\ComputeShader\ParticleShader">
       <UniqueIdentifier>{d6f30488-7940-4c90-82e6-fad2c417f2f9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scene\GameObject\Effect">
-      <UniqueIdentifier>{d1109ae9-b9f9-4138-adf3-afc7e951ce56}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene\GameObject\Effect\Explosion">
-      <UniqueIdentifier>{cd57352f-637c-4440-b54c-0aa6c4dafec4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene\GameObject\Effect\Smoke_Orange">
-      <UniqueIdentifier>{712eea2f-e28a-4186-812a-4ddacec486aa}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene\Component\RigidBody">
-      <UniqueIdentifier>{1944a4c2-ff10-4f56-a76e-26771cbf458a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Manager\ObjectPoolManager">
       <UniqueIdentifier>{cea95f48-5eda-412e-b72e-5e3f9899c803}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component">
+      <UniqueIdentifier>{9402beab-cf01-4e9e-8dd1-6a9f295bde4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Base">
+      <UniqueIdentifier>{2530ca1b-50a0-4a2f-9ef8-dec89dde7ee0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Transform">
+      <UniqueIdentifier>{a1bf01eb-46c7-414c-ae45-f196efa45229}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\MeshRenderer">
+      <UniqueIdentifier>{85c0df24-4171-4660-b45f-b1af55684ea1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Script">
+      <UniqueIdentifier>{0cc6caae-b32e-4329-85c1-b540c7fcf12f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Script\Player">
+      <UniqueIdentifier>{c644f2a5-6ad4-4b77-9221-8a672b8a2855}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Script\Wand">
+      <UniqueIdentifier>{201cfd53-bc61-4bd8-80ef-969c424e37df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Camera">
+      <UniqueIdentifier>{bb8d0172-2335-4d19-8e18-28d6894b0234}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Camera\MainCamera">
+      <UniqueIdentifier>{0ae3d3ac-cbfe-464f-85d7-1cb21a1039c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Camera\UICamera">
+      <UniqueIdentifier>{44be276c-3273-4ebc-85b8-c09ec2f40f1d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Camera\Base">
+      <UniqueIdentifier>{4063dd8d-27de-42bf-9b9f-de5af62983f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Animator">
+      <UniqueIdentifier>{a5f70619-7441-478d-b4cd-2647786bd661}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\ParticleSystem">
+      <UniqueIdentifier>{48b9acf4-bedd-4b67-b80e-95dd3269c450}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\RigidBody">
+      <UniqueIdentifier>{1944a4c2-ff10-4f56-a76e-26771cbf458a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject">
+      <UniqueIdentifier>{f7ec4d14-97f5-47aa-9c52-f71503ea0191}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Base">
+      <UniqueIdentifier>{d0e3d960-04d8-407c-a667-dc2db214e16d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Player">
+      <UniqueIdentifier>{4a4fa22a-3160-48fe-a20c-4161eb7b6323}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Player\PlayerArm">
+      <UniqueIdentifier>{e5dfa335-8a24-4f46-8b24-bb5f8ff2eb20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Player\PlayerBody">
+      <UniqueIdentifier>{d2237bbd-d139-465d-bc38-746721f63c67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Equipment">
+      <UniqueIdentifier>{4c4ac0af-b5c1-415a-ac73-d3de576dca7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Equipment\Wand">
+      <UniqueIdentifier>{69ecb260-2f56-49b9-8852-495cfb982cef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Equipment\Wand\Base">
+      <UniqueIdentifier>{c30a2ba7-9ac2-4ed0-8955-000b9bd94a87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Equipment\Wand\BoltWand0997">
+      <UniqueIdentifier>{e1529bcd-033e-4eba-b294-2da01b2e041c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Equipment\Wand\BlastWand0585">
+      <UniqueIdentifier>{f23ee366-5e06-4b73-98a0-c3a139630619}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Equipment\Base">
+      <UniqueIdentifier>{78f07279-5df1-4967-9004-ef54a850baf3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Effect">
+      <UniqueIdentifier>{d1109ae9-b9f9-4138-adf3-afc7e951ce56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Effect\Explosion">
+      <UniqueIdentifier>{cd57352f-637c-4440-b54c-0aa6c4dafec4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Effect\Smoke_Orange">
+      <UniqueIdentifier>{712eea2f-e28a-4186-812a-4ddacec486aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Collider">
+      <UniqueIdentifier>{98999ec4-a034-42f6-85e8-8960143ee3a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Manager\CollisionManager">
+      <UniqueIdentifier>{d1fa5ff3-cff4-45c6-b766-2adad6ee1f5f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Monster">
+      <UniqueIdentifier>{52d7c89b-d67a-4dd8-a728-d97c7f98b3bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Monster\ShotGunner_Weak">
+      <UniqueIdentifier>{3502c1df-a7a7-4bb5-83ac-7336a3b8d43b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -328,19 +334,19 @@
       <Filter>Scene\Layer</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzComponent.cpp">
-      <Filter>Scene\Component\Base</Filter>
+      <Filter>Component\Base</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzScene.cpp">
       <Filter>Scene\Scene\Base</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzGameObject.cpp">
-      <Filter>Scene\GameObject\Base</Filter>
+      <Filter>GameObject\Base</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzTransform.cpp">
-      <Filter>Scene\Component\Transform</Filter>
+      <Filter>Component\Transform</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzMeshRenderer.cpp">
-      <Filter>Scene\Component\MeshRenderer</Filter>
+      <Filter>Component\MeshRenderer</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzResourceManager.cpp">
       <Filter>Manager\ResourceManager</Filter>
@@ -358,7 +364,7 @@
       <Filter>Resource\Material</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzScript.cpp">
-      <Filter>Scene\Component\Script</Filter>
+      <Filter>Component\Script</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzPixelGrid.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzSand.cpp">
@@ -368,10 +374,10 @@
       <Filter>Element</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzBGScript.cpp">
-      <Filter>Scene\Component\Script</Filter>
+      <Filter>Component\Script</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzCameraScript.cpp">
-      <Filter>Scene\Component\Script</Filter>
+      <Filter>Component\Script</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzWater.cpp">
       <Filter>Element\Liquid\Water</Filter>
@@ -420,7 +426,7 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzThreadPool.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzAnimator.cpp">
-      <Filter>Scene\Component\Animator</Filter>
+      <Filter>Component\Animator</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzAnimation.cpp">
       <Filter>Resource\Animation</Filter>
@@ -429,19 +435,19 @@
       <Filter>Scene\Scene</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzPlayerScript.cpp">
-      <Filter>Scene\Component\Script\Player</Filter>
+      <Filter>Component\Script\Player</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzBox2dWorld.cpp">
       <Filter>Box2dWorld</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzPlayerArmScript.cpp">
-      <Filter>Scene\Component\Script\Player</Filter>
+      <Filter>Component\Script\Player</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzWandScript.cpp">
-      <Filter>Scene\Component\Script\Wand</Filter>
+      <Filter>Component\Script\Wand</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzCursorScript.cpp">
-      <Filter>Scene\Component\Script</Filter>
+      <Filter>Component\Script</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzInventoryBG.cpp">
       <Filter>UI\Inventory</Filter>
@@ -453,37 +459,37 @@
       <Filter>Manager\InventoryManager</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzWand.cpp">
-      <Filter>Scene\GameObject\Equipment\Wand\Base</Filter>
+      <Filter>GameObject\Equipment\Wand\Base</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzBlastWand_0585.cpp">
-      <Filter>Scene\GameObject\Equipment\Wand\BlastWand0585</Filter>
+      <Filter>GameObject\Equipment\Wand\BlastWand0585</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzPlayer.cpp">
-      <Filter>Scene\GameObject\Player\PlayerBody</Filter>
+      <Filter>GameObject\Player\PlayerBody</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzPlayerArm.cpp">
-      <Filter>Scene\GameObject\Player\PlayerArm</Filter>
+      <Filter>GameObject\Player\PlayerArm</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzEquipment.cpp">
-      <Filter>Scene\GameObject\Equipment\Base</Filter>
+      <Filter>GameObject\Equipment\Base</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)zzUICollisionManger.cpp">
-      <Filter>Manager\UICollisionManager</Filter>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzCollisionManger.cpp">
+      <Filter>Manager\CollisionManager</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)zzUICollider.cpp">
-      <Filter>Scene\Component\UICollider</Filter>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzCollider.cpp">
+      <Filter>Component\Collider</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzUI.cpp">
       <Filter>UI\Base</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzCamera.cpp">
-      <Filter>Scene\Component\Camera\Base</Filter>
+      <Filter>Component\Camera\Base</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzMainCamera.cpp">
-      <Filter>Scene\Component\Camera\MainCamera</Filter>
+      <Filter>Component\Camera\MainCamera</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzUICamera.cpp">
-      <Filter>Scene\Component\Camera\UICamera</Filter>
+      <Filter>Component\Camera\UICamera</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzMouse.cpp">
       <Filter>UI\Mouse</Filter>
@@ -492,7 +498,7 @@
       <Filter>UI\Inventory\ItemTexture</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzBoltWand_0997.cpp">
-      <Filter>Scene\GameObject\Equipment\Wand\BoltWand0997</Filter>
+      <Filter>GameObject\Equipment\Wand\BoltWand0997</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzItemTextureHighlight.cpp">
       <Filter>UI\ItemTextureHighlight</Filter>
@@ -522,7 +528,7 @@
       <Filter>Graphics\StructedBuffer</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzParticleSystem.cpp">
-      <Filter>Scene\Component\ParticleSystem</Filter>
+      <Filter>Component\ParticleSystem</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzComputeShader.cpp">
       <Filter>Resource\ComputeShader</Filter>
@@ -531,16 +537,19 @@
       <Filter>Resource\ComputeShader\ParticleShader</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzExplosion_128.cpp">
-      <Filter>Scene\GameObject\Effect\Explosion</Filter>
+      <Filter>GameObject\Effect\Explosion</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzSmoke_Orange.cpp">
-      <Filter>Scene\GameObject\Effect\Smoke_Orange</Filter>
+      <Filter>GameObject\Effect\Smoke_Orange</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzRigidBody.cpp">
-      <Filter>Scene\Component\RigidBody</Filter>
+      <Filter>Component\RigidBody</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzObjectPoolManager.cpp">
       <Filter>Manager\ObjectPoolManager</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzShotGunner_Weak.cpp">
+      <Filter>GameObject\Monster\ShotGunner_Weak</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -596,19 +605,19 @@
       <Filter>Scene\Layer</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzComponent.h">
-      <Filter>Scene\Component\Base</Filter>
+      <Filter>Component\Base</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzScene.h">
       <Filter>Scene\Scene\Base</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzGameObject.h">
-      <Filter>Scene\GameObject\Base</Filter>
+      <Filter>GameObject\Base</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzTransform.h">
-      <Filter>Scene\Component\Transform</Filter>
+      <Filter>Component\Transform</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzMeshRenderer.h">
-      <Filter>Scene\Component\MeshRenderer</Filter>
+      <Filter>Component\MeshRenderer</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzResourceManager.h">
       <Filter>Manager\ResourceManager</Filter>
@@ -626,7 +635,7 @@
       <Filter>Resource\Material</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzScript.h">
-      <Filter>Scene\Component\Script</Filter>
+      <Filter>Component\Script</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzPixelGrid.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzSand.h">
@@ -636,10 +645,10 @@
       <Filter>Element</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzCameraScript.h">
-      <Filter>Scene\Component\Script</Filter>
+      <Filter>Component\Script</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzBGScript.h">
-      <Filter>Scene\Component\Script</Filter>
+      <Filter>Component\Script</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzWater.h">
       <Filter>Element\Liquid\Water</Filter>
@@ -700,7 +709,7 @@
       <Filter>PixelWorld</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzAnimator.h">
-      <Filter>Scene\Component\Animator</Filter>
+      <Filter>Component\Animator</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzAnimation.h">
       <Filter>Resource\Animation</Filter>
@@ -709,19 +718,19 @@
       <Filter>Scene\Scene</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzPlayerScript.h">
-      <Filter>Scene\Component\Script\Player</Filter>
+      <Filter>Component\Script\Player</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzBox2dWorld.h">
       <Filter>Box2dWorld</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzPlayerArmScript.h">
-      <Filter>Scene\Component\Script\Player</Filter>
+      <Filter>Component\Script\Player</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzWandScript.h">
-      <Filter>Scene\Component\Script\Wand</Filter>
+      <Filter>Component\Script\Wand</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzCursorScript.h">
-      <Filter>Scene\Component\Script</Filter>
+      <Filter>Component\Script</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzInventoryBG.h">
       <Filter>UI\Inventory</Filter>
@@ -733,37 +742,37 @@
       <Filter>Manager\InventoryManager</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzWand.h">
-      <Filter>Scene\GameObject\Equipment\Wand\Base</Filter>
+      <Filter>GameObject\Equipment\Wand\Base</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzBlastWand_0585.h">
-      <Filter>Scene\GameObject\Equipment\Wand\BlastWand0585</Filter>
+      <Filter>GameObject\Equipment\Wand\BlastWand0585</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzPlayer.h">
-      <Filter>Scene\GameObject\Player\PlayerBody</Filter>
+      <Filter>GameObject\Player\PlayerBody</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzPlayerArm.h">
-      <Filter>Scene\GameObject\Player\PlayerArm</Filter>
+      <Filter>GameObject\Player\PlayerArm</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzEquipment.h">
-      <Filter>Scene\GameObject\Equipment\Base</Filter>
+      <Filter>GameObject\Equipment\Base</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)zzUICollisionManger.h">
-      <Filter>Manager\UICollisionManager</Filter>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzCollisionManger.h">
+      <Filter>Manager\CollisionManager</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)zzUICollider.h">
-      <Filter>Scene\Component\UICollider</Filter>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzCollider.h">
+      <Filter>Component\Collider</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzUI.h">
       <Filter>UI\Base</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzCamera.h">
-      <Filter>Scene\Component\Camera\Base</Filter>
+      <Filter>Component\Camera\Base</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzMainCamera.h">
-      <Filter>Scene\Component\Camera\MainCamera</Filter>
+      <Filter>Component\Camera\MainCamera</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzUICamera.h">
-      <Filter>Scene\Component\Camera\UICamera</Filter>
+      <Filter>Component\Camera\UICamera</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzMouse.h">
       <Filter>UI\Mouse</Filter>
@@ -772,7 +781,7 @@
       <Filter>UI\Inventory\ItemTexture</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzBoltWand_0997.h">
-      <Filter>Scene\GameObject\Equipment\Wand\BoltWand0997</Filter>
+      <Filter>GameObject\Equipment\Wand\BoltWand0997</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzItemTextureHighlight.h">
       <Filter>UI\ItemTextureHighlight</Filter>
@@ -799,7 +808,7 @@
       <Filter>Graphics\StructedBuffer</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzParticleSystem.h">
-      <Filter>Scene\Component\ParticleSystem</Filter>
+      <Filter>Component\ParticleSystem</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzComputeShader.h">
       <Filter>Resource\ComputeShader</Filter>
@@ -808,16 +817,19 @@
       <Filter>Resource\ComputeShader\ParticleShader</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzExplosion_128.h">
-      <Filter>Scene\GameObject\Effect\Explosion</Filter>
+      <Filter>GameObject\Effect\Explosion</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzSmoke_Orange.h">
-      <Filter>Scene\GameObject\Effect\Smoke_Orange</Filter>
+      <Filter>GameObject\Effect\Smoke_Orange</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzRigidBody.h">
-      <Filter>Scene\Component\RigidBody</Filter>
+      <Filter>Component\RigidBody</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzObjectPoolManager.h">
       <Filter>Manager\ObjectPoolManager</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzShotGunner_Weak.h">
+      <Filter>GameObject\Monster\ShotGunner_Weak</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

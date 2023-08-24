@@ -17,7 +17,7 @@ namespace zz
             Vector2 size;
             Vector2 offset;
             Vector2 atlasSize;
-            float duration;
+            float   duration;
 
             Sprite()
                 : leftTop(Vector2::Zero)
@@ -25,9 +25,7 @@ namespace zz
                 , offset(Vector2::Zero)
                 , atlasSize(Vector2::Zero)
                 , duration(0.0f)
-            {
-
-            }
+            {}
         };
 
         Animation();
@@ -39,13 +37,10 @@ namespace zz
         void LateUpdate();
         void Render();
 
-        void Create(std::wstring name
-            , std::shared_ptr<Texture> atlas
-            , Vector2 leftTop
-            , Vector2 size
-            , UINT columnLength
-            , Vector2 offset = Vector2::Zero
-            , float duration = 0.0f);
+        void Create(std::wstring name, std::shared_ptr<Texture> atlas, Vector2 leftTop, Vector2 size
+            , UINT columnLength, Vector2 offset = Vector2::Zero, float duration = 0.0f);
+
+        void SetAnimationEvent(int index, std::function<void()> func);
 
         void Binds();
         void Reset();
@@ -53,11 +48,14 @@ namespace zz
         bool IsComplete() { return mbComplete; }
 
     private:
-        std::shared_ptr<Texture> mAtlas;
-        Animator* mAnimator;
-        std::vector<Sprite> mSprites;
-        int mIndex;
-        float mTime;
-        bool mbComplete;
+        std::unordered_map<int, std::function<void()>> mAnimationEvents;
+
+        std::shared_ptr<Texture>    mAtlas;
+        Animator*                   mAnimator;
+        std::vector<Sprite>         mSprites;
+
+        float                       mTime;
+        int                         mIndex;
+        bool                        mbComplete;
     };
 }

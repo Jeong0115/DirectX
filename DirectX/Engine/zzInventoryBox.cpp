@@ -3,7 +3,7 @@
 #include "zzMeshRenderer.h"
 #include "zzMaterial.h"
 #include "zzTransform.h"
-#include "zzUICollider.h"
+#include "zzCollider.h"
 
 namespace zz
 {
@@ -38,7 +38,7 @@ namespace zz
 
         GetComponent<Transform>()->SetScale(Vector3(20.f, 20.f, 1.0f));
 
-        UICollider* collider = AddComponent<UICollider>();
+        Collider* collider = AddComponent<Collider>();
         collider->SetScale(Vector3(19.f, 19.f, 1.0f));
 
         GameObject::Initialize();

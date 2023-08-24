@@ -191,12 +191,12 @@
 //
 //    
 //
-//    void PixelGrid::Update()
+//    void PixelGrid::UpdateUI()
 //    {
 //        mFixedTime += Time::DeltaTime();
 //        if (mFixedTime >= 1 / 60.f)
 //        {
-//            PixelWorld::Update();
+//            PixelWorld::UpdateUI();
 //            mFixedTime = 0;
 //            //FixedUpdate();
 //            //Step.flip();
@@ -277,14 +277,14 @@
 //        mFixedTime += Time::DeltaTime();
 //        if (mFixedTime >= 1/ 60.f)
 //        {
-//            PixelWorld::Update();
+//            PixelWorld::UpdateUI();
 //            mFixedTime = 0;
 //            //FixedUpdate();
 //            //Step.flip();
 //        }
 //
 //        int a = 0;
-//        mImage->Update(mPixelColor, mBackHDC, x, y);
+//        mImage->UpdateUI(mPixelColor, mBackHDC, x, y);
 //        for (int i = 0; i < mDeadElement.size(); i++) // 먼가 먼가가 문제가 있음
 //        {
 //            if (mDeadElement[i] == nullptr)
@@ -406,7 +406,7 @@
 //                //if (true/*mElements[y * 64 + i][x * 64 + j]->isFalling*/)
 //                //{
 //                    //if (mElements[y * 64 + i][x * 64 + j]->IsUpdate()) continue;
-//                mElements[y * 64 + i][x * 64 + j]->Update();
+//                mElements[y * 64 + i][x * 64 + j]->UpdateUI();
 //                //elementsToMove.push_back(mElements[y * 64 + i][x * 64 + j]);
 //          /*  }*/
 //
@@ -415,7 +415,7 @@
 //
 //        //for (const auto& element : elementsToMove)
 //        //{
-//        //    element->Update();
+//        //    element->UpdateUI();
 //        //    element->isUpdate = true;
 //        //}
 //        //registerElements(elementsToMove);
@@ -518,7 +518,7 @@
 //        }
 //    }
 //
-//    void PixelGrid::Clear()
+//    void PixelGrid::ClearUI()
 //    {
 //        //HBRUSH grayBrush = CreateSolidBrush(RGB(121, 121, 121));
 //        //HBRUSH oldBrush = (HBRUSH)SelectObject(mBackHDC, grayBrush);

@@ -215,4 +215,13 @@ namespace zz
             mEquipment->Render();
         }
     }
+    void Player::OnCollisionEnter(GameObject* other)
+    {
+    }
+    void Player::OnCollisionStay(GameObject* other)
+    {
+    }
+    void Player::OnCollisionExit(GameObject* other)
+    {
+    }
 }

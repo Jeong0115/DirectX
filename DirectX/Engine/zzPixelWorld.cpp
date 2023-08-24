@@ -1,12 +1,6 @@
 #include "zzPixelWorld.h"
 #include "zzPixelGrid.h"
 #include "zzPixelUpdater.h"
-#include "zzSand.h"
-#include "zzRock.h"
-#include "zzWater.h"
-#include "zzSpark.h"
-#include "zzOil.h"
-#include "zzEmptyElement.h"
 
 #include "zzRenderer.h"
 #include "zzInput.h"
@@ -33,7 +27,7 @@ namespace zz
 
     std::vector<PixelChunkMap*> PixelWorld::mChunkMaps = {};
     std::unordered_map<std::pair<int, int>, PixelChunkMap*, pair_hash> PixelWorld::mChunkMapLookUp = {};
-    ThreadPool PixelWorld::threadPool(1);
+    ThreadPool PixelWorld::threadPool(1); 
     uint16_t PixelWorld::FrameCount = 0;
     std::vector<std::vector<Box2dWorld::StaticElementInfo>>* PixelWorld::mStaticElements = {};
 
@@ -84,7 +78,7 @@ namespace zz
         //    }
         //}
 
-        //Box2dWorld::Update();
+        //Box2dWorld::UpdateUI();
 
         //for (int i = 0; i < mStaticElements->size(); i++)
         //{

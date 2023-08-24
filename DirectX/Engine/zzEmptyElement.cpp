@@ -20,7 +20,7 @@
 //    {
 //        return false;
 //    }
-//    void EmptyElement::Update()
+//    void EmptyElement::UpdateUI()
 //    {
 //        return;
 //    }

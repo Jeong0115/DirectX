@@ -13,7 +13,7 @@
 //
 //        virtual Element* Clone() { return nullptr; };
 //
-//        virtual void Update() override;
+//        virtual void UpdateUI() override;
 //        virtual bool InteractElement(Element* target, Position targetPos, bool isFinal, bool isFirst, Position lastPos, int depth) override;
 //
 //        __forceinline int GetDensity() { return mDensity; }

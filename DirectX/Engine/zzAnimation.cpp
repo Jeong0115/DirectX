@@ -14,6 +14,7 @@ namespace zz
         , mIndex(-1)
         , mTime(0.0f)
         , mbComplete(false) 
+        , mAnimationEvents{}
     {
     }
     Animation::~Animation()
@@ -33,6 +34,11 @@ namespace zz
         {
             mIndex++;
             mTime = 0.0f;
+
+            if (mAnimationEvents.find(mIndex) != mAnimationEvents.end())
+            {
+                mAnimationEvents[mIndex]();
+            }
 
             if (mSprites.size() <= mIndex)
             {
@@ -66,6 +72,12 @@ namespace zz
             mSprites.push_back(sprite);
         }
     }
+
+    void Animation::SetAnimationEvent(int index, std::function<void()> func)
+    {
+        mAnimationEvents.insert(std::make_pair(index, func));
+    }
+
     void Animation::Binds()
     {
         // texture bind
@@ -84,7 +96,6 @@ namespace zz
         cb->SetBufferData(&data);
 
         cb->BindConstantBuffer(eShaderStage::VS);
-
         cb->BindConstantBuffer(eShaderStage::PS);
     }
     void Animation::Reset()

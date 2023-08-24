@@ -12,7 +12,7 @@ namespace zz
         Script,
         Animator,
         Camera,
-        UICollider,
+        Collider,
         End,
     };
 

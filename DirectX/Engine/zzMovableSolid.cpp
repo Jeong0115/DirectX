@@ -13,7 +13,7 @@
 //
 //    }
 //
-//    void MovableSolid::Update()
+//    void MovableSolid::UpdateUI()
 //    {
 //        //if (mStep != PixelGrid::Step)
 //        //    return;

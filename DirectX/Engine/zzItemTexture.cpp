@@ -5,7 +5,7 @@
 #include "zzMeshRenderer.h"
 #include "zzTransform.h"
 #include "zzInput.h"
-#include "zzUICollider.h"
+#include "zzCollider.h"
 #include "zzTime.h"
 
 namespace zz
@@ -24,7 +24,7 @@ namespace zz
 
     void ItemTexture::Initialize()
     {
-        AddComponent<UICollider>();
+        AddComponent<Collider>();
         GameObject::Initialize();
     }
 

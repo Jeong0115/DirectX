@@ -10,7 +10,7 @@
 //        MovableSolid();
 //        virtual ~MovableSolid();
 //       
-//        virtual void Update() override;
+//        virtual void UpdateUI() override;
 //        virtual bool InteractElement(Element* target, Position targetPos, bool isFinal, bool isFirst, Position lastPos, int depth) override;
 //
 //        virtual Element* Clone() = 0;

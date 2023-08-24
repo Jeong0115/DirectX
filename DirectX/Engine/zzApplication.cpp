@@ -8,6 +8,7 @@
 #include "zzInventoryManager.h"
 #include "zzEventManager.h"
 #include "zzObjectPoolManager.h"
+#include "zzCollisionManger.h"
 
 namespace zz
 {	
@@ -62,6 +63,7 @@ namespace zz
         InventoryManager::Update();
         PixelWorld::Update();
         SceneManager::Update();
+        CollisionManger::Update();
 	}
 
 	void Application::LateUpdate()

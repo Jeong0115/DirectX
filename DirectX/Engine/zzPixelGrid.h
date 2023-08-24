@@ -21,11 +21,11 @@
 //
 //    public:
 //        static void Initialize();
-//        static void Update();
+//        static void UpdateUI();
 //        static void FixedUpdate();
 //        static void Render();
 //        static void Release();
-//        static void Clear();
+//        static void ClearUI();
 //
 //        static void SetHwnd(HWND hwnd) { mHwnd = hwnd; }
 //        static void SetImage(int x, int y, std::shared_ptr<class Texture> texture, std::shared_ptr<class Texture> texture_visual = nullptr);

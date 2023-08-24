@@ -27,6 +27,7 @@ namespace zz::renderer
     void LoadSpellResource();
     void LoadEffectResource();
     void LoadParticleResource();
+    void LoadMonsterResource();
 
     void LoadBuffer()
     {
@@ -197,6 +198,8 @@ namespace zz::renderer
         LoadWandTextureResource();
         LoadEffectResource();
         LoadSpellResource();
+        LoadMonsterResource();
+
         std::shared_ptr<Shader> spriteShader = ResourceManager::Find<Shader>(L"SpriteShader");
 
         {
@@ -653,6 +656,11 @@ namespace zz::renderer
         ResourceManager::Insert(L"m_BoltWand_0997", material);
     }
 
+    void LoadMonsterResource()
+    {
+        ResourceManager::Load<Texture>(L"shotgunner_weak", L"..\\Resources\\Texture\\Monster\\shotgunner_weak.png");
+    }
+
     void LoadSpellResource()
     {
         std::shared_ptr<Shader> spriteShader = ResourceManager::Find<Shader>(L"SpriteShader");
@@ -673,15 +681,10 @@ namespace zz::renderer
         material->SetShader(ParticleShader);
         material->SetTexture(Particle_Pink);
         ResourceManager::Insert(L"ParticleMaterial", material);
-
-
     }
 
     void LoadEffectResource()
     {
-        std::shared_ptr<Shader> spriteShader = ResourceManager::Find<Shader>(L"SpriteShader");
-        std::shared_ptr<Material> material;
-
         ResourceManager::Load<Texture>(L"explosion_128", L"..\\Resources\\Texture\\Effect\\explosion_128.png");
         ResourceManager::Load<Texture>(L"explosion_128_poof", L"..\\Resources\\Texture\\Effect\\explosion_128_poof.png");
     }

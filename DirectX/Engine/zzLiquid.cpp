@@ -14,7 +14,7 @@
 //    }
 //
 //    
-//    void Liquid::Update()
+//    void Liquid::UpdateUI()
 //    {
 //       
 //        //if (mStep != PixelGrid::Step) 

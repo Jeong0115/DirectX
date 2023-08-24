@@ -1,5 +1,5 @@
 #include "zzMouse.h"
-#include "zzUICollider.h"
+#include "zzCollider.h"
 #include "zzMeshRenderer.h"
 #include "zzResourceManager.h"
 #include "zzInput.h"
@@ -28,7 +28,7 @@ namespace zz
         GetComponent<Transform>()->SetPosition(pos.x, pos.y, 0.0f);
         GetComponent<Transform>()->SetScale(13.f, 13.f, 1.f);
 
-        UICollider* collider = AddComponent<UICollider>();
+        Collider* collider = AddComponent<Collider>();
         collider->SetScale(Vector3(1.f, 1.f, 1.f));
 
         GameObject::Initialize();

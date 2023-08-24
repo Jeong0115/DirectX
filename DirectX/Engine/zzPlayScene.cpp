@@ -20,6 +20,7 @@
 #include "zzPlayerArm.h"
 #include "zzInventoryManager.h"
 #include "zzParticleSystem.h"
+#include "zzShotGunner_Weak.h"
 
 namespace zz
 {
@@ -164,6 +165,12 @@ namespace zz
             MeshRenderer* mesh = object->AddComponent<MeshRenderer>();
             mesh->SetMaterial(ResourceManager::Find<Material>(L"m_hall_r_visual_512_0"));
             mesh->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
+        }
+
+        {
+            ShotGunner_Weak* object = new ShotGunner_Weak();
+            AddGameObject(object, eLayerType::Monster);
+            object->GetComponent<Transform>()->SetPosition(Vector3(0, 0, 0.2f));
         }
 
         //Explosion_128* bomb = new Explosion_128();

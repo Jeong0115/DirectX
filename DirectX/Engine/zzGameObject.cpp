@@ -55,4 +55,13 @@ namespace zz
             comp->Render();
         }
     }
+    void GameObject::OnCollisionEnter(GameObject* other)
+    {
+    }
+    void GameObject::OnCollisionStay(GameObject* other)
+    {
+    }
+    void GameObject::OnCollisionExit(GameObject* other)
+    {
+    }
 }

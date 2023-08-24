@@ -12,7 +12,7 @@
 //    Gas::~Gas()
 //    {
 //    }
-//    void Gas::Update()
+//    void Gas::UpdateUI()
 //    {
 //        if (mStep != PixelGrid::Step)
 //            return;

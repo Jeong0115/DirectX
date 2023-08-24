@@ -59,7 +59,7 @@ namespace zz
     void Animator::Create(const std::wstring& name, std::shared_ptr<Texture> atlas, Vector2 leftTop, Vector2 size, UINT columnLength, Vector2 offset, float duration)
     {
         Animation* animation = FindAnimation(name);
-        if (nullptr != animation)
+        if (animation != nullptr)
             return;
 
         animation = new Animation();

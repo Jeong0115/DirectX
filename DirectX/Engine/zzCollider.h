@@ -5,11 +5,11 @@
 
 namespace zz
 {
-    class UICollider : public Component
+    class Collider : public Component
     {
     public:
-        UICollider();
-        ~UICollider();
+        Collider();
+        ~Collider();
 
         virtual void Initialize()   override;
         virtual void Update()       override;
@@ -19,9 +19,9 @@ namespace zz
         Vector3 GetScale() { return mScale; }
         void SetScale(Vector3 scale) { mScale = scale; }
 
-        void OnCollisionEnter   (UICollider* other);
-        void OnCollisionStay    (UICollider* other);
-        void OnCollisionExit    (UICollider* other);
+        void OnCollisionEnter   (Collider* other);
+        void OnCollisionStay    (Collider* other);
+        void OnCollisionExit    (Collider* other);
 
         Transform* GetTransform()   { return mTransform; }
         UINT GetColliderID()        { return mColliderID; }

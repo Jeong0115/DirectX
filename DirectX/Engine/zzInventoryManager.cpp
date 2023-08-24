@@ -11,7 +11,7 @@
 #include "zzRenderer.h"
 
 #include "zzMouse.h"
-#include "zzUICollisionManger.h"
+#include "zzCollisionManger.h"
 #include "zzItemTexture.h"
 #include "zzItemTextureHighlight.h"
 
@@ -77,8 +77,8 @@ namespace zz
             }
         }
 
-        UICollisionManger::SetCollisionUI(eUIType::Mouse, eUIType::ItemSlot, true);
-        UICollisionManger::SetCollisionUI(eUIType::Mouse, eUIType::Item, true);
+        CollisionManger::SetCollisionUI(eUIType::Mouse, eUIType::ItemSlot, true);
+        CollisionManger::SetCollisionUI(eUIType::Mouse, eUIType::Item, true);
     }
 
     void InventoryManager::Update()
@@ -86,13 +86,13 @@ namespace zz
         if (mbOpenInventory)
         {
             dynamic_cast<UICamera*>(renderer::uiCamera)->TurnLayerMask(eUIType::BG, true);
-            UICollisionManger::Update();
+            CollisionManger::UpdateUI();
         }
         else
         {
             // 나중에 한번만 실행되게 수정
             dynamic_cast<UICamera*>(renderer::uiCamera)->TurnLayerMask(eUIType::BG, false);
-            UICollisionManger::ResetCollision();
+            CollisionManger::ResetCollisionUI();
         }
 
         if (Input::IsInputNumberKey())
@@ -127,7 +127,7 @@ namespace zz
                 if (mItemSlots[i]->GetItem() != nullptr)
                 {
                     dynamic_cast<Wand*>(mItemSlots[i]->GetItem())->GetInfoBox()->GetComponent<Transform>()->SetPosition(70.f, 250.f - 46.f * index, 0.f);
-                    //dynamic_cast<Wand*>(mItemSlots[i]->GetItem())->GetInfoBox()->Update();
+                    //dynamic_cast<Wand*>(mItemSlots[i]->GetItem())->GetInfoBox()->UpdateUI();
                     index++;
                 }
             }
