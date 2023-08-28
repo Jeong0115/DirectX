@@ -123,18 +123,17 @@ namespace zz
     struct Particle
     {
         math::Vector4 position;
-        math::Vector4 velocity;
         math::Vector4 scale;
         math::Vector4 color;
 
+        math::Vector2 velocity;
+
         float lifeTime;
-        float time;
-        float speed;
 
         UINT active;
     };
 
-    struct ParticleShared
+    struct ProjectileShared
     {
         math::Vector4 curPosition;
         math::Vector4 distance;
@@ -143,8 +142,8 @@ namespace zz
         float index;
         float angle;
 
-        UINT SetActiveCount;
-        UINT RemainingActiveCount;
+        UINT activeCount;
+        UINT totalActiveCount;
     };
 
     struct ParticleAnimation
@@ -156,13 +155,12 @@ namespace zz
         float imageRate;
         float lifeTime;
         float time;
-        float speed;
 
-        UINT active;
         UINT animationIndex;
+        UINT active;
     };
 
-    struct ParticleAnimationShared
+    struct AnimationShared
     {
         math::Vector4 curPosition;
         math::Vector4 gravity;
@@ -170,7 +168,21 @@ namespace zz
         float maxAnimationCnt;
         float durtaion;
 
-        UINT SetActiveCount;
-        UINT RemainingActiveCount;
+        UINT activeCount;
+    };
+
+    struct ParticleShared
+    {
+        math::Vector4 curPosition;
+        math::Vector4 scale;
+        math::Vector4 color;
+
+        math::Vector2 randPositionMin;
+        math::Vector2 randPositionMax;
+        math::Vector2 randVelocityMin;
+        math::Vector2 randVelocityMax;
+        math::Vector2 randLifeTime;
+
+        UINT activeCount;
     };
 }

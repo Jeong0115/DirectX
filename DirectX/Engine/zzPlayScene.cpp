@@ -11,16 +11,12 @@
 #include "zzCameraScript.h"
 #include "zzBGScript.h"
 #include "zzAnimator.h"
-#include "zzWandScript.h"
 #include "zzRenderer.h"
-#include "zzCursorScript.h"
-#include "zzInventoryBG.h"
-#include "zzInventoryBox.h"
 #include "zzPlayer.h"
 #include "zzPlayerArm.h"
 #include "zzInventoryManager.h"
-#include "zzParticleSystem.h"
 #include "zzShotGunner_Weak.h"
+#include "zzCollisionManger.h"
 
 namespace zz
 {
@@ -58,6 +54,8 @@ namespace zz
     
     void PlayScene::Initialize()
     {       
+        CollisionManger::SetCollision(eLayerType::Monster, eLayerType::PlayerAttack, true);
+
         camera = new GameObject();
         AddGameObject(camera, eLayerType::Camera);
         camera->GetComponent<Transform>()->SetPosition(Vector3(0.0f, 0.0f, -10.0f));
@@ -109,7 +107,7 @@ namespace zz
 
         GameObject* object = new GameObject();
         AddGameObject(object, eLayerType::Player);
-        object->GetComponent<Transform>()->SetPosition(Vector3(x +1024 - 256, y -1024 + 256, 0.05f));
+        object->GetComponent<Transform>()->SetPosition(Vector3(x +1024 - 256, y -1024 + 256, PIXEL_WORLD_Z));
         object->GetComponent<Transform>()->SetScale(Vector3(2048.f, 2048.f, 1.0f));
         MeshRenderer* mesh = object->AddComponent<MeshRenderer>();
         mesh->SetMaterial(ResourceManager::Find<Material>(L"m_PixelTexture"));
@@ -198,9 +196,9 @@ namespace zz
             Player* player;
             player = new Player();
             AddGameObject(player, eLayerType::Player);
-            player->GetComponent<Transform>()->SetPosition(Vector3(10.f, -300.f, 0.000f));
+            player->GetComponent<Transform>()->SetPosition(Vector3(10.f, -300.f, 0.200f));
             player->GetComponent<Transform>()->SetScale(Vector3(12.f, 19.f, 1.0f));    
-            //player->SetCamera(camera);
+            player->SetCamera(camera);
             //player->AddComponent<ParticleSystem>();
            
             

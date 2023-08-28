@@ -214,15 +214,6 @@
     <Filter Include="Component\MeshRenderer">
       <UniqueIdentifier>{85c0df24-4171-4660-b45f-b1af55684ea1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Component\Script">
-      <UniqueIdentifier>{0cc6caae-b32e-4329-85c1-b540c7fcf12f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Component\Script\Player">
-      <UniqueIdentifier>{c644f2a5-6ad4-4b77-9221-8a672b8a2855}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Component\Script\Wand">
-      <UniqueIdentifier>{201cfd53-bc61-4bd8-80ef-969c424e37df}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Component\Camera">
       <UniqueIdentifier>{bb8d0172-2335-4d19-8e18-28d6894b0234}</UniqueIdentifier>
     </Filter>
@@ -298,6 +289,24 @@
     <Filter Include="GameObject\Monster\ShotGunner_Weak">
       <UniqueIdentifier>{3502c1df-a7a7-4bb5-83ac-7336a3b8d43b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Component\PixelCollider">
+      <UniqueIdentifier>{55f8ae59-61a0-4e2c-a3e4-6f8ba008fbad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Transform\Script">
+      <UniqueIdentifier>{0cc6caae-b32e-4329-85c1-b540c7fcf12f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Transform\Script\Player">
+      <UniqueIdentifier>{c644f2a5-6ad4-4b77-9221-8a672b8a2855}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Transform\Script\Wand">
+      <UniqueIdentifier>{201cfd53-bc61-4bd8-80ef-969c424e37df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Levitation">
+      <UniqueIdentifier>{143f6676-0ae3-4a59-ac7f-28a4f88ff501}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Effect\ExplosionEffect">
+      <UniqueIdentifier>{96210bc7-15cf-4f07-9378-a474c5059357}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzEntity.cpp">
@@ -364,7 +373,7 @@
       <Filter>Resource\Material</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzScript.cpp">
-      <Filter>Component\Script</Filter>
+      <Filter>Component\Transform\Script</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzPixelGrid.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzSand.cpp">
@@ -374,10 +383,10 @@
       <Filter>Element</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzBGScript.cpp">
-      <Filter>Component\Script</Filter>
+      <Filter>Component\Transform\Script</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzCameraScript.cpp">
-      <Filter>Component\Script</Filter>
+      <Filter>Component\Transform\Script</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzWater.cpp">
       <Filter>Element\Liquid\Water</Filter>
@@ -435,19 +444,19 @@
       <Filter>Scene\Scene</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzPlayerScript.cpp">
-      <Filter>Component\Script\Player</Filter>
+      <Filter>Component\Transform\Script\Player</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzBox2dWorld.cpp">
       <Filter>Box2dWorld</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzPlayerArmScript.cpp">
-      <Filter>Component\Script\Player</Filter>
+      <Filter>Component\Transform\Script\Player</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzWandScript.cpp">
-      <Filter>Component\Script\Wand</Filter>
+      <Filter>Component\Transform\Script\Wand</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzCursorScript.cpp">
-      <Filter>Component\Script</Filter>
+      <Filter>Component\Transform\Script</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzInventoryBG.cpp">
       <Filter>UI\Inventory</Filter>
@@ -551,6 +560,16 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)zzShotGunner_Weak.cpp">
       <Filter>GameObject\Monster\ShotGunner_Weak</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzPixelCollider.cpp">
+      <Filter>Component\PixelCollider</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzLevitation.cpp">
+      <Filter>Component\Levitation</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzPixelCollider_Lite.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzExplosionEffect.cpp">
+      <Filter>GameObject\Effect\ExplosionEffect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzEntity.h">
@@ -635,7 +654,7 @@
       <Filter>Resource\Material</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzScript.h">
-      <Filter>Component\Script</Filter>
+      <Filter>Component\Transform\Script</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzPixelGrid.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzSand.h">
@@ -645,10 +664,10 @@
       <Filter>Element</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzCameraScript.h">
-      <Filter>Component\Script</Filter>
+      <Filter>Component\Transform\Script</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzBGScript.h">
-      <Filter>Component\Script</Filter>
+      <Filter>Component\Transform\Script</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzWater.h">
       <Filter>Element\Liquid\Water</Filter>
@@ -718,19 +737,19 @@
       <Filter>Scene\Scene</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzPlayerScript.h">
-      <Filter>Component\Script\Player</Filter>
+      <Filter>Component\Transform\Script\Player</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzBox2dWorld.h">
       <Filter>Box2dWorld</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzPlayerArmScript.h">
-      <Filter>Component\Script\Player</Filter>
+      <Filter>Component\Transform\Script\Player</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzWandScript.h">
-      <Filter>Component\Script\Wand</Filter>
+      <Filter>Component\Transform\Script\Wand</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzCursorScript.h">
-      <Filter>Component\Script</Filter>
+      <Filter>Component\Transform\Script</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzInventoryBG.h">
       <Filter>UI\Inventory</Filter>
@@ -830,6 +849,16 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzShotGunner_Weak.h">
       <Filter>GameObject\Monster\ShotGunner_Weak</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzPixelCollider.h">
+      <Filter>Component\PixelCollider</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzLevitation.h">
+      <Filter>Component\Levitation</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzPixelCollider_Lite.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzExplosionEffect.h">
+      <Filter>GameObject\Effect\ExplosionEffect</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

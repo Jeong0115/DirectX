@@ -17,7 +17,15 @@ namespace zz
 
         void SetStartVelocity(float speed, float angle);
         void SetAirFirction(float friction) { mAirFriction = friction; }
-        void SetGravity(float gravity) { mGravity = gravity; }
+        void SetGravity(float gravity)      { mGravity = gravity; }
+        void SetVelocityX(float speedX)     { mVelocity.x = speedX; }
+        void SetVelocityY(float speedY)     { mVelocity.y = speedY; }
+        void SetGround(bool isGround);
+
+        bool IsGround() { return mbGround; }
+
+        Vector3 GetPredictedPosition();
+        Vector3 GetVelocity() { return mVelocity; }
 
     private:
         class Transform* mTransform;
@@ -25,6 +33,8 @@ namespace zz
         Vector3 mVelocity;
         float   mAirFriction;
         float   mGravity;
+
+        bool    mbGround;
 
     };
 }

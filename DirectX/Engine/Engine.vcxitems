@@ -14,6 +14,7 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzExplosionEffect.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzExplosion_128.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)function.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzAttackSpell.cpp" />
@@ -25,10 +26,13 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)zzInfoBoxTexture.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzItemTexture.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzItemTextureHighlight.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzLevitation.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzMouse.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzObjectPoolManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzParticleShader.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzParticleSystem.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzPixelCollider.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzPixelCollider_Lite.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzRigidBody.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzShotGunner_Weak.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzSmoke_Orange.cpp" />
@@ -108,6 +112,7 @@
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)CommonInclude.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)define.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzExplosionEffect.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzExplosion_128.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)function.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzAttackSpell.h" />
@@ -119,10 +124,13 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzInfoBoxTexture.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzItemTexture.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzItemTextureHighlight.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzLevitation.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzMouse.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzObjectPoolManager.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzParticleShader.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzParticleSystem.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzPixelCollider.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzPixelCollider_Lite.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzRigidBody.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzShotGunner_Weak.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzSmoke_Orange.h" />

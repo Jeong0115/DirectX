@@ -1,5 +1,6 @@
 #include "zzCollider.h"
 #include "zzGameObject.h"
+#include "zzTransform.h"
 
 namespace zz
 {

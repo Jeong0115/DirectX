@@ -1,15 +1,15 @@
 #pragma once
 
 #include "zzComponent.h"
-#include "zzTransform.h"
 
 namespace zz
 {
+    class Transform;
     class Collider : public Component
     {
     public:
         Collider();
-        ~Collider();
+        virtual ~Collider();
 
         virtual void Initialize()   override;
         virtual void Update()       override;
@@ -18,6 +18,7 @@ namespace zz
 
         Vector3 GetScale() { return mScale; }
         void SetScale(Vector3 scale) { mScale = scale; }
+        void SetScale(float x, float y, float z) { mScale = Vector3(x, y, z); }
 
         void OnCollisionEnter   (Collider* other);
         void OnCollisionStay    (Collider* other);

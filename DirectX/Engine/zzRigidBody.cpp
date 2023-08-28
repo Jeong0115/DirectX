@@ -9,8 +9,9 @@ namespace zz
         : Component(eComponentType::RigidBody)
         , mVelocity(Vector3::Zero)
         , mAirFriction(0.f)
-        , mGravity(0.f)
+        , mGravity(400.f)
         , mTransform(nullptr)
+        , mbGround(false)
     {
     }
 
@@ -27,10 +28,19 @@ namespace zz
     {
         Vector3 pos = mTransform->GetPosition();
 
+        if (!mbGround)
+        {
+            mVelocity.y -= mGravity * (float)Time::DeltaTime();
+        }
+
+        if (mAirFriction != 0.f)
+        {
+            mVelocity.x *= pow((1.0f / mAirFriction), (float)Time::DeltaTime());
+        }
+
         pos += mVelocity * (float)Time::DeltaTime();
-        mVelocity.y -= mGravity * (float)Time::DeltaTime();
-        mVelocity.x *= pow((1.0f / mAirFriction), (float)Time::DeltaTime());
-    
+
+
 
         //if (fabsf(mVelocity.x) <= 1.0f)
         //{
@@ -52,5 +62,24 @@ namespace zz
     {
         mVelocity.x = cos(angle) * speed;
         mVelocity.y = sin(angle) * speed;
+    }
+
+    void RigidBody::SetGround(bool isGround)
+    {
+        mbGround = isGround;
+
+        if (isGround)
+        {
+            mVelocity.y = 0.0f;
+        }   
+    }
+    
+    Vector3 RigidBody::GetPredictedPosition()
+    {
+        Vector3 pos = mTransform->GetPosition();
+
+        pos += mVelocity * (float)Time::DeltaTime();
+
+        return pos;
     }
 }

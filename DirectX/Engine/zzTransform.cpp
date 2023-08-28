@@ -57,6 +57,7 @@ namespace zz
 
     void Transform::Render()
     {
+        BindConstantBuffer();
     }
 
     void Transform::BindConstantBuffer()

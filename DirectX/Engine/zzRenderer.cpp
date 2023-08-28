@@ -163,8 +163,12 @@ namespace zz::renderer
         ResourceManager::Insert(L"SpriteAnimationShader", spriteAnimationShader);
 
         std::shared_ptr<ParticleShader> psSystemShader = std::make_shared<ParticleShader>();
-        psSystemShader->Create(L"ParticleCS.hlsl", "main");
-        ResourceManager::Insert(L"ParticleSystemShader", psSystemShader);
+        psSystemShader->Create(L"ProjectileParticleCS.hlsl", "main");
+        ResourceManager::Insert(L"ProjectileParticleCS", psSystemShader);
+
+        std::shared_ptr<ParticleShader> psSystemShader1 = std::make_shared<ParticleShader>();
+        psSystemShader1->Create(L"ParticleCS.hlsl", "main");
+        ResourceManager::Insert(L"ParticleCS", psSystemShader1);
 
         std::shared_ptr<Shader> paritcleShader = std::make_shared<Shader>();
         paritcleShader->CreateShader(eShaderStage::VS, L"ParticleVS.hlsl", "main");
@@ -178,7 +182,7 @@ namespace zz::renderer
 
         std::shared_ptr<ParticleShader> psSystemAnimationShader = std::make_shared<ParticleShader>();
         psSystemAnimationShader->Create(L"ParticleAnimationCS.hlsl", "main");
-        ResourceManager::Insert(L"ParticleSystemAnimationShader", psSystemAnimationShader);
+        ResourceManager::Insert(L"ParticleAnimationCS", psSystemAnimationShader);
 
         std::shared_ptr<Shader> paritcleAnimationShader = std::make_shared<Shader>();
         paritcleAnimationShader->CreateShader(eShaderStage::VS, L"ParticleAnimationVS.hlsl", "main");
@@ -679,8 +683,7 @@ namespace zz::renderer
         std::shared_ptr<Shader> ParticleShader = ResourceManager::Find<Shader>(L"ParticleShader");
         material = std::make_shared<Material>();
         material->SetShader(ParticleShader);
-        material->SetTexture(Particle_Pink);
-        ResourceManager::Insert(L"ParticleMaterial", material);
+        ResourceManager::Insert(L"m_Particle", material);
     }
 
     void LoadEffectResource()

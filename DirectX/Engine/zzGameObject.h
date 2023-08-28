@@ -51,6 +51,13 @@ namespace zz
             return comp;
         }
 
+        template<DerivedFromComponent T>
+        void AddComponent(T* component)
+        {
+            component->SetOwner(this);
+            mComponents.push_back(component);
+        }
+
         eState GetState() { return mState; }
         bool IsDead() { return (mState == eState::Dead); }
         bool GetActive() { return mbActive; }

@@ -25,10 +25,10 @@ void main(uint3 DTid : SV_DispatchThreadID)
             ParticleBuffer[DTid.x] = particle;
         }
     }
-    else if (ParticleSharedBuffer[0].activeCount > 0)
+    else if (ProjectileSharedBuffer[0].activeCount > 0)
     {
         int count;
-        InterlockedAdd(ParticleSharedBuffer[0].activeCount, -1, count);
+        InterlockedAdd(ProjectileSharedBuffer[0].activeCount, -1, count);
         
         if (count > 0)
         {
@@ -44,26 +44,21 @@ void main(uint3 DTid : SV_DispatchThreadID)
                 , GaussianBlur(uv + float2(0.3f, 0.f)).x
 
             );
-            ParticleShared sharedBuffer = ParticleSharedBuffer[0];
+            ProjectileShared projectile = ProjectileSharedBuffer[0];
             
-            float2 randomPosition;
-            randomPosition.x = (sharedBuffer.randPositionMax.x - sharedBuffer.randPositionMin.x) * random.x + sharedBuffer.randPositionMin.x;
-            randomPosition.y = (sharedBuffer.randPositionMax.y - sharedBuffer.randPositionMin.y) * random.y + sharedBuffer.randPositionMin.y;
-
-            float2 randomVelocity;
-            randomVelocity.x = (sharedBuffer.randVelocityMax.x - sharedBuffer.randVelocityMin.x) * random.z + sharedBuffer.randVelocityMin.x;
-            randomVelocity.y = (sharedBuffer.randVelocityMax.y - sharedBuffer.randVelocityMin.y) * random.w + sharedBuffer.randVelocityMin.y;
+            particle.position = projectile.curPosition - (projectile.distance * ((float) count / projectile.totalActiveCount));
             
-            random.x = GaussianBlur(uv + float2(0.4f, 0.f)).x;
+            int index = projectile.index + projectile.totalActiveCount - count;
+             
+            float angle = projectile.angle;
             
-            float randomLifeTime;
-            particle.lifeTime = (sharedBuffer.randLifeTime.x - sharedBuffer.randLifeTime.y) * random.x + sharedBuffer.randLifeTime.y;
+            particle.velocity.x = (random.x + 1.f) * cos(angle) * (random.w > 0.5f ? 1 : -1);
+            particle.velocity.y = random.y * sin(angle);
             
-            particle.position = sharedBuffer.curPosition + float4(randomPosition.xy, 0.0f, 0.0f);
-            particle.velocity = randomVelocity;
-            particle.color = sharedBuffer.color;
-            particle.scale = sharedBuffer.scale;
+            particle.color = projectile.color;
             particle.active = 1;
+            particle.lifeTime = 0.1f;
+            particle.scale = float4(1.0f, 1.0f, 1.0f, 0.0f);
             
             ParticleBuffer[DTid.x] = particle;
         }

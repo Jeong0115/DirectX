@@ -12,6 +12,10 @@
 #include "zzMaterial.h"
 #include "zzInventoryManager.h"
 #include "zzExplosion_128.h"
+#include "zzCollider.h"
+#include "zzPixelCollider.h"
+#include "zzLevitation.h"
+#include "zzRigidBody.h"
 
 namespace zz
 {
@@ -22,6 +26,7 @@ namespace zz
         , vel(0.f)
         , mEquipmentInitialPos(Vector3::Zero)
         , mPlayerArm(nullptr)
+        , mRigid(nullptr)
     {
     }
 
@@ -43,6 +48,15 @@ namespace zz
         mesh->SetMaterial(ResourceManager::Find<Material>(L"m_SpriteAnimation"));
         mesh->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
 
+        AddComponent<Levitation>()->SetMaxEnergy(3.0f);
+
+        PixelCollider* pxCollier = AddComponent<PixelCollider>();
+        pxCollier->SetCollision(Vector3(0.0f, -4.0f, 0.0f), Vector3(6.f, 8.f, 0.0f));
+        pxCollier->SetClimbY(3.0f);
+
+        mRigid = AddComponent<RigidBody>();
+        AddComponent<Collider>()->SetScale(6.0f, 10.f, 1.0f);
+
         mAnimator = AddComponent<Animator>();
 
         mAnimator->Create(L"Player_Idle", texture, Vector2(0.0f, 1.0f), Vector2(12.0f, 19.0f), 6, Vector2::Zero, 0.1f);
@@ -55,6 +69,7 @@ namespace zz
 
         mPlayerArm->Initialize();
         //mEquipment->Initialize();
+        GameObject::Initialize();
     }
 
     void Player::Update()
@@ -62,7 +77,7 @@ namespace zz
         if (Input::GetKeyDown(eKeyCode::B))
         {
             Explosion_128* bomb = new Explosion_128();
-            bomb->GetComponent<Transform>()->SetPosition(Input::GetMouseWorldPos());
+            bomb->GetComponent<Transform>()->SetPosition(Input::GetMouseWorldPos().x, Input::GetMouseWorldPos().y, 0.02f);
             CreateObject(bomb, eLayerType::Effect);
         }
         if (Input::GetKeyDown(eKeyCode::TAB))
@@ -73,86 +88,30 @@ namespace zz
         Transform* tr = GetComponent<Transform>();
         Vector3 pos = tr->GetPosition();
 
-#pragma region MoveTemp
-
-        if (Input::GetKey(eKeyCode::LEFT) || Input::GetKey(eKeyCode::RIGHT))
+        //if (Input::GetKeyDown(eKeyCode::W))
+        //{
+        //    mRigid->SetVelocityY(100.f);
+        //    GetComponent<RigidBody>()->SetGround(false);
+        //}
+        if (Input::GetKey(eKeyCode::A))
         {
-            if (Input::GetKey(eKeyCode::LEFT))
-            {
-                pos.x -= 50.0f * Time::DeltaTime();
-            }
-            if (Input::GetKey(eKeyCode::RIGHT))
-            {
-                pos.x += 50.0f * Time::DeltaTime();
-            }
+            mRigid->SetVelocityX(-50.f);
         }
-
-        if (!jump && !fall && Input::GetKeyDown(eKeyCode::LEFT) || Input::GetKeyDown(eKeyCode::RIGHT))
+        else if (Input::GetKeyUp(eKeyCode::A))
         {
-            mAnimator->PlayAnimation(L"Player_Walk", true);
+            mRigid->SetVelocityX(0.0f);
         }
-        else if (!jump && !fall && Input::GetKeyUp(eKeyCode::LEFT) || Input::GetKeyUp(eKeyCode::RIGHT))
+        if (Input::GetKey(eKeyCode::D))
         {
-            mAnimator->PlayAnimation(L"Player_Idle", true);
+            mRigid->SetVelocityX(50.f);
         }
-
-        if (!jump && Input::GetKeyDown(eKeyCode::UP))
+        else if (Input::GetKeyUp(eKeyCode::D))
         {
-            vel += 120.f;
-            jump = true;
-            mAnimator->PlayAnimation(L"Player_Jump_Up", true);
+            mRigid->SetVelocityX(0.0f);
         }
+        
+        tr->SetPosition(pos);
 
-        if (jump || fall)
-        {
-            vel -= 180.0f * Time::DeltaTime();
-        }
-        if (jump && vel < 0)
-        {
-            fall = true;
-            mAnimator->PlayAnimation(L"Player_Jump_Fall", true);
-        }
-
-        pos.y += vel * Time::DeltaTime();
-
-        if (pos.x >= 0 && -pos.y + 7 >= 0)
-        {
-            if (PixelWorld::GetElement(pos.x, -pos.y + 7).Type == eElementType::SOLID)
-            {
-                pos.y += 1;
-                if (jump || fall)
-                {
-                    mAnimator->PlayAnimation(L"Player_Idle", true);
-                    vel = 0.f;
-                }
-                jump = fall = false;
-            }
-            else if (PixelWorld::GetElement(pos.x, -pos.y + 9).Type != eElementType::SOLID)
-            {
-                fall = true;
-                if (vel <= -180.f)
-                {
-                    mAnimator->PlayAnimation(L"Player_Jump_Fall", true);
-
-                }
-            }
-            if (PixelWorld::GetElement(pos.x + 6.f, -pos.y).Type == eElementType::SOLID)
-            {
-
-            }
-            else tr->SetPosition(pos);
-        }
-
-
-#pragma endregion
-
-        if (mCamera != nullptr)
-        {
-            Vector3 cPos = mCamera->GetComponent<Transform>()->GetPosition();
-            cPos.x = pos.x;
-            cPos.y = pos.y;
-            mCamera->GetComponent<Transform>()->SetPosition(cPos);
-        }
 
         GameObject::Update();
 
@@ -170,8 +129,12 @@ namespace zz
 
     void Player::LateUpdate()
     {
-        GameObject::LateUpdate();
+        if (mCamera != nullptr)
+        {
+            mCamera->GetComponent<Transform>()->SetPosition(GetComponent<Transform>()->GetPosition());
+        }
 
+        GameObject::LateUpdate();
         mPlayerArm->LateUpdate();
         if (mEquipment != nullptr)
             mEquipment->LateUpdate();
@@ -214,7 +177,14 @@ namespace zz
             
             mEquipment->Render();
         }
+
+
+
+        flipCB = {};
+        cb->SetBufferData(&flipCB);
+        cb->BindConstantBuffer(eShaderStage::PS);
     }
+
     void Player::OnCollisionEnter(GameObject* other)
     {
     }

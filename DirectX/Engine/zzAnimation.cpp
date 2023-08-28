@@ -98,6 +98,7 @@ namespace zz
         cb->BindConstantBuffer(eShaderStage::VS);
         cb->BindConstantBuffer(eShaderStage::PS);
     }
+
     void Animation::Reset()
     {
         mTime = 0.0f;

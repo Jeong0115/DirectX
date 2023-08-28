@@ -1,16 +1,13 @@
 #include "Common.hlsli"
 #include "Particle.hlsli"
 
-RWStructuredBuffer<ParticleAnimation> ParticleBuffer : register(u2);
-RWStructuredBuffer<ParticleAnimationShared> SharedBuffer : register(u3);
-
 [numthreads(128, 1, 1)]
 void main(uint3 DTid : SV_DispatchThreadID)
 {
     if (elementCount <= DTid.x)
         return;
     
-    ParticleAnimation particle = ParticleBuffer[DTid.x];
+    ParticleAnimation particle = ParticleAnimationBuffer[DTid.x];
     
     if (particle.active == 1)
     {
@@ -20,35 +17,35 @@ void main(uint3 DTid : SV_DispatchThreadID)
         if (particle.lifeTime <= 0)
         {
             particle.active = 0;
-            ParticleBuffer[DTid.x] = particle;
+            ParticleAnimationBuffer[DTid.x] = particle;
             return;
         }
         else
         {
-            if (particle.time >= SharedBuffer[0].durtaion)
+            if (particle.time >= AnimationSharedBuffer[0].durtaion)
             {
-                particle.time -= SharedBuffer[0].durtaion;
+                particle.time -= AnimationSharedBuffer[0].durtaion;
                 particle.index += 1;
                 
-                if (particle.index >= SharedBuffer[0].maxAnimationCnt)
+                if (particle.index >= AnimationSharedBuffer[0].maxAnimationCnt)
                 {
                     particle.index = 0;
                 }
-                particle.ImageRate = 1 / SharedBuffer[0].maxAnimationCnt;
+                particle.ImageRate = 1 / AnimationSharedBuffer[0].maxAnimationCnt;
 
             }
-            particle.position += particle.velocity * particle.speed * deltaTime;
-            ParticleBuffer[DTid.x] = particle;
+            particle.position += particle.velocity * deltaTime;
+            ParticleAnimationBuffer[DTid.x] = particle;
         }
     }
-    else if (SharedBuffer[0].RemainingActiveCount > 0)
+    else if (AnimationSharedBuffer[0].activeCount > 0)
     {
         int count;
-        InterlockedAdd(SharedBuffer[0].RemainingActiveCount, -1, count);
+        InterlockedAdd(AnimationSharedBuffer[0].activeCount, -1, count);
         
         if (count > 0)
         {
-            ParticleAnimationShared sharedBuffer = SharedBuffer[0];            
+            AnimationShared sharedBuffer = AnimationSharedBuffer[0];
             particle.position = sharedBuffer.curPosition;
             
             float2 uv = float2((float) DTid.x / elementCount, 0.5f);
@@ -72,11 +69,10 @@ void main(uint3 DTid : SV_DispatchThreadID)
             particle.active = 1;
             particle.lifeTime = 10.0f;
             particle.time = 0.0f;
-            particle.speed = 1.0f;
             particle.index = 0.0f;
             particle.scale = float4(16.0f, 16.0f, 1.0f, 0.0f);
             
-            ParticleBuffer[DTid.x] = particle;
+            ParticleAnimationBuffer[DTid.x] = particle;
         }
     }
 }

@@ -48,13 +48,16 @@
     <FxCompile Include="$(MSBuildThisFileDirectory)ParticlePS.hlsl">
       <Filter>Particle</Filter>
     </FxCompile>
-    <FxCompile Include="$(MSBuildThisFileDirectory)ParticleCS.hlsl">
-      <Filter>Particle</Filter>
-    </FxCompile>
     <FxCompile Include="$(MSBuildThisFileDirectory)ParticleGS.hlsl">
       <Filter>Particle</Filter>
     </FxCompile>
     <FxCompile Include="$(MSBuildThisFileDirectory)ParticleVS.hlsl">
+      <Filter>Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="$(MSBuildThisFileDirectory)ParticleCS.hlsl">
+      <Filter>Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="$(MSBuildThisFileDirectory)ProjectileParticleCS.hlsl">
       <Filter>Particle</Filter>
     </FxCompile>
   </ItemGroup>

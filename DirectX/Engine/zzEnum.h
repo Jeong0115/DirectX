@@ -13,6 +13,9 @@ namespace zz
         Animator,
         Camera,
         Collider,
+        PixelCollider,
+        PixelCollider_Lite,
+        Levitation,
         End,
     };
 
@@ -22,7 +25,8 @@ namespace zz
         BG,
         Player,
         Monster,
-        
+        PlayerAttack,
+
         Object,
         Effect,
         Particle,

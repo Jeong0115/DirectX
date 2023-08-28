@@ -19,7 +19,6 @@ namespace zz
         virtual void OnCollisionStay(GameObject* other)  override;
         virtual void OnCollisionExit(GameObject* other)  override;
 
-        void Test();
 
     private:
         class Animator* mAnimator;

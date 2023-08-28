@@ -4,6 +4,7 @@
 #include "zzResourceManager.h"
 #include "zzTransform.h"
 #include "zzAnimation.h"
+#include "zzCollider.h"
 
 namespace zz
 {
@@ -19,6 +20,7 @@ namespace zz
     void ShotGunner_Weak::Initialize()
     {
         GetComponent<Transform>()->SetScale(17.f, 17.f, 1.0f);
+        AddComponent<Collider>()->SetScale(5.f, 10.f, 1.0f);
 
         std::shared_ptr<Texture> texture = ResourceManager::Find<Texture>(L"shotgunner_weak");
 
@@ -33,7 +35,7 @@ namespace zz
         mAnimator->Create(L"shotgunner_weak_attack", texture, Vector2(0.0f, 68.f), Vector2(17.0f, 17.0f), 6, Vector2::Zero, 0.07f);
         mAnimator->Create(L"shotgunner_weak_attack_ranged", texture, Vector2(0.0f, 85.f), Vector2(17.0f, 17.0f), 7, Vector2::Zero, 0.15f);
 
-        mAnimator->FindAnimation(L"shotgunner_weak_stand")->SetAnimationEvent(3, std::bind(&ShotGunner_Weak::Test, this));
+        //mAnimator->FindAnimation(L"shotgunner_weak_stand")->SetAnimationEvent(3, std::bind(&ShotGunner_Weak::Test, this));
         mAnimator->PlayAnimation(L"shotgunner_weak_stand", true);
         GameObject::Initialize();
     }
@@ -55,6 +57,7 @@ namespace zz
 
     void ShotGunner_Weak::OnCollisionEnter(GameObject* other)
     {
+        int a = 0;
     }
 
     void ShotGunner_Weak::OnCollisionStay(GameObject* other)
@@ -65,8 +68,4 @@ namespace zz
     {
     }
 
-    void ShotGunner_Weak::Test()
-    {
-        int a = 0;
-    }
 }

@@ -28,10 +28,11 @@ namespace zz
 
     private:
         GameObject* mCamera;
-        Equipment* mEquipment;
         GameObject* mPlayerArm;
+        Equipment*  mEquipment;
 
-        class Animator* mAnimator;
+        class Animator*     mAnimator;
+        class RigidBody*    mRigid;
 
         Vector3 mEquipmentInitialPos;
         float vel;

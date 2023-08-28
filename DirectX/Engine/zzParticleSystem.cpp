@@ -72,7 +72,7 @@ namespace zz
 
     void ParticleSystem::Render()
     {
-        GetOwner()->GetComponent<Transform>()->BindConstantBuffer();
+        //GetOwner()->GetComponent<Transform>()->BindConstantBuffer();
 
         mBuffer->BindSRV(eShaderStage::VS);
         mBuffer->BindSRV(eShaderStage::GS);

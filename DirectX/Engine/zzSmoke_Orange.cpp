@@ -35,13 +35,13 @@ namespace zz
         GetComponent<Transform>()->SetScale(16.f, 16.f, 1.0f);
 
         mParticle = AddComponent<ParticleSystem>();
-        mParticle->SetMaterial(ResourceManager::Find<Material>(L"ParticleMaterial"));
+        mParticle->SetMaterial(ResourceManager::Find<Material>(L"m_Particle"));
         mParticle->SetMesh(ResourceManager::Find<Mesh>(L"PointMesh"));
-        mParticle->SetParticleShader(ResourceManager::Find<ParticleShader>(L"ParticleSystemShader"));
+        mParticle->SetParticleShader(ResourceManager::Find<ParticleShader>(L"ProjectileParticleCS"));
 
         Particle particles[15] = {};
         mParticle->CreateStructedBuffer(sizeof(Particle), 15, eViewType::UAV, particles, true, 0, 14, 0);
-        mParticle->CreateStructedBuffer(sizeof(ParticleShared), 1, eViewType::UAV, nullptr, true, 1, 14, 1);
+        mParticle->CreateStructedBuffer(sizeof(ProjectileShared), 1, eViewType::UAV, nullptr, true, 1, 14, 1);
     }
 
     Smoke_Orange::~Smoke_Orange()
@@ -73,7 +73,7 @@ namespace zz
     {
         Vector3 curPos = GetComponent<Transform>()->GetPosition();
 
-        ParticleShared shareData = {};
+        ProjectileShared shareData = {};
         shareData.curPosition = Vector4((int)curPos.x, (int)curPos.y, (int)curPos.z, 0.0f);
         shareData.distance = shareData.curPosition - mPrevPos;
         shareData.distance.z = 0;
@@ -81,8 +81,8 @@ namespace zz
         shareData.angle = GetComponent<Transform>()->GetRotation().z;
 
         UINT count = (UINT)std::max(fabs(shareData.distance.x), fabs(shareData.distance.y));
-        shareData.SetActiveCount = count;
-        shareData.RemainingActiveCount = count;
+        shareData.activeCount = count;
+        shareData.totalActiveCount = count;
         //mIndex += count;
         mParticle->SetStructedBufferData(&shareData, 1, 1);
 

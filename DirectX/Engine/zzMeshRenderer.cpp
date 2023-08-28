@@ -32,8 +32,8 @@ namespace zz
 
     void MeshRenderer::Render()
     {
-        Transform* tr = GetOwner()->GetComponent<Transform>();
-        tr->BindConstantBuffer();
+        //Transform* tr = GetOwner()->GetComponent<Transform>();
+        //tr->BindConstantBuffer();
 
         mMesh->BindBuffer();
         mMaterial->Binds();

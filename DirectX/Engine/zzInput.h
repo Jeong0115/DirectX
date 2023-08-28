@@ -47,7 +47,6 @@ namespace zz
             return mKeys[(UINT)keyCode].state;
         };
 
-
         static __forceinline bool GetKey(eKeyCode keyCode)
         {
             return mKeys[static_cast<UINT>(keyCode)].state == eKeyState::Pressed;

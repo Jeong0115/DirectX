@@ -138,28 +138,42 @@ namespace zz
             }
         }
 
+        GameObject* leftObj = left->GetOwner();
+        GameObject* rightObj = right->GetOwner();
+
         if (Intersect(left, right))
         {
-            if (iter->second == false)
+            if (iter->second)
             {
-                left->OnCollisionEnter(right);
-                right->OnCollisionEnter(left);
-
-                iter->second = true;
+                if (leftObj->IsDead() || rightObj->IsDead())
+                {
+                    left->OnCollisionExit(right);
+                    right->OnCollisionExit(left);
+                    iter->second = false;
+                }
+                else
+                {
+                    left->OnCollisionStay(right);
+                    right->OnCollisionStay(left);
+                    iter->second = true;
+                }
             }
             else
             {
-                left->OnCollisionStay(right);
-                right->OnCollisionStay(left);
+                if (!leftObj->IsDead() && !rightObj->IsDead())
+                {
+                    left->OnCollisionEnter(right);
+                    right->OnCollisionEnter(left);
+                    iter->second = true;
+                }
             }
         }
         else
         {
-            if (iter->second == true)
+            if (iter->second)
             {
                 left->OnCollisionExit(right);
                 right->OnCollisionExit(left);
-
                 iter->second = false;
             }
         }

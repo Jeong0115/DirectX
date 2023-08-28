@@ -2,17 +2,17 @@
 struct Particle
 {
     float4 position;
-    float4 velocity;
     float4 scale;
     float4 color;
     
+    float2 velocity;
+    
     float lifeTime;
-    float time;
-    float speed;
+    
     uint active;
 };
 
-struct Projectile
+struct ProjectileShared
 {
     float4 curPosition;
     float4 distance;
@@ -21,8 +21,8 @@ struct Projectile
     float index;
     float angle;
     
-    uint SetActiveCount;
-    uint RemainingActiveCount;
+    uint activeCount;
+    uint totalActiveCount;
 };
 
 struct ParticleAnimation
@@ -34,13 +34,12 @@ struct ParticleAnimation
     float ImageRate;
     float lifeTime;
     float time;
-    float speed;
     
     uint index;
     uint active;
 };
 
-struct ParticleAnimationShared
+struct AnimationShared
 {
     float4 curPosition;
     float4 gravity;
@@ -48,10 +47,29 @@ struct ParticleAnimationShared
     float maxAnimationCnt;
     float durtaion;
 
-    uint SetActiveCount;
-    uint RemainingActiveCount;
+    uint activeCount;
 };
 
+struct ParticleShared
+{
+    float4 curPosition;
+    float4 scale;
+    float4 color;
+    
+    float2 randPositionMin;
+    float2 randPositionMax;
+    float2 randVelocityMin;
+    float2 randVelocityMax;
+    float2 randLifeTime;
+    
+    uint activeCount;
+};
+
+RWStructuredBuffer<Particle> ParticleBuffer : register(u0);
+RWStructuredBuffer<ProjectileShared> ProjectileSharedBuffer : register(u1);
+RWStructuredBuffer<ParticleAnimation> ParticleAnimationBuffer : register(u2);
+RWStructuredBuffer<AnimationShared> AnimationSharedBuffer : register(u3);
+RWStructuredBuffer<ParticleShared> ParticleSharedBuffer : register(u4);
 
 StructuredBuffer<Particle> particles : register(t14);
 StructuredBuffer<ParticleAnimation> particlesAnimation : register(t15);

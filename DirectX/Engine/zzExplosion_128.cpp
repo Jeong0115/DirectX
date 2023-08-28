@@ -41,19 +41,18 @@ namespace zz
         mParticle = AddComponent<ParticleSystem>();
         mParticle->SetMaterial(ResourceManager::Find<Material>(L"m_fire_falling"));
         mParticle->SetMesh(ResourceManager::Find<Mesh>(L"PointMesh"));
-        mParticle->SetParticleShader(ResourceManager::Find<ParticleShader>(L"ParticleSystemAnimationShader"));
+        mParticle->SetParticleShader(ResourceManager::Find<ParticleShader>(L"ParticleAnimationCS"));
 
         ParticleAnimation particles[10] = {};
         mParticle->CreateStructedBuffer(sizeof(ParticleAnimation), 10, eViewType::UAV, particles, true, 2, 15, 0);
-        mParticle->CreateStructedBuffer(sizeof(ParticleAnimationShared), 1, eViewType::UAV, nullptr, true, 3, 15, 1);
+        mParticle->CreateStructedBuffer(sizeof(AnimationShared), 1, eViewType::UAV, nullptr, true, 3, 15, 1);
 
         Vector3 pos = GetComponent<Transform>()->GetPosition();
 
-        ParticleAnimationShared shareData = {};
+        AnimationShared shareData = {};
         shareData.curPosition = Vector4((int)pos.x, (int)pos.y, (int)pos.z, 0.0f);
         shareData.gravity = Vector4(0.0f, -5.0f, 0.0f, 0.0f);
-        shareData.SetActiveCount = 10;
-        shareData.RemainingActiveCount = 10;
+        shareData.activeCount = 10;
         shareData.durtaion = 0.06f;
         shareData.maxAnimationCnt = 12;
 
