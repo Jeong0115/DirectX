@@ -16,7 +16,9 @@ namespace zz
         '5', '6', '7', '8', '9',
 
         VK_UP, VK_DOWN, VK_LEFT ,VK_RIGHT, VK_SPACE,
-        VK_LBUTTON, VK_RBUTTON, VK_TAB,
+        VK_LBUTTON, VK_RBUTTON, VK_TAB, VK_CONTROL,
+
+        VK_F5
     };
 
     std::vector<Input::Key> Input::mKeys;

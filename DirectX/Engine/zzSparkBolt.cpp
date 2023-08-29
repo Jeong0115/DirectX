@@ -11,13 +11,19 @@
 #include "zzCollider.h"
 #include "zzPixelCollider_Lite.h"
 #include "zzExplosionEffect.h"
+#include "zzRigidBody.h"
 
 namespace zz
 {
+    using namespace std;
+
     SparkBolt::SparkBolt()
         : mPrevPos(Vector4::Zero)
         , mParticle(nullptr)
         , mExplosion(nullptr)
+        , mRigid(nullptr)
+        , mTime(0.0f)
+        , mSpeed(500.f)
     {
     }
 
@@ -39,6 +45,11 @@ namespace zz
 
         GetComponent<Transform>()->SetScale(10.f, 10.f, 1.0f);
         AddComponent<Collider>()->SetScale(10.f, 4.f, 1.0f);
+
+        mRigid = AddComponent<RigidBody>();
+        mRigid->SetStartVelocity(mSpeed, mDirection);
+        mRigid->SetGravity(100.f);
+        mRigid->SetRotate(true);
 
         mParticle = AddComponent<ParticleSystem>();
         mParticle->SetMaterial(ResourceManager::Find<Material>(L"m_Particle_Pink"));
@@ -64,20 +75,21 @@ namespace zz
 
     void SparkBolt::Update()
     {
-        mT += Time::DeltaTime();
+        mTime += Time::DeltaTime();
 
         Transform* tr = GetComponent<Transform>();
         Vector3 prevPos = tr->GetPosition();
         mPrevPos = Vector4(prevPos.x, prevPos.y, prevPos.z, 0.0f);
-        Vector3 curPos;
-        curPos = prevPos + mDirection * 500.f * (float)Time::DeltaTime();
 
-        if (mT >= 2.5f && !IsDead())
+        if (mTime >= 0.8f && !IsDead())
         {
             DeleteObject(this, eLayerType::PlayerAttack);
-        }
 
-        tr->SetPosition(curPos);
+            Vector3 pos = GetComponent<Transform>()->GetPosition();
+            mExplosion->GetComponent<Transform>()->SetPosition(pos.x, pos.y, BACK_PIXEL_WORLD_Z);
+            mExplosion->GetComponent<Transform>()->SetScale(9.0f, 9.0f, 1.0f);
+            CreateObject(mExplosion, eLayerType::Effect);
+        }
 
         GameObject::Update();
     }
@@ -93,10 +105,11 @@ namespace zz
         shareData.angle = GetComponent<Transform>()->GetRotation().z;
         mPrevPos = shareData.curPosition;
 
-        UINT count = (UINT)std::max(fabs(shareData.distance.x), fabs(shareData.distance.y));
+        UINT count = (UINT)max(fabs(shareData.distance.x), fabs(shareData.distance.y));
         shareData.activeCount = count;
         shareData.totalActiveCount = count;
         shareData.index = mIndex;
+        shareData.color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
         mIndex += count;
         mParticle->SetStructedBufferData(&shareData, 1, 1);
 
@@ -121,6 +134,10 @@ namespace zz
                 mExplosion->GetComponent<Transform>()->SetScale(9.0f, 9.0f, 1.0f);
                 CreateObject(mExplosion, eLayerType::Effect);
             }
+        }
+        else if (element.Type == eElementType::LIQUID)
+        {
+            mRigid->ApplyResistance(pow((0.0001f), (float)Time::DeltaTime()));
         }
     }
 }

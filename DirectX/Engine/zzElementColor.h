@@ -50,10 +50,5 @@ namespace zz
     inline const ElementColor ElementColor::RandomFireColor() { return FireColors[static_cast<int>(random() * FireColors.size())]; }*/
 
 
-    uint32_t Sand_0 = { 0xFFFFFF00 };
-    uint32_t Sand_1 = { 0xFFB2C906 };
-    uint32_t Sand_2 = { 0xFFE9FC5A };
 
-    std::vector<uint32_t> SandColors = { Sand_0, Sand_1, Sand_2 };
-    inline uint32_t RandomSandColor() { return SandColors[static_cast<int>(random() * SandColors.size())]; }
 }

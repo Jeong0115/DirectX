@@ -29,8 +29,9 @@ namespace zz
     std::unordered_map<std::pair<int, int>, PixelChunkMap*, pair_hash> PixelWorld::mChunkMapLookUp = {};
     ThreadPool PixelWorld::threadPool(1); 
     uint16_t PixelWorld::FrameCount = 0;
-    std::vector<std::vector<Box2dWorld::StaticElementInfo>>* PixelWorld::mStaticElements = {};
+    //std::vector<std::vector<Box2dWorld::StaticElementInfo>>& PixelWorld::mStaticElements = {};
 
+    bool PixelWorld::mbDebugMode = false;
     PixelWorld::PixelWorld()
     {
 
@@ -52,12 +53,12 @@ namespace zz
             }
         }
 
-        mElementMap.insert({ 'z', WATER });
-        mElementMap.insert({ 'x', SAND });
-        mElementMap.insert({ 'c', ROCK });
-        //mElementMap.insert({ 'o', new Oil });
-        //mElementMap.insert({ 'f', new Spark });
-        mElementMap.insert({ 'e', {eElementType::EMPTY, eElementMove::NONE, (uint32_t)eElementColor::EMPTY, L"DeleteEmpty", math::Vector2(0.f, 0.f)} });
+        mElementMap.insert({ 'w', WATER });
+        mElementMap.insert({ 's', SAND });
+        mElementMap.insert({ 'r', ROCK });
+        mElementMap.insert({ 't', WOOD });
+        mElementMap.insert({ 'f', FIRE });
+        mElementMap.insert({ 'e', {eElementType::EMPTY, eElementMove::NONE, eElementUpdate::NONE, (uint32_t)eElementColor::EMPTY, L"DeleteEmpty", math::Vector2(0.f, 0.f)} });
         mSelectElement = mElementMap.find('e')->second;
 
         CreateNewWorld();
@@ -66,24 +67,32 @@ namespace zz
 
     void PixelWorld::Update()
     {
-        //return;
+        if (Input::GetKey(eKeyCode::CTRL) && Input::GetKeyDown(eKeyCode::F5))
+        {
+            mbDebugMode = !mbDebugMode;
+        }
         renderer::debugMeshs.clear();
         //RemoveEmptyChunks();
+        
+        std::vector<std::vector<Box2dWorld::StaticElementInfo>>& mStaticElements = Box2dWorld::GetTemp();
+
+
+            for (int i = 0; i < mStaticElements.size(); i++)
+            {
+                DeleteStaticElement((mStaticElements)[i], i);
+            }
+       
+
+        Box2dWorld::Update();
+
+        std::vector<std::vector<Box2dWorld::StaticElementInfo>>& mStaticElements1 = Box2dWorld::GetTemp();
+
+        for (int i = 0; i < mStaticElements1.size(); i++)
+        {
+            MoveStaticElement((mStaticElements1)[i]);
+        }
+
         DrawPixels();
-        //if(mStaticElements != nullptr)
-        //{
-        //    for (int i = 0; i < mStaticElements->size(); i++)
-        //    {
-        //        DeleteStaticElement((*mStaticElements)[i], i);
-        //    }
-        //}
-
-        //Box2dWorld::UpdateUI();
-
-        //for (int i = 0; i < mStaticElements->size(); i++)
-        //{
-        //    MoveStaticElement((*mStaticElements)[i]);
-        //}
                
         for (int i = 0; i < 4; i++)
         {
@@ -176,7 +185,6 @@ namespace zz
         }*/
     }
 
-
     void PixelWorld::SwapElement(int x, int y, int xto, int yto)
     {
  
@@ -235,21 +243,22 @@ namespace zz
     void PixelWorld::DeleteStaticElement(std::vector<Box2dWorld::StaticElementInfo>& elements, int index)
     {
         bool cal = false;
-        std::vector<std::pair<int, int>> empty;
         int i = 0;
         for (auto& element : elements)
         {
-            if (PixelChunk* chunk = GetChunk(element.x, element.y))
+            PixelChunk* chunk = GetChunk(element.x, element.y);
+
+            Element& pixelWorldElement = chunk->GetElement(element.x, element.y);
+            elements[i].element = pixelWorldElement;
+
+            if (pixelWorldElement.Type == eElementType::EMPTY)
             {
-                if (!chunk->TakeElement(element.x, element.y))
-                {
-                    cal = true;
-                    elements[i].element =  EMPTY;
-                    empty.push_back({ element.x, element.y });
-                }
+                cal = true;
             }
-            i++;
-           
+
+            chunk->InsertElement(element.x, element.y, EMPTY);
+
+            i++;    
         }
         if (cal)
         {
@@ -350,7 +359,7 @@ namespace zz
 
                         rock(rect).copyTo(rotateImg);
 
-                        InsertElementFromImage(i, j, rotateImg);
+                        InsertElementFromImage(i, j, rotateImg, ROCK);
                     }
                     else if (surrounding.count() == 3)
                     {
@@ -398,7 +407,7 @@ namespace zz
                             }
                         }
 
-                        InsertElementFromImage(i, j, rotateImg);
+                        InsertElementFromImage(i, j, rotateImg, ROCK);
                     }
                     else if (surrounding.count() == 2)
                     {
@@ -475,7 +484,7 @@ namespace zz
                             }
                         }
 
-                        InsertElementFromImage(i, j, rotateImg);
+                        InsertElementFromImage(i, j, rotateImg, ROCK);
                     }
                     else if (surrounding.count() == 1)
                     {
@@ -503,7 +512,7 @@ namespace zz
                             cv::flip(rotateImg, rotateImg, 0);
                         }
 
-                        InsertElementFromImage(i, j, rotateImg);
+                        InsertElementFromImage(i, j, rotateImg, ROCK);
                     }
                     else
                     {
@@ -528,7 +537,7 @@ namespace zz
                             cv::flip(rotateImg, rotateImg, rand);
                         }
 
-                        InsertElementFromImage(i, j, rotateImg);
+                        InsertElementFromImage(i, j, rotateImg, ROCK);
                     }
 
                 }
@@ -550,7 +559,7 @@ namespace zz
 
                         edge_wood_land(rect).copyTo(rotateImg);
 
-                        InsertElementFromImage(i, j, rotateImg);
+                        InsertElementFromImage(i, j, rotateImg, WOOD);
                     }
                     if (surrounding.count() == 2)
                     {
@@ -579,7 +588,7 @@ namespace zz
                         {
                             edge_wood_land(rect).copyTo(rotateImg);
                         }
-                        InsertElementFromImage(i, j, rotateImg);
+                        InsertElementFromImage(i, j, rotateImg, WOOD);
                     }
                     else if(surrounding.count() == 1)
                     {
@@ -602,7 +611,7 @@ namespace zz
                             RoatateImage(RotateOption::Right270, rotateImg);
                         }
 
-                        InsertElementFromImage(i, j, rotateImg);
+                        InsertElementFromImage(i, j, rotateImg, WOOD);
                     }
                     else
                     {
@@ -612,7 +621,7 @@ namespace zz
 
                         wood(rect).copyTo(rotateImg);
 
-                        InsertElementFromImage(i, j, rotateImg);
+                        InsertElementFromImage(i, j, rotateImg, WOOD);
                     }
                 }
                 else if (color == 0xFF413f3A)
@@ -633,7 +642,7 @@ namespace zz
 
                         wood_vertical_temp(rect).copyTo(rotateImg);
 
-                        InsertElementFromImage(i, j, rotateImg);
+                        InsertElementFromImage(i, j, rotateImg, WOOD);
                     }
                 }
                 else if (color == 0xFF2F554C)
@@ -649,12 +658,13 @@ namespace zz
                 }
                 else if (color == 0xFF505052 || color == 0xFF3B3B3C)
                 {
-
                     for (int k = i * 10; k < i * 10 + 10; k++)
                     {
                         for (int l = j * 10; l < j * 10 + 10; l++)
                         {
-                            InsertElement(l, k, SAND);
+                            Element sand = SAND;
+                            sand.Color = RandomSandColor();
+                            InsertElement(l, k, sand);
                         }
                     }
                 }
@@ -669,7 +679,7 @@ namespace zz
         free(tileData);
     }
 
-    void PixelWorld::InsertElementFromImage(int y, int x, const cv::Mat& image)
+    void PixelWorld::InsertElementFromImage(int y, int x, const cv::Mat& image, Element& element)
     {
         for (int i = y * 10; i < y * 10 + 10; i++)
         {
@@ -680,9 +690,8 @@ namespace zz
 
                 if (color != 0xFF000000 && color != 0xFFFFFFFF)
                 {
-                    Element rock = ROCK;
-                    rock.Color = color;
-                    InsertElement(j, i, rock);
+                    element.Color = color;
+                    InsertElement(j, i, element);
                 }
             }
         }
@@ -735,25 +744,27 @@ namespace zz
 
     void PixelWorld::DrawPixels()
     {
-        if (Input::GetKey(eKeyCode::Z) || Input::GetKey(eKeyCode::X) || Input::GetKey(eKeyCode::C)
-            || Input::GetKey(eKeyCode::E) || Input::GetKey(eKeyCode::O) || Input::GetKey(eKeyCode::F))
+        if (!mbDebugMode) return;
+
+        if (Input::GetKey(eKeyCode::W) || Input::GetKey(eKeyCode::R) || Input::GetKey(eKeyCode::S)
+            || Input::GetKey(eKeyCode::E) || Input::GetKey(eKeyCode::F) || Input::GetKey(eKeyCode::T))
         {
-            if ((Input::GetKey(eKeyCode::Z)))
-                mSelectElement = mElementMap.find('z')->second;
-            else if ((Input::GetKey(eKeyCode::X)))
-                mSelectElement = mElementMap.find('x')->second;
-            else if ((Input::GetKey(eKeyCode::C)))
-                mSelectElement = mElementMap.find('c')->second;
+            if ((Input::GetKey(eKeyCode::W)))
+                mSelectElement = mElementMap.find('w')->second;
+            else if ((Input::GetKey(eKeyCode::R)))
+                mSelectElement = mElementMap.find('r')->second;
+            else if ((Input::GetKey(eKeyCode::S)))
+                mSelectElement = mElementMap.find('s')->second;
             else if ((Input::GetKey(eKeyCode::E)))
                 mSelectElement = mElementMap.find('e')->second;
-            /*else if ((Input::GetKey(eKeyCode::F)))
+            else if ((Input::GetKey(eKeyCode::F)))
                 mSelectElement = mElementMap.find('f')->second;
-            else if ((Input::GetKey(eKeyCode::O)))
-                mSelectElement = mElementMap.find('o')->second;*/
+            else if ((Input::GetKey(eKeyCode::T)))
+                mSelectElement = mElementMap.find('t')->second;
         }
 
         
-        if (Input::GetKey(eKeyCode::LBUTTON) || Input::GetKey(eKeyCode::RBUTTON) || Input::GetKeyDown(eKeyCode::A) || Input::GetKeyDown(eKeyCode::T))
+        if (Input::GetKey(eKeyCode::LBUTTON) || Input::GetKey(eKeyCode::RBUTTON) || Input::GetKeyDown(eKeyCode::P) || Input::GetKeyDown(eKeyCode::T))
         {
             HWND Hwnd = Application::GetInst().GetHwnd();
             HWND nowHwnd = GetFocus();
@@ -784,13 +795,13 @@ namespace zz
                             }
                         }
                     }
-                    else if (Input::GetKeyDown(eKeyCode::A))
+                    else if (Input::GetKeyDown(eKeyCode::P))
                     {
-                        Box2dWorld::Draw(pos.x, -pos.y);
+                        Box2dWorld::Draw2(pos.x, -pos.y);
                     }
                     else
                     {
-                        Box2dWorld::Draw2(pos.x, -pos.y);
+                        
                     }
                 }
             }

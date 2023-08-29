@@ -60,10 +60,10 @@ namespace zz
         static void DeleteElement(int x, int y);
         static void MoveStaticElement(std::vector<Box2dWorld::StaticElementInfo>& elements);
         static void DeleteStaticElement(std::vector<Box2dWorld::StaticElementInfo>& elements, int index);
-        static void SetStaticElements(std::vector<std::vector<Box2dWorld::StaticElementInfo>>* staticElements) { mStaticElements = staticElements; }
+        //static void SetStaticElements(std::vector<std::vector<Box2dWorld::StaticElementInfo>>& staticElements) { mStaticElements = staticElements; }
         
         static void CreateNewWorld();
-        static void InsertElementFromImage(int y, int x, const cv::Mat& image);
+        static void InsertElementFromImage(int y, int x, const cv::Mat& image, Element& element);
         static uint32_t Vec3bToColor(const cv::Vec3b& vec3b);
         static void RoatateImage(RotateOption option, cv::Mat& image);
 
@@ -82,7 +82,6 @@ namespace zz
         static uint16_t FrameCount;
     private:
         static PixelChunkMap* CreateChunkMap(std::pair<int, int> location);
-
         
         static std::unordered_map<std::pair<int, int>, PixelChunkMap*, pair_hash> mChunkMapLookUp;
 
@@ -94,6 +93,8 @@ namespace zz
 
         static const UINT mChunkMapWidth;
         static const UINT mChunkMapHeight;
-        static std::vector<std::vector<Box2dWorld::StaticElementInfo>>* mStaticElements;
+        //static std::vector<std::vector<Box2dWorld::StaticElementInfo>>& mStaticElements;
+
+        static bool mbDebugMode;
     };
 }

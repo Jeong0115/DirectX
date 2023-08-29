@@ -18,10 +18,13 @@ namespace zz
         void BindConstantBuffer();
 
         void SetPosition(Vector3 position)  { mPosition = position; }
-        void SetPositionX(float x) { mPosition.x = x; }
-        void SetPositionY(float y) { mPosition.y = y; }
-        void ShiftPositionY(float y) { mPosition.y += y; }
+        void SetPositionX(float x)      { mPosition.x = x; }
+        void SetPositionY(float y)      { mPosition.y = y; }
+        void ShiftPositionY(float y)    { mPosition.y += y; }
+
         void SetRotation(Vector3 rotation)  { mRotation = rotation; }
+        void SetRotationZ(float z) { mRotation.z = z; }
+
         void SetScale(Vector3 scale)        { mScale = scale; }
 
         void SetPosition(float x, float y, float z) { mPosition = Vector3(x, y, z); }

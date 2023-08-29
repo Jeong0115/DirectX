@@ -1,8 +1,7 @@
 #include "zzPixelChunk.h"
 #include "zzPixelWorld.h"
 #include "zzRenderer.h"
-
-#define _DEST(x) std::get<2>(x)
+#include "zzTime.h"
 
 namespace zz
 {
@@ -48,97 +47,78 @@ namespace zz
             {
                 for (int x = mMinX; x < mMaxX; x++)
                 {
-                    Element& element = mElements[y * mWidth + x];
-
-                    if (PixelWorld::FrameCount != element.ElementFrameCount)
-                    {
-                        element.ElementFrameCount = PixelWorld::FrameCount;
-                    }
-                    else
-                    {
-                        continue;
-                    }
-
-                    int worldX = x + mStartX;
-                    int worldY = y + mStartY;
-
-                    if (element.Type == eElementType::EMPTY)
-                        continue;
-
-                    if (element.CurMove > 0)
-                    {
-                        element.CurMove--;
-                        KeepAlive(worldX, worldY);
-                    }
-
-                    if (element.Move & eElementMove::MOVE_DOWN_SOLID && MoveDownSolid(worldX, worldY, element)) {}
-                    else if (element.Move & eElementMove::MOVE_DOWN_SIDE && MoveDownSide(worldX, worldY, element)) {}
-                    else if (element.Move & eElementMove::MOVE_DOWN_LIQUID && MoveDownLiquid(worldX, worldY, element)) {}
-                    else if (element.Move & eElementMove::MOVE_SIDE && MoveSide(worldX, worldY, element)) {}
+                    UpdateElement(x, y);
                 }
             }
             else
             {
                 for (int x = mMaxX - 1; x >= mMinX; x--)
                 {
-                    Element& element = mElements[y * mWidth + x];
-
-                    if (PixelWorld::FrameCount != element.ElementFrameCount)
-                    {
-                        element.ElementFrameCount = PixelWorld::FrameCount;
-                    }
-                    else
-                    {
-                        continue;
-                    }
-
-                    int worldX = x + mStartX;
-                    int worldY = y + mStartY;
-
-                    if (element.Type == eElementType::EMPTY)
-                        continue;
-
-                    if (element.CurMove > 0)
-                    {
-                        element.CurMove--;
-                        KeepAlive(worldX, worldY);
-                    }
-
-                    if (element.Move & eElementMove::MOVE_DOWN_SOLID && MoveDownSolid(worldX, worldY, element)) {}
-                    else if (element.Move & eElementMove::MOVE_DOWN_SIDE && MoveDownSide(worldX, worldY, element)) {}
-                    else if (element.Move & eElementMove::MOVE_DOWN_LIQUID && MoveDownLiquid(worldX, worldY, element)) {}
-                    else if (element.Move & eElementMove::MOVE_SIDE && MoveSide(worldX, worldY, element)) {}
+                    UpdateElement(x, y);
                 }
             }
         }
+    }
+
+    void PixelChunk::UpdateElement(int x, int y)
+    {
+        Element& element = mElements[y * mWidth + x];
+
+        if (PixelWorld::FrameCount != element.ElementFrameCount)
+        {
+            element.ElementFrameCount = PixelWorld::FrameCount;
+        }
+        else
+        {
+            return;
+        }
+
+        if (element.Type == eElementType::EMPTY)
+        {
+            return;
+        }
+
+        int worldX = x + mStartX;
+        int worldY = y + mStartY;
 
 
-        //if (m_minXw < mStartX && m_minYw < mStartY)
-        //{
-        //    PixelWorld::GetChunk(m_minXw, m_minYw)->TKA(m_minXw, m_minYw);
-        //    PixelWorld::GetChunk(m_minXw, m_maxYw)->TKA(mStartX - 1, mStartY - 1);
-        //}
-        //if (m_maxXw >= mStartX + mWidth && m_minYw < mStartY)
-        //{
-        //    PixelWorld::GetChunk(m_maxXw, m_minYw)->TKA(m_maxXw, m_minYw);
-        //    PixelWorld::GetChunk(m_maxXw, m_maxYw)->TKA(mStartX + mWidth, mStartY - 1);
-        //}
-        //if (m_minYw < mStartY)
-        //{
-        //    PixelWorld::GetChunk(m_minXw, m_minYw)->TKA(m_maxXw, m_minYw);
-        //    PixelWorld::GetChunk(m_minXw, m_maxYw)->TKA(mStartX + mWidth, mStartY - 1);
-        //}
+        if (!(element.Temp & eElementUpdate::NONE))
+        {
+            if (element.Temp & eElementUpdate::HEAT_TRANSFER)
+            {
+                if (element.onFire)
+                {
+                    HeatNeighbors(worldX, worldY, element);
+                    KeepAlive(worldX, worldY);
+                }
+            }
 
-            //m_minXw
-            //m_minYw
-            //m_maxXw
-            //m_maxYw
+            if (element.Temp & eElementUpdate::DECREASE_LIFE_TIME)
+            {
+                DecreaseLifeTime(worldX, worldY, element);
+                KeepAlive(worldX, worldY);
+            }
+        }
+
+        if (element.Move & eElementMove::MOVE_DOWN_SOLID && MoveDownSolid(worldX, worldY, element)) {}
+        else if (element.Move & eElementMove::MOVE_DOWN_SIDE && MoveDownSide(worldX, worldY, element)) {}
+        else if (element.Move & eElementMove::MOVE_DOWN_LIQUID && MoveDownLiquid(worldX, worldY, element)) {}
+        else if (element.Move & eElementMove::MOVE_SIDE && MoveSide(worldX, worldY, element)) {}
+        else if (element.Move & eElementMove::MOVE_GAS && MoveGas(worldX, worldY, element)) {}
+        else
+        {
+            if (element.StopCount > 0)
+            {
+                element.StopCount--;
+                KeepAlive(worldX, worldY);
+            }
+        }
     }
 
     void PixelChunk::SwapElement(Element& dstElement, int dstX, int dstY, Element& srcElement, int srcX, int srcY)
     {   
-        srcElement.CurMove = srcElement.MaxMove;
-        dstElement.CurMove = dstElement.MaxMove;
+        srcElement.StopCount = srcElement.StopThreshold;
+        dstElement.StopCount = dstElement.StopThreshold;
 
         Element dest = dstElement;
         dstElement = srcElement;
@@ -146,7 +126,7 @@ namespace zz
 
         memcpy(&PixelWorld::GetPixelColor()[(srcX + ((srcY) * 2048)) * 4], &srcElement.Color, 4);
         memcpy(&PixelWorld::GetPixelColor()[(dstX + ((dstY) * 2048)) * 4], &dstElement.Color, 4);
-        //KeepAlive(srcX, srcY);
+        KeepAlive(srcX, srcY);
 
         if (InBounds(dstX, dstY))
         {
@@ -233,50 +213,46 @@ namespace zz
 
     }
 
-    void PixelChunk::KeepAlive(size_t index)
+    void PixelChunk::KeepAlive(int x, int y)
     {
         std::unique_lock<std::mutex>(mDirtyBoxMutex);
 
-        int x = (int)(index % mWidth);
-        int y = (int)(index / mWidth);
+        int relativeX = x - mStartX;
+        int relativeY = y - mStartY;
 
-        m_minXw = std::clamp(std::min(x - 2, m_minXw), 0, mWidth);
-        m_minYw = std::clamp(std::min(y - 2, m_minYw), 0, mHeight);
-        m_maxXw = std::clamp(std::max(x + 2, m_maxXw), 0, mWidth);
-        m_maxYw = std::clamp(std::max(y + 2, m_maxYw), 0, mHeight);
+        m_minXw = std::clamp(std::min(relativeX - 2, m_minXw), 0, mWidth);
+        m_minYw = std::clamp(std::min(relativeY - 2, m_minYw), 0, mHeight);
+        m_maxXw = std::clamp(std::max(relativeX + 2, m_maxXw), 0, mWidth);
+        m_maxYw = std::clamp(std::max(relativeY + 2, m_maxYw), 0, mHeight);
 
-        //if (x - 2 < 0 || y - 2 < 0 || x + 2 >= mWidth || y + 2 >= mHeight)
-        //{
+        if (relativeX < 2 || relativeY < 2 || relativeX >= mWidth - 2 || relativeY >= mHeight - 2)
+        {
+            if (relativeX < 2)
+                x -= 2;
+            else if (relativeX >= mWidth - 2)
+                x += 2;
 
-        //}
+            if (relativeY < 2)
+                y -= 2;
+            else if (relativeY >= mHeight - 2)
+                y += 2;
 
-        //m_minXw = std::clamp(std::min(x, m_minXw), 0, mWidth);
-        //m_minYw = std::clamp(std::min(y, m_minYw), 0, mHeight);
-        //m_maxXw = std::clamp(std::max(x, m_maxXw), 0, mWidth);
-        //m_maxYw = std::clamp(std::max(y, m_maxYw), 0, mHeight);
+            if(x >=0 && y>=0 && x<1536 && y<1536)
+                PixelWorld::GetChunk(x, y)->KeepAliveBoundary(x, y);
+        }
     }
 
-    //void PixelChunk::TKA(int x, int y)
-    //{
-    //    std::unique_lock<std::mutex>(mDirtyBoxMutex);
+    void PixelChunk::KeepAliveBoundary(int x, int y)
+    {
+        // 나중에 멀티 쓰레드로 바꿀 때 수정
+        int relativeX = x - mStartX;
+        int relativeY = y - mStartY;
 
-    //    m_minXw = (std::min(x, m_minXw));
-    //    m_minYw = (std::min(y, m_minYw));
-    //    m_maxXw = (std::max(x, m_maxXw));
-    //    m_maxYw = (std::max(y, m_maxYw));
-    //}
-
-    //void PixelChunk::TempKeepAlive(int x, int y)
-    //{
-    //    std::unique_lock<std::mutex>(mDirtyBoxMutex);
-
-    //    m_minXw = (std::min(x - 2, m_minXw));
-    //    m_minYw = (std::min(y - 2, m_minYw));
-    //    m_maxXw = (std::max(x + 2, m_maxXw));
-    //    m_maxYw = (std::max(y + 2, m_maxYw));
-
-    //   
-    //}
+        m_minXw = std::clamp(std::min(relativeX - 2, m_minXw), 0, mWidth);
+        m_minYw = std::clamp(std::min(relativeY - 2, m_minYw), 0, mHeight);
+        m_maxXw = std::clamp(std::max(relativeX + 2, m_maxXw), 0, mWidth);
+        m_maxYw = std::clamp(std::max(relativeY + 2, m_maxYw), 0, mHeight);
+    }
 
     void PixelChunk::UpdateRect()
     {
@@ -288,7 +264,6 @@ namespace zz
         if (mMaxX <= -1) return;
         DebugMesh mesh = {};
         mesh.position = math::Vector3((mMaxX + mMinX) / 2.f + mStartX, -((mMaxY + mMinY) / 2.f + mStartY), 0.0f);
-        //mesh.position = math::Vector3(0,0, 0.0f);
         mesh.scale = math::Vector3((float)(mMaxX - mMinX), (float)(mMaxY - mMinY), 1.0f);
         mesh.rotation = math::Vector3::Zero;
 
@@ -313,7 +288,7 @@ namespace zz
         for (int i = 1; i <= element.Velocity.y; i++)
         {
             Element& target = GetElement(x, y + i);
-            if (target.Type == eElementType::EMPTY || target.Type == eElementType::LIQUID)
+            if (target.Type == eElementType::EMPTY || target.Type == eElementType::GAS || target.Type == eElementType::LIQUID)
             {
                 if (target.Type == eElementType::LIQUID)
                     element.Velocity.y -= 1;
@@ -338,7 +313,7 @@ namespace zz
         for (int i = 1; i <= element.Velocity.y; i++)
         {
             Element& target = GetElement(x, y + i);
-            if (target.Type == eElementType::EMPTY)
+            if (target.Type == eElementType::EMPTY || target.Type == eElementType::GAS)
             {
                 posY = y + i;
             }
@@ -356,7 +331,7 @@ namespace zz
     bool PixelChunk::MoveDown(int x, int y, Element& element)
     {
         Element& target = GetElement(x, y + 1);
-        if (target.Type == eElementType::EMPTY)
+        if (target.Type == eElementType::EMPTY  || target.Type == eElementType::GAS)
         {
             SwapElement(target, x, y + 1, element, x, y);
             return true;
@@ -371,7 +346,7 @@ namespace zz
         {
             Element& target = GetElement(x + i * dir, y);
 
-            if (target.Type == eElementType::EMPTY)
+            if (target.Type == eElementType::EMPTY || target.Type == eElementType::GAS)
             {
                 posX = x + i * dir;
             }
@@ -389,7 +364,7 @@ namespace zz
             {
                 Element& target = GetElement(x + i * dir, y);
 
-                if (target.Type == eElementType::EMPTY)
+                if (target.Type == eElementType::EMPTY || target.Type == eElementType::GAS)
                 {
                     posX = x + i * dir;
                 }
@@ -405,7 +380,10 @@ namespace zz
             return true;
         }
 
-        if (posX == x) return false;
+        if (posX == x) 
+        {
+            return false;
+        }
 
         SwapElement(PixelWorld::GetElement(posX, y), posX, y, element, x, y);
         return true;
@@ -415,7 +393,7 @@ namespace zz
         int dir = random() > 0.5 ? -1 : 1;
         Element& target = GetElement(x + dir, y + 1);
 
-        if (target.Type == eElementType::EMPTY || target.Type == eElementType::LIQUID)
+        if (target.Type == eElementType::EMPTY || target.Type == eElementType::GAS || target.Type == eElementType::LIQUID)
         {
             SwapElement(target, x + dir, y + 1, element, x, y);
             return true;
@@ -423,7 +401,7 @@ namespace zz
         else
         {
             Element& target = GetElement(x - dir, y + 1);
-            if (target.Type == eElementType::EMPTY || target.Type == eElementType::LIQUID)
+            if (target.Type == eElementType::EMPTY || target.Type == eElementType::GAS || target.Type == eElementType::LIQUID)
             {
                 SwapElement(target, x - dir, y + 1, element, x, y);
                 return true;
@@ -435,7 +413,7 @@ namespace zz
         {
             Element& target = GetElement(x + i * dir, y);
 
-            if (target.Type == eElementType::EMPTY || target.Type == eElementType::LIQUID)
+            if (target.Type == eElementType::EMPTY || target.Type == eElementType::GAS || target.Type == eElementType::LIQUID)
             {
                 posX = x + i * dir;
             }
@@ -454,14 +432,13 @@ namespace zz
             {
                 Element& target = GetElement(x + i * dir, y);
 
-                if (target.Type == eElementType::EMPTY || target.Type == eElementType::LIQUID)
+                if (target.Type == eElementType::EMPTY || target.Type == eElementType::GAS || target.Type == eElementType::LIQUID)
                 {
                     posX = x + i * dir;
                 }
                 else
                 {
                     break;
-                    //cell.Velocity.x--;
                 }
             }
         }
@@ -477,4 +454,87 @@ namespace zz
         SwapElement(PixelWorld::GetElement(posX, y), posX, y, element, x, y);
         return true;
     }
+    bool PixelChunk::MoveGas(int x, int y, Element& element)
+    {
+        Element& target = GetElement(x, y - 1);
+        if (target.Type == eElementType::EMPTY)
+        {
+            SwapElement(target, x, y - 1, element, x, y);
+            return true;
+        }
+        else
+        {
+            int dir = random() > 0.5 ? -1 : 1;
+
+            for (int i = 0; i < 2; i++)
+            {
+                Element& target = GetElement(x + dir, y - 1);
+
+                if (target.Type == eElementType::EMPTY)
+                {
+                    SwapElement(target, x + dir, y - 1, element, x, y);
+                    return true;
+                }
+
+                dir *= -1;
+            }
+        }
+        return false;
+    }
+
+    void PixelChunk::HeatNeighbors(int x, int y, Element& element)
+    {
+        element.FireHP -= (float)Time::DeltaTime();
+
+        if (element.FireHP <= 0.f)
+        {
+            element = EMPTY;
+        }
+        else
+        {
+            if (random() > 0.95f)
+            {
+                if (PixelWorld::GetElement(x, y - 1).Type == eElementType::EMPTY)
+                {
+                    PixelWorld::InsertElement(x, y - 1, SMOKE);
+                }
+            }
+            element.Color = RandomFireColor();
+        }
+
+        memcpy(&PixelWorld::GetPixelColor()[(x + ((y) * 2048)) * 4], &element.Color, 4);
+
+        for (int i = y - 1; i <= y + 1; i++)
+        {
+            if (i == y) continue;
+            for (int j = x - 1; j <= x + 1; j++)
+            {
+                if (j == x) continue;
+
+                Element& dstElement = PixelWorld::GetElement(j, i);
+
+                if (dstElement.isIgnite && !dstElement.onFire)
+                {
+                    dstElement.Temperature += element.Temperature * (randf(1.0f) + 0.5f) * (float)Time::DeltaTime();
+
+                    if(dstElement.Temperature >= dstElement.MaxTemperature)
+                    {
+                        dstElement.Temperature = dstElement.MaxTemperature;
+                        dstElement.onFire = true;
+                    }
+                }
+            }
+        }
+    }
+
+    void PixelChunk::DecreaseLifeTime(int x, int y, Element& element)
+    {
+        element.LifeTime -= (float)Time::DeltaTime();
+
+        if (element.LifeTime <= 0.0f)
+        {
+            PixelWorld::InsertElement(x, y, EMPTY);
+        }
+    }
+
 }

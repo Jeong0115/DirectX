@@ -93,53 +93,6 @@ namespace zz
 
             mElementsBodys.push_back(body);
         }
-
-        {
-            cv::Mat img = cv::imread("C:\\tree_spruce_5.png", cv::IMREAD_COLOR);
-
-            StaticElementsBody body;
-
-            b2BodyDef bodyDef;
-            bodyDef.type = b2_dynamicBody;
-            bodyDef.position.Set(300.0f, 300.0f);
-            bodyDef.fixedRotation = false;
-            body.body = mBox2dWorld->CreateBody(&bodyDef);
-
-            b2PolygonShape  dynamicBox;
-            dynamicBox.SetAsBox((float)img.cols / 2, (float)img.rows / 2);
-
-            b2FixtureDef fixtureDef;
-            fixtureDef.shape = &dynamicBox;
-            fixtureDef.density = 0.5f;
-            fixtureDef.friction = 0.5f;
-            body.body->CreateFixture(&fixtureDef);
-
-            for (int i = 0; i < img.rows; i++)
-            {
-                for (int j = 0; j < img.cols; j++)
-                {
-                    // OpenCV는 BGR 순서를 사용
-                    cv::Vec3b color = img.at<cv::Vec3b>(i, j);
-
-                    if (color[0] == 0 && color[1] == 0 && color[2] == 0)
-                    {
-                        continue;
-                    }
-                    else
-                    {
-                        Element a = ROCK;
-                        a.x = j - img.cols / 2;
-                        a.y = i - img.rows / 2;
-                        a.Color = ((uint32_t)0xFF << 24) | ((uint32_t)color[2] << 16) | ((uint32_t)color[1] << 8) | (uint32_t)color[0];
-                        body.elements.push_back(a);
-                    }
-
-                }
-            }
-
-            ReconstructBody(body);
-        }
-
     }
 
     void Box2dWorld::Update()
@@ -176,7 +129,7 @@ namespace zz
             
             int a = 0;
         }
-        PixelWorld::SetStaticElements(&mStaticElements);
+        //PixelWorld::SetStaticElements(mStaticElements);
     }
     void Box2dWorld::ReconstructBody(int index)
     {
@@ -193,7 +146,7 @@ namespace zz
         }
     }
 
-    void Box2dWorld::ReconstructBody(StaticElementsBody& body)
+    void Box2dWorld::ReconstructBody(StaticElementsBody body)
     {
         bool isFirstFixture = true;
         b2AABB aabb = {};
@@ -231,14 +184,14 @@ namespace zz
 
         for (auto element : body.elements)
         {
-            if (element.Name == L"Empty") 
+            if (element.Type == eElementType::EMPTY) 
                 continue;
 
             if (x1 + element.x < 0 || y1 + element.y < 0 ||
                 y1 + element.y >= height || x1 + element.x >= width)
                 continue;
-            elementsArray[x1 + element.x][y1 + element.y] = element;
 
+            elementsArray[x1 + element.x][y1 + element.y] = element;
             points.push_back(cv::Point((int)(element.x + x1), (int)(element.y + y1)));
         }
 
@@ -249,16 +202,16 @@ namespace zz
 
         std::vector<cv::Vec6f> allTriangles;
 
-
-
-        cv::Mat img = cv::Mat::zeros(500, 500, CV_8UC3);
-
-      
         int p = 0;
+
+        if (contours.size() >= 2)
+        {
+            int op = 0;
+        }
         for (auto& contour : contours) 
         {
             
-            std::vector<cv::Point> approxCurve; // 근사화된 곡선을 저장할 공간
+            std::vector<cv::Point> approxCurve; 
             double epsilon = 3; // 최대 거리 (여기서는 원래 곡선의 길이의 10%로 설정)
             cv::approxPolyDP(contour, approxCurve, epsilon, true);
 
@@ -279,14 +232,8 @@ namespace zz
             std::vector<N> indices = mapbox::earcut<N>(polygon);
             cv::Subdiv2D subdiv(bounds);
 
-         /*   for (const auto& pt : approxCurve)
-            {
-                subdiv.insert(pt);
-            }*/
-
             std::vector<cv::Vec6f> triangleList;
-            
-            //subdiv.getTriangleList(triangleList);
+
             for (int i = 0; i < indices.size(); i += 3)
             {
                 triangleList.push_back
@@ -305,25 +252,13 @@ namespace zz
             bodyDef.type = b2_dynamicBody;
             newBody.body = mBox2dWorld->CreateBody(&bodyDef);
 
-            // Define the vertices of the triangle
-            cv::Point pt[3];
-
-
-
-            
-
             for (auto& triangle : triangleList)
             {
                 b2Vec2 vertices[3] = {};
                 for (int i = 0; i < 3; ++i) 
                 {
                     vertices[i].Set(triangle[i * 2] + floor(offsetX + 0.5f), triangle[i * 2 + 1] + floor(offsetY + 0.5f));
-                    pt[i] = cv::Point(triangle[i * 2] * 3,triangle[i * 2 + 1] * 3);
                 }
-
-                cv::line(img, pt[0], pt[1], cv::Scalar(255, 0, 0), 2);
-                cv::line(img, pt[1], pt[2], cv::Scalar(255, 0, 0), 2);
-                cv::line(img, pt[2], pt[0], cv::Scalar(255, 0, 0), 2);
 
                 b2PolygonShape dynamicTriangle;
                 dynamicTriangle.Set(vertices, 3);
@@ -333,38 +268,33 @@ namespace zz
                 fixtureDef.density = 1.0f;
                 fixtureDef.friction = 0.3f;
 
-                newBody.body->CreateFixture(&fixtureDef); // Fixture를 바디에 추가
+                newBody.body->CreateFixture(&fixtureDef); 
             }
+
             b2Vec2 a = newBody.body->GetWorldCenter();
             newBody.body->SetTransform(a, bodyAngle);
 
-
             for (b2Fixture* fixture = newBody.body->GetFixtureList(); fixture; )
             {
-                b2Fixture* nextFixture = fixture->GetNext(); // Get next fixture before we destroy the current one
+                b2Fixture* nextFixture = fixture->GetNext();
 
                 b2PolygonShape* oldShape = static_cast<b2PolygonShape*>(fixture->GetShape());
                 if (oldShape && oldShape->m_type == b2Shape::e_polygon)
                 {
-                    // Create a new shape
                     b2Vec2 newVertices[b2_maxPolygonVertices];
                     for (int i = 0; i < oldShape->m_count; ++i)
                     {
-                        // Modify the vertices as you want here
                         newVertices[i] = b2Vec2(oldShape->m_vertices[i].x - a.x, oldShape->m_vertices[i].y - a.y);
                     }
 
-                    // Create a new fixture
                     b2PolygonShape newShape;
                     newShape.Set(newVertices, oldShape->m_count);
 
-                    // Create a new fixture
                     b2FixtureDef fixtureDef;
                     fixtureDef.shape = &newShape;
                     fixtureDef.density = 1.0f;
                     fixtureDef.friction = 0.3f;
 
-                    // Destroy the old fixture and add the new one
                     newBody.body->DestroyFixture(fixture);
                     newBody.body->CreateFixture(&fixtureDef);
                 }
@@ -397,7 +327,7 @@ namespace zz
        // cv::waitKey(0);
        
         //std::vector<N> indices = mapbox::earcut<N>(polygon);
-
+        int c = 0;
     }
 
     std::vector<std::vector<cv::Point>> Box2dWorld::getContours(const std::vector<cv::Point>& points, float width, float height)
@@ -515,7 +445,7 @@ namespace zz
 
 
         {
-            cv::Mat img = cv::imread("C:\\tree_spruce_5.png", cv::IMREAD_COLOR);
+            cv::Mat img = cv::imread("..\\Resources\\Texture\\Tree\\tree_spruce_5.png", cv::IMREAD_COLOR);
 
             StaticElementsBody body;
 
@@ -547,7 +477,7 @@ namespace zz
                     }
                     else
                     {
-                        Element a = ROCK;
+                        Element a = WOOD;
                         a.x = j - img.cols / 2;
                         a.y = i - img.rows / 2;
                         a.Color = ((uint32_t)0xFF << 24) | ((uint32_t)color[2] << 16) | ((uint32_t)color[1] << 8) | (uint32_t)color[0];

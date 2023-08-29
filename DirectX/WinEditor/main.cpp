@@ -1,4 +1,12 @@
-﻿#define _CRTDBG_MAP_ALLOC
+﻿
+#include "framework.h"
+#include "WinEditor.h"
+#include "..\Engine\zzApplication.h"
+#include "..\Engine\zzPixelWorld.h"
+#include "..\Engine\zzRenderer.h"
+#include "zzEditor.h"
+
+#define _CRTDBG_MAP_ALLOC
 #include <cstdlib>
 #include <crtdbg.h>
 
@@ -8,12 +16,6 @@
 #define DBG_NEW new
 #endif
 
-#include "framework.h"
-#include "WinEditor.h"
-#include "..\Engine\zzApplication.h"
-#include "..\Engine\zzPixelWorld.h"
-#include "..\Engine\zzRenderer.h"
-#include "zzEditor.h"
 
 #ifdef _DEBUG
 #pragma comment(lib, "..\\x64\\Debug\\WinEngine.lib")

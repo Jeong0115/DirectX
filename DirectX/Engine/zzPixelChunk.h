@@ -11,6 +11,7 @@ namespace zz
         ~PixelChunk();
 
         void Update();
+        void UpdateElement(int x, int y);
 
         void SwapElement(Element& dstElement, int dstX, int dstY, Element& srcElement, int srcX, int srcY);
 
@@ -28,10 +29,11 @@ namespace zz
 
         void ResiterChanges(PixelChunk* source, int x, int y, int toX, int toY);
             
-        void KeepAlive(int x, int y) { KeepAlive(GetIndex(x, y)); }
-        void KeepAlive(size_t index);
-        void TKA(int x, int y);
-        void TempKeepAlive(int x, int y);
+        // 임시 나중에 수정
+        void KeepAlive(int x, int y);
+        void KeepAlive(size_t index) { KeepAlive(index % mWidth + mStartX, index / mWidth + mStartY); }
+
+        void KeepAliveBoundary(int x, int y);
 
         void UpdateRect();
 
@@ -43,6 +45,10 @@ namespace zz
         bool MoveDown(int x, int y, Element& element);
         bool MoveSide(int x, int y, Element& element);
         bool MoveDownSide(int x, int y, Element& element);
+        bool MoveGas(int x, int y, Element& element);
+
+        void HeatNeighbors(int x, int y, Element& element);
+        void DecreaseLifeTime(int x, int y, Element& element);
 
         bool InBounds(int x, int y) { return x >= mStartX && x < mStartX + mWidth && y >= mStartY && y < mStartY + mHeight;}
         bool IsEmpty(int x, int y) { return IsEmpty(GetIndex(x, y)); }

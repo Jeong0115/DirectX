@@ -30,7 +30,6 @@ namespace zz
 
     void ObjectPoolManager::Release()
     {
-        int a = 0;
         for (auto& iter : mObjectPool)
         {
             while (!iter.second.empty())

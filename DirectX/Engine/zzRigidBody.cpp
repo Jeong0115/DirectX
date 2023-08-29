@@ -12,6 +12,7 @@ namespace zz
         , mGravity(400.f)
         , mTransform(nullptr)
         , mbGround(false)
+        , mbRotate(false)
     {
     }
 
@@ -41,6 +42,15 @@ namespace zz
         pos += mVelocity * (float)Time::DeltaTime();
 
 
+        if (mbRotate)
+        {
+            Vector3 normalize = mVelocity;
+            normalize.Normalize();
+
+            float angle = atan2(normalize.y, normalize.x);
+
+            mTransform->SetRotationZ(angle);
+        }
 
         //if (fabsf(mVelocity.x) <= 1.0f)
         //{
@@ -62,6 +72,12 @@ namespace zz
     {
         mVelocity.x = cos(angle) * speed;
         mVelocity.y = sin(angle) * speed;
+    }
+
+    void RigidBody::SetStartVelocity(float speed, Vector3 direction)
+    {
+        mVelocity.x = direction.x * speed;
+        mVelocity.y = direction.y * speed;
     }
 
     void RigidBody::SetGround(bool isGround)

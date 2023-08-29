@@ -33,7 +33,7 @@ namespace zz
 
         static void Initialize();
         static void Update();
-        static void ReconstructBody(StaticElementsBody& body);
+        static void ReconstructBody(StaticElementsBody body);
         static void ReconstructBody(int index);
         static void Draw(int x, int y);
         static void Draw2(int x, int y);
@@ -44,6 +44,7 @@ namespace zz
         static std::vector<std::vector<cv::Point>> getContours(const std::vector<cv::Point>& points, float width, float height);
         static std::vector<std::vector<cv::Point>> getInsidePointsForEachContour(const cv::Mat& image, const std::vector<std::vector<cv::Point>>& contours);
 
+        static std::vector<std::vector<StaticElementInfo>>& GetTemp() { return mStaticElements; }
     private:
         static b2World* mBox2dWorld;
         static std::vector<b2Body*> mBodys;

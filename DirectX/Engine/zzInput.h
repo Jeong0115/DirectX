@@ -14,7 +14,10 @@ namespace zz
         Num5, Num6, Num7, Num8, Num9,
 
         UP, DOWN, LEFT, RIGHT, SPACE,
-        LBUTTON, RBUTTON, TAB,
+        LBUTTON, RBUTTON, TAB, CTRL,
+
+        F5,
+
         END,
     };
 

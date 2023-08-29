@@ -14,17 +14,19 @@ namespace zz
         virtual void Update()       override;
         virtual void LateUpdate()   override;
         virtual void Render()       override;
-        
+       
         void OnCollision(class Element& element);
 
     private:
-        class ParticleSystem* mParticle;
+        class ParticleSystem*   mParticle;
+        class ExplosionEffect*  mExplosion;
+        class RigidBody*        mRigid;
 
-        class ExplosionEffect* mExplosion;
+        float   mSpeed;
+        float   mTime;
 
-        double mT = 0.0;
-        float c = 0.0f;
         Vector4 mPrevPos;
-        UINT mIndex = 0;
+
+        UINT    mIndex = 0;
     };
 }

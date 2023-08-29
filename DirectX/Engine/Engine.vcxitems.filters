@@ -10,9 +10,6 @@
     <Filter Include="Application">
       <UniqueIdentifier>{94059b13-4e2e-459b-a8c1-13ad87242e29}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Common\Math">
-      <UniqueIdentifier>{0ebbc145-c34a-414a-a368-1b2bd4e3aaac}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Resource">
       <UniqueIdentifier>{b48a19e9-9de4-418f-b1e9-27a0f1fc90c2}</UniqueIdentifier>
     </Filter>
@@ -307,6 +304,12 @@
     <Filter Include="GameObject\Effect\ExplosionEffect">
       <UniqueIdentifier>{96210bc7-15cf-4f07-9378-a474c5059357}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Component\PixelCollider_Lite">
+      <UniqueIdentifier>{fc771a23-f108-42c0-b482-9b3e74041cc5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Math">
+      <UniqueIdentifier>{0ebbc145-c34a-414a-a368-1b2bd4e3aaac}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzEntity.cpp">
@@ -566,9 +569,11 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)zzLevitation.cpp">
       <Filter>Component\Levitation</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)zzPixelCollider_Lite.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzExplosionEffect.cpp">
       <Filter>GameObject\Effect\ExplosionEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzPixelCollider_Lite.cpp">
+      <Filter>Component\PixelCollider_Lite</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -856,9 +861,11 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzLevitation.h">
       <Filter>Component\Levitation</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)zzPixelCollider_Lite.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzExplosionEffect.h">
       <Filter>GameObject\Effect\ExplosionEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzPixelCollider_Lite.h">
+      <Filter>Component\PixelCollider_Lite</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
