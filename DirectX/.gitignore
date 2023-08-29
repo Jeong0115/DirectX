@@ -35,8 +35,9 @@ bld/
 [Ll]ogs/
 
 # Exception for a specific folder
-!External/Debug/
-!External/Release/
+!External/Box2d/lib/Debug/
+!External/DirectXTex/lib/Debug/
+!External/OpenCV/lib/Debug/
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/
