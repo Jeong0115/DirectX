@@ -113,7 +113,7 @@ namespace zz
 
         RECT rt = { 0, 0, (LONG)width , (LONG)height };
         AdjustWindowRect(&rt, WS_OVERLAPPEDWINDOW, true); // true? false?
-        SetWindowPos(mHwnd, nullptr, 30, -1000, rt.right - rt.left, rt.bottom - rt.top, 0);
+        SetWindowPos(mHwnd, nullptr, 30, 100, rt.right - rt.left, rt.bottom - rt.top, 0);
         ShowWindow(mHwnd, true);
         UpdateWindow(mHwnd);
 	}

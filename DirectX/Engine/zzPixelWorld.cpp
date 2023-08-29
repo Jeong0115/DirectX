@@ -73,24 +73,24 @@ namespace zz
         }
         renderer::debugMeshs.clear();
         //RemoveEmptyChunks();
-        
-        std::vector<std::vector<Box2dWorld::StaticElementInfo>>& mStaticElements = Box2dWorld::GetTemp();
+        //
+        //std::vector<std::vector<Box2dWorld::StaticElementInfo>>& mStaticElements = Box2dWorld::GetTemp();
 
 
-            for (int i = 0; i < mStaticElements.size(); i++)
-            {
-                DeleteStaticElement((mStaticElements)[i], i);
-            }
+        //    for (int i = 0; i < mStaticElements.size(); i++)
+        //    {
+        //        DeleteStaticElement((mStaticElements)[i], i);
+        //    }
        
 
-        Box2dWorld::Update();
+        //Box2dWorld::Update();
 
-        std::vector<std::vector<Box2dWorld::StaticElementInfo>>& mStaticElements1 = Box2dWorld::GetTemp();
+        //std::vector<std::vector<Box2dWorld::StaticElementInfo>>& mStaticElements1 = Box2dWorld::GetTemp();
 
-        for (int i = 0; i < mStaticElements1.size(); i++)
-        {
-            MoveStaticElement((mStaticElements1)[i]);
-        }
+        //for (int i = 0; i < mStaticElements1.size(); i++)
+        //{
+        //    MoveStaticElement((mStaticElements1)[i]);
+        //}
 
         DrawPixels();
                
