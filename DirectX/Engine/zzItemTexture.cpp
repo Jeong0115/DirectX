@@ -35,7 +35,7 @@ namespace zz
             Transform* transform = GetComponent<Transform>();
             Vector3 pos = transform->GetPosition();
 
-            if ((pos.x - mSlotPos.x) * (pos.x - mSlotPos.x) + (pos.y - mSlotPos.y) * (pos.y - mSlotPos.y) <= 10.0f)
+            if ((pos.x - mSlotPos.x) * (pos.x - mSlotPos.x) + (pos.y - mSlotPos.y) * (pos.y - mSlotPos.y) <= 15.0f)
             {
                 transform->SetPosition(mSlotPos);
                 mbMove = false;
@@ -45,7 +45,7 @@ namespace zz
                 Vector3 direction = mSlotPos - pos;
                 direction.Normalize();
 
-                transform->SetPosition(pos + direction * 500.f * (float)Time::DeltaTime());
+                transform->SetPosition(pos + direction * 400.f * (float)Time::DeltaTime());
             }
         }
 

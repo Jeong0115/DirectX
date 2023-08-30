@@ -31,7 +31,7 @@ namespace zz
         mesh->SetMaterial(ResourceManager::Find<Material>(L"m_info_box"));
         mesh->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
 
-        GetComponent<Transform>()->SetScale(Vector3(100.f, 45.f, 1.0f));
+        GetComponent<Transform>()->SetScale(Vector3(150.f, 60.f, 1.0f));
 
         GameObject::Initialize();
     }
@@ -62,16 +62,17 @@ namespace zz
         mWandtexture = texture;
 
         mWandtexture->GetComponent<Transform>()->SetParent(tr);
+        mWandtexture->GetComponent<Transform>()->SetPosition(-55.f, 10.f, 0.f);
 
         for (int i = 0; i < mWand->GetCapacity(); i++)
         {
-            InventoryBox* spellBox = new InventoryBox(eUIType::SpellSlot);
+            InventoryBox* spellBox = new InventoryBox(eUIType::WandSlot);
             Transform* boxTr = spellBox->GetComponent<Transform>();
             boxTr->SetParent(tr);
-            boxTr->SetPosition(-30.f + i * 20.f, -10.f, 0.0f);
+            boxTr->SetPosition(-60.f + i * 20.f, -15.f, 0.0f);
             spellBox->Initialize();
 
-            InventoryManager::AddUIObject(spellBox, eUIType::SpellSlot);
+            InventoryManager::AddUIObject(spellBox, eUIType::WandSlot);
         }
     }
 

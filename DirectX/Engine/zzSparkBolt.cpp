@@ -24,6 +24,7 @@ namespace zz
         , mRigid(nullptr)
         , mTime(0.0f)
         , mSpeed(500.f)
+        , mSubParticleTime(0.f)
     {
     }
 
@@ -52,13 +53,31 @@ namespace zz
         mRigid->SetRotate(true);
 
         mParticle = AddComponent<ParticleSystem>();
-        mParticle->SetMaterial(ResourceManager::Find<Material>(L"m_Particle_Pink"));
+        mParticle->SetMaterial(ResourceManager::Find<Material>(L"m_Particle"));
         mParticle->SetMesh(ResourceManager::Find<Mesh>(L"PointMesh"));
         mParticle->SetParticleShader(ResourceManager::Find<ParticleShader>(L"ProjectileParticleCS"));
 
-        Particle particles[500] = {};
-        mParticle->CreateStructedBuffer(sizeof(Particle), 500, eViewType::UAV, particles, true, 0, 14, 0);
+        Particle particles[150] = {};
+        mParticle->CreateStructedBuffer(sizeof(Particle), 150, eViewType::UAV, particles, true, 0, 14, 0);
         mParticle->CreateStructedBuffer(sizeof(ProjectileShared), 1, eViewType::UAV, nullptr, true, 1, 14, 1);
+
+        mSubParticle = AddComponent<ParticleSystem>();
+        mSubParticle->SetMaterial(ResourceManager::Find<Material>(L"m_Particle"));
+        mSubParticle->SetMesh(ResourceManager::Find<Mesh>(L"PointMesh"));
+        mSubParticle->SetParticleShader(ResourceManager::Find<ParticleShader>(L"ParticleCS"));
+
+        Particle subParticles[200] = {};
+        mSubParticle->CreateStructedBuffer(sizeof(Particle), 200, eViewType::UAV, subParticles, true, 0, 14, 0);
+        mSubParticle->CreateStructedBuffer(sizeof(ParticleShared), 1, eViewType::UAV, nullptr, true, 4, 14, 1);
+
+        mShareData.scale = Vector4(1.0f, 1.0f, 1.0f, 0.0f);
+        mShareData.color = Vector4(255.f / 255.f, 80.f / 255.f, 240.f / 255.f, 0.4f);
+
+        mShareData.randPositionMax = Vector2(3.0f, 15.0f);
+        mShareData.randPositionMin = Vector2(-3.0f, -15.0f);
+        mShareData.randVelocityMax = Vector2(3.0f, -3.0f);
+        mShareData.randVelocityMin = Vector2(-3.0f, -3.0f);
+        mShareData.randLifeTime = Vector2(1.0f, 0.5f);
 
         AddComponent<PixelCollider_Lite>()->SetCollisionEvent([this](Element& element) {OnCollision(element); });
 
@@ -75,11 +94,12 @@ namespace zz
 
     void SparkBolt::Update()
     {
-        mTime += Time::DeltaTime();
+        mTime += (float)Time::DeltaTime();
 
         Transform* tr = GetComponent<Transform>();
         Vector3 prevPos = tr->GetPosition();
         mPrevPos = Vector4(prevPos.x, prevPos.y, prevPos.z, 0.0f);
+
 
         if (mTime >= 0.8f && !IsDead())
         {
@@ -109,9 +129,17 @@ namespace zz
         shareData.activeCount = count;
         shareData.totalActiveCount = count;
         shareData.index = mIndex;
-        shareData.color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+        shareData.color = Vector4(255.f / 255.f, 80.f / 255.f, 240.f / 255.f, 1.0f);
         mIndex += count;
         mParticle->SetStructedBufferData(&shareData, 1, 1);
+
+
+
+            mShareData.curPosition = Vector4(curPos.x, curPos.y, curPos.z, 0.0f);
+            mShareData.activeCount = randi(5);
+
+            mSubParticle->SetStructedBufferData(&mShareData, 1, 1);
+        
 
         GameObject::LateUpdate();
     }

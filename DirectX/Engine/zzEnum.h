@@ -41,6 +41,7 @@ namespace zz
 
         ItemSlot,
         SpellSlot,
+        WandSlot,
 
         Item,
         Spell,

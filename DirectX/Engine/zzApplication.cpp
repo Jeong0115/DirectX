@@ -9,9 +9,11 @@
 #include "zzEventManager.h"
 #include "zzObjectPoolManager.h"
 #include "zzCollisionManger.h"
-
+#include "zzBox2dWorld.h"
 namespace zz
 {	
+    bool Application::OnDebugMode = false;
+
 	Application::Application()
         : mHwnd(NULL)
         , mResolution{}
@@ -60,6 +62,12 @@ namespace zz
 	{
         Time::Update();
         Input::Update();
+
+        if (Input::GetKey(eKeyCode::CTRL) && Input::GetKeyDown(eKeyCode::F5))
+        {
+            OnDebugMode = !OnDebugMode;
+        }
+
         InventoryManager::Update();
         PixelWorld::Update();
         SceneManager::Update();
@@ -78,7 +86,19 @@ namespace zz
         graphicDevice->UpdateViewPort();
         
         renderer::Render();
-        Editor::Run();
+
+        Camera* mainCamara = renderer::mainCamera;
+        Camera::SetGpuViewMatrix(mainCamara->GetViewMatrix());
+        Camera::SetGpuProjectionMatrix(mainCamara->GetProjectionMatrix());
+        renderer::TransformCB trCB = {};
+        trCB.mView = Camera::GetGpuViewMatrix();
+        trCB.mProjection = Camera::GetGpuProjectionMatrix();
+
+        if(OnDebugMode)
+        {
+            Box2dWorld::Render();
+            Editor::Run();
+        }
         Present();
 
         EventManager::Update();

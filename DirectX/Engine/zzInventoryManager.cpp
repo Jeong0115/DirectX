@@ -57,7 +57,7 @@ namespace zz
             inventoryBox->SetSlotIndex(i);
             mItemSlots.push_back(inventoryBox);
             mInventoryUI[(UINT)eUIType::ItemSlot].push_back(inventoryBox);
-            inventoryBox->GetComponent<Transform>()->SetPosition(29.5f + i * 20.f, 412.5f, 1.0f);
+            inventoryBox->GetComponent<Transform>()->SetPosition(29.5f + i * 20.f, 330.f, 1.0f);
         }
 
         for (int i = 0; i < 4; i++)
@@ -66,7 +66,7 @@ namespace zz
             inventoryBox->SetSlotIndex(i + 4);
             mItemSlots.push_back(inventoryBox);
             mInventoryUI[(UINT)eUIType::ItemSlot].push_back(inventoryBox);
-            inventoryBox->GetComponent<Transform>()->SetPosition(111.5f + i * 20.f, 412.5f, 1.0f);
+            inventoryBox->GetComponent<Transform>()->SetPosition(111.5f + i * 20.f, 330.f, 1.0f);
         }
 
         for (UINT i = 0; i < (UINT)eUIType::End; i++)
@@ -86,12 +86,16 @@ namespace zz
         if (mbOpenInventory)
         {
             dynamic_cast<UICamera*>(renderer::uiCamera)->TurnLayerMask(eUIType::BG, true);
+            dynamic_cast<UICamera*>(renderer::uiCamera)->TurnLayerMask(eUIType::InfoBox, true);
+            dynamic_cast<UICamera*>(renderer::uiCamera)->TurnLayerMask(eUIType::WandSlot, true);
             CollisionManger::UpdateUI();
         }
         else
         {
             // 나중에 한번만 실행되게 수정
             dynamic_cast<UICamera*>(renderer::uiCamera)->TurnLayerMask(eUIType::BG, false);
+            dynamic_cast<UICamera*>(renderer::uiCamera)->TurnLayerMask(eUIType::InfoBox, false);
+            dynamic_cast<UICamera*>(renderer::uiCamera)->TurnLayerMask(eUIType::WandSlot, false);
             CollisionManger::ResetCollisionUI();
         }
 
@@ -126,7 +130,7 @@ namespace zz
             {
                 if (mItemSlots[i]->GetItem() != nullptr)
                 {
-                    dynamic_cast<Wand*>(mItemSlots[i]->GetItem())->GetInfoBox()->GetComponent<Transform>()->SetPosition(70.f, 250.f - 46.f * index, 0.f);
+                    dynamic_cast<Wand*>(mItemSlots[i]->GetItem())->GetInfoBox()->GetComponent<Transform>()->SetPosition(95.f, 280.f - 65.f * index, 0.f);
                     //dynamic_cast<Wand*>(mItemSlots[i]->GetItem())->GetInfoBox()->UpdateUI();
                     index++;
                 }
@@ -230,7 +234,7 @@ namespace zz
                     mItemSlots[i]->SetItem(equipment, item);
 
                     InfoBoxTexture* infoTex = new InfoBoxTexture(eUIType::Item);
-                    infoTex->CreateItemTexture(material_name, textureScale * 1.5f);
+                    infoTex->CreateItemTexture(material_name, textureScale * 2.0f);
 
                     InfoBox* infoBox = new InfoBox(eUIType::InfoBox);
                     infoBox->LinkWand(dynamic_cast<Wand*>(equipment), infoTex);

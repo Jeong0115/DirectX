@@ -60,6 +60,12 @@
     <FxCompile Include="$(MSBuildThisFileDirectory)ProjectileParticleCS.hlsl">
       <Filter>Particle</Filter>
     </FxCompile>
+    <FxCompile Include="$(MSBuildThisFileDirectory)TriangleVS.hlsl">
+      <Filter>VS</Filter>
+    </FxCompile>
+    <FxCompile Include="$(MSBuildThisFileDirectory)TrianglePS.hlsl">
+      <Filter>PS</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)Common.hlsli" />

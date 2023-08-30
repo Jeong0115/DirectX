@@ -59,7 +59,7 @@ namespace zz
         static void InsertElement(int x, int y, const Element& element);
         static void DeleteElement(int x, int y);
         static void MoveStaticElement(std::vector<Box2dWorld::StaticElementInfo>& elements);
-        static void DeleteStaticElement(std::vector<Box2dWorld::StaticElementInfo>& elements, int index);
+        static void DeleteStaticElement(std::vector<Box2dWorld::StaticElementInfo>& elements, int index, std::vector<int>& a);
         //static void SetStaticElements(std::vector<std::vector<Box2dWorld::StaticElementInfo>>& staticElements) { mStaticElements = staticElements; }
         
         static void CreateNewWorld();
@@ -93,8 +93,8 @@ namespace zz
 
         static const UINT mChunkMapWidth;
         static const UINT mChunkMapHeight;
-        //static std::vector<std::vector<Box2dWorld::StaticElementInfo>>& mStaticElements;
 
-        static bool mbDebugMode;
+        static float mTime;
+        //static std::vector<std::vector<Box2dWorld::StaticElementInfo>>& mStaticElements;
     };
 }

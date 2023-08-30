@@ -32,6 +32,7 @@ namespace zz
 		HWND GetHwnd() { return mHwnd; }
 		POINT GetResolution() { return mResolution; }
 
+        static bool OnDebugMode;
 	private:
 		bool mbInitialize = false;
 		std::unique_ptr<zz::graphics::GraphicsDevice> graphicDevice;

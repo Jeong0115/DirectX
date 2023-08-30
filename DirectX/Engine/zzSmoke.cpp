@@ -19,7 +19,7 @@
 //    bool Smoke::ReceiveHeat(int heat)
 //    {
 //        return false;
-//    }
+//    } 
 //    Element* Smoke::Clone()
 //    {
 //        return new Smoke();

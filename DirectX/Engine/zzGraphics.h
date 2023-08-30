@@ -115,9 +115,9 @@ namespace zz
         math::Vector3 rotation;
         math::Vector3 scale;
 
-        float radius;
-        float duration;
-        float time;
+        //float radius;
+        //float duration;
+        //float time;
     };
 
     struct Particle

@@ -310,6 +310,9 @@
     <Filter Include="Common\Math">
       <UniqueIdentifier>{0ebbc145-c34a-414a-a368-1b2bd4e3aaac}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UI\Spell">
+      <UniqueIdentifier>{190e7220-3362-4dd8-a52a-458c324f787b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzEntity.cpp">

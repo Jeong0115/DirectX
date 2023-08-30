@@ -70,6 +70,8 @@ namespace zz
 
         size_t mElementCount;
 
+        uint8_t mStaticCount[64* 64];
+
     private:
         std::vector<std::tuple<PixelChunk*, size_t, size_t>> mChanges;
         std::mutex mDirtyBoxMutex;

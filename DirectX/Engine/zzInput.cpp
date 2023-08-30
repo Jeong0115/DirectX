@@ -81,7 +81,7 @@ namespace zz
             viewport.minDepth = 0.0f;
             viewport.maxDepth = 1.0f;  
 
-            mMouseUIPos = Vector3((float)pos.x * 0.5f, 450.f - ((float)pos.y * 0.5f), 1.0f);
+            mMouseUIPos = Vector3((float)pos.x * 0.4f, 360.f - ((float)pos.y * 0.4f), 1.0f);
             mMouseWorldPos = viewport.Unproject(pos, Camera::GetGpuProjectionMatrix(), Camera::GetGpuViewMatrix(), Matrix::Identity);
         }
         else

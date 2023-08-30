@@ -19,11 +19,15 @@ namespace zz
 
     private:
         class ParticleSystem*   mParticle;
+        class ParticleSystem* mSubParticle;
         class ExplosionEffect*  mExplosion;
         class RigidBody*        mRigid;
 
+        ParticleShared mShareData;
+
         float   mSpeed;
         float   mTime;
+        float mSubParticleTime;
 
         Vector4 mPrevPos;
 

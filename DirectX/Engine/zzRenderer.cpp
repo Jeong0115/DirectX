@@ -125,6 +125,23 @@ namespace zz::renderer
             ResourceManager::Insert(L"PointMesh", mesh);
         }
 
+
+        {
+            //std::vector<Vertex> lineVertexes = {};
+            //std::vector<UINT> lineIndexes = {};
+
+            //Vertex v = {};
+            //v.pos = Vector3(0.0f, 0.0f, 0.0f);
+            //v
+            //lineVertexes.push_back(v);
+            //lineIndexes.push_back(0);
+            //std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
+            //mesh->CreateVertexBuffer(pointVertexes.data(), pointVertexes.size());
+            //mesh->CreateIndexBuffer(pointIndexes.data(), pointIndexes.size());
+            //mesh->SetName(L"PointMesh");
+            //ResourceManager::Insert(L"PointMesh", mesh);
+        }
+
         constantBuffer[(UINT)eCBType::Transform] = new ConstantBuffer(eCBType::Transform);
         constantBuffer[(UINT)eCBType::Transform]->CreateConstantBuffer(sizeof(TransformCB));
 
@@ -151,6 +168,13 @@ namespace zz::renderer
         shader->SetTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
         shader->SetRSState(eRSType::WireframeNone);
         ResourceManager::Insert(L"DebugShader", shader);
+
+        std::shared_ptr<Shader> triangleShader = std::make_shared<Shader>();
+        triangleShader->CreateShader(eShaderStage::VS, L"TriangleVS.hlsl", "main");
+        triangleShader->CreateShader(eShaderStage::PS, L"TrianglePS.hlsl", "main");
+        triangleShader->SetTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+        triangleShader->SetRSState(eRSType::WireframeNone);
+        ResourceManager::Insert(L"TriangleShader", triangleShader);
 
         std::shared_ptr<Shader> spriteShader = std::make_shared<Shader>();
         spriteShader->CreateShader(eShaderStage::VS, L"SpriteVS.hlsl", "main");
@@ -400,7 +424,7 @@ namespace zz::renderer
         ResourceManager::Insert(L"m_SpriteAnimation", material);
 #pragma endregion
     }
-    
+   
     void CreateInputLayout()
     {
         D3D11_INPUT_ELEMENT_DESC arrLayout[3] = {};
@@ -449,6 +473,26 @@ namespace zz::renderer
 
         shader = ResourceManager::Find<Shader>(L"ParticleAnimationShader");
         GetDevice()->CreateInputLayout(particleLayout, 1, shader->GetVSCode(), shader->GetInputLayoutAddressOf());
+
+
+        D3D11_INPUT_ELEMENT_DESC triangleLayout[2] = {};
+
+        triangleLayout[0].AlignedByteOffset = 0;
+        triangleLayout[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+        triangleLayout[0].InputSlot = 0;
+        triangleLayout[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+        triangleLayout[0].SemanticName = "POSITION";
+        triangleLayout[0].SemanticIndex = 0;
+       
+        triangleLayout[1].AlignedByteOffset = 12;
+        triangleLayout[1].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+        triangleLayout[1].InputSlot = 0;
+        triangleLayout[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+        triangleLayout[1].SemanticName = "COLOR";
+        triangleLayout[1].SemanticIndex = 0;
+
+        shader = ResourceManager::Find<Shader>(L"TriangleShader");
+        GetDevice()->CreateInputLayout(triangleLayout, 2, shader->GetVSCode(), shader->GetInputLayoutAddressOf());
     }
     void CreateSamplerState()
     {
@@ -565,8 +609,7 @@ namespace zz::renderer
 
     void Render()
     {
-        std::shared_ptr<Texture> texture
-            = ResourceManager::Find<Texture>(L"Noise01");
+        std::shared_ptr<Texture> texture = ResourceManager::Find<Texture>(L"Noise01");
 
         texture->BindShader(eShaderStage::VS, 1);
         texture->BindShader(eShaderStage::HS, 1);
@@ -674,16 +717,22 @@ namespace zz::renderer
         ResourceManager::Load<Texture>(L"Explosion_SparkBolt", L"..\\Resources\\Texture\\Spell\\SparkBolt\\explosion_008_pink.png");
         ResourceManager::Load<Texture>(L"Muzzle_SparkBolt", L"..\\Resources\\Texture\\Spell\\SparkBolt\\muzzle_large_pink.png");
 
-        std::shared_ptr<Texture> Particle_Pink = ResourceManager::Load<Texture>(L"Particle_Pink", L"..\\Resources\\Texture\\Spell\\SparkBolt\\plasma_fading_pink.png");
-        material = std::make_shared<Material>();
-        material->SetShader(spriteShader);
-        material->SetTexture(Particle_Pink);
-        ResourceManager::Insert(L"m_Particle_Pink", material);
-
         std::shared_ptr<Shader> ParticleShader = ResourceManager::Find<Shader>(L"ParticleShader");
         material = std::make_shared<Material>();
         material->SetShader(ParticleShader);
         ResourceManager::Insert(L"m_Particle", material);
+
+        std::shared_ptr<Texture> Particle_Pink = ResourceManager::Load<Texture>(L"Particle_Pink", L"..\\Resources\\Texture\\Spell\\SparkBolt\\plasma_fading_pink.png");
+        material = std::make_shared<Material>();
+        material->SetShader(ParticleShader);
+        material->SetTexture(Particle_Pink);
+        ResourceManager::Insert(L"m_Particle_Pink", material);
+
+        std::shared_ptr<Texture> light_bullet = ResourceManager::Load<Texture>(L"light_bullet", L"..\\Resources\\Texture\\Spell\\SparkBolt\\light_bullet.png");
+        material = std::make_shared<Material>();
+        material->SetShader(spriteShader);
+        material->SetTexture(light_bullet);
+        ResourceManager::Insert(L"m_light_bullet", light_bullet);
     }
 
     void LoadEffectResource()

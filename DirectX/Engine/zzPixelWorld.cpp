@@ -12,6 +12,8 @@
 
 #include "zzInput.h"
 
+#include "zzTime.h"
+
 #define STB_HERRINGBONE_WANG_TILE_IMPLEMENTATION
 #include "..\External\Herringbone\include\stb_herringbone_wang_tile.h"
 
@@ -29,9 +31,10 @@ namespace zz
     std::unordered_map<std::pair<int, int>, PixelChunkMap*, pair_hash> PixelWorld::mChunkMapLookUp = {};
     ThreadPool PixelWorld::threadPool(1); 
     uint16_t PixelWorld::FrameCount = 0;
+
+    float PixelWorld::mTime = 0.f;
     //std::vector<std::vector<Box2dWorld::StaticElementInfo>>& PixelWorld::mStaticElements = {};
 
-    bool PixelWorld::mbDebugMode = false;
     PixelWorld::PixelWorld()
     {
 
@@ -66,31 +69,41 @@ namespace zz
     } 
 
     void PixelWorld::Update()
-    {
-        if (Input::GetKey(eKeyCode::CTRL) && Input::GetKeyDown(eKeyCode::F5))
+    {  
+
+       
+        //RemoveEmptyChunks();
+
+        mTime += (float)Time::DeltaTime();
+
+        if (mTime <= 1.f / 100.f)
         {
-            mbDebugMode = !mbDebugMode;
+            mTime += (float)Time::DeltaTime();
+            return;
         }
         renderer::debugMeshs.clear();
-        //RemoveEmptyChunks();
-        //
-        //std::vector<std::vector<Box2dWorld::StaticElementInfo>>& mStaticElements = Box2dWorld::GetTemp();
+        mTime -= 1.f / 100.f;
+
+        std::vector<std::vector<Box2dWorld::StaticElementInfo>>& mStaticElements = Box2dWorld::GetTemp();
+
+        std::vector<int> a = {};
+        for (int i = 0; i < mStaticElements.size(); i++)
+        {
+            DeleteStaticElement(mStaticElements[i], i, a);
+        }
 
 
-        //    for (int i = 0; i < mStaticElements.size(); i++)
-        //    {
-        //        DeleteStaticElement((mStaticElements)[i], i);
-        //    }
-       
+        Box2dWorld::ReconstructBody(a);
 
-        //Box2dWorld::Update();
 
-        //std::vector<std::vector<Box2dWorld::StaticElementInfo>>& mStaticElements1 = Box2dWorld::GetTemp();
+        Box2dWorld::Update();
 
-        //for (int i = 0; i < mStaticElements1.size(); i++)
-        //{
-        //    MoveStaticElement((mStaticElements1)[i]);
-        //}
+        std::vector<std::vector<Box2dWorld::StaticElementInfo>>& mStaticElements1 = Box2dWorld::GetTemp();
+
+        for (int i = 0; i < mStaticElements1.size(); i++)
+        {
+            MoveStaticElement(mStaticElements1[i]);
+        }
 
         DrawPixels();
                
@@ -103,15 +116,6 @@ namespace zz
             threadPool.wait();
         }
         FrameCount++;
-
-        //for (int i = 0; i < 4; i++)
-        //{
-        //    for (PixelChunkMap* chunkMap : mChunkMaps)
-        //    {
-        //        chunkMap->MoveElementStep(i);
-        //    }
-        //    threadPool.wait();
-        //}
 
         for (PixelChunkMap* chunkMap : mChunkMaps)
         {
@@ -235,34 +239,42 @@ namespace zz
         {
             if (PixelChunk* chunk = GetChunk(element.x, element.y))
             {
+
                 chunk->RegisterElement(element.x, element.y, element.element);
             }
         }
     }
 
-    void PixelWorld::DeleteStaticElement(std::vector<Box2dWorld::StaticElementInfo>& elements, int index)
+    void PixelWorld::DeleteStaticElement(std::vector<Box2dWorld::StaticElementInfo>& elements, int index, std::vector<int>& a)
     {
         bool cal = false;
-        int i = 0;
+
+
         for (auto& element : elements)
         {
             PixelChunk* chunk = GetChunk(element.x, element.y);
 
-            Element& pixelWorldElement = chunk->GetElement(element.x, element.y);
-            elements[i].element = pixelWorldElement;
+            if (chunk == nullptr)
+                continue;
 
-            if (pixelWorldElement.Type == eElementType::EMPTY)
+            Element& pixelWorldElement = chunk->GetElement(element.x, element.y);
+            size_t index = chunk->GetIndex(element.x, element.y);
+            chunk->mStaticCount[index]--;
+
+            if (pixelWorldElement.Type != eElementType::SOLID)
             {
                 cal = true;
             }
 
-            chunk->InsertElement(element.x, element.y, EMPTY);
-
-            i++;    
+            if(chunk->mStaticCount[index] == 0)
+            {
+                element.element = pixelWorldElement;
+                chunk->InsertElement(element.x, element.y, EMPTY);
+            }           
         }
         if (cal)
         {
-            Box2dWorld::ReconstructBody(index);
+            a.push_back(index);
             cal = false;
         }
     }
@@ -744,7 +756,7 @@ namespace zz
 
     void PixelWorld::DrawPixels()
     {
-        if (!mbDebugMode) return;
+        if (!Application::OnDebugMode) return;
 
         if (Input::GetKey(eKeyCode::W) || Input::GetKey(eKeyCode::R) || Input::GetKey(eKeyCode::S)
             || Input::GetKey(eKeyCode::E) || Input::GetKey(eKeyCode::F) || Input::GetKey(eKeyCode::T))

@@ -20,6 +20,7 @@ namespace zz
         , mElementCount(0)
         , mDirtyBoxMutex{}
         , mUpdateDir{}
+        , mStaticCount{}
     {
         mElements = new Element[mWidth * mHeight];
         for (int i = 0; i < mWidth * mHeight; i++)
@@ -163,6 +164,8 @@ namespace zz
     void PixelChunk::RegisterElement(size_t index, const Element& element)
     {
         Element& dest = mElements[index];
+
+        mStaticCount[index]++;
 
         if (dest.Type != eElementType::EMPTY)
         {

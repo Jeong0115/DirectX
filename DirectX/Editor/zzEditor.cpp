@@ -82,12 +82,6 @@ namespace zz
 
         tr->LateUpdate();
 
-
-        Camera* mainCamara = renderer::mainCamera;
-        
-        Camera::SetGpuViewMatrix(mainCamara->GetViewMatrix());
-        Camera::SetGpuProjectionMatrix(mainCamara->GetProjectionMatrix());
-
         object->Render();
     }
 }
