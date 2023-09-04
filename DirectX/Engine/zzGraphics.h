@@ -56,6 +56,7 @@ namespace zz
         Opaque,
         CutOut,
         Transparent,
+        Light,
         End,
     };
 
@@ -82,6 +83,7 @@ namespace zz
         Default,
         AlphaBlend,
         OneOne,
+        Light,
         End,
     };
 

@@ -66,8 +66,11 @@ namespace zz::graphics
         void BindBlendState(ID3D11BlendState* pBlendState);
         void CopyResource(ID3D11Resource* pDstResource, ID3D11Resource* pSrcResource);
 
+        void CreateLightMap();
+
         void DrawIndexed(UINT IndexCount, UINT StartIndexLocation, INT BaseVertexLocation);
         void DrawIndexedInstanced(UINT IndexCountPerInstance, UINT InstanceCount, UINT StartIndexLocation, INT BaseVertexLocation, UINT StartInstanceLocation);
+        void SetLightMapRenderTarget();
         void ClearRenderTarget();
         void UpdateViewPort();
         void Draw();
@@ -76,6 +79,7 @@ namespace zz::graphics
         void UpdateSubresource(ID3D11Resource* pDstResource, const void* pSrcData) { mContext->UpdateSubresource(pDstResource, 0, NULL, pSrcData, 2048 * 4, 0); }
 
         ID3D11Device* GetID3D11Device() { return mDevice.Get(); }
+        ID3D11ShaderResourceView* GetLightMapResource() { return mLightSRV.Get(); }
 
 	private:
 		Microsoft::WRL::ComPtr<ID3D11Device> mDevice;
@@ -85,6 +89,10 @@ namespace zz::graphics
 		Microsoft::WRL::ComPtr<ID3D11Texture2D> mDepthStencilBuffer;
 		Microsoft::WRL::ComPtr<ID3D11DepthStencilView> mDepthStencilView;
 		Microsoft::WRL::ComPtr<IDXGISwapChain> mSwapChain;
+
+        Microsoft::WRL::ComPtr<ID3D11Texture2D> mLightRenderTarget;
+        Microsoft::WRL::ComPtr<ID3D11RenderTargetView> mLightRenderTargetView;
+        Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mLightSRV;
 
         D3D11_VIEWPORT mViewPort;
 	};

@@ -27,6 +27,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)zzItemTexture.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzItemTextureHighlight.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzLevitation.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzLight.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzMouse.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzObjectPoolManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzParticleShader.cpp" />
@@ -125,6 +126,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzItemTexture.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzItemTextureHighlight.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzLevitation.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzLight.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzMouse.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzObjectPoolManager.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzParticleShader.h" />

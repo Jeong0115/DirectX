@@ -6,6 +6,9 @@
 #include "zzSceneManager.h"
 #include "zzMeshRenderer.h"
 
+#include "zzGraphicsDevice.h"
+#include "zzResourceManager.h"
+
 namespace zz
 {
     bool CompareZSort(GameObject* a, GameObject* b)
@@ -58,6 +61,17 @@ namespace zz
         RenderCutOut();
         RenderTransparent();
         EnableDepthStencilState();
+
+
+        ResourceManager::Find<Mesh>(L"LightMesh")->BindBuffer();
+        ResourceManager::Find<Shader>(L"LightMapShader")->BindShaders();
+        ID3D11ShaderResourceView* srv = graphics::GetDevice()->GetLightMapResource();
+
+        graphics::GetDevice()->BindShaderResource(eShaderStage::PS, 0, &srv);
+        graphics::GetDevice()->DrawIndexed(6, 0, 0);
+
+        ID3D11ShaderResourceView* srv2 = nullptr;
+        graphics::GetDevice()->BindShaderResource(eShaderStage::PS, 0, &srv2);
     }
 
 
@@ -71,6 +85,7 @@ namespace zz
         mOpaqueGameObjects.clear();
         mCutOutGameObjects.clear();  
         mTransparentGameObjects.clear(); 
+        mTp.clear();
 
         Scene* scene = SceneManager::GetActiveScene();
         for (size_t i = 0; i < (UINT)eLayerType::End; i++)

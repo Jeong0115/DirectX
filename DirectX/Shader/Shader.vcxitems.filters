@@ -13,6 +13,9 @@
     <Filter Include="Particle">
       <UniqueIdentifier>{7f71d6a9-1991-4b52-807c-7772f2519243}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Light">
+      <UniqueIdentifier>{0011c631-ca96-403c-aff2-9d75d2009e1c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="$(MSBuildThisFileDirectory)DebugVS.hlsl">
@@ -66,9 +69,21 @@
     <FxCompile Include="$(MSBuildThisFileDirectory)TrianglePS.hlsl">
       <Filter>PS</Filter>
     </FxCompile>
+    <FxCompile Include="$(MSBuildThisFileDirectory)LightMapPS.hlsl">
+      <Filter>Light</Filter>
+    </FxCompile>
+    <FxCompile Include="$(MSBuildThisFileDirectory)LightVS.hlsl">
+      <Filter>Light</Filter>
+    </FxCompile>
+    <FxCompile Include="$(MSBuildThisFileDirectory)LightPS.hlsl">
+      <Filter>Light</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)Common.hlsli" />
     <None Include="$(MSBuildThisFileDirectory)Particle.hlsli" />
+    <None Include="$(MSBuildThisFileDirectory)LightMapVS.hlsl">
+      <Filter>Light</Filter>
+    </None>
   </ItemGroup>
 </Project>

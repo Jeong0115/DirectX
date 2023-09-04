@@ -313,6 +313,9 @@
     <Filter Include="UI\Spell">
       <UniqueIdentifier>{190e7220-3362-4dd8-a52a-458c324f787b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Component\Light">
+      <UniqueIdentifier>{4ddfda6e-2563-490a-88d1-fe126939abf7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzEntity.cpp">
@@ -577,6 +580,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzPixelCollider_Lite.cpp">
       <Filter>Component\PixelCollider_Lite</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzLight.cpp">
+      <Filter>Component\Light</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -869,6 +875,9 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzPixelCollider_Lite.h">
       <Filter>Component\PixelCollider_Lite</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzLight.h">
+      <Filter>Component\Light</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

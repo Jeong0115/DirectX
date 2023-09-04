@@ -1,6 +1,5 @@
 #include "zzMeshRenderer.h"
 #include "zzGameObject.h"
-#include "zzTransform.h"
 #include "zzRenderer.h"
 #include "zzAnimator.h"
 
@@ -17,9 +16,6 @@ namespace zz
 
     void MeshRenderer::Initialize()
     {
-        Transform* tr = GetOwner()->GetComponent<Transform>();
-        //Vector2 size = mMaterial->GetSize();
-        //tr->SetScale(size.x, size.y, 1.0f);
     }
 
     void MeshRenderer::Update()
@@ -32,9 +28,6 @@ namespace zz
 
     void MeshRenderer::Render()
     {
-        //Transform* tr = GetOwner()->GetComponent<Transform>();
-        //tr->BindConstantBuffer();
-
         mMesh->BindBuffer();
         mMaterial->Binds();
 

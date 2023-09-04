@@ -10,6 +10,7 @@
 #include "zzParticleSystem.h"
 #include "zzSmoke_Orange.h"
 #include "zzObjectPoolManager.h"
+#include "zzLight.h"
 
 namespace zz
 {
@@ -37,6 +38,7 @@ namespace zz
         animator->EndEvent(L"explosion_128_play") = std::bind(&Explosion_128::EndAnimation, this);
 
         GetComponent<Transform>()->SetScale(129.f, 129.f, 1.0f);
+        AddComponent<Light>()->SetLightScale(129.f, 129.f, 1.0f);
 
         mParticle = AddComponent<ParticleSystem>();
         mParticle->SetMaterial(ResourceManager::Find<Material>(L"m_fire_falling"));

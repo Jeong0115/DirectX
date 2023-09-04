@@ -16,6 +16,7 @@
 #include "zzPixelCollider.h"
 #include "zzLevitation.h"
 #include "zzRigidBody.h"
+#include "zzLight.h"
 
 namespace zz
 {
@@ -56,6 +57,7 @@ namespace zz
 
         mRigid = AddComponent<RigidBody>();
         AddComponent<Collider>()->SetScale(6.0f, 10.f, 1.0f);
+        AddComponent<Light>()->SetLightScale(300.f, 300.f, 1.0f);
 
         mAnimator = AddComponent<Animator>();
 

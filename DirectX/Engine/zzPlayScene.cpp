@@ -219,6 +219,23 @@ namespace zz
             InventoryManager::CreateStartItems();
             InventoryManager::Test();
 
+
+            std::shared_ptr<Texture> light_mask = ResourceManager::Load<Texture>(L"light_mask", L"..\\Resources\\Texture\\light_mask.png");
+            std::shared_ptr<Material> material = std::make_shared<Material>();
+            material->SetShader(ResourceManager::Find<Shader>(L"LightShader"));
+            material->SetTexture(light_mask);
+            ResourceManager::Insert(L"m_light_mask", material);
+
+
+            //GameObject* object = new GameObject();
+            //AddGameObject(object, eLayerType::Particle);
+            //object->GetComponent<Transform>()->SetPosition(Vector3(0, 0, 0.001f));
+            //object->GetComponent<Transform>()->SetScale(Vector3(500.f, 500.f, 1.0f));
+            //MeshRenderer* mesh = object->AddComponent<MeshRenderer>();
+            //mesh->SetMaterial(ResourceManager::Load<Material>(L"m_light_mask"));
+            //mesh->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
+      
+            //object->Initialize();
         }
        
         

@@ -32,5 +32,6 @@ namespace zz
         std::vector<GameObject*>            mOpaqueGameObjects;
         std::vector<GameObject*>            mCutOutGameObjects;
         std::vector<GameObject*>            mTransparentGameObjects;
+        std::vector<GameObject*>            mTp;
     };
-}
+}   

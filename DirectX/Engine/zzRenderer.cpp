@@ -126,21 +126,39 @@ namespace zz::renderer
         }
 
 
-        {
-            //std::vector<Vertex> lineVertexes = {};
-            //std::vector<UINT> lineIndexes = {};
+        Vertex lightVertexes[4] = {};
 
-            //Vertex v = {};
-            //v.pos = Vector3(0.0f, 0.0f, 0.0f);
-            //v
-            //lineVertexes.push_back(v);
-            //lineIndexes.push_back(0);
-            //std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
-            //mesh->CreateVertexBuffer(pointVertexes.data(), pointVertexes.size());
-            //mesh->CreateIndexBuffer(pointIndexes.data(), pointIndexes.size());
-            //mesh->SetName(L"PointMesh");
-            //ResourceManager::Insert(L"PointMesh", mesh);
-        }
+        std::vector<UINT> lightIndexes = {};
+
+        lightIndexes.push_back(0);
+        lightIndexes.push_back(1);
+        lightIndexes.push_back(2);
+
+        lightIndexes.push_back(1);
+        lightIndexes.push_back(3);
+        lightIndexes.push_back(2);
+
+        lightVertexes[0].pos = Vector3(-1.0f, 1.0f, 0.0f);
+        lightVertexes[0].color = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+        lightVertexes[0].uv = Vector2(0.0f, 0.0f);
+        
+        lightVertexes[1].pos = Vector3(1.0f, 1.0f, 0.0f);
+        lightVertexes[1].color = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+        lightVertexes[1].uv = Vector2(1.0f, 0.0f);
+       
+        lightVertexes[2].pos = Vector3(-1.0f, -1.0f, 0.0f);
+        lightVertexes[2].color = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+        lightVertexes[2].uv = Vector2(0.0f, 1.0f);
+       
+        lightVertexes[3].pos = Vector3(1.0f, -1.0f, 0.0f);
+        lightVertexes[3].color = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+        lightVertexes[3].uv = Vector2(1.0f, 1.0f);
+        
+        std::shared_ptr<Mesh> lightMesh = std::make_shared<Mesh>();
+        lightMesh->CreateVertexBuffer(lightVertexes, 4);
+        lightMesh->CreateIndexBuffer(lightIndexes.data(), (UINT)lightIndexes.size());
+        ResourceManager::Insert(L"LightMesh", lightMesh);
+
 
         constantBuffer[(UINT)eCBType::Transform] = new ConstantBuffer(eCBType::Transform);
         constantBuffer[(UINT)eCBType::Transform]->CreateConstantBuffer(sizeof(TransformCB));
@@ -180,6 +198,19 @@ namespace zz::renderer
         spriteShader->CreateShader(eShaderStage::VS, L"SpriteVS.hlsl", "main");
         spriteShader->CreateShader(eShaderStage::PS, L"SpritePS.hlsl", "main");
         ResourceManager::Insert(L"SpriteShader", spriteShader);
+
+        std::shared_ptr<Shader> lightShader = std::make_shared<Shader>();
+        lightShader->CreateShader(eShaderStage::VS, L"LightVS.hlsl", "main");
+        lightShader->CreateShader(eShaderStage::PS, L"LightPS.hlsl", "main");
+        lightShader->SetBSState(eBSType::OneOne);
+        ResourceManager::Insert(L"LightShader", lightShader);
+
+        std::shared_ptr<Shader> lightMapShader = std::make_shared<Shader>();
+        lightMapShader->CreateShader(eShaderStage::VS, L"LightMapVS.hlsl", "main");
+        lightMapShader->CreateShader(eShaderStage::PS, L"LightMapPS.hlsl", "main");
+        lightMapShader->SetBSState(eBSType::Light);
+        
+        ResourceManager::Insert(L"LightMapShader", lightMapShader);
 
         std::shared_ptr<Shader> spriteAnimationShader = std::make_shared<Shader>();
         spriteAnimationShader->CreateShader(eShaderStage::VS, L"SpriteAnimationVS.hlsl", "main");
@@ -456,6 +487,12 @@ namespace zz::renderer
         shader = ResourceManager::Find<Shader>(L"SpriteShader");
         GetDevice()->CreateInputLayout(arrLayout, 3, shader->GetVSCode(), shader->GetInputLayoutAddressOf());
 
+        shader = ResourceManager::Find<Shader>(L"LightShader");
+        GetDevice()->CreateInputLayout(arrLayout, 3, shader->GetVSCode(), shader->GetInputLayoutAddressOf());
+
+        shader = ResourceManager::Find<Shader>(L"LightMapShader");
+        GetDevice()->CreateInputLayout(arrLayout, 3, shader->GetVSCode(), shader->GetInputLayoutAddressOf());
+
         shader = ResourceManager::Find<Shader>(L"SpriteAnimationShader");
         GetDevice()->CreateInputLayout(arrLayout, 3, shader->GetVSCode(), shader->GetInputLayoutAddressOf());
 
@@ -581,6 +618,17 @@ namespace zz::renderer
         desc.RenderTarget[0].DestBlend = D3D11_BLEND_ONE;
         desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
         GetDevice()->CreateBlendState(&desc, blendStates[(UINT)eBSType::OneOne].GetAddressOf());
+
+        desc.RenderTarget[0].BlendEnable = true;
+        desc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+        desc.RenderTarget[0].SrcBlend = D3D11_BLEND_ZERO;
+        desc.RenderTarget[0].DestBlend = D3D11_BLEND_SRC_COLOR;
+        desc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ZERO;
+        desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;
+        desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+        GetDevice()->CreateBlendState(&desc, blendStates[(UINT)eBSType::Light].GetAddressOf());
+
+
     }
 
     void SetupState()
@@ -628,6 +676,7 @@ namespace zz::renderer
         cb->BindConstantBuffer(eShaderStage::GS);
         cb->BindConstantBuffer(eShaderStage::PS);
         cb->BindConstantBuffer(eShaderStage::CS);
+
 
         for (Camera* camera : cameras)
         {

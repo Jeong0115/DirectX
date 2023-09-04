@@ -9,6 +9,7 @@ namespace zz
         RigidBody,
         Particle,
         MeshRenderer,
+        Light,
         Script,
         Animator,
         Camera,
