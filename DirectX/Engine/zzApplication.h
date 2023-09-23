@@ -33,6 +33,8 @@ namespace zz
 		POINT GetResolution() { return mResolution; }
 
         static bool OnDebugMode;
+        static bool LightDisabled;
+
 	private:
 		bool mbInitialize = false;
 		std::unique_ptr<zz::graphics::GraphicsDevice> graphicDevice;

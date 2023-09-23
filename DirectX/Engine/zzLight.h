@@ -20,7 +20,6 @@ namespace zz
 
     private:
         class Transform* mTransform;
-
         Vector3 mLightScale;
     };
 }

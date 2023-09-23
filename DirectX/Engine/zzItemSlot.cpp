@@ -1,4 +1,4 @@
-#include "zzInventoryBox.h"
+#include "zzItemSlot.h"
 #include "zzResourceManager.h"
 #include "zzMeshRenderer.h"
 #include "zzMaterial.h"
@@ -7,7 +7,7 @@
 
 namespace zz
 {
-    InventoryBox::InventoryBox(eUIType type)
+    ItemSlot::ItemSlot(eUIType type)
         : UI(type)
         , mSlotIndex(9)
         , mItem(nullptr)
@@ -15,7 +15,7 @@ namespace zz
     {
     }
 
-    InventoryBox::~InventoryBox()
+    ItemSlot::~ItemSlot()
     {
         if (mItem != nullptr)
         {
@@ -30,7 +30,7 @@ namespace zz
         }
     }
 
-    void InventoryBox::Initialize()
+    void ItemSlot::Initialize()
     {
         MeshRenderer* mesh = AddComponent<MeshRenderer>();
         mesh->SetMaterial(ResourceManager::Find<Material>(L"m_inventory_box"));
@@ -43,7 +43,7 @@ namespace zz
 
         GameObject::Initialize();
     }
-    void InventoryBox::Update()
+    void ItemSlot::Update()
     {
         GameObject::Update();
 
@@ -53,7 +53,7 @@ namespace zz
         }
     }
 
-    void InventoryBox::LateUpdate()
+    void ItemSlot::LateUpdate()
     {
         GameObject::LateUpdate();
 
@@ -63,7 +63,7 @@ namespace zz
         }
     }
 
-    void InventoryBox::Render()
+    void ItemSlot::Render()
     {
         GameObject::Render();
 
@@ -73,11 +73,11 @@ namespace zz
         }
     }
 
-    void InventoryBox::OnCollisionEnter(GameObject* other)
+    void ItemSlot::OnCollisionEnter(GameObject* other)
     {
     }
 
-    void InventoryBox::OnCollisionStay(GameObject* other)
+    void ItemSlot::OnCollisionStay(GameObject* other)
     {
         if (dynamic_cast<UI*>(other)->GetUIType() == eUIType::Mouse)
         {
@@ -86,7 +86,7 @@ namespace zz
         }
     }
 
-    void InventoryBox::OnCollisionExit(GameObject* other)
+    void ItemSlot::OnCollisionExit(GameObject* other)
     {
         if (dynamic_cast<UI*>(other)->GetUIType() == eUIType::Mouse)
         {
@@ -95,7 +95,7 @@ namespace zz
         }
     }
 
-    void InventoryBox::SetItem(Equipment* item, ItemTexture* tex)
+    void ItemSlot::SetItem(Equipment* item, ItemTexture* tex)
     {
         mItem = item; 
         mItemTexture = tex;

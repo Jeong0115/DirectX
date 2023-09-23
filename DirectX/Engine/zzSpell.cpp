@@ -3,6 +3,7 @@
 namespace zz
 {
     Spell::Spell()
+        : mType(eSpellType::End)
     {
     }
     Spell::~Spell()

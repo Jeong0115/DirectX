@@ -7,6 +7,7 @@ namespace zz
         , mManaMax(0)
         , mManaChargeSpeed(0)
         , mCurMana(0)
+        , mCurSpellIndex(0)
         , mCastDelay(0.f)
         , mReChargeTime(0.f)
         , mSpread(0.f)

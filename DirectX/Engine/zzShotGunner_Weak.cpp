@@ -5,6 +5,9 @@
 #include "zzTransform.h"
 #include "zzAnimation.h"
 #include "zzCollider.h"
+#include "zzDetectPlayer.h"
+#include "zzPixelCollider.h"
+#include "zzRigidBody.h"
 
 namespace zz
 {
@@ -20,7 +23,10 @@ namespace zz
     void ShotGunner_Weak::Initialize()
     {
         GetComponent<Transform>()->SetScale(17.f, 17.f, 1.0f);
-        AddComponent<Collider>()->SetScale(5.f, 10.f, 1.0f);
+        AddComponent<Collider>()->SetScale(5.f, 10.f, 1.0f); 
+        AddComponent<PixelCollider>();
+        AddComponent<RigidBody>();
+        AddComponent<DetectPlayer>();
 
         std::shared_ptr<Texture> texture = ResourceManager::Find<Texture>(L"shotgunner_weak");
 
@@ -57,7 +63,6 @@ namespace zz
 
     void ShotGunner_Weak::OnCollisionEnter(GameObject* other)
     {
-        int a = 0;
     }
 
     void ShotGunner_Weak::OnCollisionStay(GameObject* other)

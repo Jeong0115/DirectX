@@ -46,7 +46,6 @@ namespace zz
         static PixelChunk* GetChunk(int x, int y);
         static PixelChunkMap* GetChunkMapDirect(std::pair<int, int> location);
         static std::pair<int, int> GetChunkMapLocation(int x, int y);
-        static void RemoveEmptyChunks();
 
         static Element& GetElement(int x, int y) { 
             if (GetChunk(x, y) == nullptr)
@@ -54,18 +53,20 @@ namespace zz
             else
                 return GetChunk(x, y)->GetElement(x, y); 
         }
-        static void SwapElement(int x, int y, const Element& element);
-        static void SwapElement(int x, int y, int xto, int yto);
+
         static void InsertElement(int x, int y, const Element& element);
         static void DeleteElement(int x, int y);
         static void MoveStaticElement(std::vector<Box2dWorld::StaticElementInfo>& elements);
         static void DeleteStaticElement(std::vector<Box2dWorld::StaticElementInfo>& elements, int index, std::vector<int>& a);
-        //static void SetStaticElements(std::vector<std::vector<Box2dWorld::StaticElementInfo>>& staticElements) { mStaticElements = staticElements; }
         
         static void CreateNewWorld();
         static void InsertElementFromImage(int y, int x, const cv::Mat& image, Element& element);
         static uint32_t Vec3bToColor(const cv::Vec3b& vec3b);
         static void RoatateImage(RotateOption option, cv::Mat& image);
+
+        static void LoadRandomScene_01(int x, int y);
+        static void LoadRandomScene_02(int x, int y);
+        static void LoadRandomScene_03(int x, int y);
 
         static void KeepAlive(int x, int y) { if (PixelChunk* chunk = GetChunk(x, y)) { chunk->KeepAlive(x, y); }}
 
@@ -75,10 +76,12 @@ namespace zz
         static void DrawPixels();
         static void SetImage(int x, int y, std::shared_ptr<class Texture> texture, std::shared_ptr<class Texture> texture_visual);
 
-        static std::vector<uint8_t>& GetPixelColor() { return mPixelColor; }
+        static std::vector<uint32_t>& GetPixelColor() { return mPixelColor; }
+        static std::uint32_t& GetPixelColor(size_t index) { return mPixelColor[index]; }
+
         static std::vector<PixelChunkMap*> mChunkMaps;
         static ThreadPool threadPool;
-
+        static void Temp();
         static uint16_t FrameCount;
     private:
         static PixelChunkMap* CreateChunkMap(std::pair<int, int> location);
@@ -88,7 +91,7 @@ namespace zz
         static std::map<char, Element> mElementMap;
         static Element mSelectElement;
 
-        static std::vector<uint8_t> mPixelColor;
+        static std::vector<uint32_t> mPixelColor;
         static class PixelGridColor* mImage;    
 
         static const UINT mChunkMapWidth;

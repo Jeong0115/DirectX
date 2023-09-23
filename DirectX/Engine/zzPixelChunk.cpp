@@ -101,23 +101,38 @@ namespace zz
             }
         }
 
-        if (element.Move & eElementMove::MOVE_DOWN_SOLID && MoveDownSolid(worldX, worldY, element)) {}
-        else if (element.Move & eElementMove::MOVE_DOWN_SIDE && MoveDownSide(worldX, worldY, element)) {}
-        else if (element.Move & eElementMove::MOVE_DOWN_LIQUID && MoveDownLiquid(worldX, worldY, element)) {}
-        else if (element.Move & eElementMove::MOVE_SIDE && MoveSide(worldX, worldY, element)) {}
-        else if (element.Move & eElementMove::MOVE_GAS && MoveGas(worldX, worldY, element)) {}
-        else
+        if (element.StopCount > 0)
         {
-            if (element.StopCount > 0)
-            {
-                element.StopCount--;
-                KeepAlive(worldX, worldY);
-            }
+            element.StopCount--;
+            KeepAlive(worldX, worldY);
         }
+
+
+        switch (element.Id)
+        {
+        case eElementID::EMPTY: break;
+        case eElementID::WOOD:  break;
+        case eElementID::SMOKE: break;
+        case eElementID::FIRE:  UpdateFire(worldX, worldY, element);    break;
+        case eElementID::SAND:  UpdateSand(worldX, worldY, element);    break;
+        case eElementID::WATER: UpdateWater(worldX, worldY, element);   break;
+        case eElementID::ROCK:  break;
+        default: break;
+        }
+        //else
+        //{
+        //    if (element.StopCount > 0)
+        //    {
+        //        element.StopCount--;
+        //        KeepAlive(worldX, worldY);
+        //    }
+        //}
+
+        
     }
 
     void PixelChunk::SwapElement(Element& dstElement, int dstX, int dstY, Element& srcElement, int srcX, int srcY)
-    {   
+    {
         srcElement.StopCount = srcElement.StopThreshold;
         dstElement.StopCount = dstElement.StopThreshold;
 
@@ -125,8 +140,12 @@ namespace zz
         dstElement = srcElement;
         srcElement = dest;
 
-        memcpy(&PixelWorld::GetPixelColor()[(srcX + ((srcY) * 2048)) * 4], &srcElement.Color, 4);
-        memcpy(&PixelWorld::GetPixelColor()[(dstX + ((dstY) * 2048)) * 4], &dstElement.Color, 4);
+        //PixelWorld::GetPixelColor((srcX + ((srcY) * 2048))) = srcElement.Color;
+        //PixelWorld::GetPixelColor((dstX + ((dstY) * 2048))) = dstElement.Color;
+
+        memcpy(&PixelWorld::GetPixelColor((srcX + ((srcY) * 2048))), &srcElement.Color, 4);
+        memcpy(&PixelWorld::GetPixelColor((dstX + ((dstY) * 2048))), &dstElement.Color, 4);
+
         KeepAlive(srcX, srcY);
 
         if (InBounds(dstX, dstY))
@@ -139,8 +158,9 @@ namespace zz
         }
     }
 
-    void PixelChunk::InsertElement(size_t index, const Element& element)  // 수정해라
+    void PixelChunk::InsertElement(int x, int y, const Element& element)
     {
+        int index = GetIndex(x, y);
         Element& dest = mElements[index];
 
         if (dest.Type == eElementType::EMPTY && element.Type != eElementType::EMPTY)
@@ -155,10 +175,21 @@ namespace zz
 
         mElements[index] = element;
 
-        //element->SetPos(Position((int)(mStartX + index % mWidth), (int)(mStartY + index / mWidth)));
-        memcpy(&PixelWorld::GetPixelColor()[(mStartX + index % mWidth + ((mStartY + index / mWidth) * 2048)) * 4], &element.Color, 4);
+        PixelWorld::GetPixelColor(mStartX + index % mWidth + ((mStartY + index / mWidth) * 2048)) = element.Color;
 
         KeepAlive(index);
+    }
+
+    void PixelChunk::InsertElementInOrOut(int x, int y, const Element& element)
+    {
+        if (InBounds(x, y))
+        {
+            InsertElement(x, y, element);
+        }
+        else
+        {
+            PixelWorld::InsertElement(x, y, element);
+        }
     }
 
     void PixelChunk::RegisterElement(size_t index, const Element& element)
@@ -173,18 +204,16 @@ namespace zz
         }
 
         mElements[index] = element;
-
-        //element->SetPos(Position((int)(mStartX + index % mWidth), (int)(mStartY + index / mWidth)));
-        memcpy(&PixelWorld::GetPixelColor()[(mStartX + index % mWidth + ((mStartY + index / mWidth) * 2048)) * 4], &element.Color, 4);
-
+     
+        PixelWorld::GetPixelColor(mStartX + index % mWidth + ((mStartY + index / mWidth) * 2048)) = mElements[index].Color;
     }
 
     void PixelChunk::DelteElement(size_t index)
     {
         mElements[index] = EMPTY;
         mElementCount--;
-        memcpy(&PixelWorld::GetPixelColor()[(mStartX + index % mWidth + ((mStartY + index / mWidth) * 2048)) * 4], &mElements[index].Color, 4);
-
+        
+        PixelWorld::GetPixelColor(mStartX + index % mWidth + ((mStartY + index / mWidth) * 2048)) = mElements[index].Color;
         KeepAlive(index);
     }
 
@@ -197,23 +226,9 @@ namespace zz
         else
         {
             mElements[index] = EMPTY;
-            memcpy(&PixelWorld::GetPixelColor()[(mStartX + index % mWidth + ((mStartY + index / mWidth) * 2048)) * 4], &mElements[index].Color, 4);
-
+            PixelWorld::GetPixelColor(mStartX + index % mWidth + ((mStartY + index / mWidth) * 2048)) = mElements[index].Color;
             return true;
         }
-    }
-
-    void PixelChunk::ResiterChanges(PixelChunk* source, int x, int y, int toX, int toY)
-    {
-        mElementCount++;
-        if (source == nullptr)
-        {
-            int a = 0;
-        }
-        std::tuple chage = { source, source->GetIndex(x, y), GetIndex(toX, toY) };
-        mChanges.push_back(chage);
-        //mChanges.emplace_back( source, source->GetIndex(x, y), GetIndex(toX, toY));
-
     }
 
     void PixelChunk::KeepAlive(int x, int y)
@@ -240,13 +255,15 @@ namespace zz
             else if (relativeY >= mHeight - 2)
                 y += 2;
 
-            if(x >=0 && y>=0 && x<1536 && y<1536)
+            if (x >= 0 && y >= 0 && x < 1536 && y < 1536)
                 PixelWorld::GetChunk(x, y)->KeepAliveBoundary(x, y);
         }
     }
 
     void PixelChunk::KeepAliveBoundary(int x, int y)
     {
+        std::unique_lock<std::mutex>(mDirtyBoxMutex);
+
         // 나중에 멀티 쓰레드로 바꿀 때 수정
         int relativeX = x - mStartX;
         int relativeY = y - mStartY;
@@ -264,7 +281,7 @@ namespace zz
         mMaxX = m_maxXw;  m_maxXw = -1;
         mMaxY = m_maxYw;  m_maxYw = -1;
 
-        if (mMaxX <= -1) return;
+        if (mMaxX <= -1 || mMaxY <= -1) return;
         DebugMesh mesh = {};
         mesh.position = math::Vector3((mMaxX + mMinX) / 2.f + mStartX, -((mMaxY + mMinY) / 2.f + mStartY), 0.0f);
         mesh.scale = math::Vector3((float)(mMaxX - mMinX), (float)(mMaxY - mMinY), 1.0f);
@@ -274,6 +291,11 @@ namespace zz
     }
 
     Element& PixelChunk::GetElement(int x, int y)
+    {
+        return mElements[GetIndex(x, y)];
+    }
+
+    Element& PixelChunk::GetElementInOrOut(int x, int y)
     {
         if (InBounds(x, y))
         {
@@ -285,204 +307,267 @@ namespace zz
         }
     }
 
-    bool PixelChunk::MoveDownSolid(int x, int y, Element& element)
+ /*   void PixelChunk::UpdateSand(int x, int y, Element& element)
     {
-        float posY = y;
-        for (int i = 1; i <= element.Velocity.y; i++)
+        int yModifier = element.Velocity.y < 0 ? -1 : 1;
+        int xModifier = element.Velocity.x < 0 ? -1 : 1;
+       
+        float deltaYVelocityFloat = (fabs(element.Velocity.y) * (float)Time::DeltaTime());
+        float deltaXVelocityFloat = (fabs(element.Velocity.x) * (float)Time::DeltaTime());
+
+        int deltaYVelocityInt;
+        int deltaXVelocityInt;
+
+        if (deltaXVelocityFloat < 1.f)
         {
-            Element& target = GetElement(x, y + i);
-            if (target.Type == eElementType::EMPTY || target.Type == eElementType::GAS || target.Type == eElementType::LIQUID)
+            element.RemainderVelocity.x += deltaXVelocityFloat;
+            deltaYVelocityInt = (int)element.RemainderVelocity.x;
+
+            if (abs(deltaYVelocityInt) > 0)
+                element.RemainderVelocity.x = 0;
+        }
+        else
+        {
+            element.RemainderVelocity.x = 0;
+            deltaYVelocityInt = (int)deltaXVelocityFloat;
+        }
+
+        if (deltaYVelocityFloat < 1)
+        {
+            element.RemainderVelocity.y += deltaYVelocityFloat;
+            deltaXVelocityInt = (int)element.RemainderVelocity.y;
+
+            if (abs(deltaXVelocityInt) > 0)
+                element.RemainderVelocity.y = 0;
+        }
+        else
+        {
+            element.RemainderVelocity.y = 0;
+            deltaXVelocityInt = (int)deltaYVelocityFloat;
+        }
+
+        bool isXDeltaTimeLarger = abs(deltaYVelocityInt) > abs(deltaXVelocityInt);
+
+        int largeDistance = std::max(abs(deltaYVelocityInt), abs(deltaXVelocityInt));
+        int smallDistance = std::min(abs(deltaYVelocityInt), abs(deltaXVelocityInt));
+
+        float slope = (smallDistance == 0 || largeDistance == 0) ? 0 : ((float)(smallDistance + 1) / (largeDistance + 1));
+
+        int smallerCount;
+
+        int lastX = x;
+        int lastY = y;
+        
+        for (int i = 1; i <= largeDistance; i++)
+        {
+            smallerCount = (int)floor(i * slope);
+
+            int yIncrease, xIncrease;
+            if (isXDeltaTimeLarger)
             {
-                if (target.Type == eElementType::LIQUID)
-                    element.Velocity.y -= 1;
-                posY = y + i;
+                xIncrease = i;
+                yIncrease = smallerCount;
             }
             else
             {
-                break;
+                yIncrease = i;
+                xIncrease = smallerCount;
+            }
+
+            if (!PixelWorld::InBounds(x + (xIncrease * xModifier), y + (yIncrease * yModifier))) continue;
+
+            Element& target = PixelWorld::GetElement(x + (xIncrease * xModifier), y + (yIncrease * yModifier));
+
+            if (target.Type == eElementType::EMPTY || target.Type == eElementType::LIQUID || target.Type == eElementType::GAS)
+            {
+                lastX = x + (xIncrease * xModifier);
+                lastY = y + (yIncrease * yModifier);
             }
         }
+    }*/
 
-        if (posY == y) return false;
-
-        element.Velocity.x = 2;
-        SwapElement(PixelWorld::GetElement(x, posY), x, posY, element, x, y);
-
-        return true;
-    }
-    bool PixelChunk::MoveDownLiquid(int x, int y, Element& element)
+    void PixelChunk::UpdateSand(int x, int y, Element& element)
     {
-        float posY = y;
-        for (int i = 1; i <= element.Velocity.y; i++)
-        {
-            Element& target = GetElement(x, y + i);
-            if (target.Type == eElementType::EMPTY || target.Type == eElementType::GAS)
-            {
-                posY = y + i;
-            }
-            else
-            {
-                break;
-            }
-        }
+        Element& target = GetElementInOrOut(x, y + 1);
 
-        if (posY == y) return false;
-
-        SwapElement(PixelWorld::GetElement(x, posY), x, posY, element, x, y);
-        return true;
-    }
-    bool PixelChunk::MoveDown(int x, int y, Element& element)
-    {
-        Element& target = GetElement(x, y + 1);
-        if (target.Type == eElementType::EMPTY  || target.Type == eElementType::GAS)
+        if (target.Type == eElementType::EMPTY || target.Type == eElementType::LIQUID || target.Type == eElementType::GAS)
         {
             SwapElement(target, x, y + 1, element, x, y);
-            return true;
         }
-        return false;
-    }
-    bool PixelChunk::MoveSide(int x, int y, Element& element)
-    {
-        int dir = random() > 0.5 ? -1 : 1;
-        float posX = x;
-        for (int i = 1; i <= element.Velocity.x; i++)
-        {
-            Element& target = GetElement(x + i * dir, y);
+        else
+        { 
+            int rand = random() > 0.5f ? 1 : -1;
 
-            if (target.Type == eElementType::EMPTY || target.Type == eElementType::GAS)
+            Element& lTarget = GetElementInOrOut(x + rand, y + 1);
+            if (lTarget.Type == eElementType::EMPTY || lTarget.Type == eElementType::LIQUID || lTarget.Type == eElementType::GAS)
             {
-                posX = x + i * dir;
+                SwapElement(lTarget, x + rand, y + 1, element, x, y);
             }
             else
             {
-                break;
+                Element& rTarget = GetElementInOrOut(x - rand, y + 1);
+                if (rTarget.Type == eElementType::EMPTY || rTarget.Type == eElementType::LIQUID || rTarget.Type == eElementType::GAS)
+                {
+                    SwapElement(rTarget, x - rand, y + 1, element, x, y);
+                }
             }
         }
+    }
 
-        if (posX == x)
+    void PixelChunk::UpdateWater(int x, int y, Element& element)
+    {
+        /*Element& target = GetElementInOrOut(x, y + 1);
+
+        if (target.Type == eElementType::EMPTY || target.Type == eElementType::GAS)
         {
-            dir *= -1;
-            float posX = x;
-            for (int i = 1; i <= element.Velocity.x; i++)
+            SwapElement(target, x, y + 1, element, x, y);
+            return;
+        }
+        else
+        {
+            int rand = random() > 0.5f ? 1 : -1;
+
+            Element& lTarget = GetElementInOrOut(x + rand, y);
+            if (lTarget.Type == eElementType::EMPTY || lTarget.Type == eElementType::GAS)
             {
-                Element& target = GetElement(x + i * dir, y);
+                SwapElement(lTarget, x + rand, y, element, x, y);
+                return;
+            }
+            else
+            {
+                Element& rTarget = GetElementInOrOut(x - rand, y);
+                if (rTarget.Type == eElementType::EMPTY || rTarget.Type == eElementType::GAS)
+                {
+                    SwapElement(rTarget, x - rand, y, element, x, y);
+                    return;
+                }
+            }
+        }*/
+
+        eElementType underElementType = GetElementInOrOut(x, y + 1).Type;
+        if (underElementType == eElementType::EMPTY || underElementType == eElementType::GAS)
+        {
+            element.Velocity.x *= 0.8f;
+            element.Velocity.y += 0.1f;
+            
+            int floorVelX = (int)fabs(floor(element.Velocity.x));
+            int floorVelY = (int)floor(element.Velocity.y);
+
+            int dirX = element.Velocity.x >= 0 ? 1 : -1;
+
+            int largeVel;
+            int smallVel;
+
+            bool isVelXLarger;
+
+            floorVelX > floorVelY ? (largeVel = floorVelX, smallVel = floorVelY, isVelXLarger = true)
+                : (largeVel = floorVelY, smallVel = floorVelX, isVelXLarger = false);
+
+            float slope = (smallVel == 0 || largeVel == 0) ? 0 : ((float)(smallVel + 1) / (largeVel + 1));
+
+            int lastX = x;
+            int lastY = y;
+
+            for (int i = 1; i < largeVel; i++)
+            {
+                int smallerCount = (int)floor(i * slope);
+
+                int yIncrease, xIncrease;
+                if (isVelXLarger)
+                {
+                    xIncrease = i;
+                    yIncrease = smallerCount;
+                }
+                else
+                {
+                    yIncrease = i;
+                    xIncrease = smallerCount;
+                }
+
+                Element& target = GetElementInOrOut(x + (xIncrease * dirX), y + yIncrease);
 
                 if (target.Type == eElementType::EMPTY || target.Type == eElementType::GAS)
                 {
-                    posX = x + i * dir;
+                    lastX = x + (xIncrease * dirX);
+                    lastY = y + yIncrease;
                 }
-                else
+                else if (target.Type == eElementType::LIQUID || target.Type == eElementType::SOLID)
+                {
+                    element.Velocity.x = (element.Velocity.y + random() * 3.0f - 1.0f) * dirX;
+                    break;
+                }
+            }
+
+            if (lastX != x || lastY != y)
+            {
+                SwapElement(GetElementInOrOut(lastX, lastY), lastX, lastY, element, x, y);
+                return;
+            }
+        }
+        else
+        {
+            element.Velocity.y = 2.f;
+
+            if (element.Velocity.x <= 1.f)
+            {
+                element.Velocity.x = 2.0f * (random() > 0.5f ? 1.f : -1.f);
+            }
+            int dirX = element.Velocity.x >= 0 ? 1 : -1;
+            int lastX = x;
+
+            float absVelocityX = fabs(element.Velocity.x);
+            for (int j = 1; j < (int)absVelocityX; j++)
+            {
+                Element& target = GetElementInOrOut(x + j * dirX, y);
+
+                if (target.Type == eElementType::EMPTY || target.Type == eElementType::GAS)
+                {
+                    lastX = x + j * dirX;
+                }
+                else if (target.Type == eElementType::SOLID || target.Type == eElementType::LIQUID)
                 {
                     break;
                 }
             }
-        }
-        else
-        {
-            SwapElement(PixelWorld::GetElement(posX, y), posX, y, element, x, y);
-            return true;
-        }
 
-        if (posX == x) 
-        {
-            return false;
-        }
-
-        SwapElement(PixelWorld::GetElement(posX, y), posX, y, element, x, y);
-        return true;
-    }
-    bool PixelChunk::MoveDownSide(int x, int y, Element& element)
-    {
-        int dir = random() > 0.5 ? -1 : 1;
-        Element& target = GetElement(x + dir, y + 1);
-
-        if (target.Type == eElementType::EMPTY || target.Type == eElementType::GAS || target.Type == eElementType::LIQUID)
-        {
-            SwapElement(target, x + dir, y + 1, element, x, y);
-            return true;
-        }
-        else
-        {
-            Element& target = GetElement(x - dir, y + 1);
-            if (target.Type == eElementType::EMPTY || target.Type == eElementType::GAS || target.Type == eElementType::LIQUID)
+            if (lastX != x)
             {
-                SwapElement(target, x - dir, y + 1, element, x, y);
-                return true;
-            }
-        }
-
-        float posX = x;
-        for (int i = 1; i <= element.Velocity.x; i++)
-        {
-            Element& target = GetElement(x + i * dir, y);
-
-            if (target.Type == eElementType::EMPTY || target.Type == eElementType::GAS || target.Type == eElementType::LIQUID)
-            {
-                posX = x + i * dir;
+                SwapElement(GetElementInOrOut(lastX, y), lastX, y, element, x, y);
+                return;
             }
             else
             {
-                break;
-                element.Velocity.x--;
+                element.Velocity.x *= -1;
             }
         }
-
-        if (posX == x)
-        {
-            dir *= -1;
-            float posX = x;
-            for (int i = 1; i <= element.Velocity.x; i++)
-            {
-                Element& target = GetElement(x + i * dir, y);
-
-                if (target.Type == eElementType::EMPTY || target.Type == eElementType::GAS || target.Type == eElementType::LIQUID)
-                {
-                    posX = x + i * dir;
-                }
-                else
-                {
-                    break;
-                }
-            }
-        }
-        else
-        {
-            element.Velocity.x--;
-            SwapElement(PixelWorld::GetElement(posX, y), posX, y, element, x, y);
-            return true;
-        }
-
-        if (posX == x) return false;
-
-        SwapElement(PixelWorld::GetElement(posX, y), posX, y, element, x, y);
-        return true;
     }
-    bool PixelChunk::MoveGas(int x, int y, Element& element)
+
+    void PixelChunk::UpdateFire(int x, int y, Element& element)
     {
-        Element& target = GetElement(x, y - 1);
+        Element& target = GetElementInOrOut(x, y - 1);
+
         if (target.Type == eElementType::EMPTY)
         {
             SwapElement(target, x, y - 1, element, x, y);
-            return true;
         }
         else
         {
-            int dir = random() > 0.5 ? -1 : 1;
+            int rand = random() > 0.5f ? 1 : -1;
 
-            for (int i = 0; i < 2; i++)
+            Element& lTarget = GetElementInOrOut(x + rand, y - 1);
+            if (lTarget.Type == eElementType::EMPTY)
             {
-                Element& target = GetElement(x + dir, y - 1);
-
-                if (target.Type == eElementType::EMPTY)
+                SwapElement(lTarget, x + rand, y - 1, element, x, y);
+            }
+            else
+            {
+                Element& rTarget = GetElementInOrOut(x - rand, y - 1);
+                if (rTarget.Type == eElementType::EMPTY)
                 {
-                    SwapElement(target, x + dir, y - 1, element, x, y);
-                    return true;
+                    SwapElement(rTarget, x - rand, y - 1, element, x, y);
                 }
-
-                dir *= -1;
             }
         }
-        return false;
     }
 
     void PixelChunk::HeatNeighbors(int x, int y, Element& element)
@@ -497,15 +582,20 @@ namespace zz
         {
             if (random() > 0.95f)
             {
-                if (PixelWorld::GetElement(x, y - 1).Type == eElementType::EMPTY)
+                if (GetElementInOrOut(x, y - 1).Type == eElementType::EMPTY)
                 {
-                    PixelWorld::InsertElement(x, y - 1, SMOKE);
+                    Element smoke = SMOKE;
+                    smoke.Color = element.Color;
+
+                    InsertElementInOrOut(x, y - 1, smoke);
                 }
             }
-            element.Color = RandomFireColor();
+
+            if(element.Id != eElementID::FIRE)
+                element.Color = RandomFireColor();
         }
 
-        memcpy(&PixelWorld::GetPixelColor()[(x + ((y) * 2048)) * 4], &element.Color, 4);
+        PixelWorld::GetPixelColor((x + ((y) * 2048))) = element.Color;
 
         for (int i = y - 1; i <= y + 1; i++)
         {
@@ -514,13 +604,13 @@ namespace zz
             {
                 if (j == x) continue;
 
-                Element& dstElement = PixelWorld::GetElement(j, i);
+                Element& dstElement = GetElementInOrOut(j, i);
 
                 if (dstElement.isIgnite && !dstElement.onFire)
                 {
                     dstElement.Temperature += element.Temperature * (randf(1.0f) + 0.5f) * (float)Time::DeltaTime();
 
-                    if(dstElement.Temperature >= dstElement.MaxTemperature)
+                    if (dstElement.Temperature >= dstElement.MaxTemperature)
                     {
                         dstElement.Temperature = dstElement.MaxTemperature;
                         dstElement.onFire = true;
@@ -536,7 +626,7 @@ namespace zz
 
         if (element.LifeTime <= 0.0f)
         {
-            PixelWorld::InsertElement(x, y, EMPTY);
+            InsertElementInOrOut(x, y, EMPTY);
         }
     }
 

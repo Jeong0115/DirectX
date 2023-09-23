@@ -5,6 +5,13 @@
 namespace zz
 {
     class Texture;
+    class SpellSlot;
+    enum class eTextureType
+    {
+        Wand,
+        Item,
+        Spell
+    };
 
     class ItemTexture : public UI
     {
@@ -17,7 +24,7 @@ namespace zz
         virtual void LateUpdate()   override;
         virtual void Render()       override;
 
-        void CreateItemTexture(std::wstring material_name, Vector3 pos, Vector3 scale);
+        void CreateItemTexture(std::wstring material_name, eTextureType type, Vector3 pos, Vector3 scale);
         void MoveSlot(Vector3 pos);
         void MoveOriginSlot();
 
@@ -29,11 +36,16 @@ namespace zz
         virtual void OnCollisionExit(GameObject* other)     override;
 
         void SetTexture(std::shared_ptr<Texture> tex) { mTex = tex; }
+        eTextureType GetTextureType() { return mTextureType; }
+        SpellSlot* GetOwner() { return mOwner; }
+        void SetOwner(SpellSlot* owner) { mOwner = owner; }
 
     private:
         std::shared_ptr<Texture>    mTex;
         Vector3                     mSlotPos;
         UINT                        mSlotIndex;
+        SpellSlot*                  mOwner;
+        eTextureType                mTextureType;
         bool                        mbMove;
     };
 }

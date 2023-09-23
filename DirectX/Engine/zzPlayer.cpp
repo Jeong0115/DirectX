@@ -17,7 +17,7 @@
 #include "zzLevitation.h"
 #include "zzRigidBody.h"
 #include "zzLight.h"
-
+#include "zzDetectPlayer.h"
 namespace zz
 {
     Player::Player()
@@ -114,6 +114,7 @@ namespace zz
         
         tr->SetPosition(pos);
 
+        DetectPlayer::PlayerPos = Vector2(pos.x, pos.y);
 
         GameObject::Update();
 

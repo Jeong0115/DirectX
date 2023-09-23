@@ -13,7 +13,7 @@
 #include "zzLight.h"
 
 namespace zz
-{
+{   
     Smoke_Orange::Smoke_Orange()
         : mTime(0.f)
         , mParticle(nullptr)

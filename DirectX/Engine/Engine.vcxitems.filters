@@ -169,15 +169,6 @@
     <Filter Include="Spell\Base">
       <UniqueIdentifier>{00a0a4fe-f793-4764-a7a3-ca9493a9f4df}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Spell\Attack">
-      <UniqueIdentifier>{4662bc87-5cbc-4fa4-aa64-3625cc487c8e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Spell\Attack\Base">
-      <UniqueIdentifier>{addbcecc-ee09-487b-9d32-d0f29233b6fc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Spell\Attack\SparkBolt">
-      <UniqueIdentifier>{ac57409f-2c48-45c2-919d-8d56576def88}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Manager\EventManager">
       <UniqueIdentifier>{73039cfa-c4d1-4ead-933e-1b975d52ea03}</UniqueIdentifier>
     </Filter>
@@ -310,11 +301,59 @@
     <Filter Include="Common\Math">
       <UniqueIdentifier>{0ebbc145-c34a-414a-a368-1b2bd4e3aaac}</UniqueIdentifier>
     </Filter>
-    <Filter Include="UI\Spell">
-      <UniqueIdentifier>{190e7220-3362-4dd8-a52a-458c324f787b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Component\Light">
       <UniqueIdentifier>{4ddfda6e-2563-490a-88d1-fe126939abf7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\DetectPlayer">
+      <UniqueIdentifier>{b7630488-b372-4c3c-ba7c-47d6cb8c511e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\SpellUI">
+      <UniqueIdentifier>{190e7220-3362-4dd8-a52a-458c324f787b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\SpellUI\Base">
+      <UniqueIdentifier>{f8a17337-7161-48bb-b859-f7b38cde0517}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\SpellUI\LightBullet">
+      <UniqueIdentifier>{94c3465f-69d5-4d8c-ae3a-b5bc54a3a6c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Inventory\SpellSlot">
+      <UniqueIdentifier>{b24b25a8-e3d0-4edb-98be-3e7a67eb8174}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Inventory\ItemSlot">
+      <UniqueIdentifier>{5b8e899b-b476-4219-8f27-513d545837db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Spell\Utility">
+      <UniqueIdentifier>{ef794fe7-d66d-4d4c-8f3a-483ebe74eda4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Spell\Utility\Base">
+      <UniqueIdentifier>{fb5277f1-ba06-4a37-91e7-535e1aaa0fca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Spell\Utility\MultiCast">
+      <UniqueIdentifier>{4f51b664-95e4-47cd-a11f-c595e821141f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Spell\Utility\Other">
+      <UniqueIdentifier>{0d0e078c-4384-4799-bf4e-7b314a42652d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Spell\Utility\Modifier">
+      <UniqueIdentifier>{12e2a015-2139-44af-822b-ffb3eb175a72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Spell\Projectile">
+      <UniqueIdentifier>{4662bc87-5cbc-4fa4-aa64-3625cc487c8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Spell\Projectile\Base">
+      <UniqueIdentifier>{addbcecc-ee09-487b-9d32-d0f29233b6fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Spell\Projectile\SparkBolt">
+      <UniqueIdentifier>{ac57409f-2c48-45c2-919d-8d56576def88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Spell\Utility\Modifier\Base">
+      <UniqueIdentifier>{1751adb5-a90a-4ced-b263-e7f645a26718}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Spell\Utility\Modifier\SpeedUp">
+      <UniqueIdentifier>{c3c5cdc3-39bd-461f-a759-3cf70d244f9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\SpellUI\SpeedUp">
+      <UniqueIdentifier>{c65a9c1a-ffa9-4b53-9614-2010960437e9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -436,9 +475,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)zzPixelChunk.cpp">
       <Filter>PixelWorld</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)zzPixelUpdater.cpp">
-      <Filter>PixelWorld</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzPixelChunkMap.cpp">
       <Filter>PixelWorld</Filter>
     </ClCompile>
@@ -468,9 +504,6 @@
       <Filter>Component\Transform\Script</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzInventoryBG.cpp">
-      <Filter>UI\Inventory</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)zzInventoryBox.cpp">
       <Filter>UI\Inventory</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzInventoryManager.cpp">
@@ -524,11 +557,11 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)zzSpell.cpp">
       <Filter>Spell\Base</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)zzAttackSpell.cpp">
-      <Filter>Spell\Attack\Base</Filter>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzProjectileSpell.cpp">
+      <Filter>Spell\Projectile\Base</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzSparkBolt.cpp">
-      <Filter>Spell\Attack\SparkBolt</Filter>
+      <Filter>Spell\Projectile\SparkBolt</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzEventManager.cpp">
       <Filter>Manager\EventManager</Filter>
@@ -583,6 +616,33 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzLight.cpp">
       <Filter>Component\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzDetectPlayer.cpp">
+      <Filter>Component\DetectPlayer</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzSpellUI.cpp">
+      <Filter>UI\SpellUI\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzLightBullet.cpp">
+      <Filter>UI\SpellUI\LightBullet</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzSpellSlot.cpp">
+      <Filter>UI\Inventory\SpellSlot</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzItemSlot.cpp">
+      <Filter>UI\Inventory\ItemSlot</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzUtilitySpell.cpp">
+      <Filter>Spell\Utility\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzModifierSpell.cpp">
+      <Filter>Spell\Utility\Modifier\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzSpeedUp.cpp">
+      <Filter>Spell\Utility\Modifier\SpeedUp</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzSpeedUp_UI.cpp">
+      <Filter>UI\SpellUI\SpeedUp</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -731,9 +791,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzPixelChunk.h">
       <Filter>PixelWorld</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)zzPixelUpdater.h">
-      <Filter>PixelWorld</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzPixelChunkMap.h">
       <Filter>PixelWorld</Filter>
     </ClInclude>
@@ -766,9 +823,6 @@
       <Filter>Component\Transform\Script</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzInventoryBG.h">
-      <Filter>UI\Inventory</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)zzInventoryBox.h">
       <Filter>UI\Inventory</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzInventoryManager.h">
@@ -822,11 +876,11 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzSpell.h">
       <Filter>Spell\Base</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)zzAttackSpell.h">
-      <Filter>Spell\Attack\Base</Filter>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzProjectileSpell.h">
+      <Filter>Spell\Projectile\Base</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzSparkBolt.h">
-      <Filter>Spell\Attack\SparkBolt</Filter>
+      <Filter>Spell\Projectile\SparkBolt</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzEventManager.h">
       <Filter>Manager\EventManager</Filter>
@@ -878,6 +932,33 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzLight.h">
       <Filter>Component\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzDetectPlayer.h">
+      <Filter>Component\DetectPlayer</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzSpellUI.h">
+      <Filter>UI\SpellUI\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzLightBullet.h">
+      <Filter>UI\SpellUI\LightBullet</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzSpellSlot.h">
+      <Filter>UI\Inventory\SpellSlot</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzItemSlot.h">
+      <Filter>UI\Inventory\ItemSlot</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzUtilitySpell.h">
+      <Filter>Spell\Utility\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzModifierSpell.h">
+      <Filter>Spell\Utility\Modifier\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzSpeedUp.h">
+      <Filter>Spell\Utility\Modifier\SpeedUp</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzSpeedUp_UI.h">
+      <Filter>UI\SpellUI\SpeedUp</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

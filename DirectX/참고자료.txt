@@ -1,0 +1,15 @@
+- 참고자료
+https://www.youtube.com/watch?v=VLZjd_Y1gJ8&t=402s
+https://github.com/GameEngineering/EP01_SandSim
+https://www.youtube.com/watch?v=prXuyMCgbTc&t=597s
+https://www.youtube.com/watch?v=Mr3E_voEG8Y&t=2706s
+https://www.youtube.com/watch?v=5Ka3tbbT-9E
+https://nothings.org/gamedev/herringbone/
+
+
+- Library
+https://github.com/erincatto/box2d
+https://github.com/mapbox/earcut.hpp
+https://github.com/nothings/stb/blob/master/stb_herringbone_wang_tile.h
+https://github.com/opencv/opencv
+https://github.com/microsoft/DirectXTex

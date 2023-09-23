@@ -1,6 +1,5 @@
 #include "zzPixelWorld.h"
 #include "zzPixelGrid.h"
-#include "zzPixelUpdater.h"
 
 #include "zzRenderer.h"
 #include "zzInput.h"
@@ -11,7 +10,6 @@
 #include <algorithm>
 
 #include "zzInput.h"
-
 #include "zzTime.h"
 
 #define STB_HERRINGBONE_WANG_TILE_IMPLEMENTATION
@@ -19,7 +17,7 @@
 
 namespace zz
 {  
-    std::vector<uint8_t> PixelWorld::mPixelColor(2048 * 2048 * 4);
+    std::vector<uint32_t> PixelWorld::mPixelColor(2048 * 2048);
     const UINT PixelWorld::mChunkMapWidth = 512;
     const UINT PixelWorld::mChunkMapHeight = 512;
     PixelGridColor* PixelWorld::mImage = new PixelGridColor();
@@ -29,7 +27,7 @@ namespace zz
 
     std::vector<PixelChunkMap*> PixelWorld::mChunkMaps = {};
     std::unordered_map<std::pair<int, int>, PixelChunkMap*, pair_hash> PixelWorld::mChunkMapLookUp = {};
-    ThreadPool PixelWorld::threadPool(1); 
+    ThreadPool PixelWorld::threadPool(4); 
     uint16_t PixelWorld::FrameCount = 0;
 
     float PixelWorld::mTime = 0.f;
@@ -61,7 +59,7 @@ namespace zz
         mElementMap.insert({ 'r', ROCK });
         mElementMap.insert({ 't', WOOD });
         mElementMap.insert({ 'f', FIRE });
-        mElementMap.insert({ 'e', {eElementType::EMPTY, eElementMove::NONE, eElementUpdate::NONE, (uint32_t)eElementColor::EMPTY, L"DeleteEmpty", math::Vector2(0.f, 0.f)} });
+        mElementMap.insert({ 'e', EMPTY });
         mSelectElement = mElementMap.find('e')->second;
 
         CreateNewWorld();
@@ -70,10 +68,6 @@ namespace zz
 
     void PixelWorld::Update()
     {  
-
-       
-        //RemoveEmptyChunks();
-
         mTime += (float)Time::DeltaTime();
 
         if (mTime <= 1.f / 100.f)
@@ -84,27 +78,7 @@ namespace zz
         renderer::debugMeshs.clear();
         mTime -= 1.f / 100.f;
 
-        std::vector<std::vector<Box2dWorld::StaticElementInfo>>& mStaticElements = Box2dWorld::GetTemp();
-
-        std::vector<int> a = {};
-        for (int i = 0; i < mStaticElements.size(); i++)
-        {
-            DeleteStaticElement(mStaticElements[i], i, a);
-        }
-
-
-        Box2dWorld::ReconstructBody(a);
-
-
-        Box2dWorld::Update();
-
-        std::vector<std::vector<Box2dWorld::StaticElementInfo>>& mStaticElements1 = Box2dWorld::GetTemp();
-
-        for (int i = 0; i < mStaticElements1.size(); i++)
-        {
-            MoveStaticElement(mStaticElements1[i]);
-        }
-
+        threadPool.wait();
         DrawPixels();
                
         for (int i = 0; i < 4; i++)
@@ -113,8 +87,8 @@ namespace zz
             {
                 chunkMap->UpdateStep(i);
             };
-            threadPool.wait();
         }
+        threadPool.wait();
         FrameCount++;
 
         for (PixelChunkMap* chunkMap : mChunkMaps)
@@ -123,7 +97,8 @@ namespace zz
         }
         threadPool.wait();
 
-        mImage->Update(mPixelColor, NULL, 0, 0);     
+        mImage->Update(mPixelColor, NULL, 0, 0);  
+        threadPool.enqueue([=]() { Temp(); });
     }
 
     void PixelWorld::Release()
@@ -146,8 +121,7 @@ namespace zz
         PixelChunk* chunk = chunkMap->GetChunk(x, y);
         
         //mx.unlock();
-        return chunk;
-        
+        return chunk;   
     }
 
     PixelChunkMap* PixelWorld::GetChunkMapDirect(std::pair<int, int> location)
@@ -161,60 +135,6 @@ namespace zz
     std::pair<int, int> PixelWorld::GetChunkMapLocation(int x, int y)
     {
         return { floor(float(x) / mChunkMapWidth), floor(float(y) / mChunkMapHeight) };
-    }
-
-    void PixelWorld::RemoveEmptyChunks()
-    {
-        //for (size_t i = 0; i < mChunks.size(); i++) 
-        //{
-        //    PixelChunk* chunk = mChunks.at(i);
-
-        //    if (chunk->mElementCount == 0) 
-        //    {
-        //        mChunkMapLookUp.erase(GetChunkLocation(chunk->mStartX, chunk->mStartY));
-        //        mChunks[i] = mChunks.back(); mChunks.pop_back();
-        //        i--;
-
-        //        delete chunk;
-        //        chunk = nullptr;
-        //    }
-        //}
-    }
-
-    void PixelWorld::SwapElement(int x, int y, const Element& element)
-    {
-        /*if (PixelChunk* chunk = GetChunk(x, y))
-        {
-            chunk->SwapElement(x, y, element);
-        }*/
-    }
-
-    void PixelWorld::SwapElement(int x, int y, int xto, int yto)
-    {
- 
-        //if (PixelChunk* src = GetChunk(x, y))
-        //{
-        //    if (PixelChunk* dst = GetChunk(xto, yto))  // 수정예정
-        //    {
-        //        if (x == xto && y == yto) // 왜 이것땜에 모래가 물 으로 가라앉았다가 말까 할까...
-        //        {
-        //            return;
-        //        }
-        //       
-        //        int pingX = 0, pingY = 0; 
-
-        //        if (x == src->mStartX)                           pingX = -1;
-        //        if (x == src->mStartX + src->mWidth - 1)      pingX = 1;
-        //        if (y == src->mStartY)                           pingY = -1;
-        //        if (y == src->mStartY + src->mHeight - 1)     pingY = 1;
-
-        //        if (pingX != 0)               PixelWorld::KeepAlive(x + pingX, y);
-        //        if (pingY != 0)               PixelWorld::KeepAlive(x, y + pingY);
-        //        if (pingX != 0 && pingY != 0) PixelWorld::KeepAlive(x + pingX, y + pingY);
-
-        //        dst->ResiterChanges(src, x, y, xto, yto);
-        //    }
-        //}
     }
 
     void PixelWorld::InsertElement(int x, int y, const Element& element)
@@ -680,6 +600,18 @@ namespace zz
                         }
                     }
                 }
+                else if (color == 0xFFFF0AFF)
+                {
+                    LoadRandomScene_01(j * 10, i * 10);
+                }
+                else if (color == 0xFFFF0080)
+                {
+                    LoadRandomScene_02(j * 10, i * 10);
+                }
+                else if (color == 0xFFC35700)
+                {
+                    LoadRandomScene_03(j * 10, i * 10);
+                }
             }
         }
 
@@ -741,6 +673,261 @@ namespace zz
             break;
         }
         default: break;
+        }
+    }
+
+    void PixelWorld::LoadRandomScene_01(int x, int y)
+    {
+        cv::Mat material_image;
+        cv::Mat visual_image;
+
+        switch (randi(5))
+        {
+        case 0:
+        {
+            material_image = cv::imread("..\\Resources\\Texture\\Coalmine\\coalpit01.png", cv::IMREAD_COLOR);
+            visual_image = cv::imread("..\\Resources\\Texture\\Coalmine\\coalpit01_visual.png", cv::IMREAD_UNCHANGED);
+            break;
+        }
+        case 1:
+        {
+            material_image = cv::imread("..\\Resources\\Texture\\Coalmine\\coalpit02.png", cv::IMREAD_COLOR);
+            visual_image = cv::imread("..\\Resources\\Texture\\Coalmine\\coalpit02_visual.png", cv::IMREAD_UNCHANGED);
+            break;
+        }
+        case 2:
+        {
+            material_image = cv::imread("..\\Resources\\Texture\\Coalmine\\coalpit03.png", cv::IMREAD_COLOR);
+            visual_image = cv::imread("..\\Resources\\Texture\\Coalmine\\coalpit03_visual.png", cv::IMREAD_UNCHANGED);
+            break;
+        }
+        case 3:
+        {
+            material_image = cv::imread("..\\Resources\\Texture\\Coalmine\\coalpit04.png", cv::IMREAD_COLOR);
+            visual_image = cv::imread("..\\Resources\\Texture\\Coalmine\\coalpit04_visual.png", cv::IMREAD_UNCHANGED);
+            break;
+        }
+        case 4:
+        {
+            material_image = cv::imread("..\\Resources\\Texture\\Coalmine\\coalpit05.png", cv::IMREAD_COLOR);
+            visual_image = cv::imread("..\\Resources\\Texture\\Coalmine\\coalpit05_visual.png", cv::IMREAD_UNCHANGED);
+            break;
+        }
+        case 5:
+        {
+            material_image = cv::imread("..\\Resources\\Texture\\Coalmine\\carthill.png", cv::IMREAD_COLOR);
+            visual_image = cv::imread("..\\Resources\\Texture\\Coalmine\\carthill_visual.png", cv::IMREAD_UNCHANGED);
+            break;
+        }
+        }
+
+        cv::cvtColor(material_image, material_image, cv::COLOR_BGR2RGB);
+
+        for (int i = 0; i < 260; i++)
+        {
+            for (int j = 0; j < 130; j++)
+            {
+                uint32_t color = Vec3bToColor(material_image.at<cv::Vec3b>(i, j));
+                if (color == 0xFF613E02)
+                {
+                    cv::Vec4b visual_color = visual_image.at<cv::Vec4b>(i, j);
+
+                    uint32_t converted_color = 0x00000000;
+                    converted_color |= (visual_color[3] << 24); 
+                    converted_color |= (visual_color[2] << 16); 
+                    converted_color |= (visual_color[1] << 8);  
+                    converted_color |= visual_color[0];
+
+                    Element wood = WOOD;
+                    if (converted_color != 0x00000000)
+                    {
+                        wood.Color = converted_color;
+                    }
+                    InsertElement(x + j, y + i, wood);
+                }
+                else if (color != 0xFF000000)
+                {
+                    InsertElement(x + j, y + i, ROCK);
+                }
+            }
+        }
+    }
+
+    void PixelWorld::LoadRandomScene_02(int x, int y)
+    {
+        cv::Mat material_image;
+        cv::Mat visual_image;
+
+        switch (randi(9))
+        {
+        case 0:
+        {
+            material_image = cv::imread("..\\Resources\\Texture\\Coalmine\\shrine01.png", cv::IMREAD_COLOR);
+            visual_image = cv::imread("..\\Resources\\Texture\\Coalmine\\shrine01_visual.png", cv::IMREAD_UNCHANGED);
+            break;
+        }
+        case 1:
+        {
+            material_image = cv::imread("..\\Resources\\Texture\\Coalmine\\shrine02.png", cv::IMREAD_COLOR);
+            visual_image = cv::imread("..\\Resources\\Texture\\Coalmine\\shrine02_visual.png", cv::IMREAD_UNCHANGED);
+            break;
+        }
+        case 2:
+        {
+            material_image = cv::imread("..\\Resources\\Texture\\Coalmine\\slimepit.png", cv::IMREAD_COLOR);
+            visual_image = cv::imread("..\\Resources\\Texture\\Coalmine\\slimepit_visual.png", cv::IMREAD_UNCHANGED);
+            break;
+        }
+        case 3:
+        {
+            material_image = cv::imread("..\\Resources\\Texture\\Coalmine\\laboratory.png", cv::IMREAD_COLOR);
+            visual_image = cv::imread("..\\Resources\\Texture\\Coalmine\\laboratory_visual.png", cv::IMREAD_UNCHANGED);
+            break;
+        }
+        case 4:
+        {
+            material_image = cv::imread("..\\Resources\\Texture\\Coalmine\\swarm.png", cv::IMREAD_COLOR);
+            visual_image = cv::imread("..\\Resources\\Texture\\Coalmine\\swarm_visual.png", cv::IMREAD_UNCHANGED);
+            break;
+        }
+        case 5:
+        {
+            material_image = cv::imread("..\\Resources\\Texture\\Coalmine\\physics_01.png", cv::IMREAD_COLOR);
+            visual_image = cv::imread("..\\Resources\\Texture\\Coalmine\\physics_01_visual.png", cv::IMREAD_UNCHANGED);
+            break;
+        }
+        case 6:
+        {
+            material_image = cv::imread("..\\Resources\\Texture\\Coalmine\\physics_02.png", cv::IMREAD_COLOR);
+            visual_image = cv::imread("..\\Resources\\Texture\\Coalmine\\physics_02_visual.png", cv::IMREAD_UNCHANGED);
+            break;
+        }
+        case 7:
+        {
+            material_image = cv::imread("..\\Resources\\Texture\\Coalmine\\shop.png", cv::IMREAD_COLOR);
+            visual_image = cv::imread("..\\Resources\\Texture\\Coalmine\\shop_visual.png", cv::IMREAD_UNCHANGED);
+            break;
+        }
+        case 8:
+        {
+            material_image = cv::imread("..\\Resources\\Texture\\Coalmine\\wandtrap_h_02.png", cv::IMREAD_COLOR);
+            visual_image = cv::imread("..\\Resources\\Texture\\Coalmine\\wandtrap_h_02_visual.png", cv::IMREAD_UNCHANGED);
+            break;
+        }
+        case 9:
+        {
+            material_image = cv::imread("..\\Resources\\Texture\\Coalmine\\wandtrap_h_04.png", cv::IMREAD_COLOR);
+            visual_image = cv::imread("..\\Resources\\Texture\\Coalmine\\wandtrap_h_04_visual.png", cv::IMREAD_UNCHANGED);
+            break;
+        }
+        }
+        //material_image = cv::imread("..\\Resources\\Texture\\Coalmine\\symbolroom.png", cv::IMREAD_COLOR);
+        //material_image = cv::imread("..\\Resources\\Texture\\Coalmine\\physics_03.png", cv::IMREAD_COLOR);
+        //material_image = cv::imread("..\\Resources\\Texture\\Coalmine\\radioactivecave.png", cv::IMREAD_COLOR);
+        cv::cvtColor(material_image, material_image, cv::COLOR_BGR2RGB);
+
+        for (int i = 0; i < 130; i++)
+        {
+            for (int j = 0; j < 260; j++)
+            {
+                uint32_t color = Vec3bToColor(material_image.at<cv::Vec3b>(i, j));
+                if (color == 0xFF613E02)
+                {
+                    cv::Vec4b visual_color = visual_image.at<cv::Vec4b>(i, j);
+
+                    uint32_t converted_color = 0x00000000;
+                    converted_color |= (visual_color[3] << 24);
+                    converted_color |= (visual_color[2] << 16);
+                    converted_color |= (visual_color[1] << 8);
+                    converted_color |= visual_color[0];
+
+                    Element wood = WOOD;
+                    if (converted_color != 0x00000000)
+                    {
+                        wood.Color = converted_color;
+                    }
+                    InsertElement(x + j, y + i, wood);
+                }
+                else if (color != 0xFF000000)
+                {
+                    InsertElement(x + j, y + i, ROCK);
+                }
+            }
+        }
+    }
+
+    void PixelWorld::LoadRandomScene_03(int x, int y)
+    {
+        cv::Mat material_image;
+        cv::Mat visual_image;
+
+        switch (randi(4))
+        {
+        case 0:
+        {
+            material_image = cv::imread("..\\Resources\\Texture\\Coalmine\\oiltank_1.png", cv::IMREAD_COLOR);
+            visual_image = cv::imread("..\\Resources\\Texture\\Coalmine\\oiltank_1_visual.png", cv::IMREAD_UNCHANGED);
+            break;
+        }
+        case 1:
+        {
+            material_image = cv::imread("..\\Resources\\Texture\\Coalmine\\oiltank_2.png", cv::IMREAD_COLOR);
+            visual_image = cv::imread("..\\Resources\\Texture\\Coalmine\\oiltank_2_visual.png", cv::IMREAD_UNCHANGED);
+            break;
+        }
+        case 2:
+        {
+            material_image = cv::imread("..\\Resources\\Texture\\Coalmine\\oiltank_3.png", cv::IMREAD_COLOR);
+            visual_image = cv::imread("..\\Resources\\Texture\\Coalmine\\oiltank_3_visual.png", cv::IMREAD_UNCHANGED);
+            break;
+        }
+        case 3:
+        {
+            material_image = cv::imread("..\\Resources\\Texture\\Coalmine\\oiltank_4.png", cv::IMREAD_COLOR);
+            visual_image = cv::imread("..\\Resources\\Texture\\Coalmine\\oiltank_4_visual.png", cv::IMREAD_UNCHANGED);
+            break;
+        }
+        case 4:
+        {
+            material_image = cv::imread("..\\Resources\\Texture\\Coalmine\\oiltank_puzzle.png", cv::IMREAD_COLOR);
+            visual_image = cv::imread("..\\Resources\\Texture\\Coalmine\\oiltank_puzzle_visual.png", cv::IMREAD_UNCHANGED);
+            break;
+        }
+        }
+
+        cv::cvtColor(material_image, material_image, cv::COLOR_BGR2RGB);
+
+        for (int i = 0; i < 260; i++)
+        {
+            for (int j = 0; j < 130; j++)
+            {
+                uint32_t color = Vec3bToColor(material_image.at<cv::Vec3b>(i, j));
+                if (color == 0xFF613E02)
+                {
+                    cv::Vec4b visual_color = visual_image.at<cv::Vec4b>(i, j);
+
+                    uint32_t converted_color = 0x00000000;
+                    converted_color |= (visual_color[3] << 24);
+                    converted_color |= (visual_color[2] << 16);
+                    converted_color |= (visual_color[1] << 8);
+                    converted_color |= visual_color[0];
+
+                    Element wood = WOOD;
+                    if (converted_color != 0x00000000)
+                    {
+                        wood.Color = converted_color;
+                    }
+                    InsertElement(x + j, y + i, wood);
+                }
+                else if (color == 0xFFF0BBEE)
+                {
+                    InsertElement(x + j, y + i, WATER);
+                }
+                else if (color != 0xFF000000)
+                {
+                    InsertElement(x + j, y + i, ROCK);
+                }
+            }
         }
     }
 
@@ -817,6 +1004,26 @@ namespace zz
                     }
                 }
             }
+        }
+    }
+
+    void PixelWorld::Temp()
+    {
+        std::vector<std::vector<Box2dWorld::StaticElementInfo>>& mStaticElements = Box2dWorld::GetTemp();
+        std::vector<int> a = {};
+        for (int i = 0; i < mStaticElements.size(); i++)
+        {
+            DeleteStaticElement(mStaticElements[i], i, a);
+        }
+
+        Box2dWorld::ReconstructBody(a);
+        Box2dWorld::Update();
+
+        std::vector<std::vector<Box2dWorld::StaticElementInfo>>& mStaticElements1 = Box2dWorld::GetTemp();
+
+        for (int i = 0; i < mStaticElements1.size(); i++)
+        {
+            MoveStaticElement(mStaticElements1[i]);
         }
     }
 
@@ -981,12 +1188,3 @@ namespace zz
         }
     }
 }
-
-
-
-
-
-
-
-
-

@@ -10,9 +10,11 @@
 #include "zzObjectPoolManager.h"
 #include "zzCollisionManger.h"
 #include "zzBox2dWorld.h"
+
 namespace zz
 {	
     bool Application::OnDebugMode = false;
+    bool Application::LightDisabled = false;
 
 	Application::Application()
         : mHwnd(NULL)
@@ -68,6 +70,11 @@ namespace zz
             OnDebugMode = !OnDebugMode;
         }
 
+        if (Input::GetKey(eKeyCode::CTRL) && Input::GetKeyDown(eKeyCode::F8))
+        {
+            LightDisabled = !LightDisabled;
+        }
+
         InventoryManager::Update();
         PixelWorld::Update();
         SceneManager::Update();
@@ -83,7 +90,10 @@ namespace zz
         //trCB.mView = Camera::GetGpuViewMatrix();
         //trCB.mProjection = Camera::GetGpuProjectionMatrix();
 
-        graphicDevice->SetLightMapRenderTarget();
+        if (!LightDisabled)
+        {
+            graphicDevice->SetLightMapRenderTarget();
+        }
 
         InventoryManager::LateUpdate();
         SceneManager::LateUpdate();
@@ -99,9 +109,6 @@ namespace zz
         Camera* mainCamara = renderer::mainCamera;
         Camera::SetGpuViewMatrix(mainCamara->GetViewMatrix());
         Camera::SetGpuProjectionMatrix(mainCamara->GetProjectionMatrix());
-        renderer::TransformCB trCB = {};
-        trCB.mView = Camera::GetGpuViewMatrix();
-        trCB.mProjection = Camera::GetGpuProjectionMatrix();
 
         if(OnDebugMode)
         {

@@ -4,6 +4,7 @@
 #include "zzRenderer.h"
 #include "zzMeshRenderer.h"
 #include "zzResourceManager.h"
+#include "zzApplication.h"
 
 namespace zz
 {
@@ -29,6 +30,8 @@ namespace zz
     }
     void Light::LateUpdate()
     {
+        if (Application::LightDisabled) return;
+
         Matrix world = Matrix::Identity;
 
         Matrix scale = Matrix::CreateScale(mLightScale);

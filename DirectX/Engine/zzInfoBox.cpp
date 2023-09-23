@@ -3,7 +3,7 @@
 #include "zzMeshRenderer.h"
 #include "zzMaterial.h"
 #include "zzTransform.h"
-#include "zzInventoryBox.h"
+#include "zzSpellSlot.h"
 #include "zzInventoryManager.h"
 #include "zzWand.h"
 
@@ -66,13 +66,16 @@ namespace zz
 
         for (int i = 0; i < mWand->GetCapacity(); i++)
         {
-            InventoryBox* spellBox = new InventoryBox(eUIType::WandSlot);
+            SpellSlot* spellBox = new SpellSlot(eUIType::SpellSlot);
+            spellBox->SetOwnerWand(wand);
+            spellBox->SetSlotIndex(i);
+
             Transform* boxTr = spellBox->GetComponent<Transform>();
             boxTr->SetParent(tr);
             boxTr->SetPosition(-60.f + i * 20.f, -15.f, 0.0f);
             spellBox->Initialize();
 
-            InventoryManager::AddUIObject(spellBox, eUIType::WandSlot);
+            InventoryManager::AddUIObject(spellBox, eUIType::SpellSlot);
         }
     }
 

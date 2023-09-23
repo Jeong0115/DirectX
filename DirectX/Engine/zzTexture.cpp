@@ -75,7 +75,7 @@ namespace zz
 
     PixelTexture::PixelTexture()
     {
-        std::vector<uint8_t>& pixelTexture = PixelWorld::GetPixelColor();
+        std::vector<uint32_t>& pixelTexture = PixelWorld::GetPixelColor();
 
         TexMetadata metadata;
         metadata.width = 2048;
@@ -94,7 +94,7 @@ namespace zz
         image.format = DXGI_FORMAT_B8G8R8A8_UNORM;
         image.rowPitch = image.width * sizeof(uint32_t);  // for DXGI_FORMAT_R8G8B8A8_UNORM
         image.slicePitch = image.rowPitch * image.height;
-        image.pixels = pixelTexture.data();
+        image.pixels = reinterpret_cast<uint8_t*>(pixelTexture.data());
 
         mImage.InitializeFromImage(image);
 
@@ -115,7 +115,7 @@ namespace zz
 
     void PixelTexture::BindShader(eShaderStage stage, UINT startSlot)
     {
-        std::vector<uint8_t>& pixelTexture = PixelWorld::GetPixelColor();
+        std::vector<uint32_t>& pixelTexture = PixelWorld::GetPixelColor();
         zz::graphics::GetDevice()->UpdateSubresource(mTexture.Get(), pixelTexture.data());
         Texture::BindShader(stage, startSlot);
     }

@@ -14,10 +14,12 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzSpeedUp_UI.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzDetectPlayer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzExplosionEffect.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzExplosion_128.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)function.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)zzAttackSpell.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzProjectileSpell.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzBoltWand_0997.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzCamera.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzComputeShader.cpp" />
@@ -28,6 +30,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)zzItemTextureHighlight.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzLevitation.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzLight.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzLightBullet.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzModifierSpell.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzMouse.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzObjectPoolManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzParticleShader.cpp" />
@@ -38,7 +42,10 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)zzShotGunner_Weak.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzSmoke_Orange.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzSparkBolt.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzSpeedUp.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzSpell.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzSpellSlot.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzSpellUI.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzStructedBuffer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzUI.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzUICamera.cpp" />
@@ -50,11 +57,10 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)zzCursorScript.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzEquipment.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzInventoryBG.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)zzInventoryBox.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzItemSlot.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzInventoryManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzPixelChunk.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzPixelChunkMap.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)zzPixelUpdater.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzPixelWorld.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzPlayer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzPlayerArm.cpp" />
@@ -105,6 +111,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)zzThreadPool.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzTime.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzTransform.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzUtilitySpell.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzWand.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzBlastWand_0585.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzWandScript.cpp" />
@@ -113,10 +120,12 @@
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)CommonInclude.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)define.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzSpeedUp_UI.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzDetectPlayer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzExplosionEffect.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzExplosion_128.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)function.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)zzAttackSpell.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzProjectileSpell.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzBoltWand_0997.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzCamera.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzComputeShader.h" />
@@ -127,6 +136,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzItemTextureHighlight.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzLevitation.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzLight.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzLightBullet.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzModifierSpell.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzMouse.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzObjectPoolManager.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzParticleShader.h" />
@@ -137,7 +148,10 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzShotGunner_Weak.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzSmoke_Orange.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzSparkBolt.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzSpeedUp.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzSpell.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzSpellSlot.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzSpellUI.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzStructedBuffer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzUI.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzUICamera.h" />
@@ -167,7 +181,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzGraphicsDevice.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzInput.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzInventoryBG.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)zzInventoryBox.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzItemSlot.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzInventoryManager.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzLayer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzLiquid.h" />
@@ -180,7 +194,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzPixelChunk.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzPixelChunkMap.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzPixelGrid.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)zzPixelUpdater.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzPixelWorld.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzPlayer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzPlayerArm.h" />
@@ -205,6 +218,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzThreadPool.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzTime.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzTransform.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzUtilitySpell.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzWand.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzBlastWand_0585.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzWandScript.h" />

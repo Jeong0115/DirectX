@@ -11,6 +11,8 @@
 #include "zzSceneManager.h"
 #include "zzScene.h"
 
+#include "zzModifierSpell.h"
+
 namespace zz
 {
     BoltWand_0997::BoltWand_0997()
@@ -77,12 +79,59 @@ namespace zz
         direction.Normalize();
         direction.z = 0.f;
 
-        SparkBolt* attackSpell = new SparkBolt();
-        attackSpell->SetDirection(direction);
-        attackSpell->GetComponent<Transform>()->SetPosition(pos.x + mTip.x / 2, pos.y, pos.z);
-        attackSpell->GetComponent<Transform>()->SetRotation(GetComponent<Transform>()->GetWorldRotation());
-        attackSpell->Initialize();
+        UINT lastIndex = mCurSpellIndex;
 
-        SceneManager::GetActiveScene()->AddGameObject(attackSpell, eLayerType::PlayerAttack);
+        std::vector<ModifierSpell*> mModifiers;
+
+        while (true)
+        {
+            if (mSpells[mCurSpellIndex] != nullptr)
+            {
+                Spell* spell = mSpells[mCurSpellIndex];
+
+                if (spell->GetSpellType() == eSpellType::Projectile)
+                {
+                    ProjectileSpell* transClass = dynamic_cast<ProjectileSpell*>(spell);
+                    ProjectileSpell* attackSpell = transClass->Clone();
+
+                    attackSpell->SetDirection(direction);
+                    attackSpell->GetComponent<Transform>()->SetPosition(pos.x + mTip.x / 2, pos.y, pos.z);
+                    attackSpell->GetComponent<Transform>()->SetRotation(GetComponent<Transform>()->GetWorldRotation());
+
+                    if (!mModifiers.empty())
+                    {
+                        mModifiers[0]->ModifierProjectile(attackSpell);
+                        mModifiers.clear();
+                    }
+                    else
+                    {
+                        int a = 0;
+                    }
+
+                    attackSpell->Initialize();
+
+                    SceneManager::GetActiveScene()->AddGameObject(attackSpell, eLayerType::PlayerAttack);
+                    mCurSpellIndex++;
+                    break;
+                }
+
+                else if (spell->GetSpellType() == eSpellType::Utility)
+                {
+                    mModifiers.push_back(dynamic_cast<ModifierSpell*>(spell));
+                }
+            }
+
+            mCurSpellIndex++;
+            if (mCurSpellIndex == mCapacity)
+            {
+                mCurSpellIndex = 0;
+            }
+
+            if (mCurSpellIndex == lastIndex)
+            {
+                break;
+            }
+        }
+
     }
 }

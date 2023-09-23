@@ -4,6 +4,13 @@
 
 namespace zz
 {
+    enum class eSpellType
+    {
+        Projectile,
+        Utility,
+        End
+    };
+
     class Spell : public GameObject
     {
     public:
@@ -14,5 +21,10 @@ namespace zz
         virtual void Update();
         virtual void LateUpdate();
         virtual void Render();
+
+        eSpellType GetSpellType() { return mType; }
+            
+    protected:
+        eSpellType mType;
     };
 }

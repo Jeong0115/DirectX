@@ -4,20 +4,24 @@
 
 namespace zz
 {
-    class AttackSpell : public Spell
+    class ProjectileSpell : public Spell
     {
     public:
-        AttackSpell();
-        ~AttackSpell();
+        ProjectileSpell();
+        ~ProjectileSpell();
 
         virtual void Initialize();
         virtual void Update();
         virtual void LateUpdate();
         virtual void Render();
 
+        virtual ProjectileSpell* Clone();
+
         void SetDirection(Vector3 dir) { mDirection = dir; }
+        void SetSpeedFactor(float factor) { mSpeed *= factor; }
 
     protected:
         Vector3 mDirection;
+        float   mSpeed;
     };
-}
+}   

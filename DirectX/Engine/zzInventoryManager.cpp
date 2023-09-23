@@ -18,10 +18,15 @@
 #include "zzInfoBox.h"
 #include "zzInfoBoxTexture.h"
 
+#include "zzLightBullet.h"
+#include "zzSpeedUp_UI.h"
+
 namespace zz
 {
     UINT InventoryManager::mEquipItemIndex = 9;
-    std::vector<InventoryBox*> InventoryManager::mItemSlots = {};
+    std::vector<ItemSlot*> InventoryManager::mItemSlots = {};
+    std::vector<SpellSlot*> InventoryManager::mSpellSlots = {};
+
     std::vector<std::vector<UI*>> InventoryManager::mInventoryUI = {};
     Player* InventoryManager::mPlayer = nullptr;
     bool InventoryManager::mbOpenInventory = false;
@@ -39,6 +44,14 @@ namespace zz
         BoltWand_0997* wand2 = new BoltWand_0997();
         wand2->Initialize();
         AcquireItem(wand2);
+
+        LightBullet* spell = new LightBullet();
+        spell->Initialize();
+        AcquireSpell(spell);
+
+        SpeedUp_UI* spd = new SpeedUp_UI();
+        spd->Initialize();
+        AcquireSpell(spd);
     }
 
     void InventoryManager::Initialize()
@@ -53,7 +66,7 @@ namespace zz
 
         for (int i = 0; i < 4; i++)
         {
-            InventoryBox* inventoryBox = new InventoryBox(eUIType::ItemSlot);
+            ItemSlot* inventoryBox = new ItemSlot(eUIType::ItemSlot);
             inventoryBox->SetSlotIndex(i);
             mItemSlots.push_back(inventoryBox);
             mInventoryUI[(UINT)eUIType::ItemSlot].push_back(inventoryBox);
@@ -62,11 +75,20 @@ namespace zz
 
         for (int i = 0; i < 4; i++)
         {
-            InventoryBox* inventoryBox = new InventoryBox(eUIType::ItemSlot);
+            ItemSlot* inventoryBox = new ItemSlot(eUIType::ItemSlot);
             inventoryBox->SetSlotIndex(i + 4);
             mItemSlots.push_back(inventoryBox);
             mInventoryUI[(UINT)eUIType::ItemSlot].push_back(inventoryBox);
             inventoryBox->GetComponent<Transform>()->SetPosition(111.5f + i * 20.f, 330.f, 1.0f);
+        }
+
+        for (int i = 0; i < 16; i++)
+        {
+            SpellSlot* slot = new SpellSlot(eUIType::SpellSlot);
+            slot->SetSlotIndex(i);
+            mSpellSlots.push_back(slot);
+            mInventoryUI[(UINT)eUIType::SpellSlot].push_back(slot);
+            slot->GetComponent<Transform>()->SetPosition(200.0f + i * 20.f, 330.f, 1.0f);
         }
 
         for (UINT i = 0; i < (UINT)eUIType::End; i++)
@@ -78,6 +100,7 @@ namespace zz
         }
 
         CollisionManger::SetCollisionUI(eUIType::Mouse, eUIType::ItemSlot, true);
+        CollisionManger::SetCollisionUI(eUIType::Mouse, eUIType::SpellSlot, true);
         CollisionManger::SetCollisionUI(eUIType::Mouse, eUIType::Item, true);
     }
 
@@ -88,6 +111,7 @@ namespace zz
             dynamic_cast<UICamera*>(renderer::uiCamera)->TurnLayerMask(eUIType::BG, true);
             dynamic_cast<UICamera*>(renderer::uiCamera)->TurnLayerMask(eUIType::InfoBox, true);
             dynamic_cast<UICamera*>(renderer::uiCamera)->TurnLayerMask(eUIType::WandSlot, true);
+            dynamic_cast<UICamera*>(renderer::uiCamera)->TurnLayerMask(eUIType::SpellSlot, true);
             CollisionManger::UpdateUI();
         }
         else
@@ -96,6 +120,7 @@ namespace zz
             dynamic_cast<UICamera*>(renderer::uiCamera)->TurnLayerMask(eUIType::BG, false);
             dynamic_cast<UICamera*>(renderer::uiCamera)->TurnLayerMask(eUIType::InfoBox, false);
             dynamic_cast<UICamera*>(renderer::uiCamera)->TurnLayerMask(eUIType::WandSlot, false);
+            dynamic_cast<UICamera*>(renderer::uiCamera)->TurnLayerMask(eUIType::SpellSlot, false);
             CollisionManger::ResetCollisionUI();
         }
 
@@ -186,8 +211,8 @@ namespace zz
 
     void InventoryManager::MoveItemToSlot(UINT prevSlot, UINT moveSlot)
     {
-        InventoryBox* prevBox = mItemSlots[prevSlot];
-        InventoryBox* moveBox = mItemSlots[moveSlot];
+        ItemSlot* prevBox = mItemSlots[prevSlot];
+        ItemSlot* moveBox = mItemSlots[moveSlot];
 
         if (moveBox->GetItem() == nullptr)
         {
@@ -214,6 +239,26 @@ namespace zz
         }
     }
 
+    void InventoryManager::MoveSpellToSlot(UINT prevSlot, UINT moveSlot)
+    {
+        SpellSlot* prevBox = mSpellSlots[prevSlot];
+        SpellSlot* moveBox = mSpellSlots[moveSlot];
+
+        if (moveBox->GetSpell() == nullptr)
+        {
+            moveBox->SetSpell(prevBox->GetSpell(), prevBox->GetItemTexture());
+            prevBox->SetSpell(nullptr, nullptr);
+        }
+        else
+        {
+            SpellUI* tempSpell = moveBox->GetSpell();
+            ItemTexture* tempItemTexture = moveBox->GetItemTexture();
+
+            moveBox->SetSpell(prevBox->GetSpell(), prevBox->GetItemTexture());
+            prevBox->SetSpell(tempSpell, tempItemTexture);
+        }
+    }
+
     void InventoryManager::AcquireItem(Equipment* equipment)
     {
         if(dynamic_cast<Wand*>(equipment))
@@ -228,7 +273,7 @@ namespace zz
                     Vector3 textureScale = equipment->GetComponent<Transform>()->GetScale() * 0.8f;
 
                     ItemTexture* item = new ItemTexture(eUIType::Item);
-                    item->CreateItemTexture(material_name, mItemSlots[i]->GetComponent<Transform>()->GetPosition(), textureScale);
+                    item->CreateItemTexture(material_name, eTextureType::Wand, mItemSlots[i]->GetComponent<Transform>()->GetPosition(), textureScale);
                     
                     equipment->GetComponent<Transform>()->SetParent(mPlayer->GetPlayerArm()->GetComponent<Transform>());
                     mItemSlots[i]->SetItem(equipment, item);
@@ -246,5 +291,32 @@ namespace zz
                 }
             }
         }
+        
     }
+
+    void InventoryManager::AcquireSpell(SpellUI* spell)
+    {
+        if (dynamic_cast<SpellUI*>(spell))
+        {
+            for (int i = 0; i < mSpellSlots.size(); i++)
+            {
+                if (mSpellSlots[i]->GetSpell() == nullptr)
+                {
+                    std::wstring material_modifier = L"m_";
+                    std::wstring material_name = material_modifier + spell->GetName();
+
+                    Vector3 textureScale = spell->GetComponent<Transform>()->GetScale();
+
+                    ItemTexture* item = new ItemTexture(eUIType::Item);
+                    item->CreateItemTexture(material_name, eTextureType::Spell, mSpellSlots[i]->GetComponent<Transform>()->GetPosition(), textureScale);
+                    item->SetOwner(mSpellSlots[i]);
+
+                    mSpellSlots[i]->SetSpell(spell, item);
+                    break;
+                }
+            }
+        }
+    }
+
+
 }

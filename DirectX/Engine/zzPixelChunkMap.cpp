@@ -1,5 +1,4 @@
 #include "zzPixelChunkMap.h"
-#include "zzPixelUpdater.h"
 #include "zzRenderer.h"
 #include "zzPixelWorld.h"
 
@@ -39,65 +38,25 @@ namespace zz
     {
         switch (index)
         {
-        case 0:
-            UpdateStep1();
-            break;
+        case 0: UpdateStep1(); break;
+        case 1: UpdateStep2(); break;
+        case 2: UpdateStep3(); break;
+        case 3: UpdateStep4(); break;
 
-        case 1:
-            UpdateStep2();
-            break;
-
-        case 2:
-            UpdateStep3();
-            break;
-
-        case 3:
-            UpdateStep4();
-            break;
-
-        default: 
-            break;
-
+        default: break;
         }
     }
 
-    void PixelChunkMap::MoveElementStep(int index)
-    {
-        switch (index)
-        {
-        case 0:
-            MoveElementStep1();
-            break;
 
-        case 1:
-            MoveElementStep2();
-            break;
-
-        case 2:
-            MoveElementStep3();
-            break;
-
-        case 3:
-            MoveElementStep4();
-            break;
-
-        default:
-            break;
-
-        }
-    }
     void PixelChunkMap::UpdateStep1()
     {
         for (int i = 0; i < 8; i += 2)
         {
             for (int j = 0; j < 8; j += 2)
             {
-                if (mChunks[j * mXChunkCnt + i]->mElementCount == 0) continue;
                 PixelWorld::threadPool.enqueue([=]() {mChunks[j * mXChunkCnt + i]->Update(); });
 
-                //SimplePixelUpdater(mChunks[j * mChunkWidth + i]).UpdateChunk();
-
-
+                continue;
                 DebugMesh mesh = {};
                 mesh.temp = 1;
                 mesh.position = math::Vector3(mChunks[j * mXChunkCnt + i]->mStartX + 32, -mChunks[j * mXChunkCnt + i]->mStartY - 32, 0.01f);
@@ -113,9 +72,9 @@ namespace zz
         {
             for (int j = 1; j < 8; j += 2)
             {
-                if (mChunks[j * mXChunkCnt + i]->mElementCount == 0) continue;
-                //SimplePixelUpdater(mChunks[j * mChunkWidth + i]).UpdateChunk();
                 PixelWorld::threadPool.enqueue([=]() {mChunks[j * mXChunkCnt + i]->Update(); });
+
+                continue;
                 DebugMesh mesh = {};
                 mesh.temp = 1;
                 mesh.position = math::Vector3(mChunks[j * mXChunkCnt + i]->mStartX + 32, -mChunks[j * mXChunkCnt + i]->mStartY - 32, 0.01f);
@@ -131,8 +90,9 @@ namespace zz
         {
             for (int j = 0; j < 8; j += 2)
             {
-                if (mChunks[j * mXChunkCnt + i]->mElementCount == 0) continue;
                 PixelWorld::threadPool.enqueue([=]() {mChunks[j * mXChunkCnt + i]->Update(); });
+
+                continue;
                 DebugMesh mesh = {};
                 mesh.temp = 1;
                 mesh.position = math::Vector3(mChunks[j * mXChunkCnt + i]->mStartX + 32, -mChunks[j * mXChunkCnt + i]->mStartY - 32, 0.01f);
@@ -148,9 +108,9 @@ namespace zz
         {
             for (int j = 1; j < 8; j += 2)
             {
-                if (mChunks[j * mXChunkCnt + i]->mElementCount == 0) continue;
                 PixelWorld::threadPool.enqueue([=]() {mChunks[j * mXChunkCnt + i]->Update(); });
-                //SimplePixelUpdater(mChunks[j * mChunkWidth + i]).UpdateChunk();
+                
+                continue;
                 DebugMesh mesh = {};
                 mesh.temp = 1;
                 mesh.position = math::Vector3(mChunks[j * mXChunkCnt + i]->mStartX + 32, -mChunks[j * mXChunkCnt + i]->mStartY - 32, 0.01f);
@@ -161,62 +121,14 @@ namespace zz
         }
     }
 
-    void PixelChunkMap::MoveElementStep1()
-    {
-        for (int i = 0; i < 8; i += 2)
-        {
-            for (int j = 0; j < 8; j += 2)
-            {
-                if (mChunks[j * mXChunkCnt + i]->mElementCount == 0) continue;
-                //PixelWorld::threadPool.enqueue([=]() {mChunks[j * mXChunkCnt + i]->MoveElements(); });
-                //mChunks[j * mChunkWidth + i]->MoveElements();
-            }
-        }
-    }
-    void PixelChunkMap::MoveElementStep2()
-    {
-        for (int i = 0; i < 8; i += 2)
-        {
-            for (int j = 1; j < 8; j += 2)
-            {
-                if (mChunks[j * mXChunkCnt + i]->mElementCount == 0) continue;
-                //PixelWorld::threadPool.enqueue([=]() {mChunks[j * mXChunkCnt + i]->MoveElements(); });
-                //mChunks[j * mChunkWidth + i]->MoveElements();
-            }
-        }
-    }
-    void PixelChunkMap::MoveElementStep3()
-    {
-        for (int i = 1; i < 8; i += 2)
-        {
-            for (int j = 0; j < 8; j += 2)
-            {
-                if (mChunks[j * mXChunkCnt + i]->mElementCount == 0) continue;
-                //PixelWorld::threadPool.enqueue([=]() {mChunks[j * mXChunkCnt + i]->MoveElements(); });
-                //mChunks[j * mChunkWidth + i]->MoveElements();
-            }
-        }
-    }
-    void PixelChunkMap::MoveElementStep4()
-    {
-        for (int i = 1; i < 8; i += 2)
-        {
-            for (int j = 1; j < 8; j += 2)
-            {
-                if (mChunks[j * mXChunkCnt + i]->mElementCount == 0) continue;
-                //mChunks[j * mChunkWidth + i]->MoveElements();
-               // PixelWorld::threadPool.enqueue([=]() {mChunks[j * mXChunkCnt + i]->MoveElements(); });
-            }
-        }
-    }
-
     void PixelChunkMap::UpdateRect()
     {
         for (int i = 0; i < 8; i ++)
         {
             for (int j = 0; j < 8; j ++)
             {
-                PixelWorld::threadPool.enqueue([=]() {mChunks[j * mXChunkCnt + i]->UpdateRect(); });
+                //PixelWorld::threadPool.enqueue([=]() {mChunks[j * mXChunkCnt + i]->UpdateRect(); });
+                mChunks[j * mXChunkCnt + i]->UpdateRect();
             }
         }
     }

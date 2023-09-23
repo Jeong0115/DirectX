@@ -551,7 +551,6 @@ namespace zz
     }
     void DrawBox2dWorld::DrawSolidPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color)
     {
-
         if (vertexCount == 3)
         {
             std::vector<renderer::Vertex> vertexes = {};

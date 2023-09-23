@@ -24,10 +24,10 @@ VSOut main(VSIn In)
     row_major float4x4 worldViewProj 
         = mul(mul(CreateWorldMatrix(particle.position, particle.scale, 0.0f), mView), mProjection);
 
-    Out.CenterPos = mul(float4(In.CenterPos, 1.0f), worldViewProj);
-    Out.offset = mul(float4(0.5f, 0.5f, 0.0f, 0.0f), worldViewProj);
-    Out.Color = particle.color;
-    Out.Instance = In.Instance;
+    Out.CenterPos   = mul(float4(In.CenterPos, 1.0f), worldViewProj);
+    Out.offset      = mul(float4(0.5f, 0.5f, 0.0f, 0.0f), worldViewProj);
+    Out.Color       = particle.color;
+    Out.Instance    = In.Instance;
     
     return Out;
 }

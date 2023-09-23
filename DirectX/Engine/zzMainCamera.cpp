@@ -8,6 +8,7 @@
 
 #include "zzGraphicsDevice.h"
 #include "zzResourceManager.h"
+#include "zzApplication.h"
 
 namespace zz
 {
@@ -62,6 +63,7 @@ namespace zz
         RenderTransparent();
         EnableDepthStencilState();
 
+        if (Application::LightDisabled) return;
 
         ResourceManager::Find<Mesh>(L"LightMesh")->BindBuffer();
         ResourceManager::Find<Shader>(L"LightMapShader")->BindShaders();

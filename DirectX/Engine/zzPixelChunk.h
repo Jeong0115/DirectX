@@ -15,8 +15,8 @@ namespace zz
 
         void SwapElement(Element& dstElement, int dstX, int dstY, Element& srcElement, int srcX, int srcY);
 
-        void InsertElement(int x, int y, const Element& element) { InsertElement(GetIndex(x, y), element); }
-        void InsertElement(size_t index, const Element& element);
+        void InsertElement(int x, int y, const Element& element);
+        void InsertElementInOrOut(int x, int y, const Element& element);
 
         void RegisterElement(int x, int y, const Element& element) { RegisterElement(GetIndex(x, y), element); }
         void RegisterElement(size_t index, const Element& element);
@@ -26,8 +26,6 @@ namespace zz
 
         bool TakeElement(int x, int y) { return TakeElement(GetIndex(x, y)); }
         bool TakeElement(size_t index);
-
-        void ResiterChanges(PixelChunk* source, int x, int y, int toX, int toY);
             
         // 임시 나중에 수정
         void KeepAlive(int x, int y);
@@ -38,14 +36,13 @@ namespace zz
         void UpdateRect();
 
         Element& GetElement(int x, int y);
+        Element& GetElementInOrOut(int x, int y);
+
         Element& GetInChunkElement(size_t index) { return mElements[index]; }
 
-        bool MoveDownSolid(int x, int y, Element& element);
-        bool MoveDownLiquid(int x, int y, Element& elemen);
-        bool MoveDown(int x, int y, Element& element);
-        bool MoveSide(int x, int y, Element& element);
-        bool MoveDownSide(int x, int y, Element& element);
-        bool MoveGas(int x, int y, Element& element);
+        void UpdateSand(int x, int y, Element& element);
+        void UpdateWater(int x, int y, Element& element);
+        void UpdateFire(int x, int y, Element& element);
 
         void HeatNeighbors(int x, int y, Element& element);
         void DecreaseLifeTime(int x, int y, Element& element);

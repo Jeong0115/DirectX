@@ -22,6 +22,7 @@ namespace zz::renderer
     Microsoft::WRL::ComPtr<ID3D11DepthStencilState> depthStencilStates[(UINT)eDSType::End] = {};
     Microsoft::WRL::ComPtr<ID3D11BlendState> blendStates[(UINT)eBSType::End] = {};
 
+    void LoadCoalmineResource();
     void LoadUIResource();
     void LoadWandTextureResource();
     void LoadSpellResource();
@@ -252,6 +253,7 @@ namespace zz::renderer
     }
     void LoadResource()
     {
+        LoadCoalmineResource();
         LoadParticleResource();
         LoadUIResource();
         LoadWandTextureResource();
@@ -698,6 +700,78 @@ namespace zz::renderer
         }
     }
 
+    void LoadCoalmineResource()
+    {
+        std::shared_ptr<Shader> spriteShader = ResourceManager::Find<Shader>(L"SpriteShader");
+        std::shared_ptr<Material> material;
+
+        std::shared_ptr<Texture> coalpit01 = ResourceManager::Load<Texture>(L"coalpit01", L"..\\Resources\\Texture\\Coalmine\\coalpit01.png");
+        material = std::make_shared<Material>();
+        material->SetShader(spriteShader);
+        material->SetTexture(coalpit01);
+        ResourceManager::Insert(L"m_coalpit01", material);
+
+        std::shared_ptr<Texture> coalpit01_visual = ResourceManager::Load<Texture>(L"coalpit01_visual", L"..\\Resources\\Texture\\Coalmine\\coalpit01_visual.png");
+        material = std::make_shared<Material>();
+        material->SetShader(spriteShader);
+        material->SetTexture(coalpit01_visual);
+        ResourceManager::Insert(L"m_coalpit01_visual", material);
+
+        std::shared_ptr<Texture> coalpit02 = ResourceManager::Load<Texture>(L"coalpit02", L"..\\Resources\\Texture\\Coalmine\\coalpit02.png");
+        material = std::make_shared<Material>();
+        material->SetShader(spriteShader);
+        material->SetTexture(coalpit02);
+        ResourceManager::Insert(L"m_coalpit02", material);
+
+        std::shared_ptr<Texture> coalpit02_visual = ResourceManager::Load<Texture>(L"coalpit02_visual", L"..\\Resources\\Texture\\Coalmine\\coalpit02_visual.png");
+        material = std::make_shared<Material>();
+        material->SetShader(spriteShader);
+        material->SetTexture(coalpit02_visual);
+        ResourceManager::Insert(L"m_coalpit02_visual", material);
+
+        std::shared_ptr<Texture> coalpit03 = ResourceManager::Load<Texture>(L"coalpit03", L"..\\Resources\\Texture\\Coalmine\\coalpit03.png");
+        material = std::make_shared<Material>();
+        material->SetShader(spriteShader);
+        material->SetTexture(coalpit03);
+        ResourceManager::Insert(L"m_coalpit03", material);
+
+        std::shared_ptr<Texture> coalpit03_visual = ResourceManager::Load<Texture>(L"coalpit03_visual", L"..\\Resources\\Texture\\Coalmine\\coalpit03_visual.png");
+        material = std::make_shared<Material>();
+        material->SetShader(spriteShader);
+        material->SetTexture(coalpit03_visual);
+        ResourceManager::Insert(L"m_coalpit03_visual", material);
+
+        std::shared_ptr<Texture> coalpit04 = ResourceManager::Load<Texture>(L"coalpit04", L"..\\Resources\\Texture\\Coalmine\\coalpit04.png");
+        material = std::make_shared<Material>();
+        material->SetShader(spriteShader);
+        material->SetTexture(coalpit04);
+        ResourceManager::Insert(L"m_coalpit04", material);
+
+        std::shared_ptr<Texture> coalpit04_visual = ResourceManager::Load<Texture>(L"coalpit04_visual", L"..\\Resources\\Texture\\Coalmine\\coalpit04_visual.png");
+        material = std::make_shared<Material>();
+        material->SetShader(spriteShader);
+        material->SetTexture(coalpit04_visual);
+        ResourceManager::Insert(L"m_coalpit04_visual", material);
+
+        std::shared_ptr<Texture> coalpit05 = ResourceManager::Load<Texture>(L"coalpit05", L"..\\Resources\\Texture\\Coalmine\\coalpit05.png");
+        material = std::make_shared<Material>();
+        material->SetShader(spriteShader);
+        material->SetTexture(coalpit05);
+        ResourceManager::Insert(L"m_coalpit05", material);
+
+        std::shared_ptr<Texture> coalpit05_visual = ResourceManager::Load<Texture>(L"coalpit05_visual", L"..\\Resources\\Texture\\Coalmine\\coalpit05_visual.png");
+        material = std::make_shared<Material>();
+        material->SetShader(spriteShader);
+        material->SetTexture(coalpit05_visual);
+        ResourceManager::Insert(L"m_coalpit05_visual", material);
+
+        std::shared_ptr<Texture> carthill = ResourceManager::Load<Texture>(L"carthill", L"..\\Resources\\Texture\\Coalmine\\carthill.png");
+        material = std::make_shared<Material>();
+        material->SetShader(spriteShader);
+        material->SetTexture(carthill);
+        ResourceManager::Insert(L"m_carthill", material);
+    }
+
     void LoadUIResource()
     {
         std::shared_ptr<Shader> spriteShader = ResourceManager::Find<Shader>(L"SpriteShader");
@@ -781,7 +855,37 @@ namespace zz::renderer
         material = std::make_shared<Material>();
         material->SetShader(spriteShader);
         material->SetTexture(light_bullet);
-        ResourceManager::Insert(L"m_light_bullet", light_bullet);
+        ResourceManager::Insert(L"m_light_bullet", material);
+
+        std::shared_ptr<Texture> divide_2 = ResourceManager::Load<Texture>(L"divide_2", L"..\\Resources\\Texture\\Spell\\Utility\\divide_2.png");
+        material = std::make_shared<Material>();
+        material->SetShader(spriteShader);
+        material->SetTexture(divide_2);
+        ResourceManager::Insert(L"m_divide_2", material);
+
+        std::shared_ptr<Texture> divide_3 = ResourceManager::Load<Texture>(L"divide_3", L"..\\Resources\\Texture\\Spell\\Utility\\divide_3.png");
+        material = std::make_shared<Material>();
+        material->SetShader(spriteShader);
+        material->SetTexture(divide_3);
+        ResourceManager::Insert(L"m_divide_3", material);
+
+        std::shared_ptr<Texture> divide_4 = ResourceManager::Load<Texture>(L"divide_4", L"..\\Resources\\Texture\\Spell\\Utility\\divide_4.png");
+        material = std::make_shared<Material>();
+        material->SetShader(spriteShader);
+        material->SetTexture(divide_4);
+        ResourceManager::Insert(L"m_divide_4", material);
+
+        std::shared_ptr<Texture> divide_10 = ResourceManager::Load<Texture>(L"divide_10", L"..\\Resources\\Texture\\Spell\\Utility\\divide_10.png");
+        material = std::make_shared<Material>();
+        material->SetShader(spriteShader);
+        material->SetTexture(divide_10);
+        ResourceManager::Insert(L"m_divide_10", material);
+
+        std::shared_ptr<Texture> speed = ResourceManager::Load<Texture>(L"speed", L"..\\Resources\\Texture\\Spell\\Utility\\speed.png");
+        material = std::make_shared<Material>();
+        material->SetShader(spriteShader);
+        material->SetTexture(speed);
+        ResourceManager::Insert(L"m_speed", material);
     }
 
     void LoadEffectResource()
@@ -810,7 +914,5 @@ namespace zz::renderer
         material->SetTexture(smoke_orange);
         ResourceManager::Insert(L"m_smoke_orange", material);
     }
+
 }
-
-
-

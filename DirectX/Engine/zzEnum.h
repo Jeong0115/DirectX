@@ -11,6 +11,7 @@ namespace zz
         MeshRenderer,
         Light,
         Script,
+        DetectPlayer,
         Animator,
         Camera,
         Collider,

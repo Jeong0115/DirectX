@@ -1,10 +1,10 @@
 #pragma once
 
-#include "zzAttackSpell.h"
+#include "zzProjectileSpell.h"
 
 namespace zz
 {
-    class SparkBolt : public AttackSpell
+    class SparkBolt : public ProjectileSpell
     {
     public:
         SparkBolt();
@@ -15,6 +15,8 @@ namespace zz
         virtual void LateUpdate()   override;
         virtual void Render()       override;
        
+        ProjectileSpell* Clone() override;
+
         void OnCollision(class Element& element);
 
     private:
@@ -25,7 +27,7 @@ namespace zz
 
         ParticleShared mShareData;
 
-        float   mSpeed;
+        
         float   mTime;
         float mSubParticleTime;
 

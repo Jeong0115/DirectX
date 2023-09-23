@@ -6,11 +6,11 @@
 
 namespace zz
 {
-    class InventoryBox : public UI
+    class ItemSlot : public UI
     {
     public:
-        InventoryBox(eUIType type);
-        virtual ~InventoryBox();
+        ItemSlot(eUIType type);
+        virtual ~ItemSlot();
 
         virtual void Initialize()   override;
         virtual void Update()       override;

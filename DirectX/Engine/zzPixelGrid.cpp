@@ -791,7 +791,7 @@ namespace zz
         DeleteObject(mBitmap);
     }
 
-    void PixelGridColor::Update(std::vector<uint8_t>& pixelColor, HDC BackDC, float x, float y)
+    void PixelGridColor::Update(std::vector<uint32_t>& pixelColor, HDC BackDC, float x, float y)
     {
         memcpy(bits, pixelColor.data(), pixelColor.size());
         BitBlt(BackDC, 0, 0, 2048, 2048, mHdc, (int)x, (int)-y, SRCCOPY);

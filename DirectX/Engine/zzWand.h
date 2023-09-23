@@ -2,6 +2,7 @@
 
 #include "zzEquipment.h"
 #include "zzInfoBox.h"
+#include "zzSpell.h"
 
 namespace zz
 {
@@ -23,13 +24,14 @@ namespace zz
         void SetInfoBox(InfoBox* infoBox) { mInfoBox = infoBox; }
         InfoBox* GetInfoBox() { return mInfoBox; }
 
-        void SetSpell(GameObject* spell, UINT index) { mSpells[index] = spell; }
+        void SetSpell(Spell* spell, UINT index) { mSpells[index] = spell; }
 
     protected:
         UINT    mCapacity;
         UINT    mManaMax;
         UINT    mManaChargeSpeed;
         UINT    mCurMana;
+        UINT    mCurSpellIndex;
 
         float   mCastDelay;
         float   mReChargeTime;
@@ -37,7 +39,7 @@ namespace zz
 
         Vector3 mTip;
 
-        std::vector<GameObject*> mSpells;
+        std::vector<Spell*> mSpells;
 
     private:
         InfoBox* mInfoBox;

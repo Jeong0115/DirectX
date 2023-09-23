@@ -16,7 +16,7 @@ namespace zz
         UP, DOWN, LEFT, RIGHT, SPACE,
         LBUTTON, RBUTTON, TAB, CTRL,
 
-        F5,
+        F5, F8,
 
         END,
     };

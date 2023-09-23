@@ -5,9 +5,8 @@
 
 namespace zz
 {
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_real_distribution<float> dis(0.0, 1.0);
+    thread_local std::mt19937 gen(std::random_device{}());
+    thread_local std::uniform_real_distribution<float> dis(0.0, 1.0);
 
     // [0.0f, 1.0f) 
     __forceinline float random() { return dis(gen); }

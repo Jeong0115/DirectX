@@ -5,6 +5,7 @@
 #include "zzSceneManager.h"
 #include "zzLayer.h"
 #include "zzScene.h"
+#include "zzTransform.h"
 
 namespace zz
 {
@@ -184,8 +185,11 @@ namespace zz
         Transform* leftTr = left->GetOwner()->GetComponent<Transform>();
         Transform* rightTr = right->GetOwner()->GetComponent<Transform>();
 
-        Vector3 leftPos = leftTr->GetPosition();
-        Vector3 rightPos = rightTr->GetPosition();
+        //Vector3 leftPos = leftTr->GetPosition();
+        //Vector3 rightPos = rightTr->GetPosition();
+
+        Vector3 leftPos = leftTr->GetWorldPosition();
+        Vector3 rightPos = rightTr->GetWorldPosition();
 
         Vector3 leftScale = left->GetScale();
         Vector3 rightScale = right->GetScale();

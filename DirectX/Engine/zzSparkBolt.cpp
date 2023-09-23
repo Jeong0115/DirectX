@@ -23,9 +23,9 @@ namespace zz
         , mExplosion(nullptr)
         , mRigid(nullptr)
         , mTime(0.0f)
-        , mSpeed(500.f)
         , mSubParticleTime(0.f)
     {
+        mSpeed = 500.f;
     }
 
     SparkBolt::~SparkBolt()
@@ -134,12 +134,10 @@ namespace zz
         mIndex += count;
         mParticle->SetStructedBufferData(&shareData, 1, 1);
 
+        mShareData.curPosition = Vector4(curPos.x, curPos.y, curPos.z, 0.0f);
+        mShareData.activeCount = randi(5);
 
-
-            mShareData.curPosition = Vector4(curPos.x, curPos.y, curPos.z, 0.0f);
-            mShareData.activeCount = randi(5);
-
-            mSubParticle->SetStructedBufferData(&mShareData, 1, 1);
+        mSubParticle->SetStructedBufferData(&mShareData, 1, 1);
         
 
         GameObject::LateUpdate();
@@ -148,6 +146,11 @@ namespace zz
     void SparkBolt::Render()
     {
         GameObject::Render();
+    }
+
+    ProjectileSpell* SparkBolt::Clone()
+    {
+        return new SparkBolt();
     }
 
     void SparkBolt::OnCollision(Element& element)

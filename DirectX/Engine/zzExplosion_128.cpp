@@ -38,7 +38,7 @@ namespace zz
         animator->EndEvent(L"explosion_128_play") = std::bind(&Explosion_128::EndAnimation, this);
 
         GetComponent<Transform>()->SetScale(129.f, 129.f, 1.0f);
-        AddComponent<Light>()->SetLightScale(129.f, 129.f, 1.0f);
+        AddComponent<Light>()->SetLightScale(200.f, 200.f, 1.0f);
 
         mParticle = AddComponent<ParticleSystem>();
         mParticle->SetMaterial(ResourceManager::Find<Material>(L"m_fire_falling"));
@@ -74,7 +74,7 @@ namespace zz
                 int y = static_cast<int>(std::round(std::sqrt(60 * 60 - (x - pos.x) * (x - pos.x))));
                 for (int j = pos.y - y; j <= pos.y + y; j++)
                 {
-                    PixelWorld::DeleteElement(x, -j);
+                    PixelWorld::InsertElement(x, -j, FIRE);
                 }
             }
             mbFirstFrame = false;

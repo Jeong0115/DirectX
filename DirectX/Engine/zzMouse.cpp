@@ -5,7 +5,9 @@
 #include "zzInput.h"
 #include "zzMaterial.h"
 #include "zzItemTexture.h"
-#include "zzInventoryBox.h"
+#include "zzItemSlot.h"
+#include "zzSpellSlot.h"
+
 #include "zzInventoryManager.h"
 
 namespace zz
@@ -76,16 +78,37 @@ namespace zz
         {
             if (uiObject->GetUIType() == eUIType::ItemSlot && Input::GetKeyDown(eKeyCode::LBUTTON))
             {       
-                mControllUI = dynamic_cast<InventoryBox*>(uiObject)->GetItemTexture();
+                mControllUI = dynamic_cast<ItemSlot*>(uiObject)->GetItemTexture();
             }
             else if (uiObject->GetUIType() == eUIType::ItemSlot && Input::GetKeyUp(eKeyCode::LBUTTON))
             {
-                if (mControllUI != nullptr)
+                if (mControllUI != nullptr && mControllUI->GetTextureType() == eTextureType::Wand)
                 {
                     UINT prevSlotIndex = mControllUI->GetSlotIndex();
-                    UINT moveSlotIndex = dynamic_cast<InventoryBox*>(uiObject)->GetSlotIndex();
+                    UINT moveSlotIndex = dynamic_cast<ItemSlot*>(uiObject)->GetSlotIndex();
 
                     InventoryManager::MoveItemToSlot(prevSlotIndex, moveSlotIndex);
+
+                    mControllUI = nullptr;
+                }
+            }
+
+            if (uiObject->GetUIType() == eUIType::SpellSlot && Input::GetKeyDown(eKeyCode::LBUTTON))
+            {
+                mControllUI = dynamic_cast<SpellSlot*>(uiObject)->GetItemTexture();
+            }
+            else if (uiObject->GetUIType() == eUIType::SpellSlot && Input::GetKeyUp(eKeyCode::LBUTTON))
+            {
+                if (mControllUI != nullptr && mControllUI->GetTextureType() == eTextureType::Spell)
+                {
+                    SpellSlot* srcSlot = mControllUI->GetOwner();
+                    SpellSlot* dstSlot = dynamic_cast<SpellSlot*>(uiObject);
+
+                    ItemTexture* srcItemTexture = srcSlot->GetItemTexture();
+                    SpellUI* srcSpell = srcSlot->GetSpell();
+
+                    srcSlot->SetSpell(dstSlot->GetSpell(), dstSlot->GetItemTexture());
+                    dstSlot->SetSpell(srcSpell, srcItemTexture);
 
                     mControllUI = nullptr;
                 }

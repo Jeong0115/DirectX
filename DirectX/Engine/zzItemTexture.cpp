@@ -12,9 +12,11 @@ namespace zz
 {
     ItemTexture::ItemTexture(eUIType type)
         : UI(type)
+        , mTextureType(eTextureType::Item)
         , mSlotPos(Vector3::Zero)
         , mSlotIndex(9)
         , mbMove(false)
+        , mOwner(nullptr)
     {
     }
 
@@ -62,7 +64,7 @@ namespace zz
         GameObject::Render();
     }
 
-    void ItemTexture::CreateItemTexture(std::wstring material_name, Vector3 pos, Vector3 scale)
+    void ItemTexture::CreateItemTexture(std::wstring material_name, eTextureType type, Vector3 pos, Vector3 scale)
     {
         MeshRenderer* mesh = AddComponent<MeshRenderer>();
         mesh->SetMaterial(ResourceManager::Find<Material>(material_name));
@@ -72,6 +74,7 @@ namespace zz
         GetComponent<Transform>()->SetPosition(pos);
 
         mSlotPos = pos;
+        mTextureType = type;
 
         Initialize();
     }

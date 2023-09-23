@@ -12,17 +12,11 @@ namespace zz
         ~PixelChunkMap();
 
         void UpdateStep(int index);
-        void MoveElementStep(int index);
 
         void UpdateStep1();
         void UpdateStep2();
         void UpdateStep3();
         void UpdateStep4();
-
-        void MoveElementStep1();
-        void MoveElementStep2();
-        void MoveElementStep3();
-        void MoveElementStep4();
 
         void UpdateRect();
 
@@ -33,8 +27,10 @@ namespace zz
         const int mStartY;
         const int mChunkWidth;
         const int mChunkHeight;
+
         const UINT mHeight;
         const UINT mWidth;
+
         const int mYChunkCnt;
         const int mXChunkCnt;
 

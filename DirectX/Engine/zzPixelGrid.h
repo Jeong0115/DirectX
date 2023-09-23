@@ -84,7 +84,7 @@ namespace zz
         PixelGridColor();
         ~PixelGridColor();
 
-        void Update(std::vector<uint8_t>& pixelColor, HDC BackDC, float x, float y);
+        void Update(std::vector<uint32_t>& pixelColor, HDC BackDC, float x, float y);
 
     private:
         HBITMAP mBitmap;
