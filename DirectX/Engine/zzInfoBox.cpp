@@ -4,7 +4,7 @@
 #include "zzMaterial.h"
 #include "zzTransform.h"
 #include "zzSpellSlot.h"
-#include "zzInventoryManager.h"
+#include "zzUIManager.h"
 #include "zzWand.h"
 
 namespace zz
@@ -75,7 +75,7 @@ namespace zz
             boxTr->SetPosition(-60.f + i * 20.f, -15.f, 0.0f);
             spellBox->Initialize();
 
-            InventoryManager::AddUIObject(spellBox, eUIType::SpellSlot);
+            UIManager::AddUIObject(spellBox, eUIType::SpellSlot);
         }
     }
 

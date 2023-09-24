@@ -10,7 +10,7 @@
 #include "zzApplication.h"
 #include "zzMeshRenderer.h"
 #include "zzMaterial.h"
-#include "zzInventoryManager.h"
+#include "zzUIManager.h"
 #include "zzExplosion_128.h"
 #include "zzCollider.h"
 #include "zzPixelCollider.h"
@@ -84,7 +84,7 @@ namespace zz
         }
         if (Input::GetKeyDown(eKeyCode::TAB))
         {
-            InventoryManager::SetOpenOrCloseInventory();
+            UIManager::SetOpenOrCloseInventory();
         }
 
         Transform* tr = GetComponent<Transform>();

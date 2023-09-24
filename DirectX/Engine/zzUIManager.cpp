@@ -1,4 +1,4 @@
-#include "zzInventoryManager.h"
+#include "zzUIManager.h"
 #include "zzInput.h"
 #include "zzPlayer.h"
 #include "zzTransform.h"
@@ -20,26 +20,28 @@
 
 #include "zzLightBullet.h"
 #include "zzSpeedUp_UI.h"
+#include "zzHealth.h"
+#include "zzLevitationEnerge.h"
+#include "zzWandMana.h"
 
 namespace zz
 {
-    UINT InventoryManager::mEquipItemIndex = 9;
-    std::vector<ItemSlot*> InventoryManager::mItemSlots = {};
-    std::vector<SpellSlot*> InventoryManager::mSpellSlots = {};
+    UINT UIManager::mEquipItemIndex = 9;
+    std::vector<ItemSlot*> UIManager::mItemSlots = {};
+    std::vector<SpellSlot*> UIManager::mSpellSlots = {};
 
-    std::vector<std::vector<UI*>> InventoryManager::mInventoryUI = {};
-    Player* InventoryManager::mPlayer = nullptr;
-    bool InventoryManager::mbOpenInventory = false;
+    std::vector<std::vector<UI*>> UIManager::mUIObjects = {};
+    Player* UIManager::mPlayer = nullptr;
+    bool UIManager::mbOpenInventory = false;
 
-    InventoryManager::InventoryManager()   
+    UIManager::UIManager()   
+    {
+    }
+    UIManager::~UIManager()
     {
     }
 
-    InventoryManager::~InventoryManager()
-    {
-    }
-
-    void InventoryManager::Test()
+    void UIManager::Test()
     {
         BoltWand_0997* wand2 = new BoltWand_0997();
         wand2->Initialize();
@@ -49,27 +51,42 @@ namespace zz
         spell->Initialize();
         AcquireSpell(spell);
 
+        {
+            LightBullet* spell = new LightBullet();
+            spell->Initialize();
+            AcquireSpell(spell);
+        }
+
         SpeedUp_UI* spd = new SpeedUp_UI();
         spd->Initialize();
         AcquireSpell(spd);
     }
 
-    void InventoryManager::Initialize()
+    void UIManager::Initialize()
     {      
-        mInventoryUI.resize((UINT)eUIType::End);
+        mUIObjects.resize((UINT)eUIType::End);
 
         InventoryBG* inventoryBG = new InventoryBG(eUIType::BG);
-        mInventoryUI[(UINT)eUIType::BG].push_back(inventoryBG);
+        mUIObjects[(UINT)eUIType::BG].push_back(inventoryBG);
 
         Mouse* mouse = new Mouse(eUIType::Mouse);
-        mInventoryUI[(UINT)eUIType::Mouse].push_back(mouse);
+        mUIObjects[(UINT)eUIType::Mouse].push_back(mouse);
+
+        Health* health = new Health();
+        mUIObjects[(UINT)eUIType::HUD].push_back(health);
+
+        LevitationEnerge* levitaionEnerge = new LevitationEnerge();
+        mUIObjects[(UINT)eUIType::HUD].push_back(levitaionEnerge);
+
+        WandMana* wandMana = new WandMana();
+        mUIObjects[(UINT)eUIType::HUD].push_back(wandMana);
 
         for (int i = 0; i < 4; i++)
         {
             ItemSlot* inventoryBox = new ItemSlot(eUIType::ItemSlot);
             inventoryBox->SetSlotIndex(i);
             mItemSlots.push_back(inventoryBox);
-            mInventoryUI[(UINT)eUIType::ItemSlot].push_back(inventoryBox);
+            mUIObjects[(UINT)eUIType::ItemSlot].push_back(inventoryBox);
             inventoryBox->GetComponent<Transform>()->SetPosition(29.5f + i * 20.f, 330.f, 1.0f);
         }
 
@@ -78,7 +95,7 @@ namespace zz
             ItemSlot* inventoryBox = new ItemSlot(eUIType::ItemSlot);
             inventoryBox->SetSlotIndex(i + 4);
             mItemSlots.push_back(inventoryBox);
-            mInventoryUI[(UINT)eUIType::ItemSlot].push_back(inventoryBox);
+            mUIObjects[(UINT)eUIType::ItemSlot].push_back(inventoryBox);
             inventoryBox->GetComponent<Transform>()->SetPosition(111.5f + i * 20.f, 330.f, 1.0f);
         }
 
@@ -87,13 +104,13 @@ namespace zz
             SpellSlot* slot = new SpellSlot(eUIType::SpellSlot);
             slot->SetSlotIndex(i);
             mSpellSlots.push_back(slot);
-            mInventoryUI[(UINT)eUIType::SpellSlot].push_back(slot);
+            mUIObjects[(UINT)eUIType::SpellSlot].push_back(slot);
             slot->GetComponent<Transform>()->SetPosition(200.0f + i * 20.f, 330.f, 1.0f);
         }
 
         for (UINT i = 0; i < (UINT)eUIType::End; i++)
         {
-            for (auto object : mInventoryUI[i])
+            for (auto object : mUIObjects[i])
             {
                 object->Initialize();
             }
@@ -104,7 +121,7 @@ namespace zz
         CollisionManger::SetCollisionUI(eUIType::Mouse, eUIType::Item, true);
     }
 
-    void InventoryManager::Update()
+    void UIManager::Update()
     {
         if (mbOpenInventory)
         {
@@ -132,13 +149,13 @@ namespace zz
             {
                 mEquipItemIndex = index;
                 mPlayer->SetEquipment(mItemSlots[index]->GetItem());
-                mInventoryUI[(UINT)eUIType::Highligt].front()->GetComponent<Transform>()->SetParent(mItemSlots[mEquipItemIndex]->GetItemTexture()->GetComponent<Transform>());
+                mUIObjects[(UINT)eUIType::Highligt].front()->GetComponent<Transform>()->SetParent(mItemSlots[mEquipItemIndex]->GetItemTexture()->GetComponent<Transform>());
             }
         }
 
         for (UINT i = 0; i < (UINT)eUIType::End; i++)
         {
-            for (auto object : mInventoryUI[i])
+            for (auto object : mUIObjects[i])
             {
                 if (!mbOpenInventory && i == (UINT)eUIType::BG)
                 {
@@ -163,11 +180,11 @@ namespace zz
         }
     }
 
-    void InventoryManager::LateUpdate()
+    void UIManager::LateUpdate()
     {
         for (UINT i = 0; i < (UINT)eUIType::End; i++)
         {
-            for (auto object : mInventoryUI[i])
+            for (auto object : mUIObjects[i])
             {
                 if (!mbOpenInventory && i == (UINT)eUIType::BG)
                 {
@@ -178,27 +195,27 @@ namespace zz
         }
     }
 
-    void InventoryManager::Release()
+    void UIManager::Release()
     {
         for (UINT i = 0; i < (UINT)eUIType::End; i++)
         {
-            for (auto& uiObject : mInventoryUI[i])
+            for (auto& uiObject : mUIObjects[i])
             {
                 delete uiObject;
             }
         }
     }
 
-    void InventoryManager::AddUIObject(UI* object, eUIType type)
+    void UIManager::AddUIObject(UI* object, eUIType type)
     {
-        mInventoryUI[(UINT)type].push_back(object);
+        mUIObjects[(UINT)type].push_back(object);
     }
 
-    void InventoryManager::CreateStartItems()
+    void UIManager::CreateStartItems()
     {
         ItemTextureHighlight* highlight = new ItemTextureHighlight(eUIType::Highligt);
         highlight->Initialize();
-        mInventoryUI[(UINT)eUIType::Highligt].push_back(highlight);
+        mUIObjects[(UINT)eUIType::Highligt].push_back(highlight);
 
         BlastWand_0585* wand = new BlastWand_0585();
         wand->Initialize();
@@ -209,7 +226,7 @@ namespace zz
         highlight->GetComponent<Transform>()->SetParent(mItemSlots[0]->GetItemTexture()->GetComponent<Transform>());
     }
 
-    void InventoryManager::MoveItemToSlot(UINT prevSlot, UINT moveSlot)
+    void UIManager::MoveItemToSlot(UINT prevSlot, UINT moveSlot)
     {
         ItemSlot* prevBox = mItemSlots[prevSlot];
         ItemSlot* moveBox = mItemSlots[moveSlot];
@@ -239,7 +256,7 @@ namespace zz
         }
     }
 
-    void InventoryManager::MoveSpellToSlot(UINT prevSlot, UINT moveSlot)
+    void UIManager::MoveSpellToSlot(UINT prevSlot, UINT moveSlot)
     {
         SpellSlot* prevBox = mSpellSlots[prevSlot];
         SpellSlot* moveBox = mSpellSlots[moveSlot];
@@ -259,7 +276,7 @@ namespace zz
         }
     }
 
-    void InventoryManager::AcquireItem(Equipment* equipment)
+    void UIManager::AcquireItem(Equipment* equipment)
     {
         if(dynamic_cast<Wand*>(equipment))
         {
@@ -286,7 +303,7 @@ namespace zz
                     infoBox->Initialize();
 
                     dynamic_cast<Wand*>(equipment)->SetInfoBox(infoBox);
-                    mInventoryUI[(UINT)eUIType::InfoBox].push_back(infoBox);
+                    mUIObjects[(UINT)eUIType::InfoBox].push_back(infoBox);
                     break;
                 }
             }
@@ -294,7 +311,7 @@ namespace zz
         
     }
 
-    void InventoryManager::AcquireSpell(SpellUI* spell)
+    void UIManager::AcquireSpell(SpellUI* spell)
     {
         if (dynamic_cast<SpellUI*>(spell))
         {

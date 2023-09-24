@@ -1,5 +1,5 @@
 #include "zzUICamera.h"
-#include "zzInventoryManager.h"
+#include "zzUIManager.h"
 #include "zzUI.h"
 
 namespace zz
@@ -40,7 +40,7 @@ namespace zz
 
     void UICamera::RenderUI()
     {
-        const auto& objects = InventoryManager::GetInventoryUI();
+        const auto& objects = UIManager::GetInventoryUI();
 
         for (UINT i = 0; i < (UINT)eUIType::End; i++)
         {

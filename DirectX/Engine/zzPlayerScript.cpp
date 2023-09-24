@@ -46,11 +46,11 @@ namespace zz
         {
             if (Input::GetKey(eKeyCode::LEFT))
             {
-                pos.x -= 50.0f * Time::DeltaTime();
+                pos.x -= static_cast<float>(50.0f * Time::DeltaTime());
             }
             if (Input::GetKey(eKeyCode::RIGHT))
             {
-                pos.x += 50.0f * Time::DeltaTime();
+                pos.x += static_cast<float>(50.0f * Time::DeltaTime());
             }        
         }
 
@@ -80,7 +80,7 @@ namespace zz
             mAnimator->PlayAnimation(L"Player_Jump_Fall", true);
         }
 
-        pos.y += vel * Time::DeltaTime();
+        pos.y += static_cast<float>(vel * Time::DeltaTime());
 
         if (pos.x >= 0 && -pos.y + 7 >= 0)
         {

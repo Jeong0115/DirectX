@@ -1,3 +1,5 @@
+#pragma warning (disable: 6269)
+
 #ifndef OPENCV_FLANN_ANY_H_
 #define OPENCV_FLANN_ANY_H_
 /*

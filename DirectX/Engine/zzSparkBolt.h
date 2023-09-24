@@ -17,7 +17,7 @@ namespace zz
        
         ProjectileSpell* Clone() override;
 
-        void OnCollision(class Element& element);
+        void OnCollision(struct Element& element);
 
     private:
         class ParticleSystem*   mParticle;

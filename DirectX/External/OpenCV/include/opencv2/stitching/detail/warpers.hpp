@@ -39,6 +39,7 @@
 // the use of this software, even if advised of the possibility of such damage.
 //
 //M*/
+#pragma warning (disable: 26495)
 
 #ifndef OPENCV_STITCHING_WARPERS_HPP
 #define OPENCV_STITCHING_WARPERS_HPP

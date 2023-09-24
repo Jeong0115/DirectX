@@ -18,7 +18,7 @@ namespace zz
         virtual void Render()       override;
 
         void SetCollision(Vector3 offset, Vector3 scale) { mCollisionOffset = offset; mCollisionScale = scale; }
-        void SetClimbY(float y) { mClimbOverY = y; }
+        void SetClimbY(int y) { mClimbOverY = y; }
 
     private:
         void checkSidePixel(Vector3 collisionPos, Vector3 velocity);
@@ -26,13 +26,13 @@ namespace zz
         void preventTunneling(Vector3 collisionPos);
 
     private:
-        Transform* mTransform;
-        RigidBody* mRigid;
+        Transform*  mTransform;
+        RigidBody*  mRigid;
 
-        Vector3 mCollisionOffset;
-        Vector3 mCollisionScale;
+        Vector3     mCollisionOffset;
+        Vector3     mCollisionScale;
 
-        float mClimbOverY;
+        int         mClimbOverY;
     };
 }
 

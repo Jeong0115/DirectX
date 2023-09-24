@@ -8,7 +8,7 @@
 #include "zzItemSlot.h"
 #include "zzSpellSlot.h"
 
-#include "zzInventoryManager.h"
+#include "zzUIManager.h"
 
 namespace zz
 {
@@ -87,7 +87,7 @@ namespace zz
                     UINT prevSlotIndex = mControllUI->GetSlotIndex();
                     UINT moveSlotIndex = dynamic_cast<ItemSlot*>(uiObject)->GetSlotIndex();
 
-                    InventoryManager::MoveItemToSlot(prevSlotIndex, moveSlotIndex);
+                    UIManager::MoveItemToSlot(prevSlotIndex, moveSlotIndex);
 
                     mControllUI = nullptr;
                 }

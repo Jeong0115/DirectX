@@ -28,6 +28,8 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *************************************************************************/
 
+#pragma warning (disable: 26451)
+
 #ifndef OPENCV_FLANN_DIST_H_
 #define OPENCV_FLANN_DIST_H_
 

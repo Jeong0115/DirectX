@@ -41,12 +41,16 @@
 //
 //M*/
 
+#pragma warning (disable: 6294)
+#pragma warning (disable: 6201)
+
 #ifndef OPENCV_CORE_MATX_HPP
 #define OPENCV_CORE_MATX_HPP
 
 #ifndef __cplusplus
 #  error matx.hpp header must be compiled as C++
 #endif
+
 
 #include "opencv2/core/cvdef.h"
 #include "opencv2/core/base.hpp"

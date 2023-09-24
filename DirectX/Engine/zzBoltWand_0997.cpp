@@ -18,8 +18,8 @@ namespace zz
     BoltWand_0997::BoltWand_0997()
     {
         mCapacity = 4;
-        mManaMax = 143;
-        mManaChargeSpeed = 40;
+        mManaMax = 143.f;
+        mManaChargeSpeed = 40.f;
         mCurMana = mManaMax;
         mCastDelay = 0.f;
         mReChargeTime = 2.f;

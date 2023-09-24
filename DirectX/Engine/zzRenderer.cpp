@@ -120,8 +120,8 @@ namespace zz::renderer
             pointVertexes.push_back(v);
             pointIndexes.push_back(0);
             std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
-            mesh->CreateVertexBuffer(pointVertexes.data(), pointVertexes.size());
-            mesh->CreateIndexBuffer(pointIndexes.data(), pointIndexes.size());
+            mesh->CreateVertexBuffer(pointVertexes.data(), static_cast<UINT>(pointVertexes.size()));
+            mesh->CreateIndexBuffer(pointIndexes.data(), static_cast<UINT>(pointIndexes.size()));
             mesh->SetName(L"PointMesh");
             ResourceManager::Insert(L"PointMesh", mesh);
         }
@@ -167,6 +167,9 @@ namespace zz::renderer
         constantBuffer[(UINT)eCBType::Color] = new ConstantBuffer(eCBType::Color);
         constantBuffer[(UINT)eCBType::Color]->CreateConstantBuffer(sizeof(ColorCB));
 
+        constantBuffer[(UINT)eCBType::Slider] = new ConstantBuffer(eCBType::Slider);
+        constantBuffer[(UINT)eCBType::Slider]->CreateConstantBuffer(sizeof(SliderCB));
+
         constantBuffer[(UINT)eCBType::Animator] = new ConstantBuffer(eCBType::Animator);
         constantBuffer[(UINT)eCBType::Animator]->CreateConstantBuffer(sizeof(AnimatorCB));
 
@@ -199,6 +202,11 @@ namespace zz::renderer
         spriteShader->CreateShader(eShaderStage::VS, L"SpriteVS.hlsl", "main");
         spriteShader->CreateShader(eShaderStage::PS, L"SpritePS.hlsl", "main");
         ResourceManager::Insert(L"SpriteShader", spriteShader);
+
+        std::shared_ptr<Shader> sliderShader = std::make_shared<Shader>();
+        sliderShader->CreateShader(eShaderStage::VS, L"SpriteVS.hlsl", "main");
+        sliderShader->CreateShader(eShaderStage::PS, L"SliderPS.hlsl", "main");
+        ResourceManager::Insert(L"SliderShader", sliderShader);
 
         std::shared_ptr<Shader> lightShader = std::make_shared<Shader>();
         lightShader->CreateShader(eShaderStage::VS, L"LightVS.hlsl", "main");
@@ -489,6 +497,9 @@ namespace zz::renderer
         shader = ResourceManager::Find<Shader>(L"SpriteShader");
         GetDevice()->CreateInputLayout(arrLayout, 3, shader->GetVSCode(), shader->GetInputLayoutAddressOf());
 
+        shader = ResourceManager::Find<Shader>(L"SliderShader");
+        GetDevice()->CreateInputLayout(arrLayout, 3, shader->GetVSCode(), shader->GetInputLayoutAddressOf());
+
         shader = ResourceManager::Find<Shader>(L"LightShader");
         GetDevice()->CreateInputLayout(arrLayout, 3, shader->GetVSCode(), shader->GetInputLayoutAddressOf());
 
@@ -670,8 +681,8 @@ namespace zz::renderer
 
         ConstantBuffer* cb = constantBuffer[(UINT)eCBType::Noise];
         NoiseCB data = {};
-        data.textureSize.x = texture->GetImageWidth();
-        data.textureSize.y = texture->GetImageHeight();
+        data.textureSize.x = static_cast<float>(texture->GetImageWidth());
+        data.textureSize.y = static_cast<float>(texture->GetImageHeight());
 
         cb->SetBufferData(&data);
         cb->BindConstantBuffer(eShaderStage::VS);
@@ -775,6 +786,7 @@ namespace zz::renderer
     void LoadUIResource()
     {
         std::shared_ptr<Shader> spriteShader = ResourceManager::Find<Shader>(L"SpriteShader");
+        std::shared_ptr<Shader> sliderShader = ResourceManager::Find<Shader>(L"SliderShader");
         std::shared_ptr<Material> material;
 
         std::shared_ptr<Texture> inventory_box = ResourceManager::Load<Texture>(L"inventory_box", L"..\\Resources\\Texture\\Inventory\\full_inventory_box.png");   
@@ -806,6 +818,66 @@ namespace zz::renderer
         material->SetShader(spriteShader);
         material->SetTexture(info_box);
         ResourceManager::Insert(L"m_info_box", material);
+
+        std::shared_ptr<Texture> colors_bar_bg = ResourceManager::Load<Texture>(L"colors_bar_bg", L"..\\Resources\\Texture\\UI\\colors_bar_bg.png");
+        material = std::make_shared<Material>();
+        material->SetShader(spriteShader);
+        material->SetTexture(colors_bar_bg);
+        ResourceManager::Insert(L"m_colors_bar_bg", material);
+
+        std::shared_ptr<Texture> colors_flying_bar = ResourceManager::Load<Texture>(L"colors_flying_bar", L"..\\Resources\\Texture\\UI\\colors_flying_bar.png");
+        material = std::make_shared<Material>();
+        material->SetShader(sliderShader);
+        material->SetTexture(colors_flying_bar);
+        ResourceManager::Insert(L"m_colors_flying_bar", material);
+
+        std::shared_ptr<Texture> colors_health_bar = ResourceManager::Load<Texture>(L"colors_health_bar", L"..\\Resources\\Texture\\UI\\colors_health_bar.png");
+        material = std::make_shared<Material>();
+        material->SetShader(sliderShader);
+        material->SetTexture(colors_health_bar);
+        ResourceManager::Insert(L"m_colors_health_bar", material);
+
+        std::shared_ptr<Texture> colors_health_bar_damage = ResourceManager::Load<Texture>(L"colors_health_bar_damage", L"..\\Resources\\Texture\\UI\\colors_health_bar_damage.png");
+        material = std::make_shared<Material>();
+        material->SetShader(sliderShader);
+        material->SetTexture(colors_health_bar_damage);
+        ResourceManager::Insert(L"m_colors_health_bar_damage", material);
+
+        std::shared_ptr<Texture> colors_mana_bar = ResourceManager::Load<Texture>(L"colors_mana_bar", L"..\\Resources\\Texture\\UI\\colors_mana_bar.png");
+        material = std::make_shared<Material>();
+        material->SetShader(sliderShader);
+        material->SetTexture(colors_mana_bar);
+        ResourceManager::Insert(L"m_colors_mana_bar", material);
+
+        std::shared_ptr<Texture> colors_reload_bar = ResourceManager::Load<Texture>(L"colors_reload_bar", L"..\\Resources\\Texture\\UI\\colors_reload_bar.png");
+        material = std::make_shared<Material>();
+        material->SetShader(sliderShader);
+        material->SetTexture(colors_reload_bar);
+        ResourceManager::Insert(L"m_colors_reload_bar", material);
+
+        std::shared_ptr<Texture> mana = ResourceManager::Load<Texture>(L"mana", L"..\\Resources\\Texture\\UI\\mana.png");
+        material = std::make_shared<Material>();
+        material->SetShader(spriteShader);
+        material->SetTexture(mana);
+        ResourceManager::Insert(L"m_mana", material);
+
+        std::shared_ptr<Texture> health = ResourceManager::Load<Texture>(L"health", L"..\\Resources\\Texture\\UI\\health.png");
+        material = std::make_shared<Material>();
+        material->SetShader(spriteShader);
+        material->SetTexture(health);
+        ResourceManager::Insert(L"m_health", material);
+
+        std::shared_ptr<Texture> jetpack = ResourceManager::Load<Texture>(L"jetpack", L"..\\Resources\\Texture\\UI\\jetpack.png");
+        material = std::make_shared<Material>();
+        material->SetShader(spriteShader);
+        material->SetTexture(jetpack);
+        ResourceManager::Insert(L"m_jetpack", material);
+
+        std::shared_ptr<Texture> reload = ResourceManager::Load<Texture>(L"reload", L"..\\Resources\\Texture\\UI\\reload.png");
+        material = std::make_shared<Material>();
+        material->SetShader(spriteShader);
+        material->SetTexture(reload);
+        ResourceManager::Insert(L"m_reload", material);
     }
 
     void LoadWandTextureResource()

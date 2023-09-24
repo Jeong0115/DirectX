@@ -4,6 +4,7 @@ namespace zz
 {
     Spell::Spell()
         : mType(eSpellType::End)
+        , mManaDrain(0.0f)
     {
     }
     Spell::~Spell()

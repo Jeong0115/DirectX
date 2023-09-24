@@ -15,7 +15,7 @@ namespace zz
         , mRigid(nullptr)
         , mCollisionOffset(Vector3::Zero)
         , mCollisionScale(Vector3::One)
-        , mClimbOverY(0.0f)
+        , mClimbOverY(0)
     {
     }
 
@@ -47,7 +47,10 @@ namespace zz
         renderer::PushDebugMeshAttribute(mesh);
 
         // 천장 검사
-        for (int i = -mCollisionScale.x / 2; i <= mCollisionScale.x / 2; i++)
+
+        int lenX = static_cast<int>(mCollisionScale.x);
+
+        for (int i = -lenX / 2; i <= lenX / 2; i++)
         {
             for (int j = 0; j >= -1; j--)
             {
@@ -85,8 +88,8 @@ namespace zz
     {
         Vector3 checkPos = collisionPos;
 
-        float halfScaleX = mCollisionScale.x / 2;
-        float halfScaleY = mCollisionScale.y / 2;
+        int halfScaleX = static_cast<int>(mCollisionScale.x / 2);
+        int halfScaleY = static_cast<int>(mCollisionScale.y / 2);
 
         if (velocity.x > 0.f)
         {

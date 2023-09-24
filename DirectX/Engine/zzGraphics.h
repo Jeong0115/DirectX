@@ -14,6 +14,7 @@
 
 #define CBSLOT_TRANSFORM		0
 #define CBSLOT_COLOR		    1
+#define CBSLOT_SLIDER		    2
 #define CBSLOT_ANIMATION2D		3
 #define CBSLOT_FLIP		        4
 #define CBSLOT_PARTICLE			5
@@ -36,7 +37,7 @@ namespace zz
     {
         Transform,
         Color,
-        Material,
+        Slider,
         Animator,
         Flip,
         Particle,

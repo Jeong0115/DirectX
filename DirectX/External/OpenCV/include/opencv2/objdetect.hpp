@@ -41,6 +41,8 @@
 //
 //M*/
 
+#pragma warning (disable: 6294)
+
 #ifndef OPENCV_OBJDETECT_HPP
 #define OPENCV_OBJDETECT_HPP
 

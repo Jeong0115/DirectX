@@ -148,9 +148,6 @@
     <Filter Include="UI\Inventory">
       <UniqueIdentifier>{97366aa3-41e8-4340-ab60-1ad807b2c4c8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Manager\InventoryManager">
-      <UniqueIdentifier>{e679f939-66fb-45ac-b5b2-695e4bb0b18b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="UI\Base">
       <UniqueIdentifier>{2fdca9f5-ee47-4fcb-a9bd-243c803d74ab}</UniqueIdentifier>
     </Filter>
@@ -355,6 +352,36 @@
     <Filter Include="UI\SpellUI\SpeedUp">
       <UniqueIdentifier>{c65a9c1a-ffa9-4b53-9614-2010960437e9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Spell\Utility\Other\Base">
+      <UniqueIdentifier>{a23b5107-4c72-4157-bfb0-82501b964c6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Manager\UIManager">
+      <UniqueIdentifier>{e679f939-66fb-45ac-b5b2-695e4bb0b18b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\HUD">
+      <UniqueIdentifier>{5bb4a26e-b835-4784-bfb8-ae0b432dd441}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\HUD\Health">
+      <UniqueIdentifier>{dcbc154b-a14f-4d62-8992-5ca3f4933283}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\HUD\LevitationEnerge">
+      <UniqueIdentifier>{ba9f30cc-34de-4520-be43-86a6e78dfe8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\HUD\WandMana">
+      <UniqueIdentifier>{c869fea3-3c85-450b-b34c-be4f9a6d0656}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\HUD\WandRecharge">
+      <UniqueIdentifier>{a48f4916-2ada-4a06-8c6f-fbf930cfb408}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\HUD\Gold">
+      <UniqueIdentifier>{6d0b35e6-a085-486d-8a27-7728b2b54398}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\HUD\BarBackGround">
+      <UniqueIdentifier>{3dbfd0c0-c1f1-4058-90a2-3c3f4e827a58}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\HUD\Icon">
+      <UniqueIdentifier>{040be5b8-2ca5-4190-aa26-f8dede9add16}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzEntity.cpp">
@@ -506,8 +533,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)zzInventoryBG.cpp">
       <Filter>UI\Inventory</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)zzInventoryManager.cpp">
-      <Filter>Manager\InventoryManager</Filter>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzUIManager.cpp">
+      <Filter>Manager\UIManager</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzWand.cpp">
       <Filter>GameObject\Equipment\Wand\Base</Filter>
@@ -643,6 +670,21 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzSpeedUp_UI.cpp">
       <Filter>UI\SpellUI\SpeedUp</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzHealth.cpp">
+      <Filter>UI\HUD\Health</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzBarBackGround.cpp">
+      <Filter>UI\HUD\BarBackGround</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzHUD_Icon.cpp">
+      <Filter>UI\HUD\Icon</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzLevitationEnerge.cpp">
+      <Filter>UI\HUD\LevitationEnerge</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzWandMana.cpp">
+      <Filter>UI\HUD\WandMana</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -825,8 +867,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzInventoryBG.h">
       <Filter>UI\Inventory</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)zzInventoryManager.h">
-      <Filter>Manager\InventoryManager</Filter>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzUIManager.h">
+      <Filter>Manager\UIManager</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzWand.h">
       <Filter>GameObject\Equipment\Wand\Base</Filter>
@@ -959,6 +1001,21 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzSpeedUp_UI.h">
       <Filter>UI\SpellUI\SpeedUp</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzHealth.h">
+      <Filter>UI\HUD\Health</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzBarBackGround.h">
+      <Filter>UI\HUD\BarBackGround</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzHUD_Icon.h">
+      <Filter>UI\HUD\Icon</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzLevitationEnerge.h">
+      <Filter>UI\HUD\LevitationEnerge</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzWandMana.h">
+      <Filter>UI\HUD\WandMana</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

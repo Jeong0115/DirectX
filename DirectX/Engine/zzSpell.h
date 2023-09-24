@@ -26,5 +26,8 @@ namespace zz
             
     protected:
         eSpellType mType;
+
+        float mManaDrain;
+
     };
 }

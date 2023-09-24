@@ -69,10 +69,13 @@ namespace zz
         {
             Vector3 pos = GetComponent<Transform>()->GetPosition();
 
-            for (int x = pos.x - 60; x <= pos.x + 60; x++)
+            int posX = static_cast<int>(pos.x);
+            int posY = static_cast<int>(pos.y);
+
+            for (int x = posX - 60; x <= posX + 60; x++)
             {
-                int y = static_cast<int>(std::round(std::sqrt(60 * 60 - (x - pos.x) * (x - pos.x))));
-                for (int j = pos.y - y; j <= pos.y + y; j++)
+                int y = static_cast<int>(std::round(std::sqrt(60 * 60 - (x - posX) * (x - posX))));
+                for (int j = posY - y; j <= posY + y; j++)
                 {
                     PixelWorld::InsertElement(x, -j, FIRE);
                 }

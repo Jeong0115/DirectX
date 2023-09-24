@@ -5,7 +5,7 @@
 #include "zzInput.h"
 #include "..\\Editor\\zzEditor.h"
 #include "zzPixelWorld.h"
-#include "zzInventoryManager.h"
+#include "zzUIManager.h"
 #include "zzEventManager.h"
 #include "zzObjectPoolManager.h"
 #include "zzCollisionManger.h"
@@ -55,7 +55,7 @@ namespace zz
 
         PixelWorld::Initialize();
         renderer::Initialize();
-        InventoryManager::Initialize();
+        UIManager::Initialize();
         SceneManager::Initialize();
         ObjectPoolManager::Initialize();
 	}
@@ -75,7 +75,7 @@ namespace zz
             LightDisabled = !LightDisabled;
         }
 
-        InventoryManager::Update();
+        UIManager::Update();
         PixelWorld::Update();
         SceneManager::Update();
         CollisionManger::Update();
@@ -95,7 +95,7 @@ namespace zz
             graphicDevice->SetLightMapRenderTarget();
         }
 
-        InventoryManager::LateUpdate();
+        UIManager::LateUpdate();
         SceneManager::LateUpdate();
 	}
 
@@ -123,7 +123,7 @@ namespace zz
     void Application::Release()
     {
         SceneManager::Release();
-        InventoryManager::Release();
+        UIManager::Release();
         ObjectPoolManager::Release();
     }
 

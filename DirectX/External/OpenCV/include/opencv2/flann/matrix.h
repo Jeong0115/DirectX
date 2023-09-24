@@ -27,6 +27,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *************************************************************************/
+#pragma warning (disable: 26495)
 
 #ifndef OPENCV_FLANN_DATASET_H_
 #define OPENCV_FLANN_DATASET_H_

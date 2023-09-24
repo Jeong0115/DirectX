@@ -27,6 +27,11 @@ namespace zz::renderer
         Matrix WorldViewProj;
     };
 
+    CBUFFER(SliderCB, CBSLOT_SLIDER)
+    {
+        float rate;
+    };
+
     CBUFFER(AnimatorCB, CBSLOT_ANIMATION2D)
     {
         Vector2 spriteLeftTop;

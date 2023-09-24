@@ -11,6 +11,11 @@ cbuffer Color : register(b1)
     float4 color;
 }
 
+cbuffer Slider : register(b2)
+{
+    float rate;
+}
+
 cbuffer Animator : register(b3)
 {
     float2 SpriteLeftTop;

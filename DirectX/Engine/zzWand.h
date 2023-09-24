@@ -19,20 +19,20 @@ namespace zz
 
         virtual void UseEquipment();
 
-        UINT GetCapacity() { return mCapacity; }
+        int GetCapacity() { return mCapacity; }
 
         void SetInfoBox(InfoBox* infoBox) { mInfoBox = infoBox; }
         InfoBox* GetInfoBox() { return mInfoBox; }
 
-        void SetSpell(Spell* spell, UINT index) { mSpells[index] = spell; }
+        void SetSpell(Spell* spell, int index) { mSpells[index] = spell; }
 
     protected:
-        UINT    mCapacity;
-        UINT    mManaMax;
-        UINT    mManaChargeSpeed;
-        UINT    mCurMana;
-        UINT    mCurSpellIndex;
+        int     mCapacity;
+        int     mCurSpellIndex;
 
+        float   mManaMax;
+        float   mManaChargeSpeed;
+        float   mCurMana;
         float   mCastDelay;
         float   mReChargeTime;
         float   mSpread;

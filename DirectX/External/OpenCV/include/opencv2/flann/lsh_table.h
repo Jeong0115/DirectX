@@ -32,6 +32,9 @@
  * Author: Vincent Rabaud
  *************************************************************************/
 
+#pragma warning (disable: 26451)
+#pragma warning (disable: 26495)
+
 #ifndef OPENCV_FLANN_LSH_TABLE_H_
 #define OPENCV_FLANN_LSH_TABLE_H_
 

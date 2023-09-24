@@ -26,6 +26,10 @@ namespace zz
         , mSubParticleTime(0.f)
     {
         mSpeed = 500.f;
+        mCastDelay = 0.05f;
+        mDamage = 3.0f;
+        mManaDrain = 5.0f;
+
     }
 
     SparkBolt::~SparkBolt()

@@ -78,6 +78,9 @@
     <FxCompile Include="$(MSBuildThisFileDirectory)LightPS.hlsl">
       <Filter>Light</Filter>
     </FxCompile>
+    <FxCompile Include="$(MSBuildThisFileDirectory)SliderPS.hlsl">
+      <Filter>PS</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)Common.hlsli" />

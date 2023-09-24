@@ -77,8 +77,8 @@ namespace zz
                 continue;
                 DebugMesh mesh = {};
                 mesh.temp = 1;
-                mesh.position = math::Vector3(mChunks[j * mXChunkCnt + i]->mStartX + 32, -mChunks[j * mXChunkCnt + i]->mStartY - 32, 0.01f);
-                mesh.scale = math::Vector3(64, 64, 1.0f);
+                mesh.position = math::Vector3(mChunks[j * mXChunkCnt + i]->mStartX + 32.f, -mChunks[j * mXChunkCnt + i]->mStartY - 32.f, 0.01f);
+                mesh.scale = math::Vector3(64.f, 64.f, 1.0f);
                 mesh.rotation = math::Vector3::Zero;
                 renderer::PushDebugMeshAttribute(mesh);
             }
@@ -95,7 +95,7 @@ namespace zz
                 continue;
                 DebugMesh mesh = {};
                 mesh.temp = 1;
-                mesh.position = math::Vector3(mChunks[j * mXChunkCnt + i]->mStartX + 32, -mChunks[j * mXChunkCnt + i]->mStartY - 32, 0.01f);
+                mesh.position = math::Vector3(mChunks[j * mXChunkCnt + i]->mStartX + 32.f, -mChunks[j * mXChunkCnt + i]->mStartY - 32.f, 0.01f);
                 mesh.scale = math::Vector3(64, 64, 1.0f);
                 mesh.rotation = math::Vector3::Zero;
                 renderer::PushDebugMeshAttribute(mesh);

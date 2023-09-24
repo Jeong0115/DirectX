@@ -40,6 +40,8 @@
 //
 //M*/
 
+#pragma warning (disable: 26451)
+
 #ifndef OPENCV_IMGPROC_HPP
 #define OPENCV_IMGPROC_HPP
 

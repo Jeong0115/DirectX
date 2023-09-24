@@ -571,8 +571,8 @@ namespace zz
 
             std::shared_ptr<Shader> shader = ResourceManager::Find<Shader>(L"TriangleShader");
             std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
-            mesh->CreateVertexBuffer(vertexes.data(), vertexes.size());
-            mesh->CreateIndexBuffer(indexes.data(), indexes.size());
+            mesh->CreateVertexBuffer(vertexes.data(), static_cast<UINT>(vertexes.size()));
+            mesh->CreateIndexBuffer(indexes.data(), static_cast<UINT>(indexes.size()));
 
             mesh->BindBuffer();
             shader->BindShaders();

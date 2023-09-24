@@ -39,6 +39,7 @@ namespace zz
     enum class eUIType
     {
         BG,
+        HUD,
         InfoBox,
 
         ItemSlot,

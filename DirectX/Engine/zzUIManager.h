@@ -7,11 +7,11 @@
 namespace zz
 {
     class Player;
-    class InventoryManager
+    class UIManager
     {
     public:
-        InventoryManager();
-        ~InventoryManager();
+        UIManager();
+        ~UIManager();
 
         static void Test();
 
@@ -30,16 +30,19 @@ namespace zz
         static void SetOpenOrCloseInventory() { mbOpenInventory = !mbOpenInventory; }
         static bool GetIsOpenInventory() { return mbOpenInventory; }
 
-        static const std::vector<std::vector<UI*>>& GetInventoryUI() { return mInventoryUI; }
+        static const std::vector<std::vector<UI*>>& GetInventoryUI() { return mUIObjects; }
+
+        //임시 수정해야됨
+        static Player* mPlayer;
 
     private:
         static std::vector<ItemSlot*> mItemSlots;
         static std::vector<SpellSlot*> mSpellSlots;
 
         static UINT mEquipItemIndex;
-        static Player* mPlayer;
+        //static Player* mPlayer;
         static bool mbOpenInventory;
 
-        static std::vector<std::vector<UI*>> mInventoryUI;
+        static std::vector<std::vector<UI*>> mUIObjects;
     };
 }

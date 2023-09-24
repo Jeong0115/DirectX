@@ -4,9 +4,9 @@ namespace zz
 {
     Wand::Wand()
         : mCapacity(0)
-        , mManaMax(0)
-        , mManaChargeSpeed(0)
-        , mCurMana(0)
+        , mManaMax(0.f)
+        , mManaChargeSpeed(0.f)
+        , mCurMana(0.f)
         , mCurSpellIndex(0)
         , mCastDelay(0.f)
         , mReChargeTime(0.f)

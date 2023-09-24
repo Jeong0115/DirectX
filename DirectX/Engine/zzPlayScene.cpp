@@ -14,7 +14,7 @@
 #include "zzRenderer.h"
 #include "zzPlayer.h"
 #include "zzPlayerArm.h"
-#include "zzInventoryManager.h"
+#include "zzUIManager.h"
 #include "zzShotGunner_Weak.h"
 #include "zzCollisionManger.h"
 
@@ -215,9 +215,9 @@ namespace zz
 
             player->Initialize();
 
-            InventoryManager::SetPlayer(player);
-            InventoryManager::CreateStartItems();
-            InventoryManager::Test();
+            UIManager::SetPlayer(player);
+            UIManager::CreateStartItems();
+            UIManager::Test();
 
 
             std::shared_ptr<Texture> light_mask = ResourceManager::Load<Texture>(L"light_mask", L"..\\Resources\\Texture\\light_mask.png");

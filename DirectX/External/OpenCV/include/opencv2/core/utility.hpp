@@ -42,6 +42,9 @@
 //
 //M*/
 
+#pragma warning (disable: 26451)
+#pragma warning (disable: 26495)
+
 #ifndef OPENCV_CORE_UTILITY_H
 #define OPENCV_CORE_UTILITY_H
 

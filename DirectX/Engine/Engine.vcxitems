@@ -14,6 +14,10 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzBarBackGround.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzHealth.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzHUD_Icon.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzLevitationEnerge.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzSpeedUp_UI.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzDetectPlayer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzExplosionEffect.cpp" />
@@ -58,7 +62,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)zzEquipment.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzInventoryBG.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzItemSlot.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)zzInventoryManager.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzUIManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzPixelChunk.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzPixelChunkMap.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzPixelWorld.cpp" />
@@ -114,12 +118,17 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)zzUtilitySpell.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzWand.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzBlastWand_0585.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzWandMana.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzWandScript.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzWater.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)CommonInclude.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)define.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzBarBackGround.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzHealth.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzHUD_Icon.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzLevitationEnerge.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzSpeedUp_UI.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzDetectPlayer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzExplosionEffect.h" />
@@ -182,7 +191,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzInput.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzInventoryBG.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzItemSlot.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)zzInventoryManager.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzUIManager.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzLayer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzLiquid.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzMaterial.h" />
@@ -221,6 +230,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzUtilitySpell.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzWand.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzBlastWand_0585.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzWandMana.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzWandScript.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzWater.h" />
   </ItemGroup>

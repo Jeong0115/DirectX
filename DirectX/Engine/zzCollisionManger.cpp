@@ -1,6 +1,6 @@
 #include "zzCollisionManger.h"
 #include "zzCollider.h"
-#include "zzInventoryManager.h"
+#include "zzUIManager.h"
 #include "zzUI.h"
 #include "zzSceneManager.h"
 #include "zzLayer.h"
@@ -50,7 +50,7 @@ namespace zz
     {
         if (isUI)
         {
-            const auto& inventoryUI = InventoryManager::GetInventoryUI();
+            const auto& inventoryUI = UIManager::GetInventoryUI();
 
             const std::vector<UI*>& lefts = inventoryUI[left];
             const std::vector<UI*>& rights = inventoryUI[right];
@@ -207,7 +207,7 @@ namespace zz
 
     void CollisionManger::ResetCollisionUI()
     {
-        const auto& inventoryUI = InventoryManager::GetInventoryUI();
+        const auto& inventoryUI = UIManager::GetInventoryUI();
         std::map<UINT64, bool>::iterator iter;
 
         for (UINT column = 0; column < (UINT)eUIType::End; column++)

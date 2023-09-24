@@ -16,6 +16,7 @@ namespace zz
         virtual void Render()       override;
 
         void SetMaxEnergy(float energy) { mMaxEnergy = mCurEnergy = energy; }
+        float GetLevitationEnergeRate() { return mCurEnergy / mMaxEnergy; }
 
     private:
         float   mMaxEnergy;
