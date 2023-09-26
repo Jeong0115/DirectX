@@ -10,6 +10,7 @@
 #include "zzObjectPoolManager.h"
 #include "zzCollisionManger.h"
 #include "zzBox2dWorld.h"
+#include "zzWrite.h"
 
 namespace zz
 {	
@@ -55,9 +56,11 @@ namespace zz
 
         PixelWorld::Initialize();
         renderer::Initialize();
+        WriteManager::Initialize();
         UIManager::Initialize();
         SceneManager::Initialize();
         ObjectPoolManager::Initialize();
+
 	}
 
 	void Application::Update()

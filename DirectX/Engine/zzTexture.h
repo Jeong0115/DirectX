@@ -30,6 +30,9 @@ namespace zz
         UINT GetImageWidth() { return (UINT)mImage.GetMetadata().width; }
         UINT GetImageHeight() { return (UINT)mImage.GetMetadata().height; }
 
+        ScratchImage& GetScratchImage() { return mImage; }
+        void UpdateImage();
+
     protected:
         ScratchImage mImage;
         Microsoft::WRL::ComPtr<ID3D11Texture2D> mTexture;

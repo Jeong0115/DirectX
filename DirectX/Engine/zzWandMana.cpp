@@ -7,7 +7,7 @@
 #include "zzUIManager.h"
 
 #include "zzRenderer.h"
-
+#include "zzEventManager.h"
 
 //#include 
 
@@ -16,6 +16,7 @@ namespace zz
     WandMana::WandMana()
         : UI(eUIType::HUD)
         , mBar(nullptr)
+        , mManaRate(0.0f)
     {
         createIcon();
     }
@@ -34,6 +35,8 @@ namespace zz
         Transform* tr = GetComponent<Transform>();
         tr->SetScale(Vector3(40.f, 2.f, 1.0f));
         tr->SetPosition(Vector3(585.f, 325.5f, 1.0f));
+
+        EventManager::RegisterListener(eEvent::Mana_Change, [this](const EvenetData& data) { OnEvent(data); });
 
         GameObject::Initialize();
 
@@ -54,7 +57,7 @@ namespace zz
     void WandMana::Render()
     {
         renderer::SliderCB sliderCB;
-        sliderCB.rate = 0.5f;
+        sliderCB.rate = mManaRate;
 
         ConstantBuffer* cb = renderer::constantBuffer[(UINT)eCBType::Slider];
         cb->SetBufferData(&sliderCB);
@@ -72,6 +75,11 @@ namespace zz
     }
     void WandMana::OnCollisionExit(GameObject* other)
     {
+    }
+
+    void WandMana::OnEvent(const EvenetData& data)
+    {
+        mManaRate = data.mana;
     }
 
     void WandMana::createIcon()

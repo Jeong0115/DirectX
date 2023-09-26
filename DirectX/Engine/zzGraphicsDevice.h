@@ -79,6 +79,7 @@ namespace zz::graphics
         void UpdateSubresource(ID3D11Resource* pDstResource, const void* pSrcData) { mContext->UpdateSubresource(pDstResource, 0, NULL, pSrcData, 2048 * 4, 0); }
 
         ID3D11Device* GetID3D11Device() { return mDevice.Get(); }
+        ID3D11DeviceContext* GetID3D11DeviceContext() { return mContext.Get(); }
         ID3D11ShaderResourceView* GetLightMapResource() { return mLightSRV.Get(); }
 
 	private:

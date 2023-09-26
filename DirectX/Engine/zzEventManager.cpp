@@ -6,6 +6,8 @@ namespace zz
 {
     std::vector<EventInfo> EventManager::mEventsInfo = {};
     std::vector<GameObject*> EventManager::mDeactivateList = {};
+    std::vector<std::vector<std::function<void(const EvenetData&)>>> EventManager::mEventListeners((UINT)eEvent::End);
+    std::vector<EvenetData> EventManager::mEventDatas = {};
 
     EventManager::EventManager()
     {
@@ -15,8 +17,22 @@ namespace zz
     {
     }
 
+    void EventManager::Initialize()
+    {
+        mEventListeners.resize((UINT)eEvent::End);
+    }
+
     void EventManager::Update()
     {
+        for (UINT i = 0; i < mEventDatas.size(); i++)
+        {
+            for (UINT j = 0; j < mEventListeners[(UINT)mEventDatas[i].eventType].size(); j++)
+            {
+                mEventListeners[(UINT)mEventDatas[i].eventType][j](mEventDatas[i]);
+            }
+        }
+        mEventDatas.clear();
+
         for (UINT i = 0; i < mDeactivateList.size(); i++)
         {
             delete mDeactivateList[i];
@@ -28,6 +44,16 @@ namespace zz
         }
         mEventsInfo.clear();
     }
+
+    void EventManager::RegisterEvent(EvenetData data)
+    {
+        mEventDatas.push_back(data);
+    }
+
+    void EventManager::RegisterListener(eEvent eventType, std::function<void(const EvenetData& data)> listener)
+    {
+        mEventListeners[(UINT)eventType].push_back(listener);
+    }   
 
     void EventManager::Execute(const EventInfo event)
     {

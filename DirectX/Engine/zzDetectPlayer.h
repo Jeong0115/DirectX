@@ -17,11 +17,10 @@ namespace zz
 
         void SetDetectRange(float range) { mDetectRange = range; }
 
+        //юс╫ц
         static Vector2 PlayerPos;
     private:
-        void rayCast();
-
-        
+        void rayCast();   
 
         float mDetectRange;
     };

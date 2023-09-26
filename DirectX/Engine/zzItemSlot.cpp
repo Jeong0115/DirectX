@@ -12,6 +12,8 @@ namespace zz
         , mSlotIndex(9)
         , mItem(nullptr)
         , mItemTexture(nullptr)
+        , mTextBox(nullptr)
+        , mbMouseOn(false)
     {
     }
 
@@ -28,6 +30,8 @@ namespace zz
             delete mItemTexture;
             mItemTexture = nullptr;
         }
+
+        delete mTextBox;
     }
 
     void ItemSlot::Initialize()
@@ -70,7 +74,14 @@ namespace zz
         if (mItemTexture != nullptr)
         {
             mItemTexture->Render();
+
+            if (mbMouseOn)
+            {
+                mTextBox->Render();
+            }
         }
+
+        
     }
 
     void ItemSlot::OnCollisionEnter(GameObject* other)
@@ -83,6 +94,7 @@ namespace zz
         {
             MeshRenderer* mesh = GetComponent<MeshRenderer>();
             mesh->SetMaterial(ResourceManager::Find<Material>(L"m_inventory_box_highlihgt"));
+            mbMouseOn = true;
         }
     }
 
@@ -92,6 +104,7 @@ namespace zz
         {
             MeshRenderer* mesh = GetComponent<MeshRenderer>();
             mesh->SetMaterial(ResourceManager::Find<Material>(L"m_inventory_box"));
+            mbMouseOn = false;
         }
     }
 
@@ -104,6 +117,13 @@ namespace zz
         {
             mItemTexture->MoveSlot(GetComponent<Transform>()->GetPosition());
             mItemTexture->SetSlotIndex(mSlotIndex);
+
+            mTextBox = mItem->GetTextBox();
+            mTextBox->GetComponent<Transform>()->SetPosition(Vector3(85.f, 220.f, 0.f));
+        }
+        else
+        {
+            mTextBox = nullptr;
         }
     }
 }

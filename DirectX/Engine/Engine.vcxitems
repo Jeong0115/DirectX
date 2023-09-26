@@ -51,6 +51,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)zzSpellSlot.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzSpellUI.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzStructedBuffer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzTextBox.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzUI.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzUICamera.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzCollider.cpp" />
@@ -121,6 +122,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)zzWandMana.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzWandScript.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzWater.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzWrite.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)CommonInclude.h" />
@@ -162,6 +164,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzSpellSlot.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzSpellUI.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzStructedBuffer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzTextBox.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzUI.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzUICamera.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzCollider.h" />
@@ -233,6 +236,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzWandMana.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzWandScript.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzWater.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzWrite.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzMath.inl" />

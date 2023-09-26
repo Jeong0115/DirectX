@@ -382,6 +382,12 @@
     <Filter Include="UI\HUD\Icon">
       <UniqueIdentifier>{040be5b8-2ca5-4190-aa26-f8dede9add16}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Etc">
+      <UniqueIdentifier>{1aabcb38-1670-49b9-b9e7-424338658feb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Inventory\TextBox">
+      <UniqueIdentifier>{b0655fe3-6bc1-4d03-8274-15ba068b46f9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzEntity.cpp">
@@ -450,7 +456,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)zzScript.cpp">
       <Filter>Component\Transform\Script</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)zzPixelGrid.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzSand.cpp">
       <Filter>Element\Solid\Movable\Sand</Filter>
     </ClCompile>
@@ -505,7 +510,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)zzPixelChunkMap.cpp">
       <Filter>PixelWorld</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)zzThreadPool.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzAnimator.cpp">
       <Filter>Component\Animator</Filter>
     </ClCompile>
@@ -686,6 +690,16 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)zzWandMana.cpp">
       <Filter>UI\HUD\WandMana</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzPixelGrid.cpp">
+      <Filter>Etc</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzThreadPool.cpp">
+      <Filter>Etc</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzWrite.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzTextBox.cpp">
+      <Filter>UI\Inventory\TextBox</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzEntity.h">
@@ -772,7 +786,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzScript.h">
       <Filter>Component\Transform\Script</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)zzPixelGrid.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzSand.h">
       <Filter>Element\Solid\Movable\Sand</Filter>
     </ClInclude>
@@ -836,7 +849,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzPixelChunkMap.h">
       <Filter>PixelWorld</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)zzThreadPool.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzElement.h">
       <Filter>PixelWorld</Filter>
     </ClInclude>
@@ -1016,6 +1028,16 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzWandMana.h">
       <Filter>UI\HUD\WandMana</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzPixelGrid.h">
+      <Filter>Etc</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzThreadPool.h">
+      <Filter>Etc</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzWrite.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzTextBox.h">
+      <Filter>UI\Inventory\TextBox</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

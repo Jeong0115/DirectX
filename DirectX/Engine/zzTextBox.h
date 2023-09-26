@@ -1,30 +1,26 @@
 #pragma once
 
 #include "zzUI.h"
-#include "zzInfoBoxTexture.h"
 
 namespace zz
 {
-    class InfoBox : public UI
+    class TextBox : public UI
     {
     public:
-        InfoBox(eUIType type);
-        virtual ~InfoBox();
+        TextBox(const std::wstring& text, Vector3 scale);
+        virtual ~TextBox();
 
         virtual void Initialize()   override;
         virtual void Update()       override;
         virtual void LateUpdate()   override;
         virtual void Render()       override;
 
-        void LinkWand(class Wand* wand, InfoBoxTexture* texture);
-
         virtual void OnCollisionEnter(GameObject* other)    override;
         virtual void OnCollisionStay(GameObject* other)     override;
         virtual void OnCollisionExit(GameObject* other)     override;
 
     private:
-        InfoBoxTexture* mWandtexture;
-        class Wand* mWand;
         class Texture* mText;
     };
 }
+

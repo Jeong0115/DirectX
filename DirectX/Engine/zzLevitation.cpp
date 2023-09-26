@@ -10,6 +10,8 @@
 #include "zzParticleShader.h"
 #include "zzTransform.h"
 
+#include "zzEventManager.h"
+
 #define ENERGY_DECREASE_PER_SECOND 1.0f
 #define ENERGY_INCREASE_PER_SECOND_GROUND 1.5f
 #define PARTICLE_SET_ACTIVE_TIME 0.05f
@@ -101,6 +103,12 @@ namespace zz
             mbFullEnergy = true;
         }
 
+        EvenetData data;
+        data.eventType = eEvent::Enenerge_Change;
+        data.energe = mCurEnergy / mMaxEnergy;
+
+        EventManager::RegisterEvent(data);
+        
         mParticle->Update();
     }
 

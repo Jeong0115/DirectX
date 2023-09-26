@@ -18,6 +18,9 @@
 #include "zzRigidBody.h"
 #include "zzLight.h"
 #include "zzDetectPlayer.h"
+#include "zzEventManager.h"
+
+
 namespace zz
 {
     Player::Player()
@@ -127,6 +130,13 @@ namespace zz
             {
                 mEquipment->UseEquipment();
             }
+
+            EvenetData data;
+            data.eventType = eEvent::Mana_Change;
+            data.mana = mEquipment->GetEquipmentRate();
+
+            EventManager::RegisterEvent(data);
+            
         }
     }
 

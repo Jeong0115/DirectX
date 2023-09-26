@@ -17,13 +17,16 @@ namespace zz
         virtual void LateUpdate();
         virtual void Render();
 
+        virtual float GetEquipmentRate() override;
         virtual void UseEquipment();
 
         int GetCapacity() { return mCapacity; }
+        
 
-        void SetInfoBox(InfoBox* infoBox) { mInfoBox = infoBox; }
-        InfoBox* GetInfoBox() { return mInfoBox; }
+        void SetInfoBox(InfoBox* infoBox)   { mInfoBox = infoBox; }
+        InfoBox* GetInfoBox()               { return mInfoBox; }
 
+        const std::wstring& GetInfoText() { return mInformation; }
         void SetSpell(Spell* spell, int index) { mSpells[index] = spell; }
 
     protected:
@@ -40,6 +43,7 @@ namespace zz
         Vector3 mTip;
 
         std::vector<Spell*> mSpells;
+        std::wstring mInformation;
 
     private:
         InfoBox* mInfoBox;

@@ -6,13 +6,15 @@
 #include "zzSpellSlot.h"
 #include "zzUIManager.h"
 #include "zzWand.h"
-
+#include "zzWrite.h"
+#include "zzRenderer.h"
 namespace zz
 {
     InfoBox::InfoBox(eUIType type)
         : UI(type)
         , mWandtexture(nullptr)
         , mWand(nullptr)
+        , mText(nullptr)
     {
     }
 
@@ -22,6 +24,11 @@ namespace zz
         {
             delete mWandtexture;
             mWandtexture = nullptr;
+        }
+        if (mText != nullptr)
+        {
+            delete mText;
+            mText = nullptr;
         }
     }
 
@@ -52,6 +59,33 @@ namespace zz
     {
         GameObject::Render();
         mWandtexture->Render();
+
+        if(mText != nullptr)
+        {
+            Matrix mWorld = Matrix::Identity;
+            Matrix scale = Matrix::CreateScale(Vector3(150.f * 0.8f, 60.f * 0.8f, 1.0f));
+            Matrix rotation;
+            rotation = Matrix::CreateRotationX(0.f);
+            rotation *= Matrix::CreateRotationY(0.f);
+            rotation *= Matrix::CreateRotationZ(0.f);
+
+            Matrix position = Matrix::CreateTranslation(GetComponent<Transform>()->GetPosition());
+            mWorld = scale * rotation * position;
+
+            renderer::TransformCB trCB = {};
+            trCB.mWorld = mWorld;
+            trCB.mView = Camera::GetGpuViewMatrix();
+            trCB.mProjection = Camera::GetGpuProjectionMatrix();
+            trCB.WorldViewProj = trCB.mWorld * trCB.mView * trCB.mProjection;
+
+            ConstantBuffer* cb = renderer::constantBuffer[(UINT)eCBType::Transform];
+            cb->SetBufferData(&trCB);
+            cb->BindConstantBuffer(eShaderStage::VS);
+
+            mText->BindShader(eShaderStage::PS, 0);
+            graphics::GetDevice()->DrawIndexed(6, 0, 0);
+        }
+
     }
 
     void InfoBox::LinkWand(Wand* wand, InfoBoxTexture* texture)
@@ -77,7 +111,9 @@ namespace zz
 
             UIManager::AddUIObject(spellBox, eUIType::SpellSlot);
         }
-    }
+
+        mText = WriteManager::Wrtie(mWand->GetInfoText(), Vector3(150.f, 60.f, 1.f));
+    } 
 
     void InfoBox::OnCollisionEnter(GameObject* other)
     {

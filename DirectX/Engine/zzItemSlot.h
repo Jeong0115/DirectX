@@ -3,6 +3,7 @@
 #include "zzUI.h"
 #include "zzEquipment.h"
 #include "zzItemTexture.h"
+#include "zzTextBox.h"
 
 namespace zz
 {
@@ -31,6 +32,9 @@ namespace zz
     private:
         Equipment*      mItem;
         ItemTexture*    mItemTexture;
+        TextBox*        mTextBox;
+
         UINT            mSlotIndex;
+        bool            mbMouseOn;
     };
 }

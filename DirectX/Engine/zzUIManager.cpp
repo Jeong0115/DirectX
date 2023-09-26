@@ -303,6 +303,7 @@ namespace zz
                     infoBox->Initialize();
 
                     dynamic_cast<Wand*>(equipment)->SetInfoBox(infoBox);
+
                     mUIObjects[(UINT)eUIType::InfoBox].push_back(infoBox);
                     break;
                 }

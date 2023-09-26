@@ -1,4 +1,5 @@
 #include "zzWand.h"
+#include "zzTime.h"
 
 namespace zz
 {
@@ -14,25 +15,48 @@ namespace zz
         , mSpells{}
         , mTip(Vector3::Zero)
         , mInfoBox(nullptr)
+        , mInformation{}
     {
     }
 
     Wand::~Wand()
     {
     }
+
     void Wand::Initialize()
     {
+        GameObject::Initialize();
     }
+
     void Wand::Update()
     {
+        if (mCurMana > mManaMax)
+        {
+            mCurMana = mManaMax;
+        }
+        else if (mCurMana < mManaMax)
+        {
+            mCurMana += static_cast<float>(Time::DeltaTime() * mManaChargeSpeed);
+        }
+        GameObject::Update();
     }
+
     void Wand::LateUpdate()
     {
+        GameObject::LateUpdate();
     }
+
     void Wand::Render()
     {
+        GameObject::Render();
     }
+
     void Wand::UseEquipment()
     {
+    }
+
+    float Wand::GetEquipmentRate()
+    {
+        return mCurMana / mManaMax;
     }
 }

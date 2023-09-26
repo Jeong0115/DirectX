@@ -72,6 +72,20 @@ namespace zz
         graphics::GetDevice()->BindShaderResource(eShaderStage::PS, 0, &srv);
     }
 
+    void Texture::UpdateImage()
+    {
+        CreateShaderResourceView
+        (
+            graphics::GetDevice()->GetID3D11Device()
+            , mImage.GetImages()
+            , mImage.GetImageCount()
+            , mImage.GetMetadata()
+            , mSRV.GetAddressOf()
+        );
+
+        mSRV->GetResource((ID3D11Resource**)mTexture.GetAddressOf());
+    }
+
 
     PixelTexture::PixelTexture()
     {

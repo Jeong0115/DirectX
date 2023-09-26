@@ -12,6 +12,7 @@
 #include "zzScene.h"
 
 #include "zzModifierSpell.h"
+#include "zzTextBox.h"
 
 namespace zz
 {
@@ -52,22 +53,43 @@ namespace zz
         animator->Create(L"BoltWand_0997", texture, Vector2(0.0f, 0.0f), Vector2(18.0f, 7.0f), 1, Vector2::Zero, 1.f);
         animator->PlayAnimation(L"BoltWand_0997", true);
 
-        GameObject::Initialize();
+        mInformation =
+            L"\n"
+            L"       Shuffle       No\n"
+            L"       Spells/Cast   1";
+
+        Wand::Initialize();
+
+        std::wstring textBox =
+            L" WAND\n"
+            L"\n"
+            L" Shuffle        No\n"
+            L" Spells/Cast    1\n"
+            L" Cast delay     0 s\n"
+            L" Rechrg. Time   2 s\n"
+            L" Mana max       143\n"
+            L" Mana chg. Spd  40\n"
+            L" Capacity       4\n"
+            L" Spread         0\n";
+
+
+        mTextBox = new TextBox(textBox, Vector3(140.f * 1.2f, 120.f * 1.2f, 1.0f));
+        mTextBox->Initialize();
     }
 
     void BoltWand_0997::Update()
     {
-        GameObject::Update();
+        Wand::Update();
     }
 
     void BoltWand_0997::LateUpdate()
     {
-        GameObject::LateUpdate();
+        Wand::LateUpdate();
     }
 
     void BoltWand_0997::Render()
     {
-        GameObject::Render();
+        Wand::Render();
     }
 
     void BoltWand_0997::UseEquipment()

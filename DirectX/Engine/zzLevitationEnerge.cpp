@@ -11,11 +11,14 @@
 #include "zzPlayer.h"
 #include "zzLevitation.h"
 
+#include "zzEventManager.h"
+
 namespace zz
 {
     LevitationEnerge::LevitationEnerge()
         : UI(eUIType::HUD)
         , mBar(nullptr)
+        , mEnergeRate(0.f)
     {
         createIcon();
     }
@@ -35,6 +38,7 @@ namespace zz
         tr->SetScale(Vector3(40.f, 2.f, 1.0f));
         tr->SetPosition(Vector3(585.f, 332.f, 1.0f));
 
+        EventManager::RegisterListener(eEvent::Enenerge_Change, [this](const EvenetData& data) {OnEvent(data); });
         GameObject::Initialize();
       
         createBar();
@@ -54,7 +58,7 @@ namespace zz
     void LevitationEnerge::Render()
     {
         renderer::SliderCB sliderCB;
-        sliderCB.rate = UIManager::mPlayer->GetComponent<Levitation>()->GetLevitationEnergeRate();
+        sliderCB.rate = mEnergeRate;
 
         ConstantBuffer* cb = renderer::constantBuffer[(UINT)eCBType::Slider];
         cb->SetBufferData(&sliderCB);
@@ -72,6 +76,11 @@ namespace zz
     }
     void LevitationEnerge::OnCollisionExit(GameObject* other)
     {
+    }
+
+    void LevitationEnerge::OnEvent(const EvenetData& data)
+    {
+        mEnergeRate = data.energe;
     }
 
     void LevitationEnerge::createIcon()

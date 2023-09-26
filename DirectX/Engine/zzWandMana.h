@@ -2,6 +2,7 @@
 
 #include "zzUI.h"
 
+
 namespace zz
 {
     class WandMana : public UI
@@ -19,11 +20,15 @@ namespace zz
         virtual void OnCollisionStay(GameObject* other)     override;
         virtual void OnCollisionExit(GameObject* other)     override;
 
+        void OnEvent(const struct EvenetData& data);
+
     private:
         void createIcon();
         void createBar();
 
         class BarBackGround* mBar;
+
+        float mManaRate;
     };
 }
 

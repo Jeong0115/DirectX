@@ -5,6 +5,7 @@
 #include "zzAnimator.h"
 #include "zzMeshRenderer.h"
 #include "zzMaterial.h"
+#include "zzTextBox.h"
 
 namespace zz
 {
@@ -13,7 +14,7 @@ namespace zz
         mCapacity = 3;
         mManaMax = 113;
         mManaChargeSpeed = 30;
-        mCurMana = mManaMax;
+        mCurMana = 10;
         mCastDelay = 0.f;
         mReChargeTime = 2.f;
         mSpread = 2.f;
@@ -44,22 +45,43 @@ namespace zz
         animator->Create(L"BlastWand_0585", texture, Vector2(0.0f, 0.0f), Vector2(15.0f, 7.0f), 1, Vector2::Zero, 1.f);
         animator->PlayAnimation(L"BlastWand_0585", true);
 
-        GameObject::Initialize();
+        mInformation = 
+            L"\n"
+            L"       Shuffle       No\n"
+            L"       Spells/Cast   1";
+
+        Wand::Initialize();
+
+        std::wstring textBox =
+            L" WAND\n"
+            L"\n"
+            L" Shuffle        No\n"
+            L" Spells/Cast    1\n"
+            L" Cast delay     0 s\n"
+            L" Rechrg. Time   2 s\n"
+            L" Mana max       113\n"
+            L" Mana chg. Spd  30\n"
+            L" Capacity       3\n"
+            L" Spread         2\n";
+
+
+        mTextBox = new TextBox(textBox, Vector3(140.f * 1.2f, 120.f * 1.2f, 1.0f));
+        mTextBox->Initialize();
     }
 
     void BlastWand_0585::Update()
     {
-        GameObject::Update();
+        Wand::Update();
     }
 
     void BlastWand_0585::LateUpdate()
     {
-        GameObject::LateUpdate();
+        Wand::LateUpdate();
     }
 
     void BlastWand_0585::Render()
     {
-        GameObject::Render();
+        Wand::Render();
     }
     void BlastWand_0585::UseEquipment()
     {

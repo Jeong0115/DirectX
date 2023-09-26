@@ -51,6 +51,7 @@ namespace zz
 
         Highligt,
 
+        TextBox,
         Mouse,
 
         End
