@@ -24,7 +24,6 @@ namespace zz
         Vector3 mDirection;
 
         float   mSpeed;
-        float   mCastDelay;
         float   mSpread;
         float   mDamage;
     };

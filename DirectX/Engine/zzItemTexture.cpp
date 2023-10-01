@@ -7,6 +7,7 @@
 #include "zzInput.h"
 #include "zzCollider.h"
 #include "zzTime.h"
+#include "zzSpellSlot.h"
 
 namespace zz
 {
@@ -39,7 +40,16 @@ namespace zz
 
             if ((pos.x - mSlotPos.x) * (pos.x - mSlotPos.x) + (pos.y - mSlotPos.y) * (pos.y - mSlotPos.y) <= 15.0f)
             {
-                transform->SetPosition(mSlotPos);
+                if (mOwner == nullptr)
+                {
+                    transform->SetPosition(mSlotPos);
+                }
+                else
+                {
+                    transform->SetPosition(Vector3(0, 0, 0));
+                    transform->SetParent(mOwner->GetComponent<Transform>());
+                }
+                
                 mbMove = false;
             }
             else
@@ -50,7 +60,7 @@ namespace zz
                 transform->SetPosition(pos + direction * 400.f * (float)Time::DeltaTime());
             }
         }
-
+         
         GameObject::Update();
     }
 
@@ -90,17 +100,20 @@ namespace zz
         mbMove = true;
     }
 
+    void ItemTexture::SetControllMouse()
+    {
+        GetComponent<Transform>()->SetParent(nullptr);
+    }
+
 
     void ItemTexture::OnCollisionEnter(GameObject* other)
     {
         
     }
-
     void ItemTexture::OnCollisionStay(GameObject* other)
     {
         
     }
-
     void ItemTexture::OnCollisionExit(GameObject* other)
     {
     }

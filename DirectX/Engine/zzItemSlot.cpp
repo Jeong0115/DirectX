@@ -31,7 +31,7 @@ namespace zz
             mItemTexture = nullptr;
         }
 
-        delete mTextBox;
+        mTextBox = nullptr;
     }
 
     void ItemSlot::Initialize()
@@ -112,14 +112,25 @@ namespace zz
     {
         mItem = item; 
         mItemTexture = tex;
-        
+
         if(mItemTexture != nullptr)
         {
-            mItemTexture->MoveSlot(GetComponent<Transform>()->GetPosition());
+            Vector3 pos = GetComponent<Transform>()->GetWorldPosition();
+
+            mItemTexture->MoveSlot(pos);
             mItemTexture->SetSlotIndex(mSlotIndex);
 
             mTextBox = mItem->GetTextBox();
-            mTextBox->GetComponent<Transform>()->SetPosition(Vector3(85.f, 220.f, 0.f));
+
+            Transform* texTr = mTextBox->GetComponent<Transform>();
+            Vector3 scale = texTr->GetScale();
+
+            if (pos.x - scale.x / 2 - 15.f <= 0.f)
+            {
+                pos.x -= pos.x - scale.x / 2 - 15.f;
+            }
+
+            texTr->SetPosition(pos.x, pos.y - scale.y / 2 - 15.f, 0.0f);
         }
         else
         {

@@ -5,7 +5,6 @@ namespace zz
     ProjectileSpell::ProjectileSpell()
         : mDirection(Vector3::Zero)
         , mSpeed(0.0f)
-        , mCastDelay(0.0f)
         , mSpread(0.0f)
         , mDamage(0.0f)
     {

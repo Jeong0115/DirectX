@@ -23,11 +23,13 @@ namespace zz
         virtual void Render();
 
         eSpellType GetSpellType() { return mType; }
+        float GetManaDrain() { return mManaDrain; }
+        float GetCastDelay() { return mCastDelay; }
             
     protected:
-        eSpellType mType;
+        eSpellType  mType;
 
-        float mManaDrain;
-
+        float       mManaDrain;
+        float       mCastDelay;
     };
 }

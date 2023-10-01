@@ -388,6 +388,9 @@
     <Filter Include="UI\Inventory\TextBox">
       <UniqueIdentifier>{b0655fe3-6bc1-4d03-8274-15ba068b46f9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameObject\TextObject">
+      <UniqueIdentifier>{52a4a64c-db70-4dd3-ad05-111a3a48b4df}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzEntity.cpp">
@@ -699,6 +702,9 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)zzWrite.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzTextBox.cpp">
       <Filter>UI\Inventory\TextBox</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzTextObject.cpp">
+      <Filter>GameObject\TextObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1038,6 +1044,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzWrite.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzTextBox.h">
       <Filter>UI\Inventory\TextBox</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzTextObject.h">
+      <Filter>GameObject\TextObject</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

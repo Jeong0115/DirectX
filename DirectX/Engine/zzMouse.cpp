@@ -93,11 +93,15 @@ namespace zz
                 }
             }
 
-            if (uiObject->GetUIType() == eUIType::SpellSlot && Input::GetKeyDown(eKeyCode::LBUTTON))
+            if ((uiObject->GetUIType() == eUIType::SpellSlot || uiObject->GetUIType() == eUIType::WandSlot) && Input::GetKeyDown(eKeyCode::LBUTTON))
             {
                 mControllUI = dynamic_cast<SpellSlot*>(uiObject)->GetItemTexture();
+                if (mControllUI != nullptr)
+                {
+                    mControllUI->SetControllMouse();
+                }
             }
-            else if (uiObject->GetUIType() == eUIType::SpellSlot && Input::GetKeyUp(eKeyCode::LBUTTON))
+            else if ((uiObject->GetUIType() == eUIType::SpellSlot || uiObject->GetUIType() == eUIType::WandSlot) && Input::GetKeyUp(eKeyCode::LBUTTON))
             {
                 if (mControllUI != nullptr && mControllUI->GetTextureType() == eTextureType::Spell)
                 {

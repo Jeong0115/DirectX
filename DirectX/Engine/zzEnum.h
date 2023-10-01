@@ -40,18 +40,18 @@ namespace zz
     {
         BG,
         HUD,
-        InfoBox,
-
-        ItemSlot,
-        SpellSlot,
+        InfoBox,    
+        
         WandSlot,
+        SpellSlot,
+        ItemSlot,
 
         Item,
         Spell,
 
         Highligt,
 
-        TextBox,
+        TextObj,
         Mouse,
 
         End

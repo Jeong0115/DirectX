@@ -34,6 +34,8 @@ namespace zz
         static void Initialize();
         static void Update();
         static void Render();
+        static void Release();
+
         static void ReconstructBody(StaticElementsBody body);
         static void ReconstructBody(std::vector<int>& a);
         static void Draw(int x, int y);

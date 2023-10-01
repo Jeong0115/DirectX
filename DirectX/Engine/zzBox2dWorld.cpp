@@ -31,7 +31,7 @@ namespace zz
 
     Box2dWorld::~Box2dWorld()
     {
-        delete mDrawBow2dBody;
+        
     }
 
     void Box2dWorld::Initialize()
@@ -149,6 +149,12 @@ namespace zz
         cb->BindConstantBuffer(eShaderStage::PS);
 
         mBox2dWorld->DebugDraw();
+    }
+
+    void Box2dWorld::Release()
+    {
+        delete mDrawBow2dBody;
+        delete mBox2dWorld;
     }
 
     void Box2dWorld::ReconstructBody(std::vector<int>& a)

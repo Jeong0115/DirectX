@@ -9,6 +9,9 @@
 using namespace zz;
 using namespace zz::graphics;
 
+
+
+
 namespace zz::renderer
 {
     zz::Camera* mainCamera = nullptr;
@@ -207,6 +210,11 @@ namespace zz::renderer
         sliderShader->CreateShader(eShaderStage::VS, L"SpriteVS.hlsl", "main");
         sliderShader->CreateShader(eShaderStage::PS, L"SliderPS.hlsl", "main");
         ResourceManager::Insert(L"SliderShader", sliderShader);
+
+		std::shared_ptr<Shader> textShader = std::make_shared<Shader>();
+		textShader->CreateShader(eShaderStage::VS, L"SpriteVS.hlsl", "main");
+		textShader->CreateShader(eShaderStage::PS, L"TextPS.hlsl", "main");
+		ResourceManager::Insert(L"TextShader", textShader);
 
         std::shared_ptr<Shader> lightShader = std::make_shared<Shader>();
         lightShader->CreateShader(eShaderStage::VS, L"LightVS.hlsl", "main");
@@ -502,6 +510,9 @@ namespace zz::renderer
 
         shader = ResourceManager::Find<Shader>(L"LightShader");
         GetDevice()->CreateInputLayout(arrLayout, 3, shader->GetVSCode(), shader->GetInputLayoutAddressOf());
+
+		shader = ResourceManager::Find<Shader>(L"TextShader");
+		GetDevice()->CreateInputLayout(arrLayout, 3, shader->GetVSCode(), shader->GetInputLayoutAddressOf());
 
         shader = ResourceManager::Find<Shader>(L"LightMapShader");
         GetDevice()->CreateInputLayout(arrLayout, 3, shader->GetVSCode(), shader->GetInputLayoutAddressOf());
@@ -878,6 +889,25 @@ namespace zz::renderer
         material->SetShader(spriteShader);
         material->SetTexture(reload);
         ResourceManager::Insert(L"m_reload", material);
+
+        std::shared_ptr<Texture> text_box = ResourceManager::Load<Texture>(L"text_box", L"..\\Resources\\Texture\\UI\\text_box.png");
+        material = std::make_shared<Material>();
+        material->SetShader(spriteShader);
+        material->SetTexture(text_box);
+        ResourceManager::Insert(L"m_text_box", material);
+
+        ResourceManager::Load<Texture>(L"icon_action_type", L"..\\Resources\\Texture\\UI\\icon_action_type.png");
+        ResourceManager::Load<Texture>(L"icon_damage_projectile", L"..\\Resources\\Texture\\UI\\icon_damage_projectile.png");
+        ResourceManager::Load<Texture>(L"icon_fire_rate_wait", L"..\\Resources\\Texture\\UI\\icon_fire_rate_wait.png");
+        ResourceManager::Load<Texture>(L"icon_mana_drain", L"..\\Resources\\Texture\\UI\\icon_mana_drain.png");
+        ResourceManager::Load<Texture>(L"icon_reload_time", L"..\\Resources\\Texture\\UI\\icon_reload_time.png");
+        ResourceManager::Load<Texture>(L"icon_speed_multiplier", L"..\\Resources\\Texture\\UI\\icon_speed_multiplier.png");
+        ResourceManager::Load<Texture>(L"icon_spread_degrees", L"..\\Resources\\Texture\\UI\\icon_spread_degrees.png");
+        ResourceManager::Load<Texture>(L"icon_gun_actions_per_round", L"..\\Resources\\Texture\\UI\\icon_gun_actions_per_round.png");
+        ResourceManager::Load<Texture>(L"icon_gun_capacity", L"..\\Resources\\Texture\\UI\\icon_gun_capacity.png");
+        ResourceManager::Load<Texture>(L"icon_mana_charge_speed", L"..\\Resources\\Texture\\UI\\icon_mana_charge_speed.png");
+        ResourceManager::Load<Texture>(L"icon_mana_max", L"..\\Resources\\Texture\\UI\\icon_mana_max.png");
+        ResourceManager::Load<Texture>(L"icon_gun_shuffle", L"..\\Resources\\Texture\\UI\\icon_gun_shuffle.png");
     }
 
     void LoadWandTextureResource()

@@ -40,7 +40,6 @@ namespace zz
 
     PixelWorld::~PixelWorld()
     {
-        int c = 0;
     }
 
     void PixelWorld::Initialize()
@@ -109,6 +108,8 @@ namespace zz
         }
 
         delete mImage;
+
+        Box2dWorld::Release();
        // std::unordered_map<std::pair<int, int>, PixelChunk*, pair_hash> PixelWorld::mChunkMapLookUp = {};
     }
 
@@ -200,19 +201,25 @@ namespace zz
     }
 
     void PixelWorld::CreateNewWorld()
-    {
+    {          
         srand(time(NULL));
-
+        
         int x = 260;
         int y = 260;
-
+  
+        //int* a = new int;
         cv::Mat wangTileImage = cv::imread("..\\Resources\\Texture\\WangTiles\\Coalmine\\coalmine.png", cv::IMREAD_COLOR);
+        //int* b = new int;
+
+        
         cv::cvtColor(wangTileImage, wangTileImage, cv::COLOR_BGR2RGB);
+
         stbhw_tileset tileset;
 
         stbhw_build_tileset_from_image(&tileset, (unsigned char*)wangTileImage.data, wangTileImage.cols * 3, wangTileImage.cols, wangTileImage.rows);
+        
         unsigned char* tileData = (unsigned char*)malloc(3 * x * y);
-
+        
         stbhw_generate_image(&tileset, NULL, tileData, x*3, x, y);
         cv::Mat randTileImage(x, y, CV_8UC3, tileData);
 
@@ -615,12 +622,15 @@ namespace zz
             }
         }
 
-        cv::cvtColor(randTileImage, randTileImage, cv::COLOR_RGB2BGR);
-        cv::resize(randTileImage, randTileImage, cv::Size(), 2,2, cv::INTER_NEAREST);
+        //cv::cvtColor(randTileImage, randTileImage, cv::COLOR_RGB2BGR);
+        //cv::resize(randTileImage, randTileImage, cv::Size(), 2,2, cv::INTER_NEAREST);
 
-        cv::imshow("Generated Map", randTileImage);
+        //cv::imshow("Generated Map", randTileImage);
 
+        stbhw_free_tileset(&tileset);
         free(tileData);
+        
+        wangTileImage.release();
     }
 
     void PixelWorld::InsertElementFromImage(int y, int x, const cv::Mat& image, Element& element)

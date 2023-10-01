@@ -53,8 +53,9 @@ namespace zz
 	{
         Time::Initialize();
         Input::Initialize();
-
+        
         PixelWorld::Initialize();
+
         renderer::Initialize();
         WriteManager::Initialize();
         UIManager::Initialize();

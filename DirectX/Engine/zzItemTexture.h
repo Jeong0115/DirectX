@@ -28,6 +28,8 @@ namespace zz
         void MoveSlot(Vector3 pos);
         void MoveOriginSlot();
 
+        void SetControllMouse();
+
         void SetSlotIndex(UINT index) { mSlotIndex = index; }
         UINT GetSlotIndex() { return mSlotIndex; }
 

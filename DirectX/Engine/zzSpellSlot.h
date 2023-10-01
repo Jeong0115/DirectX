@@ -3,6 +3,7 @@
 #include "zzUI.h"
 #include "zzSpellUI.h"
 #include "zzItemTexture.h"
+#include "zzTextBox.h"
 
 namespace zz
 {
@@ -36,10 +37,12 @@ namespace zz
     private:
         SpellUI*        mSpell;
         ItemTexture*    mItemTexture;
+        TextBox*        mTextBox;
         UINT            mSlotIndex;
         bool            mbSlotInWand;
 
         class Wand*     mOwnerWand;
+        bool            mbMouseOn;
     };
 }
 

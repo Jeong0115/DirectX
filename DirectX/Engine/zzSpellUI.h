@@ -20,9 +20,11 @@ namespace zz
         virtual void OnCollisionExit(GameObject* other)     override;
 
         class Spell* GetSpell() { return mSpell; }
+        class TextBox* GetTextBox() { return mTextBox; }
 
     protected:
-        class Spell* mSpell;
+        class Spell*    mSpell;
+        class TextBox*  mTextBox;
     };
 }
 

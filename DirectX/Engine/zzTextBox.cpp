@@ -7,18 +7,19 @@
 namespace zz
 {
     TextBox::TextBox(const std::wstring& text, Vector3 scale)
-        : UI(eUIType::TextBox)
+        : UI(eUIType::TextObj)
     {
-        mText = WriteManager::Wrtie(text, scale);
+        mText = WriteManager::WrtieItemInformation(text, scale);
     }
     TextBox::~TextBox()
     {
+        delete mText;
     }
 
     void TextBox::Initialize()
     {
         MeshRenderer* mesh = AddComponent<MeshRenderer>();
-        mesh->SetMaterial(ResourceManager::Find<Material>(L"m_info_box"));
+        mesh->SetMaterial(ResourceManager::Find<Material>(L"m_text_box"));
         mesh->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
 
         GetComponent<Transform>()->SetScale(Vector3(140.f, 120.f, 1.0f));

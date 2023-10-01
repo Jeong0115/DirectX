@@ -53,20 +53,22 @@ namespace zz
         Wand::Initialize();
 
         std::wstring textBox =
-            L" WAND\n"
             L"\n"
-            L" Shuffle        No\n"
-            L" Spells/Cast    1\n"
-            L" Cast delay     0 s\n"
-            L" Rechrg. Time   2 s\n"
-            L" Mana max       113\n"
-            L" Mana chg. Spd  30\n"
-            L" Capacity       3\n"
-            L" Spread         2\n";
+            L"  WAND\n"
+            L"\n"
+            L"  \x0D Shuffle        No\n"
+            L"  \x08 Spells/Cast    1\n"
+            L"  \x03 Cast delay     0.0 s\n"
+            L"  \x05 Rechrg.Time    2.0 s\n"
+            L"  \x0C Mana max       113\n"
+            L"  \x0B Mana chg. Spd  30\n"
+            L"  \x09 Capacity       3\n"
+            L"  \x07 Spread         2.0 DEG\n";
 
 
-        mTextBox = new TextBox(textBox, Vector3(140.f * 1.2f, 120.f * 1.2f, 1.0f));
+        mTextBox = new TextBox(textBox, Vector3(180.f, 100.f, 1.0f));
         mTextBox->Initialize();
+        mTextBox->GetComponent<Transform>()->SetScale(180.f, 100.f, 1.0f);
     }
 
     void BlastWand_0585::Update()
@@ -85,5 +87,6 @@ namespace zz
     }
     void BlastWand_0585::UseEquipment()
     {
+        Wand::UseEquipment();
     }
 }

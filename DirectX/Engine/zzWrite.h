@@ -20,6 +20,7 @@ namespace zz
 
         static void Initialize();
         static class Texture* Wrtie(const std::wstring& writing, math::Vector3 scale);
+        static class Texture* WrtieItemInformation(const std::wstring& writing, math::Vector3 scale);
 
     private:
         static void insertData();

@@ -1,21 +1,20 @@
-﻿
+﻿#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+
+#ifdef _DEBUG
+#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
+#define new DBG_NEW
+#else
+#define DBG_NEW new
+#endif
+
 #include "framework.h"
 #include "WinEditor.h"
 #include "..\Engine\zzApplication.h"
 #include "..\Engine\zzPixelWorld.h"
 #include "..\Engine\zzRenderer.h"
 #include "zzEditor.h"
-
-#define _CRTDBG_MAP_ALLOC
-#include <cstdlib>
-#include <crtdbg.h>
-
-#ifdef _DEBUG
-#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
-#else
-#define DBG_NEW new
-#endif
-
 
 #ifdef _DEBUG
 #pragma comment(lib, "..\\x64\\Debug\\WinEngine.lib")
@@ -68,7 +67,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_ int       nCmdShow)
 {
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-    _CrtSetBreakAlloc(158);
+    _CrtSetBreakAlloc(1);
+    //_crtBreakAlloc = 156;
 
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
@@ -114,6 +114,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 //    list_remaining_d3d_objects();
 //#endif
 
+    //_CrtDumpMemoryLeaks();
     return (int) msg.wParam;
 }
 
@@ -157,7 +158,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    ShowWindow(hWnd, nCmdShow);
    
    UpdateWindow(hWnd);
-   
+
    application.Initialize();
    Editor::Initialize();
 

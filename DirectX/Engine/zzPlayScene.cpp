@@ -18,6 +18,14 @@
 #include "zzShotGunner_Weak.h"
 #include "zzCollisionManger.h"
 
+#ifdef _DEBUG
+#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
+#define new DBG_NEW
+#else
+#define DBG_NEW new
+#endif
+
+
 namespace zz
 {
     GameObject* camera;
@@ -62,14 +70,14 @@ namespace zz
         MainCamera* cameraComp = camera->AddComponent<MainCamera>();
         camera->AddComponent<CameraScript>();
         cameraComp->SetSize(0.25f);
-        cameraComp->TurnLayerMask(eLayerType::UI, false);
+        //cameraComp->TurnLayerMask(eLayerType::UI, false);
         renderer::cameras.push_back(cameraComp);
         renderer::mainCamera = cameraComp;
 
         {
             GameObject* uiCamera = new GameObject();
         	AddGameObject(uiCamera, eLayerType::Camera);
-            uiCamera->GetComponent<Transform>()->SetPosition(Vector3(320.f, 180.f, -1.0f));
+            uiCamera->GetComponent<Transform>()->SetPosition(Vector3(320.f, 180.f, -100.0f));
         	UICamera* uiCameraComp = uiCamera->AddComponent<UICamera>();
             uiCameraComp->SetSize(0.4f);
             renderer::cameras.push_back(uiCameraComp);

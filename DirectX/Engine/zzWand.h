@@ -40,6 +40,12 @@ namespace zz
         float   mReChargeTime;
         float   mSpread;
 
+        float   mCurCastDelay;
+        float   mCurReChargeTime;
+
+        bool    mbCastDelay;
+        bool    mbReCharge;
+
         Vector3 mTip;
 
         std::vector<Spell*> mSpells;

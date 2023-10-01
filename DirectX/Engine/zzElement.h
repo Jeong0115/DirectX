@@ -1,7 +1,9 @@
 #pragma once
 
+
 #include "zzEngine.h"
 #include "zzElementColor.h"
+
 
 namespace zz
 {
@@ -171,6 +173,7 @@ namespace zz
     const uint32_t Sand_2 = { 0xFFE9FC5A };
 
     std::vector<uint32_t> SandColors = { Sand_0, Sand_1, Sand_2 };
+    // °¡²û ÅÍÁü ¼öÁ¤ ¿ä¸Á
     inline uint32_t RandomSandColor() { return SandColors[static_cast<int>(random() * SandColors.size())]; }
 
     const uint32_t Red      = { 0xFFFF0000 };

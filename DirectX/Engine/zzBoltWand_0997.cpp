@@ -6,12 +6,6 @@
 #include "zzMeshRenderer.h"
 #include "zzMaterial.h"
 
-#include "zzSparkBolt.h"
-#include "zzInput.h"
-#include "zzSceneManager.h"
-#include "zzScene.h"
-
-#include "zzModifierSpell.h"
 #include "zzTextBox.h"
 
 namespace zz
@@ -61,20 +55,22 @@ namespace zz
         Wand::Initialize();
 
         std::wstring textBox =
-            L" WAND\n"
             L"\n"
-            L" Shuffle        No\n"
-            L" Spells/Cast    1\n"
-            L" Cast delay     0 s\n"
-            L" Rechrg. Time   2 s\n"
-            L" Mana max       143\n"
-            L" Mana chg. Spd  40\n"
-            L" Capacity       4\n"
-            L" Spread         0\n";
+            L"  WAND\n"
+            L"\n"
+            L"  \x0D Shuffle        No\n"
+            L"  \x08 Spells/Cast    1\n"
+            L"  \x03 Cast delay     0.0 s\n"
+            L"  \x05 Rechrg.Time    2.0 s\n"
+            L"  \x0C Mana max       143\n"
+            L"  \x0B Mana chg. Spd  40\n"
+            L"  \x09 Capacity       4\n"
+            L"  \x07 Spread         0.0 DEG\n";
 
 
-        mTextBox = new TextBox(textBox, Vector3(140.f * 1.2f, 120.f * 1.2f, 1.0f));
+        mTextBox = new TextBox(textBox, Vector3(180.f, 100.f, 1.0f));
         mTextBox->Initialize();
+        mTextBox->GetComponent<Transform>()->SetScale(180.f, 100.f, 1.0f);
     }
 
     void BoltWand_0997::Update()
@@ -94,66 +90,6 @@ namespace zz
 
     void BoltWand_0997::UseEquipment()
     {
-        Vector3 pos = GetComponent<Transform>()->GetWorldPosition();
-        Vector3 mousePos = Input::GetMouseWorldPos();
-
-        Vector3 direction = mousePos - pos;
-        direction.Normalize();
-        direction.z = 0.f;
-
-        UINT lastIndex = mCurSpellIndex;
-
-        std::vector<ModifierSpell*> mModifiers;
-
-        while (true)
-        {
-            if (mSpells[mCurSpellIndex] != nullptr)
-            {
-                Spell* spell = mSpells[mCurSpellIndex];
-
-                if (spell->GetSpellType() == eSpellType::Projectile)
-                {
-                    ProjectileSpell* transClass = dynamic_cast<ProjectileSpell*>(spell);
-                    ProjectileSpell* attackSpell = transClass->Clone();
-
-                    attackSpell->SetDirection(direction);
-                    attackSpell->GetComponent<Transform>()->SetPosition(pos.x + mTip.x / 2, pos.y, pos.z);
-                    attackSpell->GetComponent<Transform>()->SetRotation(GetComponent<Transform>()->GetWorldRotation());
-
-                    if (!mModifiers.empty())
-                    {
-                        mModifiers[0]->ModifierProjectile(attackSpell);
-                        mModifiers.clear();
-                    }
-                    else
-                    {
-                        int a = 0;
-                    }
-
-                    attackSpell->Initialize();
-
-                    SceneManager::GetActiveScene()->AddGameObject(attackSpell, eLayerType::PlayerAttack);
-                    mCurSpellIndex++;
-                    break;
-                }
-
-                else if (spell->GetSpellType() == eSpellType::Utility)
-                {
-                    mModifiers.push_back(dynamic_cast<ModifierSpell*>(spell));
-                }
-            }
-
-            mCurSpellIndex++;
-            if (mCurSpellIndex == mCapacity)
-            {
-                mCurSpellIndex = 0;
-            }
-
-            if (mCurSpellIndex == lastIndex)
-            {
-                break;
-            }
-        }
-
+        Wand::UseEquipment();
     }
 }

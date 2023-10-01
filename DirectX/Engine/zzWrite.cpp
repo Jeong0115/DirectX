@@ -60,7 +60,94 @@ namespace zz
 
             if (FAILED(hr))
             {
-                int a = 0;
+                assert(false);
+            }
+        }
+
+        writingTexture->UpdateImage();
+        return writingTexture;
+    }
+
+    Texture* WriteManager::WrtieItemInformation(const std::wstring& writing, math::Vector3 scale)
+    {
+        std::shared_ptr<Texture> icon_action_type           = ResourceManager::Find<Texture>(L"icon_action_type");
+        std::shared_ptr<Texture> icon_damage_projectile     = ResourceManager::Find<Texture>(L"icon_damage_projectile");
+        std::shared_ptr<Texture> icon_fire_rate_wait        = ResourceManager::Find<Texture>(L"icon_fire_rate_wait");
+        std::shared_ptr<Texture> icon_mana_drain            = ResourceManager::Find<Texture>(L"icon_mana_drain");
+        std::shared_ptr<Texture> icon_reload_time           = ResourceManager::Find<Texture>(L"icon_reload_time");
+        std::shared_ptr<Texture> icon_speed_multiplier      = ResourceManager::Find<Texture>(L"icon_speed_multiplier");
+        std::shared_ptr<Texture> icon_spread_degrees        = ResourceManager::Find<Texture>(L"icon_spread_degrees");
+        std::shared_ptr<Texture> icon_gun_actions_per_round = ResourceManager::Find<Texture>(L"icon_gun_actions_per_round");
+        std::shared_ptr<Texture> icon_gun_capacity          = ResourceManager::Find<Texture>(L"icon_gun_capacity");
+        std::shared_ptr<Texture> icon_mana_charge_speed     = ResourceManager::Find<Texture>(L"icon_mana_charge_speed");
+        std::shared_ptr<Texture> icon_mana_max              = ResourceManager::Find<Texture>(L"icon_mana_max");
+        std::shared_ptr<Texture> icon_gun_shuffle           = ResourceManager::Find<Texture>(L"icon_gun_shuffle");
+
+        std::shared_ptr<Texture> font_pixel = ResourceManager::Load<Texture>(L"font_pixel", L"..\\Resources\\Font\\font_pixel.png");
+        Texture* writingTexture = new Texture();
+
+        ScratchImage& srcImage = font_pixel->GetScratchImage();
+        ScratchImage& dstImage = writingTexture->GetScratchImage();
+
+        dstImage.Initialize2D(DXGI_FORMAT_B8G8R8A8_UNORM, scale.x, scale.y, 1, 1);
+
+        int line = 0;
+        int word = 0;
+
+        for (int i = 0; i < writing.size(); i++)
+        {
+            if (writing[i] == 10)
+            {
+                word = 0;
+                line++;
+
+                continue;
+            }
+            else if (writing[i] == 32)
+            {
+                word++;
+
+                continue;
+            }
+            else if (writing[i] >= 1 && writing[i] <= 13)
+            {
+                ScratchImage& iconImage = [&]() ->ScratchImage&
+                    {
+                        switch (writing[i])
+                        {
+                        case 1:     return icon_action_type->GetScratchImage();
+                        case 2:     return icon_damage_projectile->GetScratchImage();
+                        case 3:     return icon_fire_rate_wait->GetScratchImage();
+                        case 4:     return icon_mana_drain->GetScratchImage();
+                        case 5:     return icon_reload_time->GetScratchImage();
+                        case 6:     return icon_speed_multiplier->GetScratchImage();
+                        case 7:     return icon_spread_degrees->GetScratchImage();
+                        case 8:     return icon_gun_actions_per_round->GetScratchImage();
+                        case 9:     return icon_gun_capacity->GetScratchImage();
+                        case 11:    return icon_mana_charge_speed->GetScratchImage();
+                        case 12:    return icon_mana_max->GetScratchImage();
+                        case 13:    return icon_gun_shuffle->GetScratchImage();
+                        default:    throw std::runtime_error("Invalid choice");
+                        }
+                    }();
+
+                 Rect rect(0, 0, 7, 7);
+
+                 HRESULT hr = CopyRectangle(*iconImage.GetImage(0, 0, 0), rect
+                     , *dstImage.GetImage(0, 0, 0), TEX_FILTER_DEFAULT, word++ * 6, (line * 8) + 2);
+
+                 continue;
+            }
+
+            FontData data = mFontPixelData.find(writing[i])->second;
+            Rect rect(data.rect_x, data.rect_y, data.rect_w, data.rect_h);
+
+            HRESULT hr = CopyRectangle(*srcImage.GetImage(0, 0, 0), rect
+                , *dstImage.GetImage(0, 0, 0), TEX_FILTER_DEFAULT, word++ * 6, line * 8);
+
+            if (FAILED(hr))
+            {
+                assert(false);
             }
         }
 

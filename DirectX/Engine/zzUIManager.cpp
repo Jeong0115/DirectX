@@ -24,6 +24,14 @@
 #include "zzLevitationEnerge.h"
 #include "zzWandMana.h"
 
+#ifdef _DEBUG
+#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
+#define new DBG_NEW
+#else
+#define DBG_NEW new
+#endif
+
+
 namespace zz
 {
     UINT UIManager::mEquipItemIndex = 9;
@@ -118,6 +126,7 @@ namespace zz
 
         CollisionManger::SetCollisionUI(eUIType::Mouse, eUIType::ItemSlot, true);
         CollisionManger::SetCollisionUI(eUIType::Mouse, eUIType::SpellSlot, true);
+        CollisionManger::SetCollisionUI(eUIType::Mouse, eUIType::WandSlot, true);
         CollisionManger::SetCollisionUI(eUIType::Mouse, eUIType::Item, true);
     }
 
@@ -172,7 +181,7 @@ namespace zz
             {
                 if (mItemSlots[i]->GetItem() != nullptr)
                 {
-                    dynamic_cast<Wand*>(mItemSlots[i]->GetItem())->GetInfoBox()->GetComponent<Transform>()->SetPosition(95.f, 280.f - 65.f * index, 0.f);
+                    dynamic_cast<Wand*>(mItemSlots[i]->GetItem())->GetInfoBox()->GetComponent<Transform>()->SetPosition(95.f, 280.f - 65.f * index, 0.2f);
                     //dynamic_cast<Wand*>(mItemSlots[i]->GetItem())->GetInfoBox()->UpdateUI();
                     index++;
                 }

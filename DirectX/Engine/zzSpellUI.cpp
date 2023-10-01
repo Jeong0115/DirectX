@@ -1,12 +1,13 @@
 #include "zzSpellUI.h"
-
 #include "zzCollider.h"
+#include "zzTextBox.h"
 
 namespace zz
 {
     SpellUI::SpellUI()
         : UI(eUIType::Spell)
         , mSpell(nullptr)
+        , mTextBox(nullptr)
     {
     }
 
@@ -16,6 +17,7 @@ namespace zz
         {
             delete mSpell;
         }
+        delete mTextBox;
     }
 
     void SpellUI::Initialize()

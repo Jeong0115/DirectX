@@ -31,6 +31,7 @@ namespace zz
         UINT GetImageHeight() { return (UINT)mImage.GetMetadata().height; }
 
         ScratchImage& GetScratchImage() { return mImage; }
+
         void UpdateImage();
 
     protected:

@@ -58,34 +58,34 @@ namespace zz
     void InfoBox::Render()
     {
         GameObject::Render();
-        mWandtexture->Render();
+        
 
         if(mText != nullptr)
         {
-            Matrix mWorld = Matrix::Identity;
-            Matrix scale = Matrix::CreateScale(Vector3(150.f * 0.8f, 60.f * 0.8f, 1.0f));
-            Matrix rotation;
-            rotation = Matrix::CreateRotationX(0.f);
-            rotation *= Matrix::CreateRotationY(0.f);
-            rotation *= Matrix::CreateRotationZ(0.f);
+            //Matrix mWorld = Matrix::Identity;
+            //Matrix scale = Matrix::CreateScale(Vector3(150.f * 0.8f, 60.f * 0.8f, 1.0f));
+            //Matrix rotation;
+            //rotation = Matrix::CreateRotationX(0.f);
+            //rotation *= Matrix::CreateRotationY(0.f);
+            //rotation *= Matrix::CreateRotationZ(0.f);
 
-            Matrix position = Matrix::CreateTranslation(GetComponent<Transform>()->GetPosition());
-            mWorld = scale * rotation * position;
+            //Matrix position = Matrix::CreateTranslation(GetComponent<Transform>()->GetPosition());
+            //mWorld = scale * rotation * position;
 
-            renderer::TransformCB trCB = {};
-            trCB.mWorld = mWorld;
-            trCB.mView = Camera::GetGpuViewMatrix();
-            trCB.mProjection = Camera::GetGpuProjectionMatrix();
-            trCB.WorldViewProj = trCB.mWorld * trCB.mView * trCB.mProjection;
+            //renderer::TransformCB trCB = {};
+            //trCB.mWorld = mWorld;
+            //trCB.mView = Camera::GetGpuViewMatrix();
+            //trCB.mProjection = Camera::GetGpuProjectionMatrix();
+            //trCB.WorldViewProj = trCB.mWorld * trCB.mView * trCB.mProjection;
 
-            ConstantBuffer* cb = renderer::constantBuffer[(UINT)eCBType::Transform];
-            cb->SetBufferData(&trCB);
-            cb->BindConstantBuffer(eShaderStage::VS);
+            //ConstantBuffer* cb = renderer::constantBuffer[(UINT)eCBType::Transform];
+            //cb->SetBufferData(&trCB);
+            //cb->BindConstantBuffer(eShaderStage::VS);
 
             mText->BindShader(eShaderStage::PS, 0);
             graphics::GetDevice()->DrawIndexed(6, 0, 0);
         }
-
+        mWandtexture->Render();
     }
 
     void InfoBox::LinkWand(Wand* wand, InfoBoxTexture* texture)
@@ -100,7 +100,7 @@ namespace zz
 
         for (int i = 0; i < mWand->GetCapacity(); i++)
         {
-            SpellSlot* spellBox = new SpellSlot(eUIType::SpellSlot);
+            SpellSlot* spellBox = new SpellSlot(eUIType::WandSlot);
             spellBox->SetOwnerWand(wand);
             spellBox->SetSlotIndex(i);
 
@@ -109,7 +109,7 @@ namespace zz
             boxTr->SetPosition(-60.f + i * 20.f, -15.f, 0.0f);
             spellBox->Initialize();
 
-            UIManager::AddUIObject(spellBox, eUIType::SpellSlot);
+            UIManager::AddUIObject(spellBox, eUIType::WandSlot);
         }
 
         mText = WriteManager::Wrtie(mWand->GetInfoText(), Vector3(150.f, 60.f, 1.f));

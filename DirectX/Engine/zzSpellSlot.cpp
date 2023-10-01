@@ -15,6 +15,7 @@ namespace zz
         , mItemTexture(nullptr)
         , mbSlotInWand(false)
         , mOwnerWand(nullptr)
+        , mbMouseOn(false)
     {
     }
 
@@ -73,6 +74,11 @@ namespace zz
         if (mItemTexture != nullptr)
         {
             mItemTexture->Render();
+
+            if (mbMouseOn)
+            {
+                mTextBox->Render();
+            }
         }
     }
 
@@ -86,6 +92,7 @@ namespace zz
         {
             MeshRenderer* mesh = GetComponent<MeshRenderer>();
             mesh->SetMaterial(ResourceManager::Find<Material>(L"m_inventory_box_highlihgt"));       
+            mbMouseOn = true;
         }
     }
 
@@ -95,6 +102,7 @@ namespace zz
         {
             MeshRenderer* mesh = GetComponent<MeshRenderer>();
             mesh->SetMaterial(ResourceManager::Find<Material>(L"m_inventory_box"));
+            mbMouseOn = false;
         }
     }
 
@@ -105,9 +113,27 @@ namespace zz
 
         if (mItemTexture != nullptr)
         {
-            mItemTexture->MoveSlot(GetComponent<Transform>()->GetWorldPosition());
+            Vector3 pos = GetComponent<Transform>()->GetWorldPosition();
+
+            mItemTexture->MoveSlot(pos);
             mItemTexture->SetSlotIndex(mSlotIndex);
             mItemTexture->SetOwner(this);
+
+            mTextBox = spell->GetTextBox();
+            Transform* texTr = mTextBox->GetComponent<Transform>();
+            Vector3 scale = texTr->GetScale();
+
+            if (pos.x - scale.x / 2 - 15.f <= 0.f)
+            {
+                pos.x -= pos.x - scale.x / 2 - 15.f;
+            }
+
+            texTr->SetPosition(pos.x, pos.y - scale.y / 2 - 15.f, 0.0f);
+
+        }
+        else
+        {
+            mTextBox = nullptr;
         }
 
         if (mbSlotInWand)
@@ -125,7 +151,7 @@ namespace zz
 
     void SpellSlot::SetOwnerWand(Wand* wand)
     {
-        mOwnerWand = wand;
+        mOwnerWand = wand;  
         mbSlotInWand = true;
     }
 }
