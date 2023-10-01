@@ -34,5 +34,8 @@ namespace zz
         Vector4 mPrevPos;
 
         UINT    mIndex = 0;
+
+        float   mSleepTime;
+        bool    mbTimerOn;
     };
 }

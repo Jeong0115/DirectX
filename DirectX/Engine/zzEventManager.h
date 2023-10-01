@@ -17,6 +17,7 @@ namespace zz
         Health_Change,
         Mana_Change,
         Enenerge_Change,
+        ReCharge_Change,
         End,
     };
 
@@ -26,6 +27,7 @@ namespace zz
         float health;
         float mana;
         float energe;
+        float recharge;
     };
 
     class EventManager

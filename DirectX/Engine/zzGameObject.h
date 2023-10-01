@@ -16,6 +16,7 @@ namespace zz
         {
             Active,
             Paused,
+            Sleep,
             Dead,
         };
 
@@ -61,6 +62,7 @@ namespace zz
 
         eState GetState() { return mState; }
         bool IsDead() { return (mState == eState::Dead); }
+        bool IsActive() {return (mState == eState::Active);}
         bool GetActive() { return mbActive; }
         void SetActive(bool active) { mbActive = active; }
 

@@ -6,6 +6,7 @@
 #include "zzSceneManager.h"
 #include "zzInput.h"
 #include "zzTextObject.h"
+#include "zzEventManager.h"
 
 namespace zz
 {
@@ -59,6 +60,23 @@ namespace zz
                 mbCastDelay = false;
             }
         }
+        if (mbReCharge)
+        {
+            mCurReChargeTime -= static_cast<float>(Time::DeltaTime());
+
+            if (mCurReChargeTime <= 0.0f)
+            {
+                mCurReChargeTime = 0.0f;
+                mbReCharge = false;
+                mCurSpellIndex = 0;
+            }
+
+            EvenetData data;
+            data.eventType = eEvent::ReCharge_Change;
+            data.recharge = mCurReChargeTime / mReChargeTime;
+
+            EventManager::RegisterEvent(data);
+        }
         GameObject::Update();
     }
 
@@ -76,12 +94,25 @@ namespace zz
     {
         if (mbCastDelay || mbReCharge)
         {
-            TextObject* text = new TextObject();
-            text->WriteText(L"Cast Delay", Vector3(100.f, 20.f, 1.0f));
-            text->GetComponent<Transform>()->SetPosition(GetComponent<Transform>()->GetWorldPosition());
-            text->GetComponent<Transform>()->SetScale(Vector3(100.f, 20.f, 1.0f));
+            if (mbReCharge)
+            {
+                TextObject* text = new TextObject();
+                text->WriteText(L"RECHARGING..", Vector3(100.f, 20.f, 1.0f));
+                text->GetComponent<Transform>()->SetPosition(GetComponent<Transform>()->GetWorldPosition());
+                text->GetComponent<Transform>()->SetScale(Vector3(100.f, 20.f, 1.0f));
 
-            CreateObject(text, eLayerType::UI);
+                CreateObject(text, eLayerType::UI);
+            }
+            else if (mbCastDelay)
+            {
+                TextObject* text = new TextObject();
+                text->WriteText(L"CAST DELAY..", Vector3(100.f, 20.f, 1.0f));
+                text->GetComponent<Transform>()->SetPosition(GetComponent<Transform>()->GetWorldPosition());
+                text->GetComponent<Transform>()->SetScale(Vector3(100.f, 20.f, 1.0f));
+
+                CreateObject(text, eLayerType::UI);
+            }
+
             return;
         }
 
@@ -92,13 +123,10 @@ namespace zz
         direction.Normalize();
         direction.z = 0.f;
 
-        if (mCurSpellIndex >= mCapacity)
-        {
-            mCurSpellIndex = 0;
-        }
         UINT lastIndex = mCurSpellIndex;
 
         std::vector<ModifierSpell*> mModifiers;
+        bool isModifier = false;
 
         while (true)
         {
@@ -141,6 +169,38 @@ namespace zz
 
                         SceneManager::GetActiveScene()->AddGameObject(attackSpell, eLayerType::PlayerAttack);
                         mCurSpellIndex++;
+
+
+                        if (mCurSpellIndex >= mCapacity)
+                        {
+                            mCurSpellIndex = 0;
+                            mbReCharge = true;
+                            mCurReChargeTime = mReChargeTime;
+                        }
+                        else if(!mbReCharge)
+                        {
+                            bool isEmpty = true;
+
+                            for (int i = mCurSpellIndex; i < mCapacity; i++)
+                            {
+                                if (mSpells[i] != nullptr)
+                                {
+                                    isEmpty = false;
+                                    break;
+                                }
+                            }
+
+                            // all of을 사용해서도 가능 일단은 for-loop로 사용
+                            //bool isEmpty = std::all_of(mSpells.begin() + mCurSpellIndex, mSpells.begin() + mCapacity,
+                            //    [](auto spell) { return spell == nullptr; });
+
+                            if (isEmpty)
+                            {
+                                mbReCharge = true;
+                                mCurReChargeTime = mReChargeTime;
+                            }
+                        }
+
                         break;
                     }
                 }
@@ -158,6 +218,7 @@ namespace zz
                         mModifiers.push_back(dynamic_cast<ModifierSpell*>(spell));
                         mCurMana -= manaDrain;
                         mCurCastDelay += spell->GetCastDelay();
+                        isModifier = true;
                     }
 
                 }
@@ -167,6 +228,13 @@ namespace zz
             if (mCurSpellIndex >= mCapacity)
             {
                 mCurSpellIndex = 0;
+                mbReCharge = true;
+                mCurReChargeTime = mReChargeTime;
+
+                if (!isModifier)
+                {
+                    break;
+                }
             }
 
             if (mCurSpellIndex == lastIndex)

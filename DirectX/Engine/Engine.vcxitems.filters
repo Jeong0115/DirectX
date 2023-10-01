@@ -706,6 +706,9 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)zzTextObject.cpp">
       <Filter>GameObject\TextObject</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzWandRecharge.cpp">
+      <Filter>UI\HUD\WandRecharge</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzEntity.h">
@@ -1047,6 +1050,9 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzTextObject.h">
       <Filter>GameObject\TextObject</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzWandRecharge.h">
+      <Filter>UI\HUD\WandRecharge</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

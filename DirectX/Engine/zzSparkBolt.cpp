@@ -24,9 +24,11 @@ namespace zz
         , mRigid(nullptr)
         , mTime(0.0f)
         , mSubParticleTime(0.f)
+        , mSleepTime(2.0f)
+        , mbTimerOn(false)
     {
         mSpeed = 500.f;
-        mCastDelay = 2.05f;
+        mCastDelay = 0.05f;
         mDamage = 3.0f;
         mManaDrain = 5.0f;
     }
@@ -83,7 +85,7 @@ namespace zz
         mShareData.randVelocityMin = Vector2(-3.0f, -3.0f);
         mShareData.randLifeTime = Vector2(1.0f, 0.5f);
 
-        AddComponent<PixelCollider_Lite>()->SetCollisionEvent([this](Element& element) {OnCollision(element); });
+        AddComponent<PixelCollider_Lite>()->SetCollisionEvent([this](Element& element) { OnCollision(element); });
 
         GameObject::Initialize();
 
@@ -98,6 +100,17 @@ namespace zz
 
     void SparkBolt::Update()
     {
+        if (mbTimerOn)
+        {
+            mSleepTime -= (float)Time::DeltaTime();
+
+            if (mSleepTime <= 0.f)
+            {
+                DeleteObject(this, eLayerType::PlayerAttack);
+            }
+            return;
+        }
+
         mTime += (float)Time::DeltaTime();
 
         Transform* tr = GetComponent<Transform>();
@@ -105,9 +118,10 @@ namespace zz
         mPrevPos = Vector4(prevPos.x, prevPos.y, prevPos.z, 0.0f);
 
 
-        if (mTime >= 0.8f && !IsDead())
+        if (mTime >= 0.8f && IsActive())
         {
-            DeleteObject(this, eLayerType::PlayerAttack);
+            //DeleteObject(this, eLayerType::PlayerAttack);
+            mbTimerOn = true;
 
             Vector3 pos = GetComponent<Transform>()->GetPosition();
             mExplosion->GetComponent<Transform>()->SetPosition(pos.x, pos.y, BACK_PIXEL_WORLD_Z);
@@ -120,6 +134,12 @@ namespace zz
 
     void SparkBolt::LateUpdate()
     {
+        if (mbTimerOn)
+        {
+            GetComponent<ParticleSystem>()->LateUpdate();
+            return;
+        }
+
         Vector3 curPos = GetComponent<Transform>()->GetPosition();
 
         ProjectileShared shareData = {};
@@ -148,6 +168,12 @@ namespace zz
 
     void SparkBolt::Render()
     {
+        if (mbTimerOn)
+        {
+            GetComponent<ParticleSystem>()->Render();
+            return;
+        }
+
         GameObject::Render();
     }
 
@@ -160,14 +186,18 @@ namespace zz
     {
         if (element.Type == eElementType::SOLID)
         {
-            if (!IsDead())
+            if (IsActive())
             {
-                DeleteObject(this, eLayerType::PlayerAttack);
+                //DeleteObject(this, eLayerType::PlayerAttack);
+
+                SetState(eState::Sleep);
 
                 Vector3 pos = GetComponent<Transform>()->GetPosition() - (mDirection * 500.f * 0.005f);
                 mExplosion->GetComponent<Transform>()->SetPosition(pos.x, pos.y, BACK_PIXEL_WORLD_Z);
                 mExplosion->GetComponent<Transform>()->SetScale(9.0f, 9.0f, 1.0f);
                 CreateObject(mExplosion, eLayerType::Effect);
+
+                mbTimerOn = true;
             }
         }
         else if (element.Type == eElementType::LIQUID)

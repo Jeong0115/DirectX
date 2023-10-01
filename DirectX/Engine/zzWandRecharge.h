@@ -4,25 +4,32 @@
 
 namespace zz
 {
-    class HUD_Icon : public UI
+    class WandRecharge : public UI
     {
     public:
-        HUD_Icon();
-        virtual ~HUD_Icon();
+        WandRecharge();
+        virtual ~WandRecharge();
 
         virtual void Initialize();
         virtual void Update();
         virtual void LateUpdate();
         virtual void Render();
 
-        void SetActive(bool isActive) { mbActive = isActive; }
-
         virtual void OnCollisionEnter(GameObject* other)    override;
         virtual void OnCollisionStay(GameObject* other)     override;
         virtual void OnCollisionExit(GameObject* other)     override;
 
+        void OnEvent(const struct EvenetData& data);
+
     private:
-        bool mbActive;
+        void createIcon();
+        void createBar();
+
+        class BarBackGround*    mBar;
+        class HUD_Icon*         mIcon;
+
+        float   mRechargeRate;
+        bool    mbRender;
     };
 }
 

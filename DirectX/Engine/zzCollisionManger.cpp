@@ -146,7 +146,7 @@ namespace zz
         {
             if (iter->second)
             {
-                if (leftObj->IsDead() || rightObj->IsDead())
+                if (!leftObj->IsActive() || !rightObj->IsActive())
                 {
                     left->OnCollisionExit(right);
                     right->OnCollisionExit(left);

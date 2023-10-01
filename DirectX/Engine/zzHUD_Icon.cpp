@@ -7,6 +7,7 @@ namespace zz
 {
     HUD_Icon::HUD_Icon()
         : UI(eUIType::HUD)
+        , mbActive(true)
     {
     }
     HUD_Icon::~HUD_Icon()
@@ -20,17 +21,26 @@ namespace zz
 
     void HUD_Icon::Update()
     {
-        GameObject::Update();
+        if (mbActive)
+        {
+            GameObject::Update();
+        }
     }
 
     void HUD_Icon::LateUpdate()
     {
-        GameObject::LateUpdate();
+        if (mbActive)
+        {
+            GameObject::LateUpdate();
+        }
     }
 
     void HUD_Icon::Render()
     {
-        GameObject::Render();
+        if (mbActive)
+        {
+            GameObject::Render();
+        }
     }
 
     void HUD_Icon::OnCollisionEnter(GameObject* other)

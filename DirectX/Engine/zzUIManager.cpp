@@ -23,6 +23,7 @@
 #include "zzHealth.h"
 #include "zzLevitationEnerge.h"
 #include "zzWandMana.h"
+#include "zzWandRecharge.h"
 
 #ifdef _DEBUG
 #define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
@@ -88,6 +89,9 @@ namespace zz
 
         WandMana* wandMana = new WandMana();
         mUIObjects[(UINT)eUIType::HUD].push_back(wandMana);
+
+        WandRecharge* wandRecharge = new WandRecharge();
+        mUIObjects[(UINT)eUIType::HUD].push_back(wandRecharge);
 
         for (int i = 0; i < 4; i++)
         {

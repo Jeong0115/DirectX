@@ -121,6 +121,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)zzWand.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzBlastWand_0585.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzWandMana.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzWandRecharge.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzWandScript.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzWater.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzWrite.cpp" />
@@ -236,6 +237,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzWand.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzBlastWand_0585.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzWandMana.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzWandRecharge.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzWandScript.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzWater.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzWrite.h" />
