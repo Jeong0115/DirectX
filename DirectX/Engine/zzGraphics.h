@@ -142,6 +142,8 @@ namespace zz
         math::Vector4 distance;
         math::Vector4 color;
 
+        math::Vector2 randLifeTime;
+
         float index;
         float angle;
 
@@ -185,6 +187,24 @@ namespace zz
         math::Vector2 randVelocityMin;
         math::Vector2 randVelocityMax;
         math::Vector2 randLifeTime;
+
+        UINT activeCount;
+    };
+
+    struct SineParticleShared
+    {
+        math::Vector4 curPosition;
+        math::Vector4 scale;
+        math::Vector4 color;    
+
+        math::Vector2 randPositionMin;
+        math::Vector2 randPositionMax;
+        math::Vector2 randVelocityMin;
+        math::Vector2 randVelocityMax;
+        math::Vector2 randLifeTime;
+
+        float angle;
+        float index;
 
         UINT activeCount;
     };

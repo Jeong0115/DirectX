@@ -391,6 +391,9 @@
     <Filter Include="GameObject\TextObject">
       <UniqueIdentifier>{52a4a64c-db70-4dd3-ad05-111a3a48b4df}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameObject\Effect\MuzzleEffect">
+      <UniqueIdentifier>{747fb3f9-ec3e-4c1e-bf6f-71e4993e6751}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzEntity.cpp">
@@ -708,6 +711,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzWandRecharge.cpp">
       <Filter>UI\HUD\WandRecharge</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzMuzzleEffect.cpp">
+      <Filter>GameObject\Effect\MuzzleEffect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1053,6 +1059,9 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzWandRecharge.h">
       <Filter>UI\HUD\WandRecharge</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzMuzzleEffect.h">
+      <Filter>GameObject\Effect\MuzzleEffect</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

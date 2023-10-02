@@ -15,24 +15,6 @@ namespace zz
         , mCS(nullptr)
         , mBufferSlot(0)
     {
-        SetMesh(ResourceManager::Find<Mesh>(L"PointMesh"));
-
-        //{
- 
-        //    mCS = ResourceManager::Find<ParticleShader>(L"ParticleSystemAnimationShader");
-
-        //    ParticleAnimation particles[500] = {};
-
-        //    mBuffer = new StructedBuffer();
-        //    mBuffer->Create(sizeof(ParticleAnimation), 500, eViewType::UAV, particles, true);
-        //    mBuffer->SetUAVSlot(2);
-        //    
-        //    mSharedBuffer = new StructedBuffer();
-        //    mSharedBuffer->Create(sizeof(ParticleAnimationShared), 1, eViewType::UAV, nullptr, true);
-        //    mSharedBuffer->SetUAVSlot(3);
-
-
-        //}
     }
 
     ParticleSystem::~ParticleSystem()
@@ -51,20 +33,6 @@ namespace zz
 
     void ParticleSystem::LateUpdate()
     {
-
-        //else if (mTempOption == 1)
-        //{
-        //    //ParticleAnimationShared shareData = {};
-        //    //shareData.curPosition = Vector4((int)curPos.x, (int)curPos.y, (int)curPos.z, 0.0f);
-        //    //shareData.gravity = Vector4(0.0f, -5.0f, 0.0f, 0.0f);
-        //    //shareData.SetActiveCount = 1;
-        //    //shareData.RemainingActiveCount = 1;
-        //    //shareData.durtaion = 0.06f;
-        //    //shareData.maxAnimationCnt = 12;
-
-        //    //mSharedBuffer->SetData(&shareData, 1);  
-        //}
-
         mCS->SetParticleBuffer(mBuffer);
         mCS->SetSharedBuffer(mSharedBuffer);
         mCS->OnExcute();

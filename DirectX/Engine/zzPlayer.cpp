@@ -45,6 +45,8 @@ namespace zz
 
     void Player::Initialize()
     {
+        Input::SetPlayer(GetComponent<Transform>());
+
         std::shared_ptr<Texture> texture
             = ResourceManager::Load<Texture>(L"Player", L"..\\Resources\\Texture\\Player\\Player.png");
 
@@ -157,16 +159,7 @@ namespace zz
     {
         renderer::FlipCB flipCB = {};
 
-        float playerX = GetComponent<Transform>()->GetPosition().x;
-
-        if (Input::GetMouseWorldPos().x - playerX >= 0)
-        {
-            flipCB.flip.x = 0;
-        }
-        else
-        {
-            flipCB.flip.x = 1;
-        }
+        flipCB.flip.x = Input::IsFlip();
 
         ConstantBuffer* cb = renderer::constantBuffer[(UINT)eCBType::Flip];
         cb->SetBufferData(&flipCB);
@@ -191,13 +184,11 @@ namespace zz
             mEquipment->Render();
         }
 
-
-
         flipCB = {};
         cb->SetBufferData(&flipCB);
         cb->BindConstantBuffer(eShaderStage::PS);
     }
-
+     
     void Player::OnCollisionEnter(GameObject* other)
     {
     }

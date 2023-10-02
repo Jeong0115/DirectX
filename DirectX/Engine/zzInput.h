@@ -68,10 +68,14 @@ namespace zz
         static __forceinline Vector3 GetMouseWorldPos() { return mMouseWorldPos; }
         static __forceinline Vector3 GetMouseUIPos() { return mMouseUIPos; }
 
+        static void SetPlayer(class Transform* player) { mPlayer = player; }
+        static float IsFlip();
 
     private:
         static std::vector<Key> mKeys;
         static Vector3 mMouseWorldPos;
         static Vector3 mMouseUIPos;
+
+        static class Transform* mPlayer;
     };
 }

@@ -17,7 +17,6 @@ void main(uint3 DTid : SV_DispatchThreadID)
         {
             particle.active = 0;
             ParticleBuffer[DTid.x] = particle;
-            return;
         }
         else
         {
@@ -50,30 +49,11 @@ void main(uint3 DTid : SV_DispatchThreadID)
             
             int index = projectile.index + projectile.totalActiveCount - count;
              
-            float angle = projectile.angle;
-            float2 vel;
             
-            if (index == 0)
-            {
-                vel.x = (random.x + 1.f) * (random.w > 0.5f ? 1 : -1);
-                vel.y = random.y;
-                
-                particle.lifeTime = 0.1f;
-            }
-            else
-            {
-                vel.x = (random.x + 10.f);
-                vel.y = sin(index / 5.f) * (random.y * 20.f + 20.f);   
-                
-                particle.lifeTime = 0.05f;
-            }
-            
-            particle.velocity.x = vel.x * cos(angle) - vel.y * sin(angle);
-            particle.velocity.y = vel.x * sin(angle) + vel.y * cos(angle);
+            particle.lifeTime = (projectile.randLifeTime.y - projectile.randLifeTime.x) * random.x + projectile.randLifeTime.x;
             
             particle.color = projectile.color;
             particle.active = 1;
-            
             particle.scale = float4(1.0f, 1.0f, 1.0f, 0.0f);
             
             ParticleBuffer[DTid.x] = particle;

@@ -31,6 +31,8 @@ namespace zz
         void SetRotation(float x, float y, float z) { mRotation = Vector3(x, y, z); }
         void SetScale(float x, float y, float z)    { mScale = Vector3(x, y, z); }
 
+        void SetPositionXFlip() { mPosition.x *= -1; }
+
         Vector3 GetPosition()   { return mPosition; }
         Vector3 GetRotation()   { return mRotation; }
         Vector3 GetScale()      { return mScale; }

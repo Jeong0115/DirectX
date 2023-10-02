@@ -4,6 +4,7 @@
 #include "zzRenderer.h"
 #include "zzGameObject.h"
 #include "zzUICamera.h"
+#include "zzTransform.h"
 namespace zz
 {
     int ASCII[(UINT)eKeyCode::END] =
@@ -24,6 +25,7 @@ namespace zz
     std::vector<Input::Key> Input::mKeys;
     Vector3 Input::mMouseWorldPos = Vector3::Zero;
     Vector3 Input::mMouseUIPos = Vector3::Zero;
+    Transform* Input::mPlayer = nullptr;
 
     void Input::Initialize()
     {
@@ -113,5 +115,22 @@ namespace zz
             }
         }
         return 0;
+    }
+
+    float Input::IsFlip()
+    {
+        if (mPlayer == nullptr)
+        {
+            return 0.f;
+        }
+
+        if (mMouseWorldPos.x - mPlayer->GetPosition().x >= 0)
+        {
+            return 0.f;
+        }
+        else
+        {
+            return 1.f;
+        }
     }
 }

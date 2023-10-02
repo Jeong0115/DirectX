@@ -8,6 +8,13 @@
 #include "zzTextObject.h"
 #include "zzEventManager.h"
 
+#include "zzUIManager.h"
+#include "zzPlayer.h"
+
+#include "zzMuzzleEffect.h"
+#include "zzAnimator.h"
+#include "zzResourceManager.h"
+
 namespace zz
 {
     Wand::Wand()
@@ -151,9 +158,39 @@ namespace zz
                         ProjectileSpell* transClass = dynamic_cast<ProjectileSpell*>(spell);
                         ProjectileSpell* attackSpell = transClass->Clone();
 
+                        Vector3 playerPos = UIManager::mPlayer->GetComponent<Transform>()->GetPosition();
+                        Vector3 cursorPos = Input::GetMouseWorldPos();
+
+                        double dx = cursorPos.x - playerPos.x;
+                        double dy = cursorPos.y - playerPos.y;
+
+                        double radian = atan2(dy, dx);
+
+                        Vector3 rotaition = GetComponent<Transform>()->GetWorldRotation();
+                        float angle = radian;
+
+                        Vector3 worldOffset;
+
+                        worldOffset.x = mTip.x * cos(angle);
+                        worldOffset.y = mTip.x * sin(angle);
+
                         attackSpell->SetDirection(direction);
-                        attackSpell->GetComponent<Transform>()->SetPosition(pos.x + mTip.x / 2, pos.y, pos.z);
-                        attackSpell->GetComponent<Transform>()->SetRotation(GetComponent<Transform>()->GetWorldRotation());
+                        attackSpell->GetComponent<Transform>()->SetPosition(pos.x + worldOffset.x, pos.y + worldOffset.y, pos.z);
+                        attackSpell->GetComponent<Transform>()->SetRotationZ(angle);
+
+                        MuzzleEffect* muzzle = new MuzzleEffect();
+                        std::shared_ptr<Texture> muzzleTexture = ResourceManager::Find<Texture>(L"Muzzle_SparkBolt");
+                        Animator* manimator = new Animator();
+                        manimator->Create(L"Muzzle_SparkBolt_Play", muzzleTexture, Vector2(0.0f, 0.0f), Vector2(16.0f, 16.0f), 1, Vector2::Zero, 0.1f);
+                        manimator->PlayAnimation(L"Muzzle_SparkBolt_Play", false);
+
+                        muzzle->SetAnimator(manimator, L"Muzzle_SparkBolt_Play");
+                        muzzle->GetComponent<Transform>()->SetPosition(mTip.x, 0.0f, BACK_PIXEL_WORLD_Z);
+                        //muzzle->GetComponent<Transform>()->SetRotationZ(GetComponent<Transform>()->GetRotation().z);
+                        muzzle->GetComponent<Transform>()->SetScale(16.0f, 16.0f, 1.0f);
+                        CreateObject(muzzle, eLayerType::Effect);
+
+                        muzzle->GetComponent<Transform>()->SetParent(GetComponent<Transform>());
 
                         if (!mModifiers.empty())
                         {

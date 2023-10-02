@@ -242,6 +242,10 @@ namespace zz::renderer
         psSystemShader1->Create(L"ParticleCS.hlsl", "main");
         ResourceManager::Insert(L"ParticleCS", psSystemShader1);
 
+        std::shared_ptr<ParticleShader> psSystemShader2 = std::make_shared<ParticleShader>();
+        psSystemShader2->Create(L"SineFuncParticleCS.hlsl", "main");
+        ResourceManager::Insert(L"SineFuncParticleCS", psSystemShader2);
+
         std::shared_ptr<Shader> paritcleShader = std::make_shared<Shader>();
         paritcleShader->CreateShader(eShaderStage::VS, L"ParticleVS.hlsl", "main");
         paritcleShader->CreateShader(eShaderStage::GS, L"ParticleGS.hlsl", "main");

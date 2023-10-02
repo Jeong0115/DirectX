@@ -18,6 +18,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)zzHealth.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzHUD_Icon.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzLevitationEnerge.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzMuzzleEffect.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzSpeedUp_UI.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzDetectPlayer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzExplosionEffect.cpp" />
@@ -133,6 +134,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzHealth.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzHUD_Icon.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzLevitationEnerge.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzMuzzleEffect.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzSpeedUp_UI.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzDetectPlayer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzExplosionEffect.h" />

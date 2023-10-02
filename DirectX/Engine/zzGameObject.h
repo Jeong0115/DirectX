@@ -44,6 +44,18 @@ namespace zz
         }
 
         template<DerivedFromComponent T>
+        std::vector<Component*> GetComponents(/*const std::wstring name = "no_select"*/)
+        {
+            std::vector<Component*> components;
+            for (Component* comp : mComponents)
+            {
+                if (dynamic_cast<T*>(comp))
+                    components.push_back(comp);
+            }
+            return components;
+        }
+
+        template<DerivedFromComponent T>
         T* AddComponent()
         {
             T* comp = new T();

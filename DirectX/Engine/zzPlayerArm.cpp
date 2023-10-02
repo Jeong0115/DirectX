@@ -52,7 +52,7 @@ namespace zz
             radian -= PI;
         }
 
-        GetComponent<Transform>()->SetRotation(0.f, 0.f, (float)radian);
+        GetComponent<Transform>()->SetRotationZ((float)radian);
 
         GameObject::Update();
     }

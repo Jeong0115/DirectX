@@ -21,21 +21,21 @@ namespace zz
 
     private:
         class ParticleSystem*   mParticle;
-        class ParticleSystem* mSubParticle;
+        class ParticleSystem*   mSubParticle;
+        class ParticleSystem*   mTailParticle;
+
         class ExplosionEffect*  mExplosion;
         class RigidBody*        mRigid;
 
-        ParticleShared mShareData;
-
-        
         float   mTime;
-        float mSubParticleTime;
-
-        Vector4 mPrevPos;
-
-        UINT    mIndex = 0;
-
+        float   mSubParticleTime;
         float   mSleepTime;
+
         bool    mbTimerOn;
+
+        Vector4                 mPrevPos;
+        ParticleShared          mShareData;
+        SineParticleShared      mTailData;
+        UINT                    mIndex;
     };
 }

@@ -20,12 +20,17 @@ namespace zz
     SparkBolt::SparkBolt()
         : mPrevPos(Vector4::Zero)
         , mParticle(nullptr)
+        , mTailParticle(nullptr)
+        , mSubParticle(nullptr)
         , mExplosion(nullptr)
         , mRigid(nullptr)
         , mTime(0.0f)
         , mSubParticleTime(0.f)
-        , mSleepTime(2.0f)
+        , mSleepTime(3.0f)
         , mbTimerOn(false)
+        , mTailData{}
+        , mShareData{}
+        , mIndex(0)
     {
         mSpeed = 500.f;
         mCastDelay = 0.05f;
@@ -63,8 +68,8 @@ namespace zz
         mParticle->SetMesh(ResourceManager::Find<Mesh>(L"PointMesh"));
         mParticle->SetParticleShader(ResourceManager::Find<ParticleShader>(L"ProjectileParticleCS"));
 
-        Particle particles[150] = {};
-        mParticle->CreateStructedBuffer(sizeof(Particle), 150, eViewType::UAV, particles, true, 0, 14, 0);
+        Particle particles[100] = {};
+        mParticle->CreateStructedBuffer(sizeof(Particle), 100, eViewType::UAV, particles, true, 0, 14, 0);
         mParticle->CreateStructedBuffer(sizeof(ProjectileShared), 1, eViewType::UAV, nullptr, true, 1, 14, 1);
 
         mSubParticle = AddComponent<ParticleSystem>();
@@ -72,18 +77,38 @@ namespace zz
         mSubParticle->SetMesh(ResourceManager::Find<Mesh>(L"PointMesh"));
         mSubParticle->SetParticleShader(ResourceManager::Find<ParticleShader>(L"ParticleCS"));
 
-        Particle subParticles[200] = {};
-        mSubParticle->CreateStructedBuffer(sizeof(Particle), 200, eViewType::UAV, subParticles, true, 0, 14, 0);
+        Particle subParticles[50] = {};
+        mSubParticle->CreateStructedBuffer(sizeof(Particle), 50, eViewType::UAV, subParticles, true, 0, 14, 0);
         mSubParticle->CreateStructedBuffer(sizeof(ParticleShared), 1, eViewType::UAV, nullptr, true, 4, 14, 1);
 
         mShareData.scale = Vector4(1.0f, 1.0f, 1.0f, 0.0f);
-        mShareData.color = Vector4(255.f / 255.f, 80.f / 255.f, 240.f / 255.f, 0.4f);
+        mShareData.color = Vector4(255.f / 255.f, 80.f / 255.f, 240.f / 255.f, 0.25f);
 
-        mShareData.randPositionMax = Vector2(3.0f, 15.0f);
-        mShareData.randPositionMin = Vector2(-3.0f, -15.0f);
-        mShareData.randVelocityMax = Vector2(3.0f, -3.0f);
-        mShareData.randVelocityMin = Vector2(-3.0f, -3.0f);
-        mShareData.randLifeTime = Vector2(1.0f, 0.5f);
+        mShareData.randPositionMax = Vector2(3.0f, 50.0f);
+        mShareData.randPositionMin = Vector2(-3.0f, -50.0f);
+        mShareData.randVelocityMax = Vector2(5.0f, -7.0f);
+        mShareData.randVelocityMin = Vector2(-5.0f, 7.0f);
+        mShareData.randLifeTime = Vector2(3.0f, 0.5f);
+
+        mTailParticle = AddComponent<ParticleSystem>();
+        mTailParticle->SetMaterial(ResourceManager::Find<Material>(L"m_Particle"));
+        mTailParticle->SetMesh(ResourceManager::Find<Mesh>(L"PointMesh"));
+        mTailParticle->SetParticleShader(ResourceManager::Find<ParticleShader>(L"SineFuncParticleCS"));
+        
+        Particle tailParticles[100] = {};
+        mTailParticle->CreateStructedBuffer(sizeof(Particle), 100, eViewType::UAV, tailParticles, true, 0, 14, 0);
+        mTailParticle->CreateStructedBuffer(sizeof(SineParticleShared), 1, eViewType::UAV, nullptr, true, 5, 14, 1);
+
+        mTailData.scale = Vector4(1.0f, 1.0f, 1.0f, 0.0f);
+        mTailData.color = Vector4(255.f / 255.f, 80.f / 255.f, 240.f / 255.f, 0.7f);
+
+        mTailData.randPositionMax = Vector2(2.0f, 2.0f);
+        mTailData.randPositionMin = Vector2(-2.0f, -2.0f);
+        mTailData.randVelocityMax = Vector2(20.0f, 20.0f);
+        mTailData.randVelocityMin = Vector2(10.0f, -20.0f);
+        mTailData.randLifeTime = Vector2(0.2f, 0.1f);
+        mTailData.angle = GetComponent<Transform>()->GetRotation().z;
+        mTailParticle->SetStructedBufferData(&mTailData, 1, 1);
 
         AddComponent<PixelCollider_Lite>()->SetCollisionEvent([this](Element& element) { OnCollision(element); });
 
@@ -96,6 +121,18 @@ namespace zz
         animator->PlayAnimation(L"Explosion_SparkBolt_Play", false);
 
         mExplosion->SetAnimator(animator, L"Explosion_SparkBolt_Play");
+
+        //ExplosionEffect* muzzle = new ExplosionEffect();
+        //std::shared_ptr<Texture> muzzleTexture = ResourceManager::Find<Texture>(L"Muzzle_SparkBolt");
+        //Animator* manimator = new Animator();
+        //manimator->Create(L"Muzzle_SparkBolt_Play", muzzleTexture, Vector2(0.0f, 0.0f), Vector2(16.0f, 16.0f), 1, Vector2::Zero, 0.1f);
+        //manimator->PlayAnimation(L"Muzzle_SparkBolt_Play", false);
+
+        //muzzle->SetAnimator(manimator, L"Muzzle_SparkBolt_Play");
+        ////muzzle->GetComponent<Transform>()->SetPosition(GetComponent<Transform>()->GetPosition().x, GetComponent<Transform>()->GetPosition().y, BACK_PIXEL_WORLD_Z);
+        ////muzzle->GetComponent<Transform>()->SetRotationZ(GetComponent<Transform>()->GetRotation().z);
+        //muzzle->GetComponent<Transform>()->SetScale(16.0f, 16.0f, 1.0f);
+        //CreateObject(muzzle, eLayerType::Effect);
     }
 
     void SparkBolt::Update()
@@ -120,7 +157,7 @@ namespace zz
 
         if (mTime >= 0.8f && IsActive())
         {
-            //DeleteObject(this, eLayerType::PlayerAttack);
+            SetState(eState::Sleep);
             mbTimerOn = true;
 
             Vector3 pos = GetComponent<Transform>()->GetPosition();
@@ -136,9 +173,14 @@ namespace zz
     {
         if (mbTimerOn)
         {
-            GetComponent<ParticleSystem>()->LateUpdate();
+            mTailParticle->LateUpdate();
+            mParticle->LateUpdate();
+            mSubParticle->LateUpdate();
+
             return;
         }
+
+        mTailData.curPosition = mPrevPos - mRigid->GetVelocity() * 0.05f;
 
         Vector3 curPos = GetComponent<Transform>()->GetPosition();
 
@@ -146,6 +188,8 @@ namespace zz
         shareData.curPosition = Vector4((int)curPos.x, (int)curPos.y, (int)curPos.z, 0.0f);
         shareData.distance = shareData.curPosition - mPrevPos;
         shareData.distance.z = 0;
+        shareData.randLifeTime = Vector2(0.05f, 0.05f);
+
         shareData.angle = GetComponent<Transform>()->GetRotation().z;
         mPrevPos = shareData.curPosition;
 
@@ -154,14 +198,22 @@ namespace zz
         shareData.totalActiveCount = count;
         shareData.index = mIndex;
         shareData.color = Vector4(255.f / 255.f, 80.f / 255.f, 240.f / 255.f, 1.0f);
-        mIndex += count;
+        //mIndex += count;
         mParticle->SetStructedBufferData(&shareData, 1, 1);
 
         mShareData.curPosition = Vector4(curPos.x, curPos.y, curPos.z, 0.0f);
-        mShareData.activeCount = randi(5);
+        mShareData.activeCount = randi(2);
 
         mSubParticle->SetStructedBufferData(&mShareData, 1, 1);
-        
+
+        if (mTime > 0.05f)
+        {
+            mIndex += count;
+            mTailData.activeCount = count;
+            mTailData.index = mIndex;
+
+            mTailParticle->SetStructedBufferData(&mTailData, 1, 1);
+        }
 
         GameObject::LateUpdate();
     }
@@ -170,7 +222,10 @@ namespace zz
     {
         if (mbTimerOn)
         {
-            GetComponent<ParticleSystem>()->Render();
+            mParticle->Render();
+            mTailParticle->Render();
+            mSubParticle->Render();
+
             return;
         }
 
@@ -188,8 +243,6 @@ namespace zz
         {
             if (IsActive())
             {
-                //DeleteObject(this, eLayerType::PlayerAttack);
-
                 SetState(eState::Sleep);
 
                 Vector3 pos = GetComponent<Transform>()->GetPosition() - (mDirection * 500.f * 0.005f);
