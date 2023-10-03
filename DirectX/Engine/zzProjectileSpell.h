@@ -22,14 +22,19 @@ namespace zz
 
         void SetDirection(Vector3 dir) { mDirection = dir; }
         void SetSpeedFactor(float factor) { mSpeed *= factor; }
+        std::vector<struct Element>& AddTrailElement() { return mTrailElement; }
 
     protected:
-        MuzzleEffect* mMuzzleEffect;
+        class RigidBody* mRigid;
+        std::vector<struct Element> mTrailElement;
 
-        Vector3     mDirection;
+        MuzzleEffect*   mMuzzleEffect;
+        Vector4         mPrevPos;
+        Vector3         mDirection;
 
-        float   mSpeed;
-        float   mSpread;
-        float   mDamage;
+        float           mTime;
+        float           mSpeed;
+        float           mSpread;
+        float           mDamage;
     };
 }   

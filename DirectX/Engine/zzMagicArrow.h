@@ -24,18 +24,14 @@ namespace zz
         class ParticleSystem* mParticle;
         class ParticleSystem* mSubParticle;
         class ParticleSystem* mTailParticle;
-
         class ExplosionEffect* mExplosion;
-        class RigidBody* mRigid;
 
-        float   mTime;
         float   mSubParticleTime;
         float   mSleepTime;
         float   mTrailDuration;
 
         bool    mbTimerOn;
 
-        Vector4                 mPrevPos;
         ParticleShared          mShareData;
         SineParticleShared      mTailData;
         UINT                    mIndex;

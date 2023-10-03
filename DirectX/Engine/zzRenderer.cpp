@@ -979,6 +979,12 @@ namespace zz::renderer
         material->SetTexture(bullet);
         ResourceManager::Insert(L"m_bullet", material);
 
+        std::shared_ptr<Texture> water_trail = ResourceManager::Load<Texture>(L"water_trail", L"..\\Resources\\Texture\\Spell\\WaterTrail\\water_trail.png");
+        material = std::make_shared<Material>();
+        material->SetShader(spriteShader);
+        material->SetTexture(water_trail);
+        ResourceManager::Insert(L"m_water_trail", material);
+
 
         std::shared_ptr<Texture> divide_2 = ResourceManager::Load<Texture>(L"divide_2", L"..\\Resources\\Texture\\Spell\\Utility\\divide_2.png");
         material = std::make_shared<Material>();

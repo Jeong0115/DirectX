@@ -20,20 +20,13 @@
 
 #include "zzLightBullet.h"
 #include "zzBullet.h"
-
+#include "zzWaterTrail_UI.h"
 #include "zzSpeedUp_UI.h"
+
 #include "zzHealth.h"
 #include "zzLevitationEnerge.h"
 #include "zzWandMana.h"
 #include "zzWandRecharge.h"
-
-#ifdef _DEBUG
-#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
-#define new DBG_NEW
-#else
-#define DBG_NEW new
-#endif
-
 
 namespace zz
 {
@@ -64,6 +57,11 @@ namespace zz
 
         {
             Bullet* spell = new Bullet();
+            spell->Initialize();
+            AcquireSpell(spell);
+        }
+        {
+            WaterTrail_UI* spell = new WaterTrail_UI();
             spell->Initialize();
             AcquireSpell(spell);
         }

@@ -18,6 +18,8 @@ namespace zz
         void InsertElement(int x, int y, const Element& element);
         void InsertElementInOrOut(int x, int y, const Element& element);
 
+        void InsertElementIfEmpty(int x, int y, const Element& element);
+
         void RegisterElement(int x, int y, const Element& element) { RegisterElement(GetIndex(x, y), element); }
         void RegisterElement(size_t index, const Element& element);
 

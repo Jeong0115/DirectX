@@ -400,6 +400,12 @@
     <Filter Include="Spell\Projectile\MagicArrow">
       <UniqueIdentifier>{88ecd984-cec8-4ecf-b141-6ad03c10cf4b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UI\SpellUI\WaterTrail">
+      <UniqueIdentifier>{5c6164a6-b91f-467e-9865-3b24c43c28ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Spell\Utility\Modifier\WaterTrail">
+      <UniqueIdentifier>{854fa86f-bbeb-4132-b5f1-c5894dc765b5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzEntity.cpp">
@@ -726,6 +732,12 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzMagicArrow.cpp">
       <Filter>Spell\Projectile\MagicArrow</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzWaterTrail_UI.cpp">
+      <Filter>UI\SpellUI\WaterTrail</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzWaterTrail.cpp">
+      <Filter>Spell\Utility\Modifier\WaterTrail</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1080,6 +1092,12 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzMagicArrow.h">
       <Filter>Spell\Projectile\MagicArrow</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzWaterTrail_UI.h">
+      <Filter>UI\SpellUI\WaterTrail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzWaterTrail.h">
+      <Filter>Spell\Utility\Modifier\WaterTrail</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

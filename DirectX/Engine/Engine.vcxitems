@@ -127,6 +127,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)zzWandRecharge.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzWandScript.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzWater.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzWaterTrail.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzWaterTrail_UI.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzWrite.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -246,6 +248,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzWandRecharge.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzWandScript.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzWater.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzWaterTrail.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzWaterTrail_UI.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzWrite.h" />
   </ItemGroup>
   <ItemGroup>

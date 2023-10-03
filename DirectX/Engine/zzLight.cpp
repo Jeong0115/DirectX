@@ -5,6 +5,7 @@
 #include "zzMeshRenderer.h"
 #include "zzResourceManager.h"
 #include "zzApplication.h"
+#include "zzTime.h"
 
 namespace zz
 {
@@ -12,6 +13,11 @@ namespace zz
         : Component(eComponentType::Light)
         , mTransform(nullptr)
         , mLightScale(Vector3::Zero)
+        , mLightColor(Vector4::One)
+        , mbAfterimageEffect(false)
+        , mAfterimageDurtaion(0.0f)
+        , mbLight(true)
+        , mAfterimageEffect{}
     {
     }
 
@@ -32,8 +38,8 @@ namespace zz
     {
         if (Application::LightDisabled) return;
 
+      
         Matrix world = Matrix::Identity;
-
         Matrix scale = Matrix::CreateScale(mLightScale);
         Matrix position = Matrix::CreateTranslation(mTransform->GetPosition());
 
@@ -41,7 +47,6 @@ namespace zz
         rotation = Matrix::CreateRotationX(0.f);
         rotation *= Matrix::CreateRotationY(0.f);
         rotation *= Matrix::CreateRotationZ(0.f);
-
 
         world = scale * rotation * position;
 
@@ -55,13 +60,52 @@ namespace zz
         cb->SetBufferData(&trCB);
         cb->BindConstantBuffer(eShaderStage::VS);
 
+        renderer::ColorCB colorCB = {};
+        colorCB.color = mLightColor;
+
+        ConstantBuffer* colorBuff = renderer::constantBuffer[(UINT)eCBType::Color];
+        colorBuff->SetBufferData(&colorCB);
+        colorBuff->BindConstantBuffer(eShaderStage::PS);
 
 		std::shared_ptr<Mesh> mesh = ResourceManager::Find<Mesh>(L"RectMesh");
 		mesh->BindBuffer();
 
         ResourceManager::Find<Material>(L"m_light_mask")->Binds();
-		mesh->Render();
-        ResourceManager::Find<Material>(L"m_light_mask")->Clear();
+
+        if (mbLight)
+        {
+            mesh->Render();
+        }
+
+        if (mbAfterimageEffect)
+        {
+            for (auto iter = mAfterimageEffect.begin(); iter != mAfterimageEffect.end(); )
+            {
+                (*iter).second += (float)Time::DeltaTime();
+
+                if ((*iter).second >= mAfterimageDurtaion)
+                {
+                    iter = mAfterimageEffect.erase(iter);
+                }
+                else
+                {
+                    trCB.WorldViewProj = (*iter).first * trCB.mView * trCB.mProjection;
+
+                    cb->SetBufferData(&trCB);
+                    cb->BindConstantBuffer(eShaderStage::VS);
+                    mesh->Render();
+
+                    iter++;
+                }
+            }
+
+            if (mbLight)
+            {
+                mAfterimageEffect.push_back({ world, 0.0f });
+            }
+        }
+
+        ResourceManager::Find<Material>(L"m_light_mask")->Clear(); // 이거 좀 들여다 보자
     }
 
     void Light::Render()

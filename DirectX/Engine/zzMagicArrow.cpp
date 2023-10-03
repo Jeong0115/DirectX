@@ -14,18 +14,18 @@
 #include "zzRigidBody.h"
 #include "zzLight.h"
 
+#include "zzPixelWorld.h"
+#include "zzElement.h"
+
 namespace zz
 {
     using namespace std;
 
     MagicArrow::MagicArrow()
-        : mPrevPos(Vector4::Zero)
-        , mParticle(nullptr)
+        : mParticle(nullptr)
         , mTailParticle(nullptr)
         , mSubParticle(nullptr)
         , mExplosion(nullptr)
-        , mRigid(nullptr)
-        , mTime(0.0f)
         , mSubParticleTime(0.f)
         , mSleepTime(0.0f)
         , mbTimerOn(false)
@@ -58,7 +58,11 @@ namespace zz
 
         GetComponent<Transform>()->SetScale(9.f, 5.f, 1.0f);
         AddComponent<Collider>()->SetScale(9.f, 5.f, 1.0f);
-        AddComponent<Light>()->SetLightScale(10.f, 10.f, 1.0f);
+
+        Light* light = AddComponent<Light>(); 
+        light->SetLightScale(40.f, 40.f, 1.0f);
+        light->SetLightColor(40.f / 255.f, 120.f / 255.f, 10.f / 255.f, 1.0f);
+        light->SetAfterimageEffect(0.25f);
 
         mRigid = AddComponent<RigidBody>();
         mRigid->SetStartVelocity(mSpeed, mDirection);
@@ -114,8 +118,6 @@ namespace zz
 
         AddComponent<PixelCollider_Lite>()->SetCollisionEvent([this](Element& element) { OnCollision(element); });
 
-        GameObject::Initialize();
-
         mExplosion = new ExplosionEffect();
         std::shared_ptr<Texture> explosionTexture = ResourceManager::Find<Texture>(L"explosion_016_slime");
         Animator* animator = new Animator();
@@ -133,6 +135,8 @@ namespace zz
         mMuzzleEffect->SetAnimator(manimator, L"muzzle_laser_green_01_Play");
         mMuzzleEffect->GetComponent<Transform>()->SetScale(16.0f, 16.0f, 1.0f);
         CreateObject(mMuzzleEffect, eLayerType::Effect);
+
+        ProjectileSpell::Initialize();
     }
 
     void MagicArrow::Update()
@@ -148,12 +152,6 @@ namespace zz
             return;
         }
 
-        mTime += (float)Time::DeltaTime();
-
-        Transform* tr = GetComponent<Transform>();
-        Vector3 prevPos = tr->GetPosition();
-        mPrevPos = Vector4(prevPos.x, prevPos.y, prevPos.z, 0.0f);
-
 
         if (mTime >= 0.8f && IsActive())
         {
@@ -164,9 +162,11 @@ namespace zz
             mExplosion->GetComponent<Transform>()->SetPosition(pos.x, pos.y, BACK_PIXEL_WORLD_Z);
             mExplosion->GetComponent<Transform>()->SetScale(9.0f, 9.0f, 1.0f);
             CreateObject(mExplosion, eLayerType::Effect);
+            GetComponent<Light>()->TrunOff();
+
         }
 
-        GameObject::Update();
+        ProjectileSpell::Update();
     }
 
     void MagicArrow::LateUpdate()
@@ -192,6 +192,7 @@ namespace zz
                 }
             }
 
+            GetComponent<Light>()->LateUpdate();
             mTailParticle->LateUpdate();
             mParticle->LateUpdate();
             mSubParticle->LateUpdate();
@@ -208,9 +209,7 @@ namespace zz
         shareData.distance = shareData.curPosition - mPrevPos;
         shareData.distance.z = 0;
         shareData.randLifeTime = Vector2(0.05f, 0.05f);
-
         shareData.angle = GetComponent<Transform>()->GetRotation().z;
-        mPrevPos = shareData.curPosition;
 
         UINT count = (UINT)max(fabs(shareData.distance.x), fabs(shareData.distance.y));
         shareData.activeCount = count;
@@ -234,7 +233,7 @@ namespace zz
             mTailParticle->SetStructedBufferData(&mTailData, 1, 1);
         }
 
-        GameObject::LateUpdate();
+        ProjectileSpell::LateUpdate();
     }
 
     void MagicArrow::Render()
@@ -248,7 +247,7 @@ namespace zz
             return;
         }
 
-        GameObject::Render();
+        ProjectileSpell::Render();
     }
 
     ProjectileSpell* MagicArrow::Clone()
@@ -269,6 +268,7 @@ namespace zz
                 mExplosion->GetComponent<Transform>()->SetScale(9.0f, 9.0f, 1.0f);
                 CreateObject(mExplosion, eLayerType::Effect);
 
+                GetComponent<Light>()->TrunOff();
                 mbTimerOn = true;
             }
         }

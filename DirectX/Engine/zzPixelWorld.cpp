@@ -146,6 +146,14 @@ namespace zz
         }
     }
 
+    void PixelWorld::InsertElementIfEmpty(int x, int y, const Element& element)
+    {
+        if (PixelChunk* chunk = GetChunk(x, y))
+        {
+            chunk->InsertElementIfEmpty(x, y, element);
+        }
+    }
+
     void PixelWorld::DeleteElement(int x, int y)
     {
         if (PixelChunk* chunk = GetChunk(x, y))
@@ -207,13 +215,15 @@ namespace zz
         int x = 260;
         int y = 260;
   
-        int* a = new int;
+        int* a = new int; // 왜 릭 나냐 모르겠다...
         cv::Mat wangTileImage = cv::imread("..\\Resources\\Texture\\WangTiles\\Coalmine\\coalmine.png", cv::IMREAD_COLOR);
         int* b = new int;
+        //int yux = wangTileImage.u->refcount;
+        //wangTileImage.deallocate();
+        //int eqwd = wangTileImage.u->refcount;
 
-        
         cv::cvtColor(wangTileImage, wangTileImage, cv::COLOR_BGR2RGB);
-
+                    
         stbhw_tileset tileset;
 
         stbhw_build_tileset_from_image(&tileset, (unsigned char*)wangTileImage.data, wangTileImage.cols * 3, wangTileImage.cols, wangTileImage.rows);
@@ -626,11 +636,9 @@ namespace zz
         //cv::resize(randTileImage, randTileImage, cv::Size(), 2,2, cv::INTER_NEAREST);
 
         //cv::imshow("Generated Map", randTileImage);
-
+        wangTileImage.release();
         stbhw_free_tileset(&tileset);
         free(tileData);
-        
-        wangTileImage.release();
     }
 
     void PixelWorld::InsertElementFromImage(int y, int x, const cv::Mat& image, Element& element)

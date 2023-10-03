@@ -192,6 +192,22 @@ namespace zz
         }
     }
 
+    void PixelChunk::InsertElementIfEmpty(int x, int y, const Element& element)
+    {
+        int index = GetIndex(x, y);
+        Element& dest = mElements[index];
+
+        if (dest.Type == eElementType::EMPTY)
+        {
+            mElements[index] = element;
+            mElementCount++;
+
+            PixelWorld::GetPixelColor(mStartX + index % mWidth + ((mStartY + index / mWidth) * 2048)) = element.Color;
+
+            KeepAlive(index);
+        }
+    }
+
     void PixelChunk::RegisterElement(size_t index, const Element& element)
     {
         Element& dest = mElements[index];

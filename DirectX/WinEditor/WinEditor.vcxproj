@@ -120,6 +120,7 @@
       <AdditionalLibraryDirectories>$(SolutionDir)x64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <StackReserveSize>10485760</StackReserveSize>
+      <DelayLoadDLLs>opencv_world480d.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

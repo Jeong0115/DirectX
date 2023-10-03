@@ -18,13 +18,10 @@ namespace zz
     using namespace std;
 
     SparkBolt::SparkBolt()
-        : mPrevPos(Vector4::Zero)
-        , mParticle(nullptr)
+        : mParticle(nullptr)
         , mTailParticle(nullptr)
         , mSubParticle(nullptr)
         , mExplosion(nullptr)
-        , mRigid(nullptr)
-        , mTime(0.0f)
         , mSubParticleTime(0.f)
         , mSleepTime(0.0f)
         , mbTimerOn(false)
@@ -113,8 +110,6 @@ namespace zz
 
         AddComponent<PixelCollider_Lite>()->SetCollisionEvent([this](Element& element) { OnCollision(element); });
 
-        GameObject::Initialize();
-
         mExplosion = new ExplosionEffect();
         std::shared_ptr<Texture> explosionTexture = ResourceManager::Find<Texture>(L"Explosion_SparkBolt");
         Animator* animator = new Animator();
@@ -132,6 +127,8 @@ namespace zz
         mMuzzleEffect->SetAnimator(manimator, L"Muzzle_SparkBolt_Play");
         mMuzzleEffect->GetComponent<Transform>()->SetScale(16.0f, 16.0f, 1.0f);
         CreateObject(mMuzzleEffect, eLayerType::Effect);
+
+        ProjectileSpell::Initialize();
     }
 
     void SparkBolt::Update()
@@ -147,12 +144,6 @@ namespace zz
             return;
         }
 
-        mTime += (float)Time::DeltaTime();
-
-        Transform* tr = GetComponent<Transform>();
-        Vector3 prevPos = tr->GetPosition();
-        mPrevPos = Vector4(prevPos.x, prevPos.y, prevPos.z, 0.0f);
-
 
         if (mTime >= 0.8f && IsActive())
         {
@@ -165,7 +156,7 @@ namespace zz
             CreateObject(mExplosion, eLayerType::Effect);
         }
 
-        GameObject::Update();
+        ProjectileSpell::Update();
     }
 
     void SparkBolt::LateUpdate()
@@ -206,9 +197,7 @@ namespace zz
         shareData.distance = shareData.curPosition - mPrevPos;
         shareData.distance.z = 0;
         shareData.randLifeTime = Vector2(0.05f, 0.05f);
-
         shareData.angle = GetComponent<Transform>()->GetRotation().z;
-        mPrevPos = shareData.curPosition;
 
         UINT count = (UINT)max(fabs(shareData.distance.x), fabs(shareData.distance.y));
         shareData.activeCount = count;
@@ -232,7 +221,7 @@ namespace zz
             mTailParticle->SetStructedBufferData(&mTailData, 1, 1);
         }
 
-        GameObject::LateUpdate();
+        ProjectileSpell::LateUpdate();
     }
 
     void SparkBolt::Render()
@@ -246,7 +235,7 @@ namespace zz
             return;
         }
 
-        GameObject::Render();
+        ProjectileSpell::Render();
     }
 
     ProjectileSpell* SparkBolt::Clone()

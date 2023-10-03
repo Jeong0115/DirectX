@@ -177,12 +177,11 @@ namespace zz
 
                         if (!mModifiers.empty())
                         {
-                            mModifiers[0]->ModifierProjectile(attackSpell);
+                            for(auto modifierSpell : mModifiers)
+                            {
+                                modifierSpell->ModifierProjectile(attackSpell);
+                            }
                             mModifiers.clear();
-                        }
-                        else
-                        {
-                            int a = 0;
                         }
 
                         attackSpell->Initialize();

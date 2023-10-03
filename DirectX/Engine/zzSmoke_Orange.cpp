@@ -36,6 +36,10 @@ namespace zz
         GetComponent<Transform>()->SetScale(16.f, 16.f, 1.0f);
 
         AddComponent<Light>()->SetLightScale(16.f, 16.f, 1.0f);
+
+        // 나중에 색 건들자
+        GetComponent<Light>()->SetLightColor(1.0f,0.5f, 0.0f, 1.0f);
+
         mParticle = AddComponent<ParticleSystem>();
         mParticle->SetMaterial(ResourceManager::Find<Material>(L"m_Particle"));
         mParticle->SetMesh(ResourceManager::Find<Mesh>(L"PointMesh"));
