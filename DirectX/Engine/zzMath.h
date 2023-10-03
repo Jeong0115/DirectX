@@ -438,6 +438,9 @@ namespace zz::math
     Vector4 operator/ (const Vector4& V, float S) noexcept;
     Vector4 operator* (float S, const Vector4& V) noexcept;
 
+    // Custom code written by Jeong
+    Vector4 operator+(const Vector3& vec3, float value) { return Vector4(vec3.x, vec3.y, vec3.z, value); }
+
     //------------------------------------------------------------------------------
     // 4x4 Matrix (assumes right-handed cooordinates)
     struct Matrix : public XMFLOAT4X4

@@ -207,9 +207,9 @@ namespace zz
         int x = 260;
         int y = 260;
   
-        //int* a = new int;
+        int* a = new int;
         cv::Mat wangTileImage = cv::imread("..\\Resources\\Texture\\WangTiles\\Coalmine\\coalmine.png", cv::IMREAD_COLOR);
-        //int* b = new int;
+        int* b = new int;
 
         
         cv::cvtColor(wangTileImage, wangTileImage, cv::COLOR_BGR2RGB);

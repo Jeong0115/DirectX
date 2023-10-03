@@ -4,7 +4,6 @@
 
 #ifdef _DEBUG
 #define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
-#define new DBG_NEW
 #else
 #define DBG_NEW new
 #endif
@@ -67,7 +66,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_ int       nCmdShow)
 {
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-    _CrtSetBreakAlloc(1);
+    //_CrtSetBreakAlloc(2368872);
     //_crtBreakAlloc = 156;
 
     UNREFERENCED_PARAMETER(hPrevInstance);

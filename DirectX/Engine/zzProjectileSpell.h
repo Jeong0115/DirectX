@@ -1,6 +1,7 @@
 #pragma once
 
 #include "zzSpell.h"
+#include "zzMuzzleEffect.h"
 
 namespace zz
 {
@@ -8,7 +9,7 @@ namespace zz
     {
     public:
         ProjectileSpell();
-        ~ProjectileSpell();
+        virtual ~ProjectileSpell();
 
         virtual void Initialize();
         virtual void Update();
@@ -17,11 +18,15 @@ namespace zz
 
         virtual ProjectileSpell* Clone();
 
+        GameObject* GetMuzzleEffect() { return mMuzzleEffect; }
+
         void SetDirection(Vector3 dir) { mDirection = dir; }
         void SetSpeedFactor(float factor) { mSpeed *= factor; }
 
     protected:
-        Vector3 mDirection;
+        MuzzleEffect* mMuzzleEffect;
+
+        Vector3     mDirection;
 
         float   mSpeed;
         float   mSpread;

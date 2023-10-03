@@ -1,5 +1,7 @@
 #pragma once
 
+#include "CommonInclude.h"
+
 #include <string>
 #include <Windows.h>
 #include <assert.h>
@@ -19,7 +21,6 @@
 #include <wrl.h>
 #include <stack>
 
-#include "CommonInclude.h"
 #include "zzEnum.h"
 #include "zzMath.h"
 
@@ -34,6 +35,7 @@
 #ifdef _DEBUG
 #pragma comment(lib, "..\\External\\OpenCV\\lib\\Debug\\opencv_world480d.lib")
 #endif
+
 
 
 // #include "../External/Box2d/include/box2d.h"

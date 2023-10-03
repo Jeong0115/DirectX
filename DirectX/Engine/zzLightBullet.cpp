@@ -22,7 +22,6 @@ namespace zz
 
         SpellUI::Initialize();
 
-
         std::wstring textBox =
             L"\n"
             L"  SPARK BOLT\n"

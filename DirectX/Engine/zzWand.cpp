@@ -11,10 +11,6 @@
 #include "zzUIManager.h"
 #include "zzPlayer.h"
 
-#include "zzMuzzleEffect.h"
-#include "zzAnimator.h"
-#include "zzResourceManager.h"
-
 namespace zz
 {
     Wand::Wand()
@@ -158,6 +154,7 @@ namespace zz
                         ProjectileSpell* transClass = dynamic_cast<ProjectileSpell*>(spell);
                         ProjectileSpell* attackSpell = transClass->Clone();
 
+                        //이쪽 코드 수정해야됨 수정하면 위에 헤더파일도 제거
                         Vector3 playerPos = UIManager::mPlayer->GetComponent<Transform>()->GetPosition();
                         Vector3 cursorPos = Input::GetMouseWorldPos();
 
@@ -178,20 +175,6 @@ namespace zz
                         attackSpell->GetComponent<Transform>()->SetPosition(pos.x + worldOffset.x, pos.y + worldOffset.y, pos.z);
                         attackSpell->GetComponent<Transform>()->SetRotationZ(angle);
 
-                        MuzzleEffect* muzzle = new MuzzleEffect();
-                        std::shared_ptr<Texture> muzzleTexture = ResourceManager::Find<Texture>(L"Muzzle_SparkBolt");
-                        Animator* manimator = new Animator();
-                        manimator->Create(L"Muzzle_SparkBolt_Play", muzzleTexture, Vector2(0.0f, 0.0f), Vector2(16.0f, 16.0f), 1, Vector2::Zero, 0.1f);
-                        manimator->PlayAnimation(L"Muzzle_SparkBolt_Play", false);
-
-                        muzzle->SetAnimator(manimator, L"Muzzle_SparkBolt_Play");
-                        muzzle->GetComponent<Transform>()->SetPosition(mTip.x, 0.0f, BACK_PIXEL_WORLD_Z);
-                        //muzzle->GetComponent<Transform>()->SetRotationZ(GetComponent<Transform>()->GetRotation().z);
-                        muzzle->GetComponent<Transform>()->SetScale(16.0f, 16.0f, 1.0f);
-                        CreateObject(muzzle, eLayerType::Effect);
-
-                        muzzle->GetComponent<Transform>()->SetParent(GetComponent<Transform>());
-
                         if (!mModifiers.empty())
                         {
                             mModifiers[0]->ModifierProjectile(attackSpell);
@@ -203,6 +186,10 @@ namespace zz
                         }
 
                         attackSpell->Initialize();
+
+                        GameObject* muzzle = attackSpell->GetMuzzleEffect();
+                        muzzle->GetComponent<Transform>()->SetPosition(mTip.x, 0.0f, BACK_PIXEL_WORLD_Z);
+                        muzzle->GetComponent<Transform>()->SetParent(GetComponent<Transform>());
 
                         SceneManager::GetActiveScene()->AddGameObject(attackSpell, eLayerType::PlayerAttack);
                         mCurSpellIndex++;

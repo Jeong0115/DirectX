@@ -19,6 +19,8 @@
 #include "zzInfoBoxTexture.h"
 
 #include "zzLightBullet.h"
+#include "zzBullet.h"
+
 #include "zzSpeedUp_UI.h"
 #include "zzHealth.h"
 #include "zzLevitationEnerge.h"
@@ -61,7 +63,7 @@ namespace zz
         AcquireSpell(spell);
 
         {
-            LightBullet* spell = new LightBullet();
+            Bullet* spell = new Bullet();
             spell->Initialize();
             AcquireSpell(spell);
         }

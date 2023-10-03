@@ -5,28 +5,28 @@
 
 namespace zz
 {
-    class SparkBolt : public ProjectileSpell
+    class MagicArrow : public ProjectileSpell
     {
     public:
-        SparkBolt();
-        virtual ~SparkBolt();
+        MagicArrow();
+        virtual ~MagicArrow();
 
         virtual void Initialize()   override;
         virtual void Update()       override;
         virtual void LateUpdate()   override;
         virtual void Render()       override;
-       
+
         ProjectileSpell* Clone() override;
 
         void OnCollision(struct Element& element);
 
     private:
-        class ParticleSystem*   mParticle;
-        class ParticleSystem*   mSubParticle;
-        class ParticleSystem*   mTailParticle;
+        class ParticleSystem* mParticle;
+        class ParticleSystem* mSubParticle;
+        class ParticleSystem* mTailParticle;
 
-        class ExplosionEffect*  mExplosion;
-        class RigidBody*        mRigid;
+        class ExplosionEffect* mExplosion;
+        class RigidBody* mRigid;
 
         float   mTime;
         float   mSubParticleTime;

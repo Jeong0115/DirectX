@@ -75,7 +75,7 @@ void main(uint3 DTid : SV_DispatchThreadID)
             particle.position.xy += offsetPosition;
             particle.color = sharedBuffer.color;
             particle.scale = sharedBuffer.scale;
-            particle.active = (uint) (GaussianBlur(uv + float2(0.5f, 0.f)).x * 3.0f);
+            particle.active = 1;
             
             ParticleBuffer[DTid.x] = particle;
         }

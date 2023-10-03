@@ -942,14 +942,14 @@ namespace zz::renderer
         std::shared_ptr<Shader> spriteShader = ResourceManager::Find<Shader>(L"SpriteShader");
         std::shared_ptr<Material> material;
 
-        ResourceManager::Load<Texture>(L"SparkBolt", L"..\\Resources\\Texture\\Spell\\SparkBolt\\spark.png");
-        ResourceManager::Load<Texture>(L"Explosion_SparkBolt", L"..\\Resources\\Texture\\Spell\\SparkBolt\\explosion_008_pink.png");
-        ResourceManager::Load<Texture>(L"Muzzle_SparkBolt", L"..\\Resources\\Texture\\Spell\\SparkBolt\\muzzle_large_pink.png");
-
         std::shared_ptr<Shader> ParticleShader = ResourceManager::Find<Shader>(L"ParticleShader");
         material = std::make_shared<Material>();
         material->SetShader(ParticleShader);
         ResourceManager::Insert(L"m_Particle", material);
+
+        ResourceManager::Load<Texture>(L"SparkBolt", L"..\\Resources\\Texture\\Spell\\SparkBolt\\spark.png");
+        ResourceManager::Load<Texture>(L"Explosion_SparkBolt", L"..\\Resources\\Texture\\Spell\\SparkBolt\\explosion_008_pink.png");
+        ResourceManager::Load<Texture>(L"Muzzle_SparkBolt", L"..\\Resources\\Texture\\Spell\\SparkBolt\\muzzle_large_pink.png");
 
         std::shared_ptr<Texture> Particle_Pink = ResourceManager::Load<Texture>(L"Particle_Pink", L"..\\Resources\\Texture\\Spell\\SparkBolt\\plasma_fading_pink.png");
         material = std::make_shared<Material>();
@@ -962,6 +962,23 @@ namespace zz::renderer
         material->SetShader(spriteShader);
         material->SetTexture(light_bullet);
         ResourceManager::Insert(L"m_light_bullet", material);
+
+        ResourceManager::Load<Texture>(L"light_arrow", L"..\\Resources\\Texture\\Spell\\MagicArrow\\light_arrow.png");
+        ResourceManager::Load<Texture>(L"explosion_016_slime", L"..\\Resources\\Texture\\Spell\\MagicArrow\\explosion_016_slime.png");
+        ResourceManager::Load<Texture>(L"muzzle_laser_green_01", L"..\\Resources\\Texture\\Spell\\MagicArrow\\muzzle_laser_green_01.png");
+
+        std::shared_ptr<Texture> spark_green = ResourceManager::Load<Texture>(L"spark_green", L"..\\Resources\\Texture\\Spell\\MagicArrow\\spark_green.png");
+        material = std::make_shared<Material>();
+        material->SetShader(ParticleShader);
+        material->SetTexture(spark_green);
+        ResourceManager::Insert(L"m_spark_green", material);
+
+        std::shared_ptr<Texture> bullet = ResourceManager::Load<Texture>(L"bullet", L"..\\Resources\\Texture\\Spell\\MagicArrow\\bullet.png");
+        material = std::make_shared<Material>();
+        material->SetShader(spriteShader);
+        material->SetTexture(bullet);
+        ResourceManager::Insert(L"m_bullet", material);
+
 
         std::shared_ptr<Texture> divide_2 = ResourceManager::Load<Texture>(L"divide_2", L"..\\Resources\\Texture\\Spell\\Utility\\divide_2.png");
         material = std::make_shared<Material>();

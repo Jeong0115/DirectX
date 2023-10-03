@@ -7,6 +7,7 @@ namespace zz
         , mSpeed(0.0f)
         , mSpread(0.0f)
         , mDamage(0.0f)
+        , mMuzzleEffect(nullptr)
     {
         mType = eSpellType::Projectile;
     }

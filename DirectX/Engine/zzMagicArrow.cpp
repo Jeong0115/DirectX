@@ -1,4 +1,4 @@
-#include "zzSparkBolt.h"
+#include "zzMagicArrow.h"
 #include "zzAnimator.h"
 #include "zzTransform.h"
 #include "zzMeshRenderer.h"
@@ -13,11 +13,12 @@
 #include "zzExplosionEffect.h"
 #include "zzRigidBody.h"
 #include "zzLight.h"
+
 namespace zz
 {
     using namespace std;
 
-    SparkBolt::SparkBolt()
+    MagicArrow::MagicArrow()
         : mPrevPos(Vector4::Zero)
         , mParticle(nullptr)
         , mTailParticle(nullptr)
@@ -33,31 +34,31 @@ namespace zz
         , mIndex(0)
         , mTrailDuration(0.05f)
     {
-        mSpeed = 500.f;
+        mSpeed = 350.f;
         mCastDelay = 0.05f;
-        mDamage = 3.0f;
-        mManaDrain = 5.0f;
+        mDamage = 10.0f;
+        mManaDrain = 20.0f;
     }
 
-    SparkBolt::~SparkBolt()
+    MagicArrow::~MagicArrow()
     {
     }
 
-    void SparkBolt::Initialize()
+    void MagicArrow::Initialize()
     {
         MeshRenderer* mesh = AddComponent<MeshRenderer>();
         mesh->SetMaterial(ResourceManager::Find<Material>(L"m_SpriteAnimation"));
         mesh->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
 
-        std::shared_ptr<Texture> texture = ResourceManager::Find<Texture>(L"SparkBolt");
+        std::shared_ptr<Texture> texture = ResourceManager::Find<Texture>(L"light_arrow");
 
         Animator* ani = AddComponent<Animator>();
-        ani->Create(L"SparkBolt_Idle", texture, Vector2(0.0f, 1.0f), Vector2(10.0f, 10.0f), 2, Vector2::Zero, 0.2f);
-        ani->PlayAnimation(L"SparkBolt_Idle", true);
+        ani->Create(L"light_arrow_Idle", texture, Vector2(0.0f, 0.0f), Vector2(9.0f, 5.0f), 1, Vector2::Zero, 1.0f);
+        ani->PlayAnimation(L"light_arrow_Idle", true);
 
-        GetComponent<Transform>()->SetScale(10.f, 10.f, 1.0f);
-        AddComponent<Collider>()->SetScale(10.f, 4.f, 1.0f);
-        //AddComponent<Light>()->SetLightScale(10.f, 10.f, 1.0f);
+        GetComponent<Transform>()->SetScale(9.f, 5.f, 1.0f);
+        AddComponent<Collider>()->SetScale(9.f, 5.f, 1.0f);
+        AddComponent<Light>()->SetLightScale(10.f, 10.f, 1.0f);
 
         mRigid = AddComponent<RigidBody>();
         mRigid->SetStartVelocity(mSpeed, mDirection);
@@ -83,31 +84,31 @@ namespace zz
         mSubParticle->CreateStructedBuffer(sizeof(ParticleShared), 1, eViewType::UAV, nullptr, true, 4, 14, 1);
 
         mShareData.scale = Vector4(1.0f, 1.0f, 1.0f, 0.0f);
-        mShareData.color = Vector4(255.f / 255.f, 80.f / 255.f, 240.f / 255.f, 0.25f);
+        mShareData.color = Vector4(150.f / 255.f, 255.f / 255.f, 70.f / 255.f, 0.25f);
 
-        mShareData.randPositionMax = Vector2(30.0f, 30.0f);
-        mShareData.randPositionMin = Vector2(-30.0f, -30.0f);
-        mShareData.randVelocityMax = Vector2(15.0f, -30.0f);
-        mShareData.randVelocityMin = Vector2(-15.0f, 30.0f);
+        mShareData.randPositionMax = Vector2(3.0f, 50.0f);
+        mShareData.randPositionMin = Vector2(-3.0f, -50.0f);
+        mShareData.randVelocityMax = Vector2(5.0f, -7.0f);
+        mShareData.randVelocityMin = Vector2(-5.0f, 7.0f);
         mShareData.randLifeTime = Vector2(3.0f, 0.5f);
 
         mTailParticle = AddComponent<ParticleSystem>();
         mTailParticle->SetMaterial(ResourceManager::Find<Material>(L"m_Particle"));
         mTailParticle->SetMesh(ResourceManager::Find<Mesh>(L"PointMesh"));
         mTailParticle->SetParticleShader(ResourceManager::Find<ParticleShader>(L"SineFuncParticleCS"));
-        
+
         Particle tailParticles[100] = {};
         mTailParticle->CreateStructedBuffer(sizeof(Particle), 100, eViewType::UAV, tailParticles, true, 0, 14, 0);
         mTailParticle->CreateStructedBuffer(sizeof(SineParticleShared), 1, eViewType::UAV, nullptr, true, 5, 14, 1);
 
         mTailData.scale = Vector4(1.0f, 1.0f, 1.0f, 0.0f);
-        mTailData.color = Vector4(255.f / 255.f, 80.f / 255.f, 240.f / 255.f, 0.7f);
+        mTailData.color = Vector4(150.f / 255.f, 255.f / 255.f, 70.f / 255.f, 0.7f);
 
         mTailData.randPositionMax = Vector2(2.0f, 2.0f);
         mTailData.randPositionMin = Vector2(-2.0f, -2.0f);
-        mTailData.randVelocityMax = Vector2(20.0f, 20.0f);
-        mTailData.randVelocityMin = Vector2(10.0f, -20.0f);
-        mTailData.randLifeTime = Vector2(0.2f, 0.1f);
+        mTailData.randVelocityMax = Vector2(20.0f, 40.0f);
+        mTailData.randVelocityMin = Vector2(-20.0f, -40.0f);
+        mTailData.randLifeTime = Vector2(0.3f, 0.15f);
         mTailData.angle = GetComponent<Transform>()->GetRotation().z;
         mTailParticle->SetStructedBufferData(&mTailData, 1, 1);
 
@@ -116,25 +117,25 @@ namespace zz
         GameObject::Initialize();
 
         mExplosion = new ExplosionEffect();
-        std::shared_ptr<Texture> explosionTexture = ResourceManager::Find<Texture>(L"Explosion_SparkBolt");
+        std::shared_ptr<Texture> explosionTexture = ResourceManager::Find<Texture>(L"explosion_016_slime");
         Animator* animator = new Animator();
-        animator->Create(L"Explosion_SparkBolt_Play", explosionTexture, Vector2(0.0f, 1.0f), Vector2(9.0f, 9.0f), 8, Vector2::Zero, 0.01f);
-        animator->PlayAnimation(L"Explosion_SparkBolt_Play", false);
+        animator->Create(L"explosion_016_slime_Play", explosionTexture, Vector2(0.0f, 1.0f), Vector2(17.0f, 17.0f), 8, Vector2::Zero, 0.021f);
+        animator->PlayAnimation(L"explosion_016_slime_Play", false);
 
-        mExplosion->SetAnimator(animator, L"Explosion_SparkBolt_Play");
+        mExplosion->SetAnimator(animator, L"explosion_016_slime_Play");
 
         mMuzzleEffect = new MuzzleEffect();
-        std::shared_ptr<Texture> muzzleTexture = ResourceManager::Find<Texture>(L"Muzzle_SparkBolt");
+        std::shared_ptr<Texture> muzzleTexture = ResourceManager::Find<Texture>(L"muzzle_laser_green_01");
         Animator* manimator = new Animator();
-        manimator->Create(L"Muzzle_SparkBolt_Play", muzzleTexture, Vector2(0.0f, 0.0f), Vector2(16.0f, 16.0f), 1, Vector2::Zero, 0.1f);
-        manimator->PlayAnimation(L"Muzzle_SparkBolt_Play", false);
+        manimator->Create(L"muzzle_laser_green_01_Play", muzzleTexture, Vector2(0.0f, 0.0f), Vector2(16.0f, 16.0f), 1, Vector2::Zero, 0.1f);
+        manimator->PlayAnimation(L"muzzle_laser_green_01_Play", false);
 
-        mMuzzleEffect->SetAnimator(manimator, L"Muzzle_SparkBolt_Play");
+        mMuzzleEffect->SetAnimator(manimator, L"muzzle_laser_green_01_Play");
         mMuzzleEffect->GetComponent<Transform>()->SetScale(16.0f, 16.0f, 1.0f);
         CreateObject(mMuzzleEffect, eLayerType::Effect);
     }
 
-    void SparkBolt::Update()
+    void MagicArrow::Update()
     {
         if (mbTimerOn)
         {
@@ -168,7 +169,7 @@ namespace zz
         GameObject::Update();
     }
 
-    void SparkBolt::LateUpdate()
+    void MagicArrow::LateUpdate()
     {
         if (mbTimerOn)
         {
@@ -190,6 +191,7 @@ namespace zz
                     mTailParticle->SetStructedBufferData(&mTailData, 1, 1);
                 }
             }
+
             mTailParticle->LateUpdate();
             mParticle->LateUpdate();
             mSubParticle->LateUpdate();
@@ -213,9 +215,9 @@ namespace zz
         UINT count = (UINT)max(fabs(shareData.distance.x), fabs(shareData.distance.y));
         shareData.activeCount = count;
         shareData.totalActiveCount = count;
-        shareData.index = mIndex;
-        shareData.color = Vector4(255.f / 255.f, 80.f / 255.f, 240.f / 255.f, 1.0f);
-        //mIndex += count;
+        shareData.index = (float)mIndex;
+        shareData.color = Vector4(150.f / 255.f, 255.f / 255.f, 70.f / 255.f, 1.0f);
+        mIndex += count;
         mParticle->SetStructedBufferData(&shareData, 1, 1);
 
         mShareData.curPosition = curPos + 0.0f;
@@ -223,11 +225,11 @@ namespace zz
 
         mSubParticle->SetStructedBufferData(&mShareData, 1, 1);
 
-        if (mTime > 0.05f)
+        if (mTime > mTrailDuration)
         {
             mIndex += count;
             mTailData.activeCount = count;
-            mTailData.index = mIndex;
+            mTailData.index = (float)mIndex;
 
             mTailParticle->SetStructedBufferData(&mTailData, 1, 1);
         }
@@ -235,7 +237,7 @@ namespace zz
         GameObject::LateUpdate();
     }
 
-    void SparkBolt::Render()
+    void MagicArrow::Render()
     {
         if (mbTimerOn)
         {
@@ -249,12 +251,12 @@ namespace zz
         GameObject::Render();
     }
 
-    ProjectileSpell* SparkBolt::Clone()
+    ProjectileSpell* MagicArrow::Clone()
     {
-        return new SparkBolt();
+        return new MagicArrow();
     }
 
-    void SparkBolt::OnCollision(Element& element)
+    void MagicArrow::OnCollision(Element& element)
     {
         if (element.Type == eElementType::SOLID)
         {
@@ -262,7 +264,7 @@ namespace zz
             {
                 SetState(eState::Sleep);
 
-                Vector3 pos = GetComponent<Transform>()->GetPosition() - (mDirection * 500.f * 0.005f);
+                Vector3 pos = GetComponent<Transform>()->GetPosition() - (mDirection * 350.f * 0.005f);
                 mExplosion->GetComponent<Transform>()->SetPosition(pos.x, pos.y, BACK_PIXEL_WORLD_Z);
                 mExplosion->GetComponent<Transform>()->SetScale(9.0f, 9.0f, 1.0f);
                 CreateObject(mExplosion, eLayerType::Effect);

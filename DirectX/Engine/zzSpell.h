@@ -15,7 +15,7 @@ namespace zz
     {
     public:
         Spell();
-        ~Spell();
+        virtual ~Spell();
 
         virtual void Initialize();
         virtual void Update();
