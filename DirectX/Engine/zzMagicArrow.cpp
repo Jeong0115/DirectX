@@ -60,8 +60,9 @@ namespace zz
         AddComponent<Collider>()->SetScale(9.f, 5.f, 1.0f);
 
         Light* light = AddComponent<Light>(); 
+        light->SetLightType(1);
         light->SetLightScale(40.f, 40.f, 1.0f);
-        light->SetLightColor(40.f / 255.f, 120.f / 255.f, 10.f / 255.f, 1.0f);
+        light->SetLightColor(40.f / 255.f, 120.f / 255.f, 10.f / 255.f, 0.1f);
         light->SetAfterimageEffect(0.25f);
 
         mRigid = AddComponent<RigidBody>();

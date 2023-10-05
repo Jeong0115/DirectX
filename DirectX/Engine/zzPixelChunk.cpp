@@ -21,6 +21,8 @@ namespace zz
         , mDirtyBoxMutex{}
         , mUpdateDir{}
         , mStaticCount{}
+        , mBodies{}
+        , mbChange(false)
     {
         mElements = new Element[mWidth * mHeight];
         for (int i = 0; i < mWidth * mHeight; i++)
@@ -163,14 +165,16 @@ namespace zz
         int index = GetIndex(x, y);
         Element& dest = mElements[index];
 
-        if (dest.Type == eElementType::EMPTY && element.Type != eElementType::EMPTY)
+        if (dest.Type == eElementType::SOLID && element.Type != eElementType::SOLID)
         {
-            mElementCount++;
+            mStaticSolidElements[y - mStartY][x - mStartX] = 0;
+            mbChange = true;
         }
 
-        else if (dest.Type != eElementType::EMPTY && element.Type == eElementType::EMPTY)
+        else if (dest.Type != eElementType::SOLID && element.Type == eElementType::SOLID)
         {
-            mElementCount--;
+            mStaticSolidElements[y - mStartY][x - mStartX] = 1;
+            mbChange = true;
         }
 
         mElements[index] = element;
@@ -643,6 +647,15 @@ namespace zz
         if (element.LifeTime <= 0.0f)
         {
             InsertElementInOrOut(x, y, EMPTY);
+        }
+    }
+
+    void PixelChunk::RenewalBody()
+    {
+        if (mbChange)
+        {
+            Box2dWorld::RenewalChunkBody(mStaticSolidElements, mStartX, mStartY, mBodies);
+            mbChange = false;
         }
     }
 

@@ -228,12 +228,6 @@ namespace zz
             UIManager::Test();
 
 
-            std::shared_ptr<Texture> light_mask = ResourceManager::Load<Texture>(L"light_mask", L"..\\Resources\\Texture\\light_mask.png");
-            std::shared_ptr<Material> material = std::make_shared<Material>();
-            material->SetShader(ResourceManager::Find<Shader>(L"LightShader"));
-            material->SetTexture(light_mask);
-            ResourceManager::Insert(L"m_light_mask", material);
-
 
             //GameObject* object = new GameObject();
             //AddGameObject(object, eLayerType::Particle);

@@ -9,18 +9,21 @@ namespace zz
 {
     class Box2dWorld
     {
-        struct StaticElementsBody
-        {
-            b2Body* body = nullptr;
-            std::vector<Element> elements;
-        };
-
     public:       
         struct StaticElementInfo
         {
             Element& element;
             int x;
             int y;
+        };
+
+        struct StaticElementsBody
+        {
+            b2Body* body = nullptr;
+            std::vector<Element> elements;
+            bool isDestroy;
+
+            std::vector<StaticElementInfo> elementsInfo;
         };
 
         struct Position 
@@ -36,18 +39,28 @@ namespace zz
         static void Render();
         static void Release();
 
+        static void CreateBody(b2Body*& body, eBodyShape shape, Vector2 scale, Vector3 pos);
+        static void DeleteBody(b2Body* body);
+
+        static void RenewalChunkBody(std::array<std::bitset<64>, 64>& points, int offsetX, int offsetY, std::vector<b2Body*>& bodies);
+
         static void ReconstructBody(StaticElementsBody body);
-        static void ReconstructBody(std::vector<int>& a);
+        static void ReconstructBody();
+
         static void Draw(int x, int y);
         static void Draw2(int x, int y);
+
+        static void Draw(int x, int y, cv::Mat& image, Element& element);
 
         static double perpendicularDistance(const Position& pt, const Position& lineStart, const Position& lineEnd);
         static void douglasPeucker(const std::vector<Position>& points, double epsilon, std::vector<Position>& out);
 
         static std::vector<std::vector<cv::Point>> getContours(const std::vector<cv::Point>& points, float width, float height);
+        static std::vector<std::vector<cv::Point>> getContours(cv::Mat& image, const std::vector<cv::Point>& points, float width, float height);
+        static std::vector<std::vector<cv::Point>> getContours(const std::array<std::bitset<64>, 64>& points, float width, float height, float offsetX, float offsetY);
         static std::vector<std::vector<cv::Point>> getInsidePointsForEachContour(const cv::Mat& image, const std::vector<std::vector<cv::Point>>& contours);
 
-        static std::vector<std::vector<StaticElementInfo>>& GetTemp() { return mStaticElements; }
+        static std::vector<StaticElementsBody> mElementsBodys;
 
     private:
         static b2World* mBox2dWorld;
@@ -56,8 +69,7 @@ namespace zz
         static std::vector<b2FixtureDef*> mFixtureDefs;
         static std::vector<b2Shape*> mShapes;
 
-        static std::vector<StaticElementsBody> mElementsBodys;
-        static std::vector<std::vector<StaticElementInfo>> mStaticElements;
+
 
         static class DrawBox2dWorld* mDrawBow2dBody;
     };

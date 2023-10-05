@@ -58,7 +58,7 @@ namespace zz
         static void InsertElementIfEmpty(int x, int y, const Element& element);
         static void DeleteElement(int x, int y);
         static void MoveStaticElement(std::vector<Box2dWorld::StaticElementInfo>& elements);
-        static void DeleteStaticElement(std::vector<Box2dWorld::StaticElementInfo>& elements, int index, std::vector<int>& a);
+        static void DeleteStaticElement(std::vector<Box2dWorld::StaticElementInfo>& elements);
         
         static void CreateNewWorld();
         static void InsertElementFromImage(int y, int x, const cv::Mat& image, Element& element);
@@ -73,6 +73,8 @@ namespace zz
 
         static bool InBounds(int x, int y);
         static bool IsEmpty(int x, int y) { return InBounds(x, y) && GetChunk(x, y)->IsEmpty(x, y);}
+
+        static void RenewalChunkBody(int x, int y);
 
         static void DrawPixels();
         static void SetImage(int x, int y, std::shared_ptr<class Texture> texture, std::shared_ptr<class Texture> texture_visual);

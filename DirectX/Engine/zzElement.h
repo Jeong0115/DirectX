@@ -14,6 +14,13 @@ namespace zz
         GAS,
     };
 
+    enum class eSolidType : uint8_t
+    {
+        DYNAMIC,
+        STATIC,
+        NONE,
+    };
+
     enum class eElementID : uint8_t
     {
         EMPTY ,
@@ -45,9 +52,10 @@ namespace zz
 
     struct Element
     {
-        eElementType    Type    = eElementType::EMPTY;
-        eElementID      Id      = eElementID::EMPTY;
-        eElementUpdate  Temp    = eElementUpdate::NONE;
+        eElementType    Type        = eElementType::EMPTY;
+        eSolidType      SolidType   = eSolidType::NONE;
+        eElementID      Id          = eElementID::EMPTY;
+        eElementUpdate  Temp        = eElementUpdate::NONE;
 
         uint32_t        Color   = (uint32_t)eElementColor::EMPTY;
         std::wstring    Name    = L"Empty";
@@ -70,6 +78,8 @@ namespace zz
         float y                 = 0.0f;
 
         uint16_t ElementFrameCount = 0;
+
+        bool* reBody = nullptr;
     };
 
     Element EMPTY, SAND, WATER, ROCK, WOOD, FIRE, SMOKE;
@@ -96,6 +106,7 @@ namespace zz
         EMPTY.onFire        = false;
 
         SAND.Type           = eElementType::SOLID;
+        SAND.SolidType      = eSolidType::DYNAMIC;
         SAND.Id             = eElementID::SAND;
         SAND.Color          = (uint32_t)eElementColor::SAND;
         SAND.Name           = L"Sand";
@@ -117,6 +128,7 @@ namespace zz
         WATER.FireHP        = 10000.f;
 
         ROCK.Type           = eElementType::SOLID;
+        ROCK.SolidType      = eSolidType::STATIC;
         ROCK.Id             = eElementID::ROCK;
         ROCK.Color          = (uint32_t)eElementColor::ROCK;
         ROCK.Name           = L"Rock";
@@ -127,6 +139,7 @@ namespace zz
         ROCK.onFire         = false;
 
         WOOD.Type           = eElementType::SOLID;
+        WOOD.SolidType      = eSolidType::STATIC;
         WOOD.Id             = eElementID::WOOD;
         WOOD.Temp           = eElementUpdate::HEAT_TRANSFER;
         WOOD.Color          = (uint32_t)eElementColor::WOOD;

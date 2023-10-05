@@ -985,6 +985,14 @@ namespace zz::renderer
         material->SetTexture(water_trail);
         ResourceManager::Insert(L"m_water_trail", material);
 
+        ResourceManager::Load<Texture>(L"bomb", L"..\\Resources\\Texture\\Spell\\Bomb\\bomb.png");
+        ResourceManager::Load<Texture>(L"muzzle_launcher_large_01", L"..\\Resources\\Texture\\Spell\\Bomb\\muzzle_launcher_large_01.png");
+
+        std::shared_ptr<Texture> bomb_ui = ResourceManager::Load<Texture>(L"bomb_ui", L"..\\Resources\\Texture\\Spell\\Bomb\\bomb_ui.png");
+        material = std::make_shared<Material>();
+        material->SetShader(spriteShader);
+        material->SetTexture(bomb_ui);
+        ResourceManager::Insert(L"m_bomb_ui", material);
 
         std::shared_ptr<Texture> divide_2 = ResourceManager::Load<Texture>(L"divide_2", L"..\\Resources\\Texture\\Spell\\Utility\\divide_2.png");
         material = std::make_shared<Material>();
@@ -1021,6 +1029,33 @@ namespace zz::renderer
     {
         ResourceManager::Load<Texture>(L"explosion_128", L"..\\Resources\\Texture\\Effect\\explosion_128.png");
         ResourceManager::Load<Texture>(L"explosion_128_poof", L"..\\Resources\\Texture\\Effect\\explosion_128_poof.png");
+
+        std::shared_ptr<Shader> lightShader = ResourceManager::Find<Shader>(L"LightShader");
+        std::shared_ptr<Material> material;
+        
+        std::shared_ptr<Texture> light_mask = ResourceManager::Load<Texture>(L"light_mask", L"..\\Resources\\Texture\\Light\\light_mask.png");
+        material = std::make_shared<Material>();
+        material->SetShader(lightShader);
+        material->SetTexture(light_mask);
+        ResourceManager::Insert(L"m_light_mask", material);
+
+        std::shared_ptr<Texture> light_mask_smoothed = ResourceManager::Load<Texture>(L"light_mask_smoothed", L"..\\Resources\\Texture\\Light\\light_mask_smoothed.png");
+        material = std::make_shared<Material>();
+        material->SetShader(lightShader);
+        material->SetTexture(light_mask_smoothed);
+        ResourceManager::Insert(L"m_light_mask_smoothed", material);
+
+        std::shared_ptr<Texture> particle_glow = ResourceManager::Load<Texture>(L"particle_glow", L"..\\Resources\\Texture\\Light\\particle_glow.png");
+        material = std::make_shared<Material>();
+        material->SetShader(lightShader);
+        material->SetTexture(particle_glow);
+        ResourceManager::Insert(L"m_particle_glow", material);
+
+        std::shared_ptr<Texture> light_mask_linear = ResourceManager::Load<Texture>(L"light_mask_linear", L"..\\Resources\\Texture\\Light\\light_mask_linear.png");
+        material = std::make_shared<Material>();
+        material->SetShader(lightShader);
+        material->SetTexture(light_mask_linear);
+        ResourceManager::Insert(L"m_light_mask_linear", material);
     }
 
     void LoadParticleResource()

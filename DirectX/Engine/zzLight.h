@@ -22,11 +22,14 @@ namespace zz
         void SetLightColor(float r, float g, float b, float a) { mLightColor = Vector4(r, g, b, a); }
 
         void SetAfterimageEffect(float duration) { mAfterimageDurtaion = duration; mbAfterimageEffect = true; }
+        void SetLightType(int type);
 
         void TrunOff() { mbLight = false; }
 
     private:
-        class Transform* mTransform;
+        std::shared_ptr<class Material> mMaterial;
+        class Transform*    mTransform;
+
 
         Vector3 mLightScale;
         Vector4 mLightColor;

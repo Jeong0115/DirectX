@@ -1,6 +1,9 @@
 #pragma once
 
 #include "zzElement.h"
+#include "../External/Box2d/include/box2d.h"
+#include <array>
+#include <bitset>
 
 namespace zz
 {
@@ -55,6 +58,7 @@ namespace zz
 
         size_t GetIndex(int x, int y) { return (x - mStartX) + (y - mStartY) * mWidth; };
 
+        void RenewalBody();
 
     public:
         const int mWidth;
@@ -75,7 +79,13 @@ namespace zz
         std::vector<std::tuple<PixelChunk*, size_t, size_t>> mChanges;
         std::mutex mDirtyBoxMutex;
         Element* mElements;
+
         std::bitset<1> mUpdateDir;
+
+        std::array<std::bitset<64>, 64> mStaticSolidElements;
+        std::vector<b2Body*> mBodies;
+
+        bool mbChange;
 
     private:
         int m_minXw, m_minYw,

@@ -22,6 +22,7 @@
 #include "zzBullet.h"
 #include "zzWaterTrail_UI.h"
 #include "zzSpeedUp_UI.h"
+#include "zzBomb_UI.h"
 
 #include "zzHealth.h"
 #include "zzLevitationEnerge.h"
@@ -62,6 +63,11 @@ namespace zz
         }
         {
             WaterTrail_UI* spell = new WaterTrail_UI();
+            spell->Initialize();
+            AcquireSpell(spell);
+        }
+        {
+            Bomb_UI* spell = new Bomb_UI();
             spell->Initialize();
             AcquireSpell(spell);
         }

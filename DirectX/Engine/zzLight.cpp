@@ -19,6 +19,7 @@ namespace zz
         , mbLight(true)
         , mAfterimageEffect{}
     {
+        mMaterial = ResourceManager::Find<Material>(L"m_light_mask");
     }
 
     Light::~Light()
@@ -37,8 +38,7 @@ namespace zz
     void Light::LateUpdate()
     {
         if (Application::LightDisabled) return;
-
-      
+   
         Matrix world = Matrix::Identity;
         Matrix scale = Matrix::CreateScale(mLightScale);
         Matrix position = Matrix::CreateTranslation(mTransform->GetPosition());
@@ -70,7 +70,7 @@ namespace zz
 		std::shared_ptr<Mesh> mesh = ResourceManager::Find<Mesh>(L"RectMesh");
 		mesh->BindBuffer();
 
-        ResourceManager::Find<Material>(L"m_light_mask")->Binds();
+        mMaterial->Binds();
 
         if (mbLight)
         {
@@ -105,10 +105,22 @@ namespace zz
             }
         }
 
-        ResourceManager::Find<Material>(L"m_light_mask")->Clear(); // 이거 좀 들여다 보자
+        mMaterial->Clear(); // 이거 좀 들여다 보자
     }
 
     void Light::Render()
     {
+    }
+
+    void Light::SetLightType(int type)
+    {
+        switch (type)
+        {
+        case 0: mMaterial = ResourceManager::Find<Material>(L"m_light_mask");           break;
+        case 1: mMaterial = ResourceManager::Find<Material>(L"m_light_mask_smoothed");  break;
+        case 2: mMaterial = ResourceManager::Find<Material>(L"m_particle_glow");        break;
+        case 3: mMaterial = ResourceManager::Find<Material>(L"m_light_mask_linear");    break;
+        default: break;
+        }
     }
 }

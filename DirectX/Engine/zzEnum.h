@@ -18,6 +18,7 @@ namespace zz
         PixelCollider,
         PixelCollider_Lite,
         Levitation,
+        Box2dCollider,
         End,
     };
 
@@ -72,6 +73,13 @@ namespace zz
     {
         Create_Object,
         Delete_Object,
+        End,
+    };
+
+    enum class eBodyShape
+    {
+        Box,
+        Circle,
         End,
     };
 }

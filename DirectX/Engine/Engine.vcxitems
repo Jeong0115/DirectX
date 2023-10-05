@@ -15,6 +15,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzBarBackGround.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzBomb.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzBomb_UI.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzBox2dCollider.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzBullet.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzHealth.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzHUD_Icon.cpp" />
@@ -135,6 +138,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)CommonInclude.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)define.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzBarBackGround.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzBomb.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzBomb_UI.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzBox2dCollider.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzBullet.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzHealth.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzHUD_Icon.h" />
