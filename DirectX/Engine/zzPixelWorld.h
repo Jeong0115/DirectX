@@ -20,15 +20,25 @@ namespace zz
     class PixelWorld
     {
     public:
-        struct move
+        struct MaterialImage
         {
-            float x;
-            float y;
-            Element& element;
-            float prevX;
-            float prevY;
+            cv::Mat image;
 
+            int width;
+            int height;
+
+            int indexX;
+            int indexY;
         };
+        //struct move
+        //{
+        //    float x;
+        //    float y;
+        //    Element& element;
+        //    float prevX;
+        //    float prevY;
+
+        //};
 
         enum class RotateOption
         {
@@ -63,6 +73,7 @@ namespace zz
         static void CreateNewWorld();
         static void InsertElementFromImage(int y, int x, const cv::Mat& image, Element& element);
         static uint32_t Vec3bToColor(const cv::Vec3b& vec3b);
+        static uint32_t Vec4bToColor(const cv::Vec4b& vec4b);
         static void RoatateImage(RotateOption option, cv::Mat& image);
 
         static void LoadRandomScene_01(int x, int y);
@@ -86,10 +97,15 @@ namespace zz
         static ThreadPool threadPool;
         static void Temp();
         static uint16_t FrameCount;
+
     private:
         static PixelChunkMap* CreateChunkMap(std::pair<int, int> location);
-        
+        static uint32_t getMaterialColor(const std::wstring& material_name);
+        static void loadMaterialImage();
+        static void createVegetation(int x, int y);
+
         static std::unordered_map<std::pair<int, int>, PixelChunkMap*, pair_hash> mChunkMapLookUp;
+        static std::unordered_map<std::wstring, MaterialImage*> mMaterialImages;
 
         static std::map<char, Element> mElementMap;
         static Element mSelectElement;

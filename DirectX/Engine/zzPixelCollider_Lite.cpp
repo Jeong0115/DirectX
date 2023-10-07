@@ -7,6 +7,7 @@ namespace zz
 {
     PixelCollider_Lite::PixelCollider_Lite()
         : Component(eComponentType::PixelCollider_Lite)
+        , mOffset(Vector3::Zero)
         , mTransform(nullptr)
         , mEvent(nullptr)
     {
@@ -23,7 +24,7 @@ namespace zz
 
     void PixelCollider_Lite::Update()
     {
-        Vector3 ownerPos = mTransform->GetPosition();
+        Vector3 ownerPos = mTransform->GetPosition() + mOffset;
 
         Element& element = PixelWorld::GetElement(ownerPos.x, -ownerPos.y);
         mEvent(element);

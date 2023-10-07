@@ -15,10 +15,13 @@ namespace zz
         virtual void LateUpdate()   override;
         virtual void Render()       override;
 
+        void SetOffest(float x, float y, float z) { mOffset = Vector3(x, y, z); }
+        void SetOffest(Vector3 offset) { mOffset = offset; }
         void SetCollisionEvent(const std::function<void(Element& element)>& callback) { mEvent = callback; }
 
     private:
         std::function<void(Element& element)> mEvent;
+        Vector3 mOffset;
 
         class Transform* mTransform;
     };

@@ -589,7 +589,7 @@ namespace zz::graphics
 
     void GraphicsDevice::ClearRenderTarget()
     {
-        FLOAT bgColor[4] = { 0.2f, 0.2f, 0.2f, 1.0f };
+        FLOAT bgColor[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
         mContext->ClearRenderTargetView(mRenderTargetView.Get(), bgColor);
         mContext->ClearDepthStencilView(mDepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1, 0);
         mContext->OMSetRenderTargets(1, mRenderTargetView.GetAddressOf(), mDepthStencilView.Get());

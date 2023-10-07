@@ -159,7 +159,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    UpdateWindow(hWnd);
 
    application.Initialize();
-   Editor::Initialize();
+
 
    return TRUE;
 }

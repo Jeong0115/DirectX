@@ -118,6 +118,8 @@ namespace zz
         case eElementID::FIRE:  UpdateFire(worldX, worldY, element);    break;
         case eElementID::SAND:  UpdateSand(worldX, worldY, element);    break;
         case eElementID::WATER: UpdateWater(worldX, worldY, element);   break;
+        case eElementID::OIL:   UpdateWater(worldX, worldY, element);   break;
+        case eElementID::GRASS: UpdateGrass(worldX, worldY, element);   break;
         case eElementID::ROCK:  break;
         default: break;
         }
@@ -169,8 +171,19 @@ namespace zz
         {
             mStaticSolidElements[y - mStartY][x - mStartX] = 0;
             mbChange = true;
-        }
 
+            if (dest.SolidType == eSolidType::DYNAMIC)
+            {
+                bool* body = mElements[index].destoryBody;
+                mElements[index] = element;
+                mElements[index].destoryBody = body;
+                *body = true;
+                PixelWorld::GetPixelColor(mStartX + index % mWidth + ((mStartY + index / mWidth) * 2048)) = element.Color;
+                KeepAlive(index);
+
+                return;
+            }
+        }
         else if (dest.Type != eElementType::SOLID && element.Type == eElementType::SOLID)
         {
             mStaticSolidElements[y - mStartY][x - mStartX] = 1;
@@ -178,9 +191,7 @@ namespace zz
         }
 
         mElements[index] = element;
-
         PixelWorld::GetPixelColor(mStartX + index % mWidth + ((mStartY + index / mWidth) * 2048)) = element.Color;
-
         KeepAlive(index);
     }
 
@@ -224,7 +235,6 @@ namespace zz
         }
 
         mElements[index] = element;
-     
         PixelWorld::GetPixelColor(mStartX + index % mWidth + ((mStartY + index / mWidth) * 2048)) = mElements[index].Color;
     }
 
@@ -464,8 +474,10 @@ namespace zz
             }
         }*/
 
-        eElementType underElementType = GetElementInOrOut(x, y + 1).Type;
-        if (underElementType == eElementType::EMPTY || underElementType == eElementType::GAS)
+        Element& target = GetElementInOrOut(x, y + 1);
+
+        if (target.Type == eElementType::EMPTY || target.Type == eElementType::GAS
+            || (target.Type == eElementType::LIQUID && target.Density < element.Density))
         {
             element.Velocity.x *= 0.8f;
             element.Velocity.y += 0.1f;
@@ -504,14 +516,15 @@ namespace zz
                     xIncrease = smallerCount;
                 }
 
-                Element& target = GetElementInOrOut(x + (xIncrease * dirX), y + yIncrease);
+                Element& nextTarget = GetElementInOrOut(x + (xIncrease * dirX), y + yIncrease);
 
-                if (target.Type == eElementType::EMPTY || target.Type == eElementType::GAS)
+                if (nextTarget.Type == eElementType::EMPTY || nextTarget.Type == eElementType::GAS
+                    || (nextTarget.Type == eElementType::LIQUID && nextTarget.Density < element.Density))
                 {
                     lastX = x + (xIncrease * dirX);
                     lastY = y + yIncrease;
                 }
-                else if (target.Type == eElementType::LIQUID || target.Type == eElementType::SOLID)
+                else if (nextTarget.Type == eElementType::LIQUID || nextTarget.Type == eElementType::SOLID)
                 {
                     element.Velocity.x = (element.Velocity.y + random() * 3.0f - 1.0f) * dirX;
                     break;
@@ -540,7 +553,8 @@ namespace zz
             {
                 Element& target = GetElementInOrOut(x + j * dirX, y);
 
-                if (target.Type == eElementType::EMPTY || target.Type == eElementType::GAS)
+                if (target.Type == eElementType::EMPTY || target.Type == eElementType::GAS
+                    || (target.Type == eElementType::LIQUID && target.Density < element.Density))
                 {
                     lastX = x + j * dirX;
                 }
@@ -587,6 +601,14 @@ namespace zz
                     SwapElement(rTarget, x - rand, y - 1, element, x, y);
                 }
             }
+        }
+    }
+
+    void PixelChunk::UpdateGrass(int x, int y, Element& element)
+    {
+        if (element.StopCount > 0)
+        {
+            InsertElement(x, y, EMPTY);
         }
     }
 

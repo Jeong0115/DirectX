@@ -8,7 +8,7 @@ namespace zz
     {
     public:
         ShotGunner_Weak();
-        ~ShotGunner_Weak();
+        virtual ~ShotGunner_Weak();
 
         virtual void Initialize()   override;
         virtual void Update()       override;

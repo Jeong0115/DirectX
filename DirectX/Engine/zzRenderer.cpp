@@ -32,6 +32,7 @@ namespace zz::renderer
     void LoadEffectResource();
     void LoadParticleResource();
     void LoadMonsterResource();
+    void LoadVegetationResource();
 
     void LoadBuffer()
     {
@@ -216,6 +217,11 @@ namespace zz::renderer
 		textShader->CreateShader(eShaderStage::PS, L"TextPS.hlsl", "main");
 		ResourceManager::Insert(L"TextShader", textShader);
 
+        std::shared_ptr<Shader> fadeSpriteShader = std::make_shared<Shader>();
+        fadeSpriteShader->CreateShader(eShaderStage::VS, L"SpriteVS.hlsl", "main");
+        fadeSpriteShader->CreateShader(eShaderStage::PS, L"FadeSpritePS.hlsl", "main");
+        ResourceManager::Insert(L"FadeSpriteShader", fadeSpriteShader);
+
         std::shared_ptr<Shader> lightShader = std::make_shared<Shader>();
         lightShader->CreateShader(eShaderStage::VS, L"LightVS.hlsl", "main");
         lightShader->CreateShader(eShaderStage::PS, L"LightPS.hlsl", "main");
@@ -225,14 +231,18 @@ namespace zz::renderer
         std::shared_ptr<Shader> lightMapShader = std::make_shared<Shader>();
         lightMapShader->CreateShader(eShaderStage::VS, L"LightMapVS.hlsl", "main");
         lightMapShader->CreateShader(eShaderStage::PS, L"LightMapPS.hlsl", "main");
-        lightMapShader->SetBSState(eBSType::Light);
-        
+        lightMapShader->SetBSState(eBSType::Light);       
         ResourceManager::Insert(L"LightMapShader", lightMapShader);
 
         std::shared_ptr<Shader> spriteAnimationShader = std::make_shared<Shader>();
         spriteAnimationShader->CreateShader(eShaderStage::VS, L"SpriteAnimationVS.hlsl", "main");
         spriteAnimationShader->CreateShader(eShaderStage::PS, L"SpriteAnimationPS.hlsl", "main");
         ResourceManager::Insert(L"SpriteAnimationShader", spriteAnimationShader);
+
+        std::shared_ptr<Shader> fadeAnimationShader = std::make_shared<Shader>();
+        fadeAnimationShader->CreateShader(eShaderStage::VS, L"SpriteAnimationVS.hlsl", "main");
+        fadeAnimationShader->CreateShader(eShaderStage::PS, L"FadeAnimationPS.hlsl", "main");
+        ResourceManager::Insert(L"FadeAnimationShader", fadeAnimationShader);
 
         std::shared_ptr<ParticleShader> psSystemShader = std::make_shared<ParticleShader>();
         psSystemShader->Create(L"ProjectileParticleCS.hlsl", "main");
@@ -280,6 +290,7 @@ namespace zz::renderer
         LoadEffectResource();
         LoadSpellResource();
         LoadMonsterResource();
+        LoadVegetationResource();
 
         std::shared_ptr<Shader> spriteShader = ResourceManager::Find<Shader>(L"SpriteShader");
 
@@ -475,6 +486,12 @@ namespace zz::renderer
         material->SetShader(animationShader);
         material->SetRenderingMode(eRenderingMode::Transparent);
         ResourceManager::Insert(L"m_SpriteAnimation", material);
+
+        std::shared_ptr<Shader> fadeAnimationShader = ResourceManager::Find<Shader>(L"FadeAnimationShader");
+        material = std::make_shared<Material>();
+        material->SetShader(fadeAnimationShader);
+        material->SetRenderingMode(eRenderingMode::Transparent);
+        ResourceManager::Insert(L"m_FadeAnimation", material);
 #pragma endregion
     }
    
@@ -512,6 +529,9 @@ namespace zz::renderer
         shader = ResourceManager::Find<Shader>(L"SliderShader");
         GetDevice()->CreateInputLayout(arrLayout, 3, shader->GetVSCode(), shader->GetInputLayoutAddressOf());
 
+        shader = ResourceManager::Find<Shader>(L"FadeSpriteShader");
+        GetDevice()->CreateInputLayout(arrLayout, 3, shader->GetVSCode(), shader->GetInputLayoutAddressOf());
+
         shader = ResourceManager::Find<Shader>(L"LightShader");
         GetDevice()->CreateInputLayout(arrLayout, 3, shader->GetVSCode(), shader->GetInputLayoutAddressOf());
 
@@ -522,6 +542,9 @@ namespace zz::renderer
         GetDevice()->CreateInputLayout(arrLayout, 3, shader->GetVSCode(), shader->GetInputLayoutAddressOf());
 
         shader = ResourceManager::Find<Shader>(L"SpriteAnimationShader");
+        GetDevice()->CreateInputLayout(arrLayout, 3, shader->GetVSCode(), shader->GetInputLayoutAddressOf());
+
+        shader = ResourceManager::Find<Shader>(L"FadeAnimationShader");
         GetDevice()->CreateInputLayout(arrLayout, 3, shader->GetVSCode(), shader->GetInputLayoutAddressOf());
 
         D3D11_INPUT_ELEMENT_DESC particleLayout[1] = {};
@@ -730,6 +753,18 @@ namespace zz::renderer
     {
         std::shared_ptr<Shader> spriteShader = ResourceManager::Find<Shader>(L"SpriteShader");
         std::shared_ptr<Material> material;
+
+        std::shared_ptr<Texture> rock_hard_alt = ResourceManager::Load<Texture>(L"rock_hard_alt", L"..\\Resources\\Texture\\Material\\rock_hard_alt.png");
+        material = std::make_shared<Material>();
+        material->SetShader(spriteShader);
+        material->SetTexture(rock_hard_alt);
+        ResourceManager::Insert(L"m_rock_hard_alt", material);
+
+        std::shared_ptr<Texture> wall_background = ResourceManager::Load<Texture>(L"wall_background", L"..\\Resources\\Texture\\Temple\\wall_background.png");
+        material = std::make_shared<Material>();
+        material->SetShader(spriteShader);
+        material->SetTexture(wall_background);
+        ResourceManager::Insert(L"m_wall_background", material);
 
         std::shared_ptr<Texture> coalpit01 = ResourceManager::Load<Texture>(L"coalpit01", L"..\\Resources\\Texture\\Coalmine\\coalpit01.png");
         material = std::make_shared<Material>();
@@ -1077,6 +1112,33 @@ namespace zz::renderer
         material->SetShader(ParticleAnimationShader);
         material->SetTexture(smoke_orange);
         ResourceManager::Insert(L"m_smoke_orange", material);
+    }
+
+    void LoadVegetationResource()
+    {
+        std::shared_ptr<Shader> spriteShader = ResourceManager::Find<Shader>(L"FadeSpriteShader");
+        std::shared_ptr<Material> material;
+
+        for (int i = 1; i <= 9; i++)
+        {
+            std::wstring number = std::to_wstring(i);
+
+            std::shared_ptr<Texture> mushroom_small = ResourceManager::Load<Texture>(L"mushroom_small_0" + number, L"..\\Resources\\Texture\\Vegetation\\mushroom_small_0" + number + L".png");
+            material = std::make_shared<Material>();
+            material->SetShader(spriteShader);
+            material->SetTexture(mushroom_small);
+            ResourceManager::Insert(L"m_mushroom_small_0" + number, material);
+        }
+        for (int i = 1; i <= 2; i++)
+        {
+            std::wstring number = std::to_wstring(i);
+
+            std::shared_ptr<Texture> shrub = ResourceManager::Load<Texture>(L"shrub_" + number, L"..\\Resources\\Texture\\Vegetation\\shrub_" + number + L".png");
+            material = std::make_shared<Material>();
+            material->SetShader(spriteShader);
+            material->SetTexture(shrub);
+            ResourceManager::Insert(L"m_shrub_" + number, material);
+        }
     }
 
 }

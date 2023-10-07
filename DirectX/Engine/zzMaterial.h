@@ -20,6 +20,8 @@ namespace zz
         void SetShader(std::shared_ptr<Shader> shader) { mShader = shader; }
         void SetTexture(std::shared_ptr<Texture> texture) { mTexture = texture; }
         void SetRenderingMode(eRenderingMode mode) { mMode = mode; }
+
+        std::shared_ptr<Texture> GetTexture() { return mTexture; }
         eRenderingMode GetRenderingMode() { return mMode; }
 
     private:

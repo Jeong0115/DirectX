@@ -15,7 +15,7 @@ namespace zz
         , mAspectRatio(1.0f)
         , mNear(1.0f)
         , mFar(1000.0f)
-        , mSize(1920.f)
+        , mSize(1.f)
         , mView(Matrix::Identity)
         , mProjection(Matrix::Identity)
     {

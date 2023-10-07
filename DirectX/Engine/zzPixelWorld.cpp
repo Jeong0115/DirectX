@@ -12,6 +12,9 @@
 #include "zzInput.h"
 #include "zzTime.h"
 
+#include "zzVegetation.h"
+#include "zzTransform.h"
+
 #define STB_HERRINGBONE_WANG_TILE_IMPLEMENTATION
 #include "..\External\Herringbone\include\stb_herringbone_wang_tile.h"
 
@@ -27,11 +30,11 @@ namespace zz
 
     std::vector<PixelChunkMap*> PixelWorld::mChunkMaps = {};
     std::unordered_map<std::pair<int, int>, PixelChunkMap*, pair_hash> PixelWorld::mChunkMapLookUp = {};
+    std::unordered_map<std::wstring, PixelWorld::MaterialImage*> PixelWorld::mMaterialImages = {};
     ThreadPool PixelWorld::threadPool(4); 
     uint16_t PixelWorld::FrameCount = 0;
 
     float PixelWorld::mTime = 0.f;
-    //std::vector<std::vector<Box2dWorld::StaticElementInfo>>& PixelWorld::mStaticElements = {};
 
     PixelWorld::PixelWorld()
     {
@@ -45,7 +48,7 @@ namespace zz
     void PixelWorld::Initialize()
     {
         InitializeElement();
-        for (int i = 0; i <= 2; i++)
+        for (int i = 0; i <= 3; i++)
         {
             for (int j = 0; j <= 2; j++)
             {
@@ -54,6 +57,7 @@ namespace zz
         }
 
         mElementMap.insert({ 'w', WATER });
+        mElementMap.insert({ 'o', OIL });
         mElementMap.insert({ 's', SAND });
         mElementMap.insert({ 'r', ROCK });
         mElementMap.insert({ 't', WOOD });
@@ -61,6 +65,7 @@ namespace zz
         mElementMap.insert({ 'e', EMPTY });
         mSelectElement = mElementMap.find('e')->second;
 
+        loadMaterialImage();
         CreateNewWorld();
         Box2dWorld::Initialize();
     } 
@@ -108,6 +113,14 @@ namespace zz
         for (auto chunkMap : mChunkMaps)
         {
             delete chunkMap;
+        }
+
+        for(auto iter = mMaterialImages.begin(); iter != mMaterialImages.end(); )
+        {
+            delete iter->second;
+            iter->second = nullptr;
+
+            iter++;
         }
 
         delete mImage;
@@ -229,7 +242,7 @@ namespace zz
         
         unsigned char* tileData = (unsigned char*)malloc(3 * x * y);
         
-        stbhw_generate_image(&tileset, NULL, tileData, x*3, x, y);
+        stbhw_generate_image(&tileset, NULL, tileData, x * 3, x, y);
         cv::Mat randTileImage(x, y, CV_8UC3, tileData);
 
         cv::Mat rock = cv::imread("..\\Resources\\Texture\\Material\\edge\\rock.png", cv::IMREAD_COLOR);
@@ -283,9 +296,9 @@ namespace zz
         int dx[] = { 0, 1, 0,-1 };
         int dy[] = { -1,0, 1, 0 };
 
-        for (int i = 0; i < y; i++)
+        for (int i = 0; i < 172; i++)
         {
-            for (int j = 0; j < x; j++)
+            for (int j = 0; j < 154; j++)
             {           
                 uint32_t color = Vec3bToColor(randTileImage.at<cv::Vec3b>(i, j));
 
@@ -594,8 +607,7 @@ namespace zz
                     }
                 }
                 else if (color == 0xFF2F554C)
-                {
-                    
+                {               
                     for (int k = i * 10; k < i * 10 + 10; k++)
                     {
                         for (int l = j * 10; l < j * 10 + 10; l++)
@@ -604,15 +616,27 @@ namespace zz
                         }
                     }
                 }
-                else if (color == 0xFF505052 || color == 0xFF3B3B3C)
+                else if (color == 0xFF505052) // coal
                 {
                     for (int k = i * 10; k < i * 10 + 10; k++)
                     {
                         for (int l = j * 10; l < j * 10 + 10; l++)
                         {
-                            Element sand = SAND;
-                            sand.Color = RandomSandColor();
-                            InsertElement(l, k, sand);
+                            Element coal = SAND;
+                            coal.Color = getMaterialColor(L"coal");
+                            InsertElement(l, k, coal);
+                        }
+                    }
+                }
+                else if (color == 0xFF3B3B3C) // oil
+                {
+                    for (int k = i * 10; k < i * 10 + 10; k++)
+                    {
+                        for (int l = j * 10; l < j * 10 + 10; l++)
+                        {
+                            Element oil = OIL;
+                            oil.Color = 0xE63D3728;
+                            InsertElement(l, k, oil);
                         }
                     }
                 }
@@ -631,6 +655,68 @@ namespace zz
             }
         }
 
+        for (int i = 0; i < 1720; i++)
+        {
+            for (int j = 0; j < 1536; j++)
+            {
+                if (GetElement(i, j).Id == eElementID::ROCK)
+                {
+                    if (GetElement(i, j - 1).Id == eElementID::EMPTY)
+                    {
+                        if (random() > 0.5f)
+                        {
+                            Element grass = GRASS;
+                            grass.Color = getMaterialColor(L"grass");
+
+                            InsertElement(i, j - 1, grass);
+                        }
+                        else if (random() > 0.97f)
+                        {
+                            createVegetation(i, j - 1);
+                        }
+                    }
+                }
+            }
+        }
+
+
+        cv::Mat material_image = cv::imread("..\\Resources\\Texture\\Temple\\altar_top.png", cv::IMREAD_COLOR);
+        cv::Mat visual_image = cv::imread("..\\Resources\\Texture\\Temple\\altar_top_visual.png", cv::IMREAD_UNCHANGED);
+
+        cv::cvtColor(material_image, material_image, cv::COLOR_BGR2RGB);
+
+        for (int i = 1747; i < 2047; i++)
+        {
+
+            for (int cnt = 0; cnt < 3; cnt++)
+            {
+                for (int j = 0; j < 512; j++)
+                {
+                   
+                    uint32_t color = Vec3bToColor(material_image.at<cv::Vec3b>(i - 1747, j));
+                    if (color == 0xFF786C42)
+                    {
+                        cv::Vec4b visual_color = visual_image.at<cv::Vec4b>(i - 1747, j);
+
+                        uint32_t converted_color =
+                            (visual_color[3] << 24) |
+                            (visual_color[2] << 16) |
+                            (visual_color[1] << 8) |
+                            (visual_color[0]);
+
+                        Element element = ROCK;
+                        element.Color = converted_color;
+
+                        InsertElement(j + cnt * 512, i, element);
+                    }
+                    else
+                    {
+                        InsertElement(j + cnt * 512, i, EMPTY);
+                    }
+                }
+            }
+        }
+      
         //cv::cvtColor(randTileImage, randTileImage, cv::COLOR_RGB2BGR);
         //cv::resize(randTileImage, randTileImage, cv::Size(), 2,2, cv::INTER_NEAREST);
 
@@ -664,6 +750,17 @@ namespace zz
         color |= (vec3b[0] << 16);
         color |= (vec3b[1] << 8);
         color |= vec3b[2];
+
+        return color;
+    }
+
+    uint32_t PixelWorld::Vec4bToColor(const cv::Vec4b& vec4b)
+    {
+        uint32_t color =
+            (vec4b[3] << 24) |
+            (vec4b[2] << 16) |
+            (vec4b[1] << 8)  |
+            (vec4b[0]);
 
         return color;
     }
@@ -740,43 +837,89 @@ namespace zz
 
         cv::cvtColor(material_image, material_image, cv::COLOR_BGR2RGB);
 
-        cv::Scalar color_wood(97, 62, 2);
-        cv::Scalar color_wood_vertical(65, 63, 58);
 
-        cv::Mat mask_wood;
-        cv::inRange(material_image, color_wood, color_wood, mask_wood);
-
-        Box2dWorld::Draw(x, y, mask_wood, WOOD);
-
-        return;
         for (int i = 0; i < 260; i++)
         {
             for (int j = 0; j < 130; j++)
             {
                 uint32_t color = Vec3bToColor(material_image.at<cv::Vec3b>(i, j));
-                if (color == 0xFF613E02)
+                if (color == 0xFF613E02 || color == 0xFF413F24)
                 {
-                    cv::Vec4b visual_color = visual_image.at<cv::Vec4b>(i, j);
+                    continue;
+                }
+                else if (color == 0xFF524F2D)
+                {
+                    Element element = ROCK;
+                    element.Color = getMaterialColor(L"earth");
 
-                    uint32_t converted_color = 0x00000000;
-                    converted_color |= (visual_color[3] << 24); 
-                    converted_color |= (visual_color[2] << 16); 
-                    converted_color |= (visual_color[1] << 8);  
-                    converted_color |= visual_color[0];
+                    InsertElement(x + j, y + i, element);
+                }
+                else if (color == 0xFF33B828)
+                {
+                    Element element = GRASS;
+                    element.Color = getMaterialColor(L"grass");
 
-                    Element wood = WOOD;
-                    if (converted_color != 0x00000000)
-                    {
-                        wood.Color = converted_color;
-                    }
-                    InsertElement(x + j, y + i, wood);
+                    InsertElement(x + j, y + i, element);
+                }
+                else if (color == 0xFF353923)
+                {
+                    Element element = ROCK;
+                    element.Color = getMaterialColor(L"rock_alt2");
+
+                    InsertElement(x + j, y + i, element);
+                }
+                else if (color == 0xFF353923)
+                {
+                    Element element = ROCK;
+                    element.Color = getMaterialColor(L"rock_alt2");
+
+                    InsertElement(x + j, y + i, element);
+                }
+                else if (color == 0xFF505052)
+                {
+                    Element element = SAND;
+                    element.Color = getMaterialColor(L"coal");
+
+                    InsertElement(x + j, y + i, element);
+                }
+                else if (color == 0xFFF7BB43)
+                {
+                    Element element = SAND;
+                    element.Color = getMaterialColor(L"gunpowder_tnt");
+
+                    InsertElement(x + j, y + i, element);
+                }
+                else if (color == 0xFF00F344)
+                {
+                    Element element = ROCK;
+                    element.Color = getMaterialColor(L"rock_radioactive");
+
+                    InsertElement(x + j, y + i, element);
                 }
                 else if (color != 0xFF000000)
                 {
-                    InsertElement(x + j, y + i, ROCK);
+                    Element element = ROCK;
+                    element.Color = getMaterialColor(L"rock");
+
+                    InsertElement(x + j, y + i, element);
                 }
             }
         }
+
+        cv::Scalar color_wood(97, 62, 2);
+        cv::Scalar color_wood2(65, 63, 36);
+
+        cv::Mat mask_wood1, mask_wood2, combined_mask;
+        cv::inRange(material_image, color_wood, color_wood, mask_wood1);
+        cv::inRange(material_image, color_wood2, color_wood2, mask_wood2);
+
+        cv::bitwise_or(mask_wood1, mask_wood2, combined_mask);
+
+        Element wood = WOOD;
+        wood.SolidType = eSolidType::DYNAMIC;
+
+        Box2dWorld::Draw(x, y, combined_mask, visual_image, wood);
+
     }
 
     void PixelWorld::LoadRandomScene_02(int x, int y)
@@ -857,29 +1000,82 @@ namespace zz
             for (int j = 0; j < 260; j++)
             {
                 uint32_t color = Vec3bToColor(material_image.at<cv::Vec3b>(i, j));
-                if (color == 0xFF613E02)
+                if (color == 0xFF613E02 || color == 0xFF413F24)
                 {
-                    cv::Vec4b visual_color = visual_image.at<cv::Vec4b>(i, j);
+                    continue;
+                }
+                else if (color == 0xFF524F2D)
+                {
+                    Element element = ROCK;
+                    element.Color = getMaterialColor(L"earth");
 
-                    uint32_t converted_color = 0x00000000;
-                    converted_color |= (visual_color[3] << 24);
-                    converted_color |= (visual_color[2] << 16);
-                    converted_color |= (visual_color[1] << 8);
-                    converted_color |= visual_color[0];
+                    InsertElement(x + j, y + i, element);
+                }
+                else if (color == 0xFF33B828)
+                {
+                    Element element = GRASS;
+                    element.Color = getMaterialColor(L"grass");
 
-                    Element wood = WOOD;
-                    if (converted_color != 0x00000000)
-                    {
-                        wood.Color = converted_color;
-                    }
-                    InsertElement(x + j, y + i, wood);
+                    InsertElement(x + j, y + i, element);
+                }
+                else if (color == 0xFF353923)
+                {
+                    Element element = ROCK;
+                    element.Color = getMaterialColor(L"rock_alt2");
+
+                    InsertElement(x + j, y + i, element);
+                }
+                else if (color == 0xFF353923)
+                {
+                    Element element = ROCK;
+                    element.Color = getMaterialColor(L"rock_alt2");
+
+                    InsertElement(x + j, y + i, element);
+                }
+                else if (color == 0xFF505052)
+                {
+                    Element element = SAND;
+                    element.Color = getMaterialColor(L"coal");
+
+                    InsertElement(x + j, y + i, element);
+                }
+                else if (color == 0xFFF7BB43)
+                {
+                    Element element = SAND;
+                    element.Color = getMaterialColor(L"gunpowder_tnt");
+
+                    InsertElement(x + j, y + i, element);
+                }
+                else if (color == 0xFF00F344)
+                {
+                    Element element = ROCK;
+                    element.Color = getMaterialColor(L"rock_radioactive");
+
+                    InsertElement(x + j, y + i, element);
                 }
                 else if (color != 0xFF000000)
                 {
-                    InsertElement(x + j, y + i, ROCK);
+                    Element element = ROCK;
+                    element.Color = getMaterialColor(L"rock");
+
+                    InsertElement(x + j, y + i, element);
                 }
             }
         }
+
+        cv::Scalar color_wood(97, 62, 2);
+        cv::Scalar color_wood2(65, 63, 36);
+
+        cv::Mat mask_wood1, mask_wood2, combined_mask;
+        cv::inRange(material_image, color_wood, color_wood, mask_wood1);
+        cv::inRange(material_image, color_wood2, color_wood2, mask_wood2);
+
+        cv::bitwise_or(mask_wood1, mask_wood2, combined_mask);
+
+        Element wood = WOOD;
+        wood.SolidType = eSolidType::DYNAMIC;
+
+        Box2dWorld::Draw(x, y, combined_mask, visual_image, wood);
     }
 
     void PixelWorld::LoadRandomScene_03(int x, int y)
@@ -928,33 +1124,82 @@ namespace zz
             for (int j = 0; j < 130; j++)
             {
                 uint32_t color = Vec3bToColor(material_image.at<cv::Vec3b>(i, j));
-                if (color == 0xFF613E02)
+                if (color == 0xFF613E02 || color == 0xFF413F24)
                 {
-                    cv::Vec4b visual_color = visual_image.at<cv::Vec4b>(i, j);
-
-                    uint32_t converted_color = 0x00000000;
-                    converted_color |= (visual_color[3] << 24);
-                    converted_color |= (visual_color[2] << 16);
-                    converted_color |= (visual_color[1] << 8);
-                    converted_color |= visual_color[0];
-
-                    Element wood = WOOD;
-                    if (converted_color != 0x00000000)
-                    {
-                        wood.Color = converted_color;
-                    }
-                    InsertElement(x + j, y + i, wood);
+                    continue;
                 }
-                else if (color == 0xFFF0BBEE)
+                else if (color == 0xFF524F2D)
                 {
-                    InsertElement(x + j, y + i, WATER);
+                    Element element = ROCK;
+                    element.Color = getMaterialColor(L"earth");
+
+                    InsertElement(x + j, y + i, element);
+                }
+                else if (color == 0xFF33B828)
+                {
+                    Element element = GRASS;
+                    element.Color = getMaterialColor(L"grass");
+
+                    InsertElement(x + j, y + i, element);
+                }
+                else if (color == 0xFF353923)
+                {
+                    Element element = ROCK;
+                    element.Color = getMaterialColor(L"rock_alt2");
+
+                    InsertElement(x + j, y + i, element);
+                }
+                else if (color == 0xFF353923)
+                {
+                    Element element = ROCK;
+                    element.Color = getMaterialColor(L"rock_alt2");
+
+                    InsertElement(x + j, y + i, element);
+                }
+                else if (color == 0xFF505052)
+                {
+                    Element element = SAND;
+                    element.Color = getMaterialColor(L"coal");
+
+                    InsertElement(x + j, y + i, element);
+                }
+                else if (color == 0xFFF7BB43)
+                {
+                    Element element = SAND;
+                    element.Color = getMaterialColor(L"gunpowder_tnt");
+
+                    InsertElement(x + j, y + i, element);
+                }
+                else if (color == 0xFF00F344)
+                {
+                    Element element = ROCK;
+                    element.Color = getMaterialColor(L"rock_radioactive");
+
+                    InsertElement(x + j, y + i, element);
                 }
                 else if (color != 0xFF000000)
                 {
-                    InsertElement(x + j, y + i, ROCK);
+                    Element element = ROCK;
+                    element.Color = getMaterialColor(L"rock");
+
+                    InsertElement(x + j, y + i, element);
                 }
             }
         }
+
+        cv::Scalar color_wood(97, 62, 2);
+        cv::Scalar color_wood2(65, 63, 36);
+
+        cv::Mat mask_wood1, mask_wood2, combined_mask;
+        cv::inRange(material_image, color_wood, color_wood, mask_wood1);
+        cv::inRange(material_image, color_wood2, color_wood2, mask_wood2);
+
+        cv::bitwise_or(mask_wood1, mask_wood2, combined_mask);
+
+        Element wood = WOOD;
+        wood.SolidType = eSolidType::DYNAMIC;
+
+        Box2dWorld::Draw(x, y, combined_mask, visual_image, wood);
     }
 
     bool PixelWorld::InBounds(int x, int y)
@@ -980,7 +1225,8 @@ namespace zz
         if (!Application::OnDebugMode) return;
 
         if (Input::GetKey(eKeyCode::W) || Input::GetKey(eKeyCode::R) || Input::GetKey(eKeyCode::S)
-            || Input::GetKey(eKeyCode::E) || Input::GetKey(eKeyCode::F) || Input::GetKey(eKeyCode::T))
+            || Input::GetKey(eKeyCode::E) || Input::GetKey(eKeyCode::F) || Input::GetKey(eKeyCode::T)
+            || Input::GetKey(eKeyCode::O))
         {
             if ((Input::GetKey(eKeyCode::W)))
                 mSelectElement = mElementMap.find('w')->second;
@@ -994,6 +1240,8 @@ namespace zz
                 mSelectElement = mElementMap.find('f')->second;
             else if ((Input::GetKey(eKeyCode::T)))
                 mSelectElement = mElementMap.find('t')->second;
+            else if ((Input::GetKey(eKeyCode::O)))
+                mSelectElement = mElementMap.find('o')->second;
         }
 
         
@@ -1078,6 +1326,116 @@ namespace zz
         mChunkMaps.push_back(chunkMap);
 
         return chunkMap;
+    }
+
+    uint32_t PixelWorld::getMaterialColor(const std::wstring& material_name)
+    {
+        auto iter = mMaterialImages.find(material_name);
+        auto image = iter->second;
+
+        cv::Vec4b color = image->image.at<cv::Vec4b>(image->indexY, image->indexX++);
+        uint32_t converted_color = Vec4bToColor(color);
+
+        if (image->indexX >= image->width)
+        {
+            image->indexX = 0;
+            image->indexY++;
+
+            if (image->indexY >= image->height)
+            {
+                image->indexY = 0;
+            }
+        }
+        return converted_color;
+    }
+
+    void PixelWorld::loadMaterialImage()
+    {
+        {
+            MaterialImage* image = new MaterialImage();
+
+            image->image = cv::imread("..\\Resources\\Texture\\Material\\rock.png", cv::IMREAD_UNCHANGED);
+            image->width = image->image.cols;
+            image->height = image->image.rows;
+            image->indexX = 0;
+            image->indexY = 0;
+
+            mMaterialImages.insert({ L"rock", image });
+        }
+        {
+            MaterialImage* image = new MaterialImage();
+
+            image->image = cv::imread("..\\Resources\\Texture\\Material\\earth.png", cv::IMREAD_UNCHANGED);
+            image->width = image->image.cols;
+            image->height = image->image.rows;
+            image->indexX = 0;
+            image->indexY = 0;
+
+            mMaterialImages.insert({ L"earth", image });
+        }
+        {
+            MaterialImage* image = new MaterialImage();
+
+            image->image = cv::imread("..\\Resources\\Texture\\Material\\grass.png", cv::IMREAD_UNCHANGED);
+            image->width = image->image.cols;
+            image->height = image->image.rows;
+            image->indexX = 0;
+            image->indexY = 0;
+
+            mMaterialImages.insert({ L"grass", image });
+        }
+        {
+            MaterialImage* image = new MaterialImage();
+
+            image->image = cv::imread("..\\Resources\\Texture\\Material\\rock_alt2.png", cv::IMREAD_UNCHANGED);
+            image->width = image->image.cols;
+            image->height = image->image.rows;
+            image->indexX = 0;
+            image->indexY = 0;
+
+            mMaterialImages.insert({ L"rock_alt2", image });
+        }
+        {
+            MaterialImage* image = new MaterialImage();
+
+            image->image = cv::imread("..\\Resources\\Texture\\Material\\coal.png", cv::IMREAD_UNCHANGED);
+            image->width = image->image.cols;
+            image->height = image->image.rows;
+            image->indexX = 0;
+            image->indexY = 0;
+
+            mMaterialImages.insert({ L"coal", image });
+        }
+        {
+            MaterialImage* image = new MaterialImage();
+
+            image->image = cv::imread("..\\Resources\\Texture\\Material\\gunpowder_tnt.png", cv::IMREAD_UNCHANGED);
+            image->width = image->image.cols;
+            image->height = image->image.rows;
+            image->indexX = 0;
+            image->indexY = 0;
+
+            mMaterialImages.insert({ L"gunpowder_tnt", image });
+        }
+        {
+            MaterialImage* image = new MaterialImage();
+
+            image->image = cv::imread("..\\Resources\\Texture\\Material\\rock_radioactive.png", cv::IMREAD_UNCHANGED);
+            image->width = image->image.cols;
+            image->height = image->image.rows;
+            image->indexX = 0;
+            image->indexY = 0;
+
+            mMaterialImages.insert({ L"rock_radioactive", image });
+        }
+    }
+
+    void PixelWorld::createVegetation(int x, int y)
+    {
+        Vegetation* object = new Vegetation();
+        object->GetComponent<Transform>()->SetPosition(x, -y, 0.0f);
+
+        CreateObject(object, eLayerType::Vegetation);
     }
 
     void PixelWorld::SetImage(int x, int y, std::shared_ptr<Texture> texture, std::shared_ptr<Texture> texture_visual)

@@ -11,11 +11,15 @@
 #include "zzCollisionManger.h"
 #include "zzBox2dWorld.h"
 #include "zzWrite.h"
+#include "zzThreadPool.h"
+
+#include "zzOpeningScene.h"
 
 namespace zz
 {	
     bool Application::OnDebugMode = false;
     bool Application::LightDisabled = false;
+    bool Application::IsDrawBox2d = false;
 
 	Application::Application()
         : mHwnd(NULL)
@@ -51,17 +55,43 @@ namespace zz
 
 	void Application::Initialize()
 	{
+        ThreadPool thread(1);
+
         Time::Initialize();
-        Input::Initialize();
-        
-        PixelWorld::Initialize();
-
+        Input::Initialize();  
         renderer::Initialize();
-        WriteManager::Initialize();
-        UIManager::Initialize();
-        SceneManager::Initialize();
-        ObjectPoolManager::Initialize();
 
+        OpeningScene* opening = new OpeningScene();
+        opening->Initialize();
+
+        thread.enqueue([=]() { PixelWorld::Initialize(); });
+        thread.enqueue([=]() { WriteManager::Initialize(); });
+        thread.enqueue([=]() { UIManager::Initialize(); });
+        thread.enqueue([=]() { SceneManager::Initialize(); });
+        thread.enqueue([=]() { ObjectPoolManager::Initialize(); });
+        thread.enqueue([=]() { Editor::Initialize(); });
+
+        while (true)
+        {
+            graphicDevice->ClearRenderTarget();
+            graphicDevice->UpdateViewPort();
+
+            opening->Run();
+
+            Present();
+
+            if (thread.isEmpty())   
+            {
+                delete opening;
+                break;
+            }
+        }
+        //PixelWorld::Initialize();
+        //WriteManager::Initialize();
+        //UIManager::Initialize();
+        //SceneManager::Initialize();
+        //ObjectPoolManager::Initialize();
+        //Editor::Initialize();
 	}
 
 	void Application::Update()
@@ -72,6 +102,11 @@ namespace zz
         if (Input::GetKey(eKeyCode::CTRL) && Input::GetKeyDown(eKeyCode::F5))
         {
             OnDebugMode = !OnDebugMode;
+        }
+
+        if (Input::GetKey(eKeyCode::CTRL) && Input::GetKeyDown(eKeyCode::F6))
+        {
+            IsDrawBox2d = !IsDrawBox2d;
         }
 
         if (Input::GetKey(eKeyCode::CTRL) && Input::GetKeyDown(eKeyCode::F8))
@@ -114,9 +149,12 @@ namespace zz
         Camera::SetGpuViewMatrix(mainCamara->GetViewMatrix());
         Camera::SetGpuProjectionMatrix(mainCamara->GetProjectionMatrix());
 
-        if(OnDebugMode)
+        if (IsDrawBox2d)
         {
             Box2dWorld::Render();
+        }
+        if(OnDebugMode)
+        {
             Editor::Run();
         }
         Present();

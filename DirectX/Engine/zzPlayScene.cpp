@@ -18,14 +18,6 @@
 #include "zzShotGunner_Weak.h"
 #include "zzCollisionManger.h"
 
-#ifdef _DEBUG
-#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
-#define new DBG_NEW
-#else
-#define DBG_NEW new
-#endif
-
-
 namespace zz
 {
     GameObject* camera;
@@ -70,7 +62,7 @@ namespace zz
         MainCamera* cameraComp = camera->AddComponent<MainCamera>();
         camera->AddComponent<CameraScript>();
         cameraComp->SetSize(0.25f);
-        //cameraComp->TurnLayerMask(eLayerType::UI, false);
+
         renderer::cameras.push_back(cameraComp);
         renderer::mainCamera = cameraComp;
 
@@ -114,7 +106,7 @@ namespace zz
         }
 
         GameObject* object = new GameObject();
-        AddGameObject(object, eLayerType::Player);
+        AddGameObject(object, eLayerType::PixelWorld);
         object->GetComponent<Transform>()->SetPosition(Vector3(x +1024 - 256, y -1024 + 256, PIXEL_WORLD_Z));
         object->GetComponent<Transform>()->SetScale(Vector3(2048.f, 2048.f, 1.0f));
         MeshRenderer* mesh = object->AddComponent<MeshRenderer>();
@@ -135,6 +127,76 @@ namespace zz
             }
         }
 
+        for (int y = 0; y < 8; y++)
+        {
+            for (int x = 0; x < 2; x++)
+            {
+                GameObject* bg = new GameObject();
+                AddGameObject(bg, eLayerType::Object);
+                bg->GetComponent<Transform>()->SetPosition(Vector3(-48.f - (x * 96.f), -48.f - (y * 96.f),1.0f));
+                bg->GetComponent<Transform>()->SetScale(Vector3(96.f, 96.f, 0.0f));
+                MeshRenderer* bgmesh = bg->AddComponent<MeshRenderer>();
+                bgmesh->SetMaterial(ResourceManager::Find<Material>(L"m_rock_hard_alt"));
+                bgmesh->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
+            }
+        }
+
+        std::shared_ptr<Texture> newImage = ResourceManager::Find<Texture>(L"rock_hard_alt");
+        std::shared_ptr<Texture> texture = std::make_shared<Texture>();
+
+        ScratchImage& srcImage = newImage->GetScratchImage();
+        ScratchImage& dstImage = texture->GetScratchImage();
+
+
+        dstImage.Initialize2D(DXGI_FORMAT_B8G8R8A8_UNORM, 960, 192, 1, 1);
+
+
+        for (int j = 0; j < 2; j++)
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                Rect rect(0, 0, 96, 96);
+
+                HRESULT hr = CopyRectangle(*srcImage.GetImage(0, 0, 0), rect
+                    , *dstImage.GetImage(0, 0, 0), TEX_FILTER_DEFAULT, i * 96, j * 96);
+
+                if (FAILED(hr))
+                {
+                    assert(false);
+                }
+            }
+        }
+
+        texture->UpdateImage();
+
+        std::shared_ptr<Material> material = std::make_shared<Material>();
+        material->SetShader(ResourceManager::Find<Shader>(L"SpriteShader"));
+        material->SetTexture(texture);
+
+        {
+            GameObject* bg = new GameObject();
+            AddGameObject(bg, eLayerType::Object);
+            bg->GetComponent<Transform>()->SetPosition(Vector3(480.f, 96.f, 1.0f));
+            bg->GetComponent<Transform>()->SetScale(Vector3(960.f, 192.f, 0.0f));
+            MeshRenderer* bgmesh = bg->AddComponent<MeshRenderer>();
+            bgmesh->SetMaterial(material);
+            bgmesh->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
+        }
+
+
+ 
+            for (int x = 0; x < 3; x++)
+            {
+                GameObject* bg = new GameObject();
+                AddGameObject(bg, eLayerType::Object);
+                bg->GetComponent<Transform>()->SetPosition(Vector3(256.f + x * 512.f, -1747.f - 86.f, 1.0f));
+                bg->GetComponent<Transform>()->SetScale(Vector3(514.f, 171.f, 0.0f));
+                MeshRenderer* bgmesh = bg->AddComponent<MeshRenderer>();
+                bgmesh->SetMaterial(ResourceManager::Find<Material>(L"m_wall_background"));
+                bgmesh->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
+            }
+       
+
 
         {
             //GameObject* object = new GameObject();
@@ -153,25 +215,25 @@ namespace zz
         //    mesh->SetMaterial(ResourceManager::Find<Material>(L"m_hall_b_visual_0_512"));
         //    mesh->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
         //}
-        {
-            GameObject* object = new GameObject();
-            AddGameObject(object, eLayerType::Player);
-            object->GetComponent<Transform>()->SetPosition(Vector3(x + 300, y - 331, 0.0f));
-            object->GetComponent<Transform>()->SetScale(Vector3(88.f, 150.f, 1.0f));
-            MeshRenderer* mesh = object->AddComponent<MeshRenderer>();
-            mesh->SetMaterial(ResourceManager::Find<Material>(L"m_hall_br_visual_512_512"));
-            mesh->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
-        }
-        
-        {
-            GameObject* object = new GameObject();
-            AddGameObject(object, eLayerType::Player);
-            object->GetComponent<Transform>()->SetPosition(Vector3(x + 300, y, 0.01f));
-            object->GetComponent<Transform>()->SetScale(Vector3(88.f, 512.f, 1.0f));
-            MeshRenderer* mesh = object->AddComponent<MeshRenderer>();
-            mesh->SetMaterial(ResourceManager::Find<Material>(L"m_hall_r_visual_512_0"));
-            mesh->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
-        }
+        //{
+        //    GameObject* object = new GameObject();
+        //    AddGameObject(object, eLayerType::Player);
+        //    object->GetComponent<Transform>()->SetPosition(Vector3(x + 300, y - 331, 0.0f));
+        //    object->GetComponent<Transform>()->SetScale(Vector3(88.f, 150.f, 1.0f));
+        //    MeshRenderer* mesh = object->AddComponent<MeshRenderer>();
+        //    mesh->SetMaterial(ResourceManager::Find<Material>(L"m_hall_br_visual_512_512"));
+        //    mesh->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
+        //}
+        //
+        //{
+        //    GameObject* object = new GameObject();
+        //    AddGameObject(object, eLayerType::Player);
+        //    object->GetComponent<Transform>()->SetPosition(Vector3(x + 300, y, 0.01f));
+        //    object->GetComponent<Transform>()->SetScale(Vector3(88.f, 512.f, 1.0f));
+        //    MeshRenderer* mesh = object->AddComponent<MeshRenderer>();
+        //    mesh->SetMaterial(ResourceManager::Find<Material>(L"m_hall_r_visual_512_0"));
+        //    mesh->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
+        //}
 
         {
             ShotGunner_Weak* object = new ShotGunner_Weak();
@@ -204,7 +266,7 @@ namespace zz
             Player* player;
             player = new Player();
             AddGameObject(player, eLayerType::Player);
-            player->GetComponent<Transform>()->SetPosition(Vector3(10.f, -300.f, 0.200f));
+            player->GetComponent<Transform>()->SetPosition(Vector3(1536.f / 2.f, -10.f, 0.200f));
             player->GetComponent<Transform>()->SetScale(Vector3(12.f, 19.f, 1.0f));    
             //player->SetCamera(camera);
             //player->AddComponent<ParticleSystem>();

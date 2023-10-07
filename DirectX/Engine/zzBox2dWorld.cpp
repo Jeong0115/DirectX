@@ -31,6 +31,7 @@ namespace zz
 
     std::vector<Box2dWorld::StaticElementsBody> Box2dWorld::mElementsBodys;
     DrawBox2dWorld* Box2dWorld::mDrawBow2dBody;
+    //bool Box2dWorld::StaticElementsBody::isDestroy = false;
 
     Box2dWorld::Box2dWorld()
     {
@@ -103,6 +104,11 @@ namespace zz
 
     void Box2dWorld::Release()
     {
+        for (int i = 0; i < mElementsBodys.size(); i++)
+        {
+            delete mElementsBodys[i].isDestroy;
+        }
+
         delete mDrawBow2dBody;
         delete mBox2dWorld;
     }
@@ -271,7 +277,7 @@ namespace zz
 
         for (int i = 0; i < mElementsBodys.size(); i++)
         {
-            if (mElementsBodys[i].isDestroy)
+            if (*mElementsBodys[i].isDestroy)
             {
                 if (mElementsBodys[i].elements.size() == 0)
                 {
@@ -287,24 +293,10 @@ namespace zz
 
         for (int i = 0; i < list.size(); i++)
         {
-            mBox2dWorld->DestroyBody(mElementsBodys[i].body);
-            mElementsBodys.erase(mElementsBodys.begin() + i);
+            mBox2dWorld->DestroyBody(mElementsBodys[list[i]].body);
+            delete mElementsBodys[list[i]].isDestroy;
+            mElementsBodys.erase(mElementsBodys.begin() + list[i]);
         }
-
-
-        //for (int i = 0; i < a.size(); i++)
-        //{
-        //    ReconstructBody(mElementsBodys[a[i]]);
-        //}
-
-        //std::sort(a.begin(), a.end(), std::greater<int>());
-
-        //for (int i = 0; i < a.size(); i++)
-        //{
-        //    mBox2dWorld->DestroyBody(mElementsBodys[a[i]].body);
-        //    mElementsBodys.erase(mElementsBodys.begin() + a[i]);
-        //}
-
     }
 
     void Box2dWorld::ReconstructBody(StaticElementsBody body)
@@ -343,6 +335,7 @@ namespace zz
 
         std::vector<cv::Point> points;
 
+        // 나중에 element 멤버변수로 구별
         for (auto element : body.elements)
         {
             if (element.Type != eElementType::SOLID)
@@ -357,8 +350,6 @@ namespace zz
             points.push_back(cv::Point((int)(element.x + x1), (int)(element.y + y1)));
         }
 
-
-
         std::vector<std::vector<cv::Point>> contours = getContours(points, width, height);
         auto insidePointsForEachContour = getInsidePointsForEachContour(cv::Mat::zeros(height, width, CV_8UC1), contours);
 
@@ -372,7 +363,6 @@ namespace zz
         }
         for (auto& contour : contours)
         {
-
             std::vector<cv::Point> approxCurve;
             double epsilon = 2.5; // 최대 거리 (여기서는 원래 곡선의 길이의 10%로 설정)
             cv::approxPolyDP(contour, approxCurve, epsilon, true);
@@ -408,12 +398,12 @@ namespace zz
                 );
             }
 
-
             StaticElementsBody newBody;
 
             b2BodyDef bodyDef;
             bodyDef.type = b2_dynamicBody;
             newBody.body = mBox2dWorld->CreateBody(&bodyDef);
+            newBody.isDestroy = new bool();
 
             for (auto& triangle : triangleList)
             {
@@ -457,6 +447,8 @@ namespace zz
                     fixtureDef.shape = &newShape;
                     fixtureDef.density = 1.0f;
                     fixtureDef.friction = 0.3f;
+                    fixtureDef.filter.categoryBits = 0x0002;
+                    fixtureDef.filter.maskBits = 0xFFFF;
 
                     newBody.body->DestroyFixture(fixture);
                     newBody.body->CreateFixture(&fixtureDef);
@@ -464,7 +456,6 @@ namespace zz
 
                 fixture = nextFixture;
             }
-
 
             std::vector<Element> bodyElements;
 
@@ -476,7 +467,7 @@ namespace zz
             {
                 elementsArray[i.x][i.y].x = x - bX + elementsArray[i.x][i.y].x;
                 elementsArray[i.x][i.y].y = y - bY + elementsArray[i.x][i.y].y;
-                elementsArray[i.x][i.y].reBody = &newBody.isDestroy;
+                elementsArray[i.x][i.y].destoryBody = newBody.isDestroy;
                 //elementsArray[i.x][i.y].
                 bodyElements.push_back(elementsArray[i.x][i.y]);
             }
@@ -488,33 +479,29 @@ namespace zz
             float sin = std::sin(angle);
             float cos = std::cos(angle);
 
+            newBody.elements = std::move(bodyElements);
+
             std::vector<StaticElementInfo> vec;
 
-            for (Element& element : newBody.elements)
+            mElementsBodys.push_back(std::move(newBody));
+
+            for (auto& element : mElementsBodys.back().elements)
             {
+                element.destoryBody = newBody.isDestroy;
+
                 float relativeX = element.x * cos - element.y * sin;
                 float relativeY = element.x * sin + element.y * cos;
 
                 int posX = (int)(floor(relativeX + 0.5f) + (int)centerX);
                 int posY = (int)(floor(relativeY + 0.5f) + (int)centerY);
 
-                newBody.elementsInfo.push_back({ element, posX, posY });
+                mElementsBodys.back().elementsInfo.push_back({ element, posX, posY });
             }
 
-            PixelWorld::MoveStaticElement(body.elementsInfo);
+            PixelWorld::MoveStaticElement(mElementsBodys.back().elementsInfo);
 
-            newBody.elements = bodyElements;
-            newBody.isDestroy = false;
-            mElementsBodys.push_back(newBody);
             p++;
-            //allTriangles.insert(allTriangles.end(), triangleList.begin(), triangleList.end());
         }
-
-
-        // cv::waitKey(0);
-
-         //std::vector<N> indices = mapbox::earcut<N>(polygon);
-        int c = 0;
     }
 
     std::vector<std::vector<cv::Point>> Box2dWorld::getContours(const std::vector<cv::Point>& points, float width, float height)
@@ -533,7 +520,7 @@ namespace zz
 
         return contours;
     }
-    std::vector<std::vector<cv::Point>> Box2dWorld::getContours(cv::Mat& image, const std::vector<cv::Point>& points, float width, float height)
+    std::vector<std::vector<cv::Point>> Box2dWorld::getContours(cv::Mat& image)
     {
         std::vector<std::vector<cv::Point>> contours;
         std::vector<cv::Vec4i> hierarchy;
@@ -591,7 +578,7 @@ namespace zz
                     if (contourImage.at<uchar>(y, x) == 255)
                     {
                         insidePoints.push_back(cv::Point(x, y));
-                    }
+                    }   
                 }
             }
 
@@ -622,7 +609,8 @@ namespace zz
         fixtureDef.filter.maskBits = 0xFFFF;
 
         body.body->CreateFixture(&fixtureDef);
-        body.isDestroy = false;
+        body.isDestroy = new bool();
+        *body.isDestroy = false;
 
         body.elements.resize(121);
         int cnt = 0;
@@ -634,7 +622,7 @@ namespace zz
                 a.x = i;
                 a.y = j;
 
-                a.reBody = &body.isDestroy;
+                a.destoryBody = body.isDestroy;
                 body.elements[cnt] = a;
 
                 body.elementsInfo.push_back({ body.elements[cnt], (int)a.x + x, (int)a.y + y});
@@ -694,12 +682,10 @@ namespace zz
         mElementsBodys.push_back(body);
     }
 
-    void Box2dWorld::Draw(int x, int y, cv::Mat& image, Element& element)
+    void Box2dWorld::Draw(int x, int y, cv::Mat& mask_image, cv::Mat& visual_image, Element& element)
     {
-        std::vector<cv::Point> points;
-
-        std::vector<std::vector<cv::Point>> contours = getContours(image, points, image.rows, image.cols);
-        auto insidePointsForEachContour = getInsidePointsForEachContour(cv::Mat::zeros(image.cols, image.rows, CV_8UC1), contours);
+        std::vector<std::vector<cv::Point>> contours = getContours(mask_image);
+        auto insidePointsForEachContour = getInsidePointsForEachContour(cv::Mat::zeros(mask_image.rows, mask_image.cols, CV_8UC1), contours);
 
         std::vector<cv::Vec6f> allTriangles;
 
@@ -712,7 +698,7 @@ namespace zz
         {
 
             std::vector<cv::Point> approxCurve;
-            double epsilon = 2.5; // 최대 거리 (여기서는 원래 곡선의 길이의 10%로 설정)
+            double epsilon = 1.0;
             cv::approxPolyDP(contour, approxCurve, epsilon, true);
 
             auto x_min_it = std::min_element(approxCurve.begin(), approxCurve.end(), [](const cv::Point& a, const cv::Point& b) { return a.x < b.x; });
@@ -747,16 +733,54 @@ namespace zz
             }
 
             StaticElementsBody newBody;
+            newBody.isDestroy = new bool();
+            *newBody.isDestroy = false;
             b2BodyDef bodyDef;
             bodyDef.type = b2_staticBody;
             newBody.body = mBox2dWorld->CreateBody(&bodyDef);
 
+            std::vector<std::pair<float, float>> triangleCenters;
+
+            float avgX = 0.0f;
+            float avgY = 0.0f;
+
+            for (auto& triangle : triangleList)
+            {
+                float sumX = 0;
+                float sumY = 0;
+
+                for (int i = 0; i < 3; i++)
+                {
+                    sumX += triangle[i * 2] + x;
+                    sumY += triangle[i * 2 + 1] + y;
+                }
+                triangleCenters.push_back({ sumX / 3.f, sumY / 3.f });
+            }
+
+            float totalX = 0.f;
+            float totalY = 0.f;
+
+            for (const auto& center : triangleCenters)
+            {
+                totalX += center.first;
+                totalY += center.second;
+            }
+
+            avgX = totalX / triangleCenters.size();
+            avgY = totalY / triangleCenters.size();
+
+            newBody.body->SetTransform({ avgX, avgY }, 0);
+
+            float bX = floor(avgX + 0.5f);
+            float bY = floor(avgY + 0.5f);
+
             for (auto& triangle : triangleList)
             {
                 b2Vec2 vertices[3] = {};
+
                 for (int i = 0; i < 3; ++i)
                 {
-                    vertices[i].Set(triangle[i * 2] + floor(x + 0.5f), triangle[i * 2 + 1] + floor(y + 0.5f));
+                    vertices[i].Set(triangle[i * 2] + x - bX, triangle[i * 2 + 1] + y - bY);
                 }
 
                 b2PolygonShape staticTriangle;
@@ -766,85 +790,53 @@ namespace zz
                 fixtureDef.shape = &staticTriangle;
                 fixtureDef.density = WOOD_DENSITY;
                 fixtureDef.friction = WOOD_FRICTION;
+                fixtureDef.filter.categoryBits = 0x0002;
+                fixtureDef.filter.maskBits = 0xFFFF;
 
                 newBody.body->CreateFixture(&fixtureDef);
             }
+         
 
-            b2Vec2 a = newBody.body->GetWorldCenter();
-            newBody.body->SetTransform(a, 0);
-
-            for (b2Fixture* fixture = newBody.body->GetFixtureList(); fixture; )
-            {
-                b2Fixture* nextFixture = fixture->GetNext();
-
-                b2PolygonShape* oldShape = static_cast<b2PolygonShape*>(fixture->GetShape());
-                if (oldShape && oldShape->m_type == b2Shape::e_polygon)
-                {
-                    b2Vec2 newVertices[b2_maxPolygonVertices];
-                    for (int i = 0; i < oldShape->m_count; ++i)
-                    {
-                        newVertices[i] = b2Vec2(oldShape->m_vertices[i].x - a.x, oldShape->m_vertices[i].y - a.y);
-                    }
-
-                    b2PolygonShape newShape;
-                    newShape.Set(newVertices, oldShape->m_count);
-
-                    b2FixtureDef fixtureDef;
-                    fixtureDef.shape = &newShape;
-                    fixtureDef.density = 1.0f;
-                    fixtureDef.friction = 0.3f;
-
-                    newBody.body->DestroyFixture(fixture);
-                    newBody.body->CreateFixture(&fixtureDef);
-                }
-
-                fixture = nextFixture;
-            }
-            newBody.isDestroy = false;
             std::vector<Element> bodyElements;
 
 
-            float bX = floor(newBody.body->GetPosition().x + 0.5f);
-            float bY = floor(newBody.body->GetPosition().y + 0.5f);
 
-            for (auto i : insidePointsForEachContour[p])
+            int pointCnt = insidePointsForEachContour[p].size();
+
+            bodyElements.reserve(pointCnt);
+            for(int i=0; i< pointCnt; i++)
             {
-                Element ele = element;
-                ele.x = i.x + x - bX;
-                ele.y = i.y + y - bY;
-                ele.reBody = &newBody.isDestroy;
-                bodyElements.push_back(ele);
+                auto& point = insidePointsForEachContour[p][i];
+
+                cv::Vec4b visual_color = visual_image.at<cv::Vec4b>(point.y, point.x);
+
+                uint32_t converted_color =
+                    (visual_color[3] << 24) |
+                    (visual_color[2] << 16) |
+                    (visual_color[1] << 8)  |
+                    (visual_color[0]);
+
+                Element newElement = element;
+                newElement.x = point.x + x - bX;
+                newElement.y = point.y + y - bY;
+                newElement.Color = converted_color;
+                bodyElements.push_back(newElement);
+
+                //newBody.elementsInfo.push_back({ bodyElements[i], point.x + x, point.y + y});
+            }
+                
+            newBody.elements = std::move(bodyElements);
+            mElementsBodys.push_back(std::move(newBody));
+
+            for (auto& elem : mElementsBodys.back().elements)
+            {
+                elem.destoryBody = newBody.isDestroy;
+                mElementsBodys.back().elementsInfo.push_back({ elem, (int)(elem.x + bX),(int)(elem.y + bY) });
             }
 
-            float centerX = newBody.body->GetPosition().x;
-            float centerY = newBody.body->GetPosition().y;
-            float angle = newBody.body->GetAngle();
-
-            float sin = std::sin(angle);
-            float cos = std::cos(angle);
-
-            std::vector<StaticElementInfo> vec;
-
-            for (Element& element : newBody.elements)
-            {
-                float relativeX = element.x * cos - element.y * sin;
-                float relativeY = element.x * sin + element.y * cos;
-
-                int posX = (int)(floor(relativeX + 0.5f) + (int)centerX);
-                int posY = (int)(floor(relativeY + 0.5f) + (int)centerY);
-
-                newBody.elementsInfo.push_back({ element, posX, posY });
-            }
-
-            newBody.elements = bodyElements;
-            mElementsBodys.push_back(newBody);
-
-            PixelWorld::MoveStaticElement(newBody.elementsInfo);
-
-
+            PixelWorld::MoveStaticElement(mElementsBodys.back().elementsInfo);
             p++;
         }
-
     }
 
     double Box2dWorld::perpendicularDistance(const Position& pt, const Position& lineStart, const Position& lineEnd)
@@ -869,7 +861,6 @@ namespace zz
 
         return std::sqrt(ax * ax + ay * ay);
     }
-
     void Box2dWorld::douglasPeucker(const std::vector<Position>& points, double epsilon, std::vector<Position>& out)
     {
         if (points.size() < 3) {
@@ -912,9 +903,6 @@ namespace zz
             out.push_back(points.back());
         }
     }
-
-
-
 
 
     void DrawBox2dWorld::DrawPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color)

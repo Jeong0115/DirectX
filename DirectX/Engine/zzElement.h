@@ -16,6 +16,7 @@ namespace zz
 
     enum class eSolidType : uint8_t
     {
+        SAND,
         DYNAMIC,
         STATIC,
         NONE,
@@ -26,10 +27,12 @@ namespace zz
         EMPTY ,
         SAND  ,
         WATER ,
+        OIL   ,
         ROCK  ,
         WOOD  ,
         FIRE  ,
         SMOKE ,
+        GRASS ,
     };
 
     enum class eElementUpdate
@@ -44,10 +47,12 @@ namespace zz
         EMPTY   = 0x00000000,
         SAND    = 0xFFFFFF00,
         WATER   = 0xA0376259,
+        OIL     = 0xE63D3728,
         ROCK    = 0xFF808080,
         WOOD    = 0xFF413F24,
         FIRE    = 0x00000000,//= 0x7FFF6060,
         SMOKE   = 0x7F848485,
+        GRASS   = 0xFF33B828
     };
 
     struct Element
@@ -69,6 +74,7 @@ namespace zz
         bool isIgnite           = false;
         bool onFire             = false;
 
+        float Density           = 0.0f;
         float FireHP            = 0.0f;
         float Temperature       = 0.0f;
         float MaxTemperature    = 0.0f;
@@ -79,10 +85,10 @@ namespace zz
 
         uint16_t ElementFrameCount = 0;
 
-        bool* reBody = nullptr;
+        bool* destoryBody = nullptr;
     };
 
-    Element EMPTY, SAND, WATER, ROCK, WOOD, FIRE, SMOKE;
+    Element EMPTY, SAND, WATER, OIL, ROCK, WOOD, FIRE, SMOKE, GRASS;
 
     inline bool operator&(eElementUpdate a, eElementUpdate b)
     {
@@ -106,7 +112,7 @@ namespace zz
         EMPTY.onFire        = false;
 
         SAND.Type           = eElementType::SOLID;
-        SAND.SolidType      = eSolidType::DYNAMIC;
+        SAND.SolidType      = eSolidType::SAND;
         SAND.Id             = eElementID::SAND;
         SAND.Color          = (uint32_t)eElementColor::SAND;
         SAND.Name           = L"Sand";
@@ -126,6 +132,30 @@ namespace zz
         WATER.isIgnite      = false;
         WATER.onFire        = false;
         WATER.FireHP        = 10000.f;
+        WATER.Density       = 1.0f;
+
+        OIL.Type            = eElementType::LIQUID;
+        OIL.Id              = eElementID::OIL;
+        OIL.Color           = (uint32_t)eElementColor::OIL;
+        OIL.Name            = L"Oil";
+        OIL.Velocity        = math::Vector2(0.f, 2.f);
+        OIL.StopThreshold   = 10;
+        OIL.StopCount       = 10;
+        OIL.isIgnite        = false;
+        OIL.onFire          = false;
+        OIL.FireHP          = 10000.f;
+        OIL.Density         = 0.89f;
+
+        GRASS.Type          = eElementType::LIQUID;
+        GRASS.Id            = eElementID::GRASS;
+        GRASS.Color         = (uint32_t)eElementColor::GRASS;
+        GRASS.Name          = L"Grass";
+        GRASS.Velocity      = math::Vector2(0.f, 2.f);
+        GRASS.StopThreshold = 8;
+        GRASS.StopCount     = 0;
+        GRASS.isIgnite      = false;
+        GRASS.onFire        = false;
+        GRASS.FireHP        = 1.f;
 
         ROCK.Type           = eElementType::SOLID;
         ROCK.SolidType      = eSolidType::STATIC;

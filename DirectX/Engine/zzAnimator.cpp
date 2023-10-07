@@ -106,12 +106,12 @@ namespace zz
         Animation* prevAnimation = mActiveAnimation;
 
         Events* events;
-        if (prevAnimation != nullptr)
-        {
-            events = FindEvents(prevAnimation->GetKey());
-            if (events)
-                events->endEvent();
-        }
+        //if (prevAnimation != nullptr)
+        //{
+        //    events = FindEvents(prevAnimation->GetKey());
+        //    if (events)
+        //        events->endEvent();
+        //}
 
         Animation* animation = FindAnimation(name);
         if (animation)

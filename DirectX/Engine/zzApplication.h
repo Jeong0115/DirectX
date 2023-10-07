@@ -3,12 +3,12 @@
 #include "zzEngine.h"
 #include "zzGraphicsDevice.h"
 
-//#ifdef _DEBUG
-//#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
-//#define new DBG_NEW
-//#else
-//#define DBG_NEW new
-//#endif
+#ifdef _DEBUG
+#define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
+#define new DBG_NEW
+#else
+#define DBG_NEW new
+#endif
 
 namespace zz
 {
@@ -41,6 +41,7 @@ namespace zz
 
         static bool OnDebugMode;
         static bool LightDisabled;
+        static bool IsDrawBox2d;
 
 	private:
 		bool mbInitialize = false;

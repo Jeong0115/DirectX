@@ -27,7 +27,7 @@ void main(uint3 DTid : SV_DispatchThreadID)
                 particle.time -= AnimationSharedBuffer[0].durtaion;
                 particle.index += 1;
                 
-                if (particle.index >= AnimationSharedBuffer[0].maxAnimationCnt)
+                if (particle.index >= (uint) AnimationSharedBuffer[0].maxAnimationCnt) // 나중에 수정
                 {
                     particle.index = 0;
                 }

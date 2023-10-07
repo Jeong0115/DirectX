@@ -20,6 +20,7 @@ namespace zz
         void SetPosition(Vector3 position)  { mPosition = position; }
         void SetPositionX(float x)      { mPosition.x = x; }
         void SetPositionY(float y)      { mPosition.y = y; }
+        void SetPositionZ(float z)      { mPosition.z = z; }
         void SetPositionXY(float x, float y) { mPosition.x = x; mPosition.y = y; }
         void ShiftPositionY(float y)    { mPosition.y += y; }
 

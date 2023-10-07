@@ -26,9 +26,11 @@ namespace zz
     {
         Camera,
         BG,
+        Vegetation,
         Player,
         Monster,
         PlayerAttack,
+        PixelWorld,
 
         Object,
         Effect,

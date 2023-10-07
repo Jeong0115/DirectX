@@ -21,7 +21,7 @@ namespace zz
         {
             b2Body* body = nullptr;
             std::vector<Element> elements;
-            bool isDestroy;
+            bool* isDestroy;
 
             std::vector<StaticElementInfo> elementsInfo;
         };
@@ -50,13 +50,13 @@ namespace zz
         static void Draw(int x, int y);
         static void Draw2(int x, int y);
 
-        static void Draw(int x, int y, cv::Mat& image, Element& element);
+        static void Draw(int x, int y, cv::Mat& mask_image, cv::Mat& visual_image, Element& element);
 
         static double perpendicularDistance(const Position& pt, const Position& lineStart, const Position& lineEnd);
         static void douglasPeucker(const std::vector<Position>& points, double epsilon, std::vector<Position>& out);
 
         static std::vector<std::vector<cv::Point>> getContours(const std::vector<cv::Point>& points, float width, float height);
-        static std::vector<std::vector<cv::Point>> getContours(cv::Mat& image, const std::vector<cv::Point>& points, float width, float height);
+        static std::vector<std::vector<cv::Point>> getContours(cv::Mat& image);
         static std::vector<std::vector<cv::Point>> getContours(const std::array<std::bitset<64>, 64>& points, float width, float height, float offsetX, float offsetY);
         static std::vector<std::vector<cv::Point>> getInsidePointsForEachContour(const cv::Mat& image, const std::vector<std::vector<cv::Point>>& contours);
 
@@ -68,8 +68,6 @@ namespace zz
         static std::vector<b2BodyDef*> mBodyDefs;
         static std::vector<b2FixtureDef*> mFixtureDefs;
         static std::vector<b2Shape*> mShapes;
-
-
 
         static class DrawBox2dWorld* mDrawBow2dBody;
     };

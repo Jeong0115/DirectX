@@ -415,6 +415,12 @@
     <Filter Include="Spell\Projectile\Bomb">
       <UniqueIdentifier>{969f7fcd-6225-408e-aee5-298e44783e79}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scene\Scene\OpeninigScene">
+      <UniqueIdentifier>{02f5a1b9-6330-4a65-b9c7-6abf4bea3755}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Vegetation">
+      <UniqueIdentifier>{4375e8a8-45a7-473f-9608-6ec05d43bd67}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzEntity.cpp">
@@ -542,9 +548,6 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzAnimation.cpp">
       <Filter>Resource\Animation</Filter>
-    </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)zzPlayScene.cpp">
-      <Filter>Scene\Scene</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzPlayerScript.cpp">
       <Filter>Component\Transform\Script\Player</Filter>
@@ -757,6 +760,15 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)zzBomb.cpp">
       <Filter>Spell\Projectile\Bomb</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzPlayScene.cpp">
+      <Filter>Scene\Scene\PlayScene</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzOpeningScene.cpp">
+      <Filter>Scene\Scene\OpeninigScene</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzVegetation.cpp">
+      <Filter>GameObject\Vegetation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzEntity.h">
@@ -914,9 +926,6 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzAnimation.h">
       <Filter>Resource\Animation</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)zzPlayScene.h">
-      <Filter>Scene\Scene</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzPlayerScript.h">
       <Filter>Component\Transform\Script\Player</Filter>
@@ -1125,6 +1134,15 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzBomb.h">
       <Filter>Spell\Projectile\Bomb</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzPlayScene.h">
+      <Filter>Scene\Scene\PlayScene</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzOpeningScene.h">
+      <Filter>Scene\Scene\OpeninigScene</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzVegetation.h">
+      <Filter>GameObject\Vegetation</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

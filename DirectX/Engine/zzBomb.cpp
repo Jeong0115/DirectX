@@ -6,6 +6,8 @@
 #include "zzAnimator.h"
 #include "zzCollider.h"
 #include "zzBox2dCollider.h"
+#include "zzExplosion_128.h"
+#include "zzInput.h"
 
 namespace zz
 {
@@ -39,7 +41,16 @@ namespace zz
 
         ProjectileSpell::Initialize();
 
-        GetComponent<Box2dCollider>()->ApplyLinearImpulse(Vector2(500.f, 30.f), Vector2(-1,-1));
+        Vector3 mousePos = Input::GetMouseWorldPos();
+        Vector3 pos = GetComponent<Transform>()->GetPosition();
+
+        float angle = std::atan2(mousePos.y - pos.y, mousePos.x - pos.x);
+
+        Vector2 force = { 400.f, 0.f };
+        force.x = 600.f * cos(angle);
+        force.y = -600.f * sin(angle);
+
+        GetComponent<Box2dCollider>()->ApplyLinearImpulse(force, Vector2(-1,-1));
 
         mMuzzleEffect = new MuzzleEffect();
         std::shared_ptr<Texture> muzzleTexture = ResourceManager::Find<Texture>(L"muzzle_launcher_large_01");
@@ -54,6 +65,17 @@ namespace zz
 
     void Bomb::Update()
     {
+        if (mTime >= 1.0f && IsActive())
+        {
+            DeleteObject(this, eLayerType::PlayerAttack);
+
+            Vector3 pos = GetComponent<Transform>()->GetPosition();
+
+            Explosion_128* bomb = new Explosion_128();
+            bomb->GetComponent<Transform>()->SetPosition(pos);
+            CreateObject(bomb, eLayerType::Effect);
+        }
+
         ProjectileSpell::Update();
     }
 

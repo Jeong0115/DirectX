@@ -24,6 +24,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)zzLevitationEnerge.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzMagicArrow.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzMuzzleEffect.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzOpeningScene.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzSpeedUp_UI.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzDetectPlayer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzExplosionEffect.cpp" />
@@ -124,6 +125,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)zzTime.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzTransform.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzUtilitySpell.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzVegetation.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzWand.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzBlastWand_0585.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzWandMana.cpp" />
@@ -147,6 +149,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzLevitationEnerge.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzMagicArrow.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzMuzzleEffect.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzOpeningScene.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzSpeedUp_UI.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzDetectPlayer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzExplosionEffect.h" />
@@ -248,6 +251,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzTime.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzTransform.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzUtilitySpell.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzVegetation.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzWand.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzBlastWand_0585.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzWandMana.h" />
