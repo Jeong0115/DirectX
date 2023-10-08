@@ -37,6 +37,7 @@ namespace zz
         static void Initialize();
         static void Update();
         static void Render();
+        static void InitializePresentWorld();
         static void Release();
 
         static void CreateBody(b2Body*& body, eBodyShape shape, Vector2 scale, Vector3 pos);
@@ -65,9 +66,6 @@ namespace zz
     private:
         static b2World* mBox2dWorld;
         static std::vector<b2Body*> mBodys;
-        static std::vector<b2BodyDef*> mBodyDefs;
-        static std::vector<b2FixtureDef*> mFixtureDefs;
-        static std::vector<b2Shape*> mShapes;
 
         static class DrawBox2dWorld* mDrawBow2dBody;
     };

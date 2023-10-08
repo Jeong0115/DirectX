@@ -92,7 +92,7 @@ namespace zz
         std::vector<uint32_t>& pixelTexture = PixelWorld::GetPixelColor();
 
         TexMetadata metadata;
-        metadata.width = 2048;
+        metadata.width = 1536;
         metadata.height = 2048;
         metadata.depth = 1;
         metadata.arraySize = 1;
@@ -103,7 +103,7 @@ namespace zz
         HRESULT hr2 = mImage.Initialize(metadata, CP_FLAGS_NONE);
 
         Image image;
-        image.width = 2048;
+        image.width = 1536;
         image.height = 2048;
         image.format = DXGI_FORMAT_B8G8R8A8_UNORM;
         image.rowPitch = image.width * sizeof(uint32_t);  // for DXGI_FORMAT_R8G8B8A8_UNORM

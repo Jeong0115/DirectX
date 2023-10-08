@@ -43,6 +43,7 @@ namespace zz
         static void RegisterEvent(EvenetData data);
         static void RegisterListener(eEvent eventType, std::function<void(const EvenetData&)> listener);
 
+        static void AddOtherEvent(std::function<void()> event) { mOtherEvents.push_back(event); }
     private:
         static void Execute(const EventInfo event);
 
@@ -50,6 +51,7 @@ namespace zz
         static std::vector<GameObject*> mDeactivateList;
 
         static std::vector<std::vector<std::function<void(const EvenetData&)>>> mEventListeners;
+        static std::vector<std::function<void()>> mOtherEvents;
         static std::vector<EvenetData> mEventDatas;
     };
 }

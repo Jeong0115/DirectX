@@ -15,7 +15,8 @@ namespace zz
         virtual void LateUpdate()   override;
         virtual void Render()       override;
 
-        void Run();
+        void EndLoading();
+        bool Run();
 
     private:
         void playNextAnimation();
@@ -30,5 +31,8 @@ namespace zz
         float fadeTime;
 
         float sign;
+        float duration;
+
+        bool mbEnd;
     };
 }

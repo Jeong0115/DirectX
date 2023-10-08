@@ -18,6 +18,8 @@ namespace zz
         , sign(1.f)
         , time(0.f)
         , fadeTime(1.4f)
+        , duration(0.2f)
+        , mbEnd(false)
     {
     }
     OpeningScene::~OpeningScene()
@@ -80,7 +82,7 @@ namespace zz
         cb->SetBufferData(&color);
         cb->BindConstantBuffer(eShaderStage::PS);
 
-        if (time > fadeTime + 0.2f)
+        if (time >= fadeTime + duration)
         {
             time = fadeTime;
             sign *= -1.f;
@@ -95,14 +97,36 @@ namespace zz
 
         mesh->GetMesh()->Render();
         mesh->GetMaterial()->Clear();
+
     }
 
-    void OpeningScene::Run()
+    void OpeningScene::EndLoading()
+    {
+        mbEnd = true;
+
+        if (duration != 0.f)
+        {
+            duration = 0.f;
+            time = fadeTime = 1.f;
+        }
+    }
+
+    bool OpeningScene::Run()
     {
         Time::Update();
         Update();
         LateUpdate();
         Render();
+
+        if (mbEnd)
+        {
+            if (time < 0.f)
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     void OpeningScene::playNextAnimation()
@@ -110,6 +134,7 @@ namespace zz
         sign = 1.f;
         time = 0.f;
         fadeTime = 1.f;
+        duration = 50.f;
         trans->SetScale(1600.f * 0.5f, 900.f * 0.5f, 1.f);
         animator->PlayAnimation(L"noita_logo_anim_01_play", true);
     }

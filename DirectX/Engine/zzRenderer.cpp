@@ -33,6 +33,7 @@ namespace zz::renderer
     void LoadParticleResource();
     void LoadMonsterResource();
     void LoadVegetationResource();
+    void LoadEtc();
 
     void LoadBuffer()
     {
@@ -256,6 +257,10 @@ namespace zz::renderer
         psSystemShader2->Create(L"SineFuncParticleCS.hlsl", "main");
         ResourceManager::Insert(L"SineFuncParticleCS", psSystemShader2);
 
+        std::shared_ptr<ParticleShader> psSystemShader3 = std::make_shared<ParticleShader>();
+        psSystemShader3->Create(L"ParticleCircleCS.hlsl", "main");
+        ResourceManager::Insert(L"ParticleCircleCS", psSystemShader3);
+
         std::shared_ptr<Shader> paritcleShader = std::make_shared<Shader>();
         paritcleShader->CreateShader(eShaderStage::VS, L"ParticleVS.hlsl", "main");
         paritcleShader->CreateShader(eShaderStage::GS, L"ParticleGS.hlsl", "main");
@@ -291,6 +296,7 @@ namespace zz::renderer
         LoadSpellResource();
         LoadMonsterResource();
         LoadVegetationResource();
+        LoadEtc();
 
         std::shared_ptr<Shader> spriteShader = ResourceManager::Find<Shader>(L"SpriteShader");
 
@@ -1141,4 +1147,15 @@ namespace zz::renderer
         }
     }
 
+    void LoadEtc()
+    {
+        std::shared_ptr<Shader> spriteShader = ResourceManager::Find<Shader>(L"SpriteShader");
+        std::shared_ptr<Material> material;
+
+        std::shared_ptr<Texture> teleport_center = ResourceManager::Load<Texture>(L"teleport_center", L"..\\Resources\\Texture\\Etc\\teleport_center.png");
+        material = std::make_shared<Material>();
+        material->SetShader(spriteShader);
+        material->SetTexture(teleport_center);
+        ResourceManager::Insert(L"m_teleport_center", material);
+    }
 }

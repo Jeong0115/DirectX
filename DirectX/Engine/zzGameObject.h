@@ -72,19 +72,25 @@ namespace zz
             mComponents.push_back(component);
         }
 
+        eLayerType GetLayerType() { return mLayerType; }
+        void SetLayerType(eLayerType type) { mLayerType = type; }
+
         eState GetState() { return mState; }
         bool IsDead() { return (mState == eState::Dead); }
         bool IsActive() {return (mState == eState::Active);}
         bool GetActive() { return mbActive; }
         void SetActive(bool active) { mbActive = active; }
 
+
     protected:
         void SetState(eState state) { mState = state; }
         friend class EventManager;
 
     private:
-        eState  mState;
-        bool    mbActive;
+        eState          mState;
+        bool            mbActive;
+        eLayerType      mLayerType;
+
         std::vector<Component*> mComponents;
     };
 }

@@ -71,6 +71,8 @@ namespace zz
         static void DeleteStaticElement(std::vector<Box2dWorld::StaticElementInfo>& elements);
         
         static void CreateNewWorld();
+        static void CreateNextWorld();
+
         static void InsertElementFromImage(int y, int x, const cv::Mat& image, Element& element);
         static uint32_t Vec3bToColor(const cv::Vec3b& vec3b);
         static uint32_t Vec4bToColor(const cv::Vec4b& vec4b);

@@ -77,7 +77,8 @@ namespace zz
         float Density           = 0.0f;
         float FireHP            = 0.0f;
         float Temperature       = 0.0f;
-        float MaxTemperature    = 0.0f;
+        float IgnitionPoint     = 0.0f;
+        float FlashPoint        = 0.0f;
         float LifeTime          = 0.0f;
         float Hp                = 0.0f;
         float x                 = 0.0f;
@@ -117,8 +118,8 @@ namespace zz
         SAND.Color          = (uint32_t)eElementColor::SAND;
         SAND.Name           = L"Sand";
         SAND.Velocity       = math::Vector2(2.f, 2.f);
-        SAND.StopThreshold  = 5;
-        SAND.StopCount      = 5;
+        SAND.StopThreshold  = 10;
+        SAND.StopCount      = 10;
         SAND.isIgnite       = false;
         SAND.onFire         = false;
 
@@ -127,24 +128,29 @@ namespace zz
         WATER.Color         = (uint32_t)eElementColor::WATER;
         WATER.Name          = L"Water";
         WATER.Velocity      = math::Vector2(0.f, 2.f);
-        WATER.StopThreshold = 10;
-        WATER.StopCount     = 10;
+        WATER.StopThreshold = 15;
+        WATER.StopCount     = 15;
         WATER.isIgnite      = false;
         WATER.onFire        = false;
         WATER.FireHP        = 10000.f;
         WATER.Density       = 1.0f;
+        WATER.Temperature = 100.f;
 
         OIL.Type            = eElementType::LIQUID;
         OIL.Id              = eElementID::OIL;
         OIL.Color           = (uint32_t)eElementColor::OIL;
+        OIL.Temp            = eElementUpdate::HEAT_TRANSFER;
         OIL.Name            = L"Oil";
         OIL.Velocity        = math::Vector2(0.f, 2.f);
-        OIL.StopThreshold   = 10;
-        OIL.StopCount       = 10;
-        OIL.isIgnite        = false;
+        OIL.StopThreshold   = 15;
+        OIL.StopCount       = 15;
+        OIL.isIgnite        = true;
         OIL.onFire          = false;
-        OIL.FireHP          = 10000.f;
+        OIL.FireHP          = 5.f;
         OIL.Density         = 0.89f;
+        OIL.IgnitionPoint   = 260.f;
+        OIL.Temperature     = 0.f;
+        OIL.FlashPoint      = 5.f;
 
         GRASS.Type          = eElementType::LIQUID;
         GRASS.Id            = eElementID::GRASS;
@@ -180,8 +186,9 @@ namespace zz
         WOOD.isIgnite       = true;
         WOOD.onFire         = false;
         WOOD.FireHP         = 5.f;
-        WOOD.MaxTemperature = 450.f;
+        WOOD.IgnitionPoint  = 450.f;
         WOOD.Temperature    = 0.f;
+        WOOD.FlashPoint     = 260.f;
 
         FIRE.Type           = eElementType::GAS;
         FIRE.Id             = eElementID::FIRE;
@@ -202,12 +209,12 @@ namespace zz
         SMOKE.Temp          = eElementUpdate::DECREASE_LIFE_TIME;
         SMOKE.Color         = (uint32_t)eElementColor::SMOKE;
         SMOKE.Name          = L"Smoke";
-        SMOKE.Velocity      = math::Vector2(2.f, 5.f);
+        SMOKE.Velocity      = math::Vector2(-2.f, 4.f);
         SMOKE.StopThreshold = 5;
         SMOKE.StopCount     = 5;
         SMOKE.isIgnite      = false;
         SMOKE.onFire        = false;
-        SMOKE.LifeTime      = 1.5f;
+        SMOKE.LifeTime      = 4.0f;
     }
 
     const uint32_t Sand_0 = { 0xFFFFFF00 };
@@ -224,4 +231,30 @@ namespace zz
 
     std::vector<uint32_t> FireColors = { Red, Yellow, Yellow, Orange, Orange, Orange };
     inline uint32_t RandomFireColor() { return FireColors[static_cast<int>(random() * FireColors.size())]; }
+
+
+    uint32_t getElementColor(eElementID id) {
+        switch (id) {
+        case eElementID::EMPTY:
+            return (uint32_t)eElementColor::EMPTY;
+        case eElementID::SAND:
+            return (uint32_t)eElementColor::SAND;
+        case eElementID::WATER:
+            return (uint32_t)eElementColor::WATER;
+        case eElementID::OIL:
+            return (uint32_t)eElementColor::OIL;
+        case eElementID::ROCK:
+            return (uint32_t)eElementColor::ROCK;
+        case eElementID::WOOD:
+            return (uint32_t)eElementColor::WOOD;
+        case eElementID::FIRE:
+            return (uint32_t)eElementColor::FIRE;
+        case eElementID::SMOKE:
+            return (uint32_t)eElementColor::SMOKE;
+        case eElementID::GRASS:
+            return (uint32_t)eElementColor::GRASS;
+        default:
+            throw std::runtime_error("Invalid eElementID");
+        }
+    }
 }

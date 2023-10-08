@@ -85,12 +85,33 @@ struct SineParticleShared
     uint activeCount;
 };
 
+struct ParticleCircleShared
+{
+    float4 curPosition;
+    float4 scale;
+    float4 color;
+    
+    float2 randPositionMin;
+    float2 randPositionMax;
+    
+    float2 randSpeed;
+    float2 randLifeTime;
+    
+    float radius;
+    
+    int particleCnt;
+    int maxParticleCnt;
+    
+    bool create;
+};
+
 RWStructuredBuffer<Particle> ParticleBuffer : register(u0);
 RWStructuredBuffer<ProjectileShared> ProjectileSharedBuffer : register(u1);
 RWStructuredBuffer<ParticleAnimation> ParticleAnimationBuffer : register(u2);
 RWStructuredBuffer<AnimationShared> AnimationSharedBuffer : register(u3);
 RWStructuredBuffer<ParticleShared> ParticleSharedBuffer : register(u4);
 RWStructuredBuffer<SineParticleShared> SineParticleSharedBuffer : register(u5);
+RWStructuredBuffer<ParticleCircleShared> ParticleCircleSharedBuffer : register(u6);
 
 StructuredBuffer<Particle> particles : register(t14);
 StructuredBuffer<ParticleAnimation> particlesAnimation : register(t15);

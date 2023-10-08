@@ -58,8 +58,10 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)zzSpellSlot.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzSpellUI.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzStructedBuffer.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzTeleport.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzTextBox.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzTextObject.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zztScene.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzUI.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzUICamera.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzCollider.cpp" />
@@ -183,8 +185,10 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzSpellSlot.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzSpellUI.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzStructedBuffer.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzTeleport.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzTextBox.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzTextObject.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zztScene.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzUI.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzUICamera.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzCollider.h" />

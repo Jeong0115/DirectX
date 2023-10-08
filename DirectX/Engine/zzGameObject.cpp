@@ -9,6 +9,7 @@ namespace zz
     GameObject::GameObject()
         : mState(eState::Active)
         , mbActive(true)
+        , mLayerType(eLayerType::End)
     {
         AddComponent<Transform>();
     }

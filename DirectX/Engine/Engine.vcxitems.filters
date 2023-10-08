@@ -160,12 +160,6 @@
     <Filter Include="UI\ItemTextureHighlight">
       <UniqueIdentifier>{58cd1e62-3e2d-48ed-9f48-4a6d398d8691}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Spell">
-      <UniqueIdentifier>{a1e0faa0-856b-4e02-8480-87e8431c92b3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Spell\Base">
-      <UniqueIdentifier>{00a0a4fe-f793-4764-a7a3-ca9493a9f4df}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Manager\EventManager">
       <UniqueIdentifier>{73039cfa-c4d1-4ead-933e-1b975d52ea03}</UniqueIdentifier>
     </Filter>
@@ -319,41 +313,8 @@
     <Filter Include="UI\Inventory\ItemSlot">
       <UniqueIdentifier>{5b8e899b-b476-4219-8f27-513d545837db}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Spell\Utility">
-      <UniqueIdentifier>{ef794fe7-d66d-4d4c-8f3a-483ebe74eda4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Spell\Utility\Base">
-      <UniqueIdentifier>{fb5277f1-ba06-4a37-91e7-535e1aaa0fca}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Spell\Utility\MultiCast">
-      <UniqueIdentifier>{4f51b664-95e4-47cd-a11f-c595e821141f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Spell\Utility\Other">
-      <UniqueIdentifier>{0d0e078c-4384-4799-bf4e-7b314a42652d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Spell\Utility\Modifier">
-      <UniqueIdentifier>{12e2a015-2139-44af-822b-ffb3eb175a72}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Spell\Projectile">
-      <UniqueIdentifier>{4662bc87-5cbc-4fa4-aa64-3625cc487c8e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Spell\Projectile\Base">
-      <UniqueIdentifier>{addbcecc-ee09-487b-9d32-d0f29233b6fc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Spell\Projectile\SparkBolt">
-      <UniqueIdentifier>{ac57409f-2c48-45c2-919d-8d56576def88}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Spell\Utility\Modifier\Base">
-      <UniqueIdentifier>{1751adb5-a90a-4ced-b263-e7f645a26718}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Spell\Utility\Modifier\SpeedUp">
-      <UniqueIdentifier>{c3c5cdc3-39bd-461f-a759-3cf70d244f9b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="UI\SpellUI\SpeedUp">
       <UniqueIdentifier>{c65a9c1a-ffa9-4b53-9614-2010960437e9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Spell\Utility\Other\Base">
-      <UniqueIdentifier>{a23b5107-4c72-4157-bfb0-82501b964c6c}</UniqueIdentifier>
     </Filter>
     <Filter Include="Manager\UIManager">
       <UniqueIdentifier>{e679f939-66fb-45ac-b5b2-695e4bb0b18b}</UniqueIdentifier>
@@ -397,14 +358,8 @@
     <Filter Include="UI\SpellUI\Bullet">
       <UniqueIdentifier>{f69239f3-5011-4862-a1c4-2522fe4f6d58}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Spell\Projectile\MagicArrow">
-      <UniqueIdentifier>{88ecd984-cec8-4ecf-b141-6ad03c10cf4b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="UI\SpellUI\WaterTrail">
       <UniqueIdentifier>{5c6164a6-b91f-467e-9865-3b24c43c28ac}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Spell\Utility\Modifier\WaterTrail">
-      <UniqueIdentifier>{854fa86f-bbeb-4132-b5f1-c5894dc765b5}</UniqueIdentifier>
     </Filter>
     <Filter Include="Component\Box2dCollider">
       <UniqueIdentifier>{90a65842-9de7-4de7-9a4a-a7c93fe2a559}</UniqueIdentifier>
@@ -412,14 +367,62 @@
     <Filter Include="UI\SpellUI\Bomb">
       <UniqueIdentifier>{8317c367-ccc1-4c6f-bb07-e3bf19e77493}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Spell\Projectile\Bomb">
-      <UniqueIdentifier>{969f7fcd-6225-408e-aee5-298e44783e79}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Scene\Scene\OpeninigScene">
       <UniqueIdentifier>{02f5a1b9-6330-4a65-b9c7-6abf4bea3755}</UniqueIdentifier>
     </Filter>
     <Filter Include="GameObject\Vegetation">
       <UniqueIdentifier>{4375e8a8-45a7-473f-9608-6ec05d43bd67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Teleport">
+      <UniqueIdentifier>{d0a8a589-e102-42c4-be6a-81b3fb52f43d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Spell">
+      <UniqueIdentifier>{a1e0faa0-856b-4e02-8480-87e8431c92b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Spell\Base">
+      <UniqueIdentifier>{00a0a4fe-f793-4764-a7a3-ca9493a9f4df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Spell\Utility">
+      <UniqueIdentifier>{ef794fe7-d66d-4d4c-8f3a-483ebe74eda4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Spell\Utility\Base">
+      <UniqueIdentifier>{fb5277f1-ba06-4a37-91e7-535e1aaa0fca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Spell\Utility\MultiCast">
+      <UniqueIdentifier>{4f51b664-95e4-47cd-a11f-c595e821141f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Spell\Utility\Other">
+      <UniqueIdentifier>{0d0e078c-4384-4799-bf4e-7b314a42652d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Spell\Utility\Other\Base">
+      <UniqueIdentifier>{a23b5107-4c72-4157-bfb0-82501b964c6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Spell\Utility\Modifier">
+      <UniqueIdentifier>{12e2a015-2139-44af-822b-ffb3eb175a72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Spell\Utility\Modifier\Base">
+      <UniqueIdentifier>{1751adb5-a90a-4ced-b263-e7f645a26718}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Spell\Utility\Modifier\SpeedUp">
+      <UniqueIdentifier>{c3c5cdc3-39bd-461f-a759-3cf70d244f9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Spell\Utility\Modifier\WaterTrail">
+      <UniqueIdentifier>{854fa86f-bbeb-4132-b5f1-c5894dc765b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Spell\Projectile">
+      <UniqueIdentifier>{4662bc87-5cbc-4fa4-aa64-3625cc487c8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Spell\Projectile\Base">
+      <UniqueIdentifier>{addbcecc-ee09-487b-9d32-d0f29233b6fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Spell\Projectile\SparkBolt">
+      <UniqueIdentifier>{ac57409f-2c48-45c2-919d-8d56576def88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Spell\Projectile\MagicArrow">
+      <UniqueIdentifier>{88ecd984-cec8-4ecf-b141-6ad03c10cf4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Spell\Projectile\Bomb">
+      <UniqueIdentifier>{969f7fcd-6225-408e-aee5-298e44783e79}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -616,13 +619,13 @@
       <Filter>UI\ItemTextureHighlight</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzSpell.cpp">
-      <Filter>Spell\Base</Filter>
+      <Filter>GameObject\Spell\Base</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzProjectileSpell.cpp">
-      <Filter>Spell\Projectile\Base</Filter>
+      <Filter>GameObject\Spell\Projectile\Base</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzSparkBolt.cpp">
-      <Filter>Spell\Projectile\SparkBolt</Filter>
+      <Filter>GameObject\Spell\Projectile\SparkBolt</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzEventManager.cpp">
       <Filter>Manager\EventManager</Filter>
@@ -694,13 +697,13 @@
       <Filter>UI\Inventory\ItemSlot</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzUtilitySpell.cpp">
-      <Filter>Spell\Utility\Base</Filter>
+      <Filter>GameObject\Spell\Utility\Base</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzModifierSpell.cpp">
-      <Filter>Spell\Utility\Modifier\Base</Filter>
+      <Filter>GameObject\Spell\Utility\Modifier\Base</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzSpeedUp.cpp">
-      <Filter>Spell\Utility\Modifier\SpeedUp</Filter>
+      <Filter>GameObject\Spell\Utility\Modifier\SpeedUp</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzSpeedUp_UI.cpp">
       <Filter>UI\SpellUI\SpeedUp</Filter>
@@ -743,13 +746,13 @@
       <Filter>UI\SpellUI\Bullet</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzMagicArrow.cpp">
-      <Filter>Spell\Projectile\MagicArrow</Filter>
+      <Filter>GameObject\Spell\Projectile\MagicArrow</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzWaterTrail_UI.cpp">
       <Filter>UI\SpellUI\WaterTrail</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzWaterTrail.cpp">
-      <Filter>Spell\Utility\Modifier\WaterTrail</Filter>
+      <Filter>GameObject\Spell\Utility\Modifier\WaterTrail</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzBox2dCollider.cpp">
       <Filter>Component\Box2dCollider</Filter>
@@ -758,7 +761,7 @@
       <Filter>UI\SpellUI\Bomb</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzBomb.cpp">
-      <Filter>Spell\Projectile\Bomb</Filter>
+      <Filter>GameObject\Spell\Projectile\Bomb</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzPlayScene.cpp">
       <Filter>Scene\Scene\PlayScene</Filter>
@@ -768,6 +771,12 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzVegetation.cpp">
       <Filter>GameObject\Vegetation</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzTeleport.cpp">
+      <Filter>GameObject\Teleport</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zztScene.cpp">
+      <Filter>Scene\Scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -994,13 +1003,13 @@
       <Filter>UI\ItemTextureHighlight</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzSpell.h">
-      <Filter>Spell\Base</Filter>
+      <Filter>GameObject\Spell\Base</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzProjectileSpell.h">
-      <Filter>Spell\Projectile\Base</Filter>
+      <Filter>GameObject\Spell\Projectile\Base</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzSparkBolt.h">
-      <Filter>Spell\Projectile\SparkBolt</Filter>
+      <Filter>GameObject\Spell\Projectile\SparkBolt</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzEventManager.h">
       <Filter>Manager\EventManager</Filter>
@@ -1069,13 +1078,13 @@
       <Filter>UI\Inventory\ItemSlot</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzUtilitySpell.h">
-      <Filter>Spell\Utility\Base</Filter>
+      <Filter>GameObject\Spell\Utility\Base</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzModifierSpell.h">
-      <Filter>Spell\Utility\Modifier\Base</Filter>
+      <Filter>GameObject\Spell\Utility\Modifier\Base</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzSpeedUp.h">
-      <Filter>Spell\Utility\Modifier\SpeedUp</Filter>
+      <Filter>GameObject\Spell\Utility\Modifier\SpeedUp</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzSpeedUp_UI.h">
       <Filter>UI\SpellUI\SpeedUp</Filter>
@@ -1118,13 +1127,13 @@
       <Filter>UI\SpellUI\Bullet</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzMagicArrow.h">
-      <Filter>Spell\Projectile\MagicArrow</Filter>
+      <Filter>GameObject\Spell\Projectile\MagicArrow</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzWaterTrail_UI.h">
       <Filter>UI\SpellUI\WaterTrail</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzWaterTrail.h">
-      <Filter>Spell\Utility\Modifier\WaterTrail</Filter>
+      <Filter>GameObject\Spell\Utility\Modifier\WaterTrail</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzBox2dCollider.h">
       <Filter>Component\Box2dCollider</Filter>
@@ -1133,7 +1142,7 @@
       <Filter>UI\SpellUI\Bomb</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzBomb.h">
-      <Filter>Spell\Projectile\Bomb</Filter>
+      <Filter>GameObject\Spell\Projectile\Bomb</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzPlayScene.h">
       <Filter>Scene\Scene\PlayScene</Filter>
@@ -1143,6 +1152,12 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzVegetation.h">
       <Filter>GameObject\Vegetation</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzTeleport.h">
+      <Filter>GameObject\Teleport</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zztScene.h">
+      <Filter>Scene\Scene</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

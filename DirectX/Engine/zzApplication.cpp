@@ -14,7 +14,7 @@
 #include "zzThreadPool.h"
 
 #include "zzOpeningScene.h"
-
+#include "zztScene.h"
 namespace zz
 {	
     bool Application::OnDebugMode = false;
@@ -71,27 +71,25 @@ namespace zz
         thread.enqueue([=]() { ObjectPoolManager::Initialize(); });
         thread.enqueue([=]() { Editor::Initialize(); });
 
-        while (true)
+        bool isBreak = true;
+
+        while (isBreak)
         {
             graphicDevice->ClearRenderTarget();
             graphicDevice->UpdateViewPort();
 
-            opening->Run();
+            isBreak = opening->Run();
 
             Present();
 
             if (thread.isEmpty())   
             {
-                delete opening;
-                break;
+                opening->EndLoading();
             }
         }
-        //PixelWorld::Initialize();
-        //WriteManager::Initialize();
-        //UIManager::Initialize();
-        //SceneManager::Initialize();
-        //ObjectPoolManager::Initialize();
-        //Editor::Initialize();
+
+        delete opening;
+        opening = nullptr;
 	}
 
 	void Application::Update()
@@ -103,12 +101,10 @@ namespace zz
         {
             OnDebugMode = !OnDebugMode;
         }
-
         if (Input::GetKey(eKeyCode::CTRL) && Input::GetKeyDown(eKeyCode::F6))
         {
             IsDrawBox2d = !IsDrawBox2d;
         }
-
         if (Input::GetKey(eKeyCode::CTRL) && Input::GetKeyDown(eKeyCode::F8))
         {
             LightDisabled = !LightDisabled;
@@ -195,4 +191,20 @@ namespace zz
         ShowWindow(mHwnd, true);
         UpdateWindow(mHwnd);
 	}
+
+    void Application::LoadNextScene(const std::wstring& name)
+    {
+        if (name == L"Excavationsite")
+        {
+            EventManager::AddOtherEvent([]() { LoadExcavationsite(); });
+        }
+    }
+
+    void Application::LoadExcavationsite()
+    {
+        tScene* scene = new tScene();
+
+        SceneManager::LoadScene(L"Excavationsite", scene);
+        PixelWorld::CreateNextWorld();
+    }
 }

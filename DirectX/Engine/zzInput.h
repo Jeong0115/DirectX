@@ -69,6 +69,7 @@ namespace zz
         static __forceinline Vector3 GetMouseUIPos() { return mMouseUIPos; }
 
         static void SetPlayer(class Transform* player) { mPlayer = player; }
+        static class Transform* GetPlayer() { return mPlayer; }
         static float IsFlip();
 
     private:

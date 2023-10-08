@@ -17,6 +17,8 @@ namespace zz
         static void Render();
         static void Release();
 
+        static void LoadScene(const std::wstring& name, Scene* scene);
+
         static void CreateScene(std::wstring name, Scene* scene);
 
         static Scene* GetActiveScene() { return mActiveScene; }

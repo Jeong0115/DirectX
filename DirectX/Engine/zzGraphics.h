@@ -208,4 +208,24 @@ namespace zz
 
         UINT activeCount;
     };
+
+    struct ParticleCircleShared
+    {
+        math::Vector4 curPosition;
+        math::Vector4 scale;
+        math::Vector4 color;
+
+        math::Vector2 randPositionMin;
+        math::Vector2 randPositionMax;
+
+        math::Vector2 randSpeed;
+        math::Vector2 randLifeTime;
+
+        float radius;
+
+        int particleCnt;
+        int maxParticleCnt;
+
+        bool create;
+    };
 }

@@ -50,9 +50,9 @@ namespace zz
 
     void PixelChunkMap::UpdateStep1()
     {
-        for (int i = 0; i < 8; i += 2)
+        for (int i = 7; i >= 0; i -= 2)
         {
-            for (int j = 0; j < 8; j += 2)
+            for (int j = 7; j >= 0; j -= 2)
             {
                 PixelWorld::threadPool.enqueue([=]() {mChunks[j * mXChunkCnt + i]->Update(); });
 
@@ -68,9 +68,9 @@ namespace zz
     }
     void PixelChunkMap::UpdateStep2()
     {
-        for (int i = 0; i < 8; i += 2)
+        for (int i = 7; i >= 0; i -= 2)
         {
-            for (int j = 1; j < 8; j += 2)
+            for (int j = 6; j >= 0; j -= 2)
             {
                 PixelWorld::threadPool.enqueue([=]() {mChunks[j * mXChunkCnt + i]->Update(); });
 
@@ -86,9 +86,9 @@ namespace zz
     }
     void PixelChunkMap::UpdateStep3()
     {
-        for (int i = 1; i < 8; i += 2)
+        for (int i = 6; i >= 0; i -= 2)
         {
-            for (int j = 0; j < 8; j += 2)
+            for (int j = 7; j >= 0; j -= 2)
             {
                 PixelWorld::threadPool.enqueue([=]() {mChunks[j * mXChunkCnt + i]->Update(); });
 
@@ -104,9 +104,9 @@ namespace zz
     }
     void PixelChunkMap::UpdateStep4()
     {
-        for (int i = 1; i < 8; i += 2)
+        for (int i = 6; i >= 0; i -= 2)
         {
-            for (int j = 1; j < 8; j += 2)
+            for (int j = 6; j >= 0; j -= 2)
             {
                 PixelWorld::threadPool.enqueue([=]() {mChunks[j * mXChunkCnt + i]->Update(); });
                 
@@ -127,8 +127,8 @@ namespace zz
         {
             for (int j = 0; j < 8; j ++)
             {
-                //PixelWorld::threadPool.enqueue([=]() {mChunks[j * mXChunkCnt + i]->UpdateRect(); });
-                mChunks[j * mXChunkCnt + i]->UpdateRect();
+                PixelWorld::threadPool.enqueue([=]() {mChunks[j * mXChunkCnt + i]->UpdateRect(); });
+                //mChunks[j * mXChunkCnt + i]->UpdateRect();
             }
         }
     }

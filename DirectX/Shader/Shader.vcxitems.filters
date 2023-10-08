@@ -93,6 +93,9 @@
     <FxCompile Include="$(MSBuildThisFileDirectory)FadeSpritePS.hlsl">
       <Filter>PS</Filter>
     </FxCompile>
+    <FxCompile Include="$(MSBuildThisFileDirectory)ParticleCircleCS.hlsl">
+      <Filter>Particle</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)Common.hlsli" />

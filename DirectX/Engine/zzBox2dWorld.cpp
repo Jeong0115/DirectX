@@ -25,9 +25,6 @@ namespace zz
 
     b2World* Box2dWorld::mBox2dWorld = new b2World(b2Vec2(0.0f, 5.f));
     std::vector<b2Body*> Box2dWorld::mBodys;
-    std::vector<b2BodyDef*> Box2dWorld::mBodyDefs;
-    std::vector<b2FixtureDef*> Box2dWorld::mFixtureDefs;
-    std::vector<b2Shape*> Box2dWorld::mShapes;
 
     std::vector<Box2dWorld::StaticElementsBody> Box2dWorld::mElementsBodys;
     DrawBox2dWorld* Box2dWorld::mDrawBow2dBody;
@@ -100,6 +97,39 @@ namespace zz
         cb->BindConstantBuffer(eShaderStage::PS);
 
         mBox2dWorld->DebugDraw();
+    }
+
+    void Box2dWorld::InitializePresentWorld()
+    {
+        for (auto elementsBody : mElementsBodys)
+        {
+            delete elementsBody.isDestroy;
+            elementsBody.isDestroy = nullptr;
+
+            mBox2dWorld->DestroyBody(elementsBody.body);
+            elementsBody.body = nullptr;
+        }
+        mElementsBodys.clear();
+        std::vector<StaticElementsBody>().swap(mElementsBodys);
+        
+        for (b2Body* body : mBodys)
+        {
+            mBox2dWorld->DestroyBody(body);
+        }
+        mBodys.clear();
+        std::vector<b2Body*>().swap(mBodys);
+        
+
+        delete mDrawBow2dBody;
+        mDrawBow2dBody = nullptr; 
+
+        delete mBox2dWorld;
+        mBox2dWorld = nullptr;
+
+        mBox2dWorld = new b2World(b2Vec2(0.0f, 5.f));
+        mDrawBow2dBody = new DrawBox2dWorld();
+        mDrawBow2dBody->SetFlags(b2Draw::e_shapeBit);
+        mBox2dWorld->SetDebugDraw(mDrawBow2dBody);
     }
 
     void Box2dWorld::Release()

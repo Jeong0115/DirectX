@@ -10,6 +10,7 @@
 #include <algorithm>
 
 #include "zzInput.h"
+#include "zzTransform.h"
 #include "zzTime.h"
 
 #include "zzVegetation.h"
@@ -20,7 +21,7 @@
 
 namespace zz
 {  
-    std::vector<uint32_t> PixelWorld::mPixelColor(2048 * 2048);
+    std::vector<uint32_t> PixelWorld::mPixelColor(2048 * 1536);
     const UINT PixelWorld::mChunkMapWidth = 512;
     const UINT PixelWorld::mChunkMapHeight = 512;
     PixelGridColor* PixelWorld::mImage = new PixelGridColor();
@@ -62,6 +63,7 @@ namespace zz
         mElementMap.insert({ 'r', ROCK });
         mElementMap.insert({ 't', WOOD });
         mElementMap.insert({ 'f', FIRE });
+        mElementMap.insert({ 'g', SMOKE});
         mElementMap.insert({ 'e', EMPTY });
         mSelectElement = mElementMap.find('e')->second;
 
@@ -82,29 +84,83 @@ namespace zz
         renderer::debugMeshs.clear();
         mTime -= 1.f / 100.f;
 
-        threadPool.wait();
-        DrawPixels();
-               
-        Box2dWorld::mElementsBodys;
+        std::vector<std::pair<int, int>> aroundMap;
+
+        //Vector3 playerPos = Input::GetPlayer()->GetPosition();
+        Vector3 playerPos = Input::GetMouseWorldPos();
+
+        float posX = playerPos.x / 512.f;
+        float posY = -playerPos.y / 512.f;
+
+        aroundMap.push_back({ (int)posX, (int)posY });
+
+        int nearX = (int)(posX + 0.5f) == (int)posX ? (int)posX - 1 : (int)(posX + 0.5f);
+        int nearY = (int)(posY + 0.5f) == (int)posY ? (int)posY - 1 : (int)(posY + 0.5f);
+
+        aroundMap.push_back({ (int)nearX, (int)posY });
+        aroundMap.push_back({ (int)posX, (int)nearY });
+        aroundMap.push_back({ (int)nearX, (int)nearY });
+
+        std::vector<PixelChunkMap*> updateMaps;
+
+        for(int i=0; i<4; i++)
+        {
+            PixelChunkMap* chunkMap = GetChunkMapDirect(aroundMap[i]);
+
+            if (chunkMap != nullptr)
+            {
+                updateMaps.push_back(chunkMap);
+            }
+        }
+
+        DrawPixels();               
+
+        static int k = 0;
         for (int i = 0; i < 4; i++)
         {
-            for (PixelChunkMap* chunkMap : mChunkMaps)
+            k++;
+            if (k >= 4)
+                k -= 4;
+            
+            //for (PixelChunkMap* chunkMap : mChunkMaps)
+            //{
+            //    chunkMap->UpdateStep(k);
+            //};
+            //
+            for (PixelChunkMap* chunkMap : updateMaps)
             {
-                chunkMap->UpdateStep(i);
+                chunkMap->UpdateStep(k);
             };
+           
         }
+        k++;
         threadPool.wait();
-        FrameCount++;
-        Box2dWorld::mElementsBodys;
-        for (PixelChunkMap* chunkMap : mChunkMaps)
+
+        if(FrameCount == std::numeric_limits<uint16_t>::max())
+        {
+            FrameCount = 0;
+        }
+        else
+        {
+            FrameCount++;
+        }
+
+        //for (PixelChunkMap* chunkMap : mChunkMaps)
+        //{
+        //    chunkMap->UpdateRect();
+
+        //}
+
+        for (PixelChunkMap* chunkMap : updateMaps)
         {
             chunkMap->UpdateRect();
-        }
-        threadPool.wait();
-        Box2dWorld::mElementsBodys;
-        mImage->Update(mPixelColor, NULL, 0, 0);  
-        Temp();
+        };
+       
 
+        mImage->Update(mPixelColor, NULL, 0, 0);  
+
+        Temp();
+        threadPool.wait();
         //threadPool.enqueue([=]() { Temp(); });
     }
 
@@ -122,6 +178,7 @@ namespace zz
 
             iter++;
         }
+        mMaterialImages.clear();
 
         delete mImage;
 
@@ -726,6 +783,538 @@ namespace zz
         free(tileData);
     }
 
+    void PixelWorld::CreateNextWorld()
+    {
+        for (auto chunkMap : mChunkMaps)
+        {
+            delete chunkMap;
+            chunkMap = nullptr;
+        }
+        mChunkMaps.clear();
+        mChunkMapLookUp.clear();
+
+        delete mImage;
+        mImage = nullptr;
+
+        mImage = new PixelGridColor();
+
+        mPixelColor.clear();
+        mPixelColor.resize(2048 * 1536);
+
+        for (int i = 0; i <= 3; i++)
+        {
+            for (int j = 0; j <= 2; j++)
+            {
+                CreateChunkMap({ j, i });
+            }
+        }
+
+        srand(time(NULL));
+
+        int x = 260;
+        int y = 260;
+
+        int* a = new int; // 왜 릭 나냐 모르겠다...
+        cv::Mat wangTileImage = cv::imread("..\\Resources\\Texture\\WangTiles\\Excavationsite\\excavationsite.png", cv::IMREAD_COLOR);
+        int* b = new int;
+        //int yux = wangTileImage.u->refcount;
+        //wangTileImage.deallocate();
+        //int eqwd = wangTileImage.u->refcount;
+
+        cv::cvtColor(wangTileImage, wangTileImage, cv::COLOR_BGR2RGB);
+
+        stbhw_tileset tileset;
+
+        stbhw_build_tileset_from_image(&tileset, (unsigned char*)wangTileImage.data, wangTileImage.cols * 3, wangTileImage.cols, wangTileImage.rows);
+
+        unsigned char* tileData = (unsigned char*)malloc(3 * x * y);
+
+        stbhw_generate_image(&tileset, NULL, tileData, x * 3, x, y);
+        cv::Mat randTileImage(x, y, CV_8UC3, tileData);
+
+        cv::Mat rock = cv::imread("..\\Resources\\Texture\\Material\\edge\\rock.png", cv::IMREAD_COLOR);
+        cv::cvtColor(rock, rock, cv::COLOR_BGR2RGB);
+
+        cv::Mat edge_rock_land = cv::imread("..\\Resources\\Texture\\Material\\edge\\edge_rock_land.png", cv::IMREAD_COLOR);
+        cv::cvtColor(edge_rock_land, edge_rock_land, cv::COLOR_BGR2RGB);
+
+        cv::Mat edge_rock_wall_temp = cv::imread("..\\Resources\\Texture\\Material\\edge\\edge_rock_wall_temp.png", cv::IMREAD_COLOR);
+        cv::cvtColor(edge_rock_wall_temp, edge_rock_wall_temp, cv::COLOR_BGR2RGB);
+
+        cv::Mat edge_rock_slope = cv::imread("..\\Resources\\Texture\\Material\\edge\\edge_rock_slope.png", cv::IMREAD_COLOR);
+        cv::cvtColor(edge_rock_slope, edge_rock_slope, cv::COLOR_BGR2RGB);
+
+        cv::Mat edge_rock_convex = cv::imread("..\\Resources\\Texture\\Material\\edge\\edge_rock_convex.png", cv::IMREAD_COLOR);
+        cv::cvtColor(edge_rock_convex, edge_rock_convex, cv::COLOR_BGR2RGB);
+
+        cv::Mat edge_rock_alone = cv::imread("..\\Resources\\Texture\\Material\\edge\\edge_rock_alone.png", cv::IMREAD_COLOR);
+        cv::cvtColor(edge_rock_alone, edge_rock_alone, cv::COLOR_BGR2RGB);
+
+        cv::Mat wood = cv::imread("..\\Resources\\Texture\\Material\\edge\\wood.png", cv::IMREAD_COLOR);
+        cv::cvtColor(wood, wood, cv::COLOR_BGR2RGB);
+
+        cv::Mat edge_wood_temp = cv::imread("..\\Resources\\Texture\\Material\\edge\\edge_wood_temp.png", cv::IMREAD_COLOR);
+        cv::cvtColor(edge_wood_temp, edge_wood_temp, cv::COLOR_BGR2RGB);
+
+        cv::Mat edge_wood_land = cv::imread("..\\Resources\\Texture\\Material\\edge\\edge_wood_land.png", cv::IMREAD_COLOR);
+        cv::cvtColor(edge_wood_land, edge_wood_land, cv::COLOR_BGR2RGB);
+
+        cv::Mat edge_wood_corner = cv::imread("..\\Resources\\Texture\\Material\\edge\\edge_wood_corner.png", cv::IMREAD_COLOR);
+        cv::cvtColor(edge_wood_corner, edge_wood_corner, cv::COLOR_BGR2RGB);
+
+        cv::Mat wood_vertical_temp = cv::imread("..\\Resources\\Texture\\Material\\edge\\wood_vertical_temp.png", cv::IMREAD_COLOR);
+        cv::cvtColor(wood_vertical_temp, wood_vertical_temp, cv::COLOR_BGR2RGB);
+
+        cv::Scalar white(255, 255, 255);
+
+        cv::Mat mask;
+        cv::inRange(randTileImage, white, white, mask);
+
+        cv::Scalar color_wood(65, 63, 36);
+        cv::Scalar color_wood_vertical(65, 63, 58);
+
+        cv::Mat mask_wood;
+        cv::inRange(randTileImage, color_wood, color_wood_vertical, mask_wood);
+
+        mask = mask | mask_wood;
+
+        std::bitset<4> surrounding;
+
+        int dx[] = { 0, 1, 0,-1 };
+        int dy[] = { -1,0, 1, 0 };
+
+        for (int i = 0; i < 172; i++)
+        {
+            for (int j = 0; j < 154; j++)
+            {
+                uint32_t color = Vec3bToColor(randTileImage.at<cv::Vec3b>(i, j));
+
+                if (color == 0xFFFFFFFF)
+                {
+                    for (int dir = 0; dir < 4; dir++)
+                    {
+                        if (j + dx[dir] >= 0 && j + dx[dir] < mask.cols && i + dy[dir] >= 0 && i + dy[dir] < mask.rows)
+                        {
+                            surrounding[dir] = (mask.at<uchar>(i + dy[dir], j + dx[dir]) > 0) ? 1 : 0;
+                        }
+                    }
+
+                    if (surrounding.count() == 4)
+                    {
+                        int rand = randi(7);
+                        cv::Rect rect(rand * 10, 0, 10, 10);
+                        cv::Mat rotateImg;
+
+                        rock(rect).copyTo(rotateImg);
+
+                        InsertElementFromImage(i, j, rotateImg, ROCK);
+                    }
+                    else if (surrounding.count() == 3)
+                    {
+                        int rand = randi(7);
+                        bool flip = randi(1) > 0 ? true : false;
+
+                        cv::Rect rect(rand * 10, 0, 10, 10);
+                        cv::Mat rotateImg;
+
+                        if (!surrounding[0])
+                        {
+                            edge_rock_land(rect).copyTo(rotateImg);
+
+                            if (flip)
+                            {
+                                cv::flip(rotateImg, rotateImg, 1);
+                            }
+                        }
+                        else if (!surrounding[1])
+                        {
+                            cv::transpose(edge_rock_land(rect), rotateImg);
+                            cv::flip(rotateImg, rotateImg, 1);
+                            if (flip)
+                            {
+                                cv::flip(rotateImg, rotateImg, 0);
+                            }
+                        }
+                        else if (!surrounding[2])
+                        {
+                            edge_rock_land(rect).copyTo(rotateImg);
+                            cv::flip(rotateImg, rotateImg, 0);
+
+                            if (flip)
+                            {
+                                cv::flip(rotateImg, rotateImg, 1);
+                            }
+                        }
+                        else if (!surrounding[3])
+                        {
+                            cv::transpose(edge_rock_land(rect), rotateImg);
+
+                            if (flip)
+                            {
+                                cv::flip(rotateImg, rotateImg, 0);
+                            }
+                        }
+
+                        InsertElementFromImage(i, j, rotateImg, ROCK);
+                    }
+                    else if (surrounding.count() == 2)
+                    {
+                        int rand = randi(5);
+                        bool flip = randi(1) > 0 ? true : false;
+                        cv::Rect rect(rand * 10, 0, 10, 10);
+                        cv::Mat rotateImg;
+
+                        if (surrounding[1] && surrounding[2])
+                        {
+                            edge_rock_slope(rect).copyTo(rotateImg);
+
+                            if (flip)
+                            {
+                                cv::transpose(rotateImg, rotateImg);
+                            }
+                        }
+                        else if (surrounding[2] && surrounding[3])
+                        {
+                            edge_rock_slope(rect).copyTo(rotateImg);
+                            cv::flip(rotateImg, rotateImg, 1);
+
+                            if (flip)
+                            {
+                                cv::transpose(rotateImg, rotateImg);
+                                cv::flip(rotateImg, rotateImg, -1);
+                            }
+                        }
+                        else if (surrounding[3] && surrounding[0])
+                        {
+                            edge_rock_slope(rect).copyTo(rotateImg);
+                            cv::flip(rotateImg, rotateImg, -1);
+
+                            if (flip)
+                            {
+                                cv::transpose(rotateImg, rotateImg);
+                            }
+                        }
+                        else if (surrounding[0] && surrounding[1])
+                        {
+                            edge_rock_slope(rect).copyTo(rotateImg);
+                            cv::flip(rotateImg, rotateImg, 0);
+
+                            if (flip)
+                            {
+                                cv::transpose(rotateImg, rotateImg);
+                                cv::flip(rotateImg, rotateImg, -1);
+                            }
+                        }
+                        else
+                        {
+                            rand = randi(7);
+                            rect = cv::Rect(rand * 10, 0, 10, 10);
+
+                            if (surrounding[0] && surrounding[2])
+                            {
+                                edge_rock_wall_temp(rect).copyTo(rotateImg);
+                                cv::transpose(rotateImg, rotateImg);
+
+                                if (flip)
+                                {
+                                    cv::flip(rotateImg, rotateImg, 0);
+                                }
+
+                            }
+                            else
+                            {
+                                edge_rock_wall_temp(rect).copyTo(rotateImg);
+
+                                if (flip)
+                                {
+                                    cv::flip(rotateImg, rotateImg, 1);
+                                }
+                            }
+                        }
+
+                        InsertElementFromImage(i, j, rotateImg, ROCK);
+                    }
+                    else if (surrounding.count() == 1)
+                    {
+                        int rand = randi(5);
+                        cv::Rect rect(rand * 10, 0, 10, 10);
+                        cv::Mat rotateImg;
+
+                        if (surrounding[2])
+                        {
+                            rotateImg = edge_rock_convex(rect).clone();
+                        }
+                        else if (surrounding[3])
+                        {
+                            cv::transpose(edge_rock_convex(rect), rotateImg);
+                            cv::flip(rotateImg, rotateImg, 1);
+                        }
+                        else if (surrounding[0])
+                        {
+                            edge_rock_convex(rect).copyTo(rotateImg);
+                            cv::flip(rotateImg, rotateImg, -1);
+                        }
+                        else if (surrounding[1])
+                        {
+                            cv::transpose(edge_rock_convex(rect), rotateImg);
+                            cv::flip(rotateImg, rotateImg, 0);
+                        }
+
+                        InsertElementFromImage(i, j, rotateImg, ROCK);
+                    }
+                    else
+                    {
+                        int rand = randi(3);
+                        cv::Rect rect(rand * 10, 0, 10, 10);
+                        cv::Mat rotateImg;
+
+                        edge_rock_alone(rect).copyTo(rotateImg);
+
+                        if (randi(1) > 0)
+                        {
+                            cv::transpose(rotateImg, rotateImg);
+                        }
+
+                        rand = randi(2);
+                        if (rand == 2)
+                        {
+                            cv::flip(rotateImg, rotateImg, -1);
+                        }
+                        else
+                        {
+                            cv::flip(rotateImg, rotateImg, rand);
+                        }
+
+                        InsertElementFromImage(i, j, rotateImg, ROCK);
+                    }
+
+                }
+                else if (color == 0xFF413F24)
+                {
+                    for (int dir = 0; dir < 4; dir++)
+                    {
+                        if (j + dx[dir] >= 0 && j + dx[dir] < mask.cols && i + dy[dir] >= 0 && i + dy[dir] < mask.rows)
+                        {
+                            surrounding[dir] = (mask.at<uchar>(i + dy[dir], j + dx[dir]) > 0) ? 1 : 0;
+                        }
+                    }
+
+                    if (surrounding.count() >= 3)
+                    {
+                        int rand = randi(3);
+                        cv::Rect rect(rand * 10, 0, 10, 10);
+                        cv::Mat rotateImg;
+
+                        edge_wood_land(rect).copyTo(rotateImg);
+
+                        InsertElementFromImage(i, j, rotateImg, WOOD);
+                    }
+                    if (surrounding.count() == 2)
+                    {
+                        int rand = 0;
+                        cv::Rect rect(rand * 10, 0, 10, 10);
+                        cv::Mat rotateImg;
+                        edge_wood_corner(rect).copyTo(rotateImg);
+
+                        if (surrounding[2] && surrounding[3])
+                        {
+                            cv::flip(rotateImg, rotateImg, 1);
+                        }
+                        else if (surrounding[3] && surrounding[0])
+                        {
+                            cv::flip(rotateImg, rotateImg, -1);
+                        }
+                        else if (surrounding[0] && surrounding[1])
+                        {
+                            cv::flip(rotateImg, rotateImg, 0);
+                        }
+                        else if (surrounding[1] && surrounding[2])
+                        {
+
+                        }
+                        else
+                        {
+                            edge_wood_land(rect).copyTo(rotateImg);
+                        }
+                        InsertElementFromImage(i, j, rotateImg, WOOD);
+                    }
+                    else if (surrounding.count() == 1)
+                    {
+                        int rand = 0;
+                        cv::Rect rect(rand * 10, 0, 10, 10);
+                        cv::Mat rotateImg;
+                        edge_wood_temp(rect).copyTo(rotateImg);
+
+                        if (surrounding[3])
+                        {
+                            RoatateImage(RotateOption::Right90, rotateImg);
+                            cv::flip(rotateImg, rotateImg, 0);
+                        }
+                        else if (surrounding[0])
+                        {
+                            RoatateImage(RotateOption::Right180, rotateImg);
+                        }
+                        else if (surrounding[1])
+                        {
+                            RoatateImage(RotateOption::Right270, rotateImg);
+                        }
+
+                        InsertElementFromImage(i, j, rotateImg, WOOD);
+                    }
+                    else
+                    {
+                        int rand = randi(3);
+                        cv::Rect rect(rand * 10, 0, 10, 10);
+                        cv::Mat rotateImg;
+
+                        wood(rect).copyTo(rotateImg);
+
+                        InsertElementFromImage(i, j, rotateImg, WOOD);
+                    }
+                }
+                else if (color == 0xFF413f3A)
+                {
+                    for (int dir = 0; dir < 4; dir++)
+                    {
+                        if (j + dx[dir] >= 0 && j + dx[dir] < mask_wood.cols && i + dy[dir] >= 0 && i + dy[dir] < mask_wood.rows)
+                        {
+                            surrounding[dir] = (mask_wood.at<uchar>(i + dy[dir], j + dx[dir]) > 0) ? 1 : 0;
+                        }
+                    }
+
+                    if (true)
+                    {
+                        int rand = 0;
+                        cv::Rect rect(rand * 10, 0, 10, 10);
+                        cv::Mat rotateImg;
+
+                        wood_vertical_temp(rect).copyTo(rotateImg);
+
+                        InsertElementFromImage(i, j, rotateImg, WOOD);
+                    }
+                }
+                else if (color == 0xFF2F554C)
+                {
+                    for (int k = i * 10; k < i * 10 + 10; k++)
+                    {
+                        for (int l = j * 10; l < j * 10 + 10; l++)
+                        {
+                            InsertElement(l, k, WATER);
+                        }
+                    }
+                }
+                else if (color == 0xFF505052) // coal
+                {
+                    for (int k = i * 10; k < i * 10 + 10; k++)
+                    {
+                        for (int l = j * 10; l < j * 10 + 10; l++)
+                        {
+                            Element coal = SAND;
+                            coal.Color = getMaterialColor(L"coal");
+                            InsertElement(l, k, coal);
+                        }
+                    }
+                }
+                else if (color == 0xFF3B3B3C) // oil
+                {
+                    for (int k = i * 10; k < i * 10 + 10; k++)
+                    {
+                        for (int l = j * 10; l < j * 10 + 10; l++)
+                        {
+                            Element oil = OIL;
+                            oil.Color = 0xE63D3728;
+                            InsertElement(l, k, oil);
+                        }
+                    }
+                }
+                else if (color == 0xFFFF0AFF)
+                {
+                    LoadRandomScene_01(j * 10, i * 10);
+                }
+                else if (color == 0xFFFF0080)
+                {
+                    LoadRandomScene_02(j * 10, i * 10);
+                }
+                else if (color == 0xFFC35700)
+                {
+                    LoadRandomScene_03(j * 10, i * 10);
+                }
+            }
+        }
+
+        for (int i = 0; i < 1720; i++)
+        {
+            for (int j = 0; j < 1536; j++)
+            {
+                if (GetElement(i, j).Id == eElementID::ROCK)
+                {
+                    if (GetElement(i, j - 1).Id == eElementID::EMPTY)
+                    {
+                        if (random() > 0.5f)
+                        {
+                            Element grass = GRASS;
+                            grass.Color = getMaterialColor(L"grass");
+
+                            InsertElement(i, j - 1, grass);
+                        }
+                        else if (random() > 0.97f)
+                        {
+                            createVegetation(i, j - 1);
+                        }
+                    }
+                }
+            }
+        }
+
+
+        cv::Mat material_image = cv::imread("..\\Resources\\Texture\\Temple\\altar_top.png", cv::IMREAD_COLOR);
+        cv::Mat visual_image = cv::imread("..\\Resources\\Texture\\Temple\\altar_top_visual.png", cv::IMREAD_UNCHANGED);
+
+        cv::cvtColor(material_image, material_image, cv::COLOR_BGR2RGB);
+
+        for (int i = 1747; i < 2047; i++)
+        {
+
+            for (int cnt = 0; cnt < 3; cnt++)
+            {
+                for (int j = 0; j < 512; j++)
+                {
+
+                    uint32_t color = Vec3bToColor(material_image.at<cv::Vec3b>(i - 1747, j));
+                    if (color == 0xFF786C42)
+                    {
+                        cv::Vec4b visual_color = visual_image.at<cv::Vec4b>(i - 1747, j);
+
+                        uint32_t converted_color =
+                            (visual_color[3] << 24) |
+                            (visual_color[2] << 16) |
+                            (visual_color[1] << 8) |
+                            (visual_color[0]);
+
+                        Element element = ROCK;
+                        element.Color = converted_color;
+
+                        InsertElement(j + cnt * 512, i, element);
+                    }
+                    else
+                    {
+                        InsertElement(j + cnt * 512, i, EMPTY);
+                    }
+                }
+            }
+        }
+
+        //cv::cvtColor(randTileImage, randTileImage, cv::COLOR_RGB2BGR);
+        //cv::resize(randTileImage, randTileImage, cv::Size(), 2,2, cv::INTER_NEAREST);
+
+        //cv::imshow("Generated Map", randTileImage);
+        wangTileImage.release();
+        stbhw_free_tileset(&tileset);
+        free(tileData);
+
+        Box2dWorld::InitializePresentWorld();
+    }
+
     void PixelWorld::InsertElementFromImage(int y, int x, const cv::Mat& image, Element& element)
     {
         for (int i = y * 10; i < y * 10 + 10; i++)
@@ -921,7 +1510,6 @@ namespace zz
         Box2dWorld::Draw(x, y, combined_mask, visual_image, wood);
 
     }
-
     void PixelWorld::LoadRandomScene_02(int x, int y)
     {
         cv::Mat material_image;
@@ -1077,7 +1665,6 @@ namespace zz
 
         Box2dWorld::Draw(x, y, combined_mask, visual_image, wood);
     }
-
     void PixelWorld::LoadRandomScene_03(int x, int y)
     {
         cv::Mat material_image;
@@ -1226,7 +1813,7 @@ namespace zz
 
         if (Input::GetKey(eKeyCode::W) || Input::GetKey(eKeyCode::R) || Input::GetKey(eKeyCode::S)
             || Input::GetKey(eKeyCode::E) || Input::GetKey(eKeyCode::F) || Input::GetKey(eKeyCode::T)
-            || Input::GetKey(eKeyCode::O))
+            || Input::GetKey(eKeyCode::O) || Input::GetKey(eKeyCode::G))
         {
             if ((Input::GetKey(eKeyCode::W)))
                 mSelectElement = mElementMap.find('w')->second;
@@ -1242,6 +1829,8 @@ namespace zz
                 mSelectElement = mElementMap.find('t')->second;
             else if ((Input::GetKey(eKeyCode::O)))
                 mSelectElement = mElementMap.find('o')->second;
+            else if ((Input::GetKey(eKeyCode::G)))
+                mSelectElement = mElementMap.find('g')->second;
         }
 
         
@@ -1292,23 +1881,7 @@ namespace zz
     void PixelWorld::Temp()
     {
         Box2dWorld::ReconstructBody();
-
-        //std::vector<std::vector<Box2dWorld::StaticElementInfo>>& mStaticElements = Box2dWorld::GetTemp();
-        //std::vector<int> a = {};
-        //for (int i = 0; i < mStaticElements.size(); i++)
-        //{
-        //    DeleteStaticElement(mStaticElements[i], i, a);
-        //}
-
-        //
         Box2dWorld::Update();
-
-        //std::vector<std::vector<Box2dWorld::StaticElementInfo>>& mStaticElements1 = Box2dWorld::GetTemp();
-
-        //for (int i = 0; i < mStaticElements1.size(); i++)
-        //{
-        //    MoveStaticElement(mStaticElements1[i]);
-        //}
     }
 
     PixelChunkMap* PixelWorld::CreateChunkMap(std::pair<int, int> location)

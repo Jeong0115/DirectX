@@ -34,6 +34,9 @@ namespace zz
 		void SetWindow(HWND hwnd, UINT width, UINT height);
         void SetPixelHwnd(HWND hwnd) { mPixelHwnd = hwnd; }
 
+        static void LoadNextScene(const std::wstring& name);
+        static void LoadExcavationsite();
+
 		UINT GetWidth() { return mWidth; }
 		UINT GetHeight() { return mHeight; }
 		HWND GetHwnd() { return mHwnd; }

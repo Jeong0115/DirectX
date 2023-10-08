@@ -40,6 +40,30 @@ namespace zz
         }
     }
 
+    void SceneManager::LoadScene(const std::wstring& name, Scene* scene)
+    {
+        mScenes.insert(std::make_pair(name, scene));
+        scene->Initialize();
+
+        Layer& cameraLayer = mActiveScene->GetLayer(eLayerType::Camera);
+
+        for (GameObject* obj : cameraLayer.GetGameObjects())
+        {
+            scene->AddGameObject(obj, eLayerType::Camera);
+        }
+        cameraLayer = {};
+
+        Layer& playerLayer = mActiveScene->GetLayer(eLayerType::Player);
+        for (GameObject* obj : playerLayer.GetGameObjects())
+        {
+            scene->AddGameObject(obj, eLayerType::Player);
+        }
+        playerLayer = {};
+
+
+        mActiveScene = scene;
+    }
+
     void SceneManager::CreateScene(std::wstring name, Scene* scene)
     {
         mScenes.insert(std::make_pair(name, scene));

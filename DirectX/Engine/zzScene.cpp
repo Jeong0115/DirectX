@@ -45,6 +45,7 @@ namespace zz
 
     void Scene::AddGameObject(GameObject* gameObject, eLayerType type)
     {
+        gameObject->SetLayerType(type);
         mLayers[(UINT)type].AddGameObject(gameObject);
     }
 }

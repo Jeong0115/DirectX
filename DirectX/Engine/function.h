@@ -12,8 +12,8 @@ namespace zz
     // [0.0f, 1.0f) 
     __forceinline float random() { return dis(gen); }
 
-    std::random_device i_rd;
-    std::mt19937 i_gen(i_rd());
+    thread_local std::random_device i_rd;
+    thread_local std::mt19937 i_gen(i_rd());
 
     // [0, max]
     __forceinline int randi(int max)
