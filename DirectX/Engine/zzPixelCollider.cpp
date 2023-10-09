@@ -47,7 +47,6 @@ namespace zz
         renderer::PushDebugMeshAttribute(mesh);
 
         // 천장 검사
-
         int lenX = static_cast<int>(mCollisionScale.x);
 
         for (int i = -lenX / 2; i <= lenX / 2; i++)

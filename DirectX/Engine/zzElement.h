@@ -230,7 +230,13 @@ namespace zz
     const uint32_t Orange   = { 0xFFFF7F00 };
 
     std::vector<uint32_t> FireColors = { Red, Yellow, Yellow, Orange, Orange, Orange };
-    inline uint32_t RandomFireColor() { return FireColors[static_cast<int>(random() * FireColors.size())]; }
+
+    thread_local std::mt19937 genf(std::random_device{}());
+    thread_local std::uniform_int_distribution<int> disf(0, FireColors.size() - 1);
+
+    inline uint32_t RandomFireColor() {return FireColors[disf(genf)]; }
+
+   // inline uint32_t RandomFireColor() { return FireColors[static_cast<int>(random() * FireColors.size())]; }
 
 
     uint32_t getElementColor(eElementID id) {

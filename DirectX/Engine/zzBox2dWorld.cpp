@@ -306,14 +306,14 @@ namespace zz
         std::vector<int> list;
 
         for (int i = 0; i < mElementsBodys.size(); i++)
-        {
-            if (*mElementsBodys[i].isDestroy)
+        {        
+            if (mElementsBodys[i].elements.size() <= 5)
             {
-                if (mElementsBodys[i].elements.size() == 0)
-                {
-                    list.push_back(i);
-                    continue;
-                }
+                PixelWorld::DeleteStaticElement(mElementsBodys[i].elementsInfo);
+                list.push_back(i);
+            }
+            else if (*mElementsBodys[i].isDestroy)
+            {
                 PixelWorld::DeleteStaticElement(mElementsBodys[i].elementsInfo);
                 ReconstructBody(mElementsBodys[i]);
                 list.push_back(i);
@@ -368,7 +368,7 @@ namespace zz
         // 나중에 element 멤버변수로 구별
         for (auto element : body.elements)
         {
-            if (element.Type != eElementType::SOLID)
+            if (element.SolidType != eSolidType::DYNAMIC)
                 continue;
 
 
@@ -828,8 +828,6 @@ namespace zz
          
 
             std::vector<Element> bodyElements;
-
-
 
             int pointCnt = insidePointsForEachContour[p].size();
 

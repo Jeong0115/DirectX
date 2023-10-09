@@ -118,13 +118,6 @@ namespace zz
 
 	void Application::LateUpdate()
 	{
-        //Camera* mainCamara = renderer::mainCamera;
-        //Camera::SetGpuViewMatrix(mainCamara->GetViewMatrix());
-        //Camera::SetGpuProjectionMatrix(mainCamara->GetProjectionMatrix());
-        //renderer::TransformCB trCB = {};
-        //trCB.mView = Camera::GetGpuViewMatrix();
-        //trCB.mProjection = Camera::GetGpuProjectionMatrix();
-
         if (!LightDisabled)
         {
             graphicDevice->SetLightMapRenderTarget();
@@ -186,7 +179,7 @@ namespace zz
         }
 
         RECT rt = { 0, 0, (LONG)width , (LONG)height };
-        AdjustWindowRect(&rt, WS_OVERLAPPEDWINDOW, true); // true? false?
+        AdjustWindowRect(&rt, WS_OVERLAPPEDWINDOW, true);
         SetWindowPos(mHwnd, nullptr, 30, -1000, rt.right - rt.left, rt.bottom - rt.top, 0);
         ShowWindow(mHwnd, true);
         UpdateWindow(mHwnd);

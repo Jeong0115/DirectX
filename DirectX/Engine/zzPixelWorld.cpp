@@ -271,7 +271,12 @@ namespace zz
             if (chunk->mStaticCount[index] == 0)
             {
                 element.element = pixelWorldElement;
-                chunk->InsertElement(element.x, element.y, EMPTY);
+
+                //if (*element.element.destoryBody)
+                //{
+                //    int a = 0;
+                //}
+                chunk->DelteElement(element.x, element.y);
             }
         }
 
@@ -1498,16 +1503,15 @@ namespace zz
         cv::Scalar color_wood(97, 62, 2);
         cv::Scalar color_wood2(65, 63, 36);
 
-        cv::Mat mask_wood1, mask_wood2, combined_mask;
+        cv::Mat mask_wood1, mask_wood2;
         cv::inRange(material_image, color_wood, color_wood, mask_wood1);
         cv::inRange(material_image, color_wood2, color_wood2, mask_wood2);
-
-        cv::bitwise_or(mask_wood1, mask_wood2, combined_mask);
 
         Element wood = WOOD;
         wood.SolidType = eSolidType::DYNAMIC;
 
-        Box2dWorld::Draw(x, y, combined_mask, visual_image, wood);
+        Box2dWorld::Draw(x, y, mask_wood1, visual_image, wood);
+        Box2dWorld::Draw(x, y, mask_wood2, visual_image, wood);
 
     }
     void PixelWorld::LoadRandomScene_02(int x, int y)
@@ -1654,16 +1658,15 @@ namespace zz
         cv::Scalar color_wood(97, 62, 2);
         cv::Scalar color_wood2(65, 63, 36);
 
-        cv::Mat mask_wood1, mask_wood2, combined_mask;
+        cv::Mat mask_wood1, mask_wood2;
         cv::inRange(material_image, color_wood, color_wood, mask_wood1);
         cv::inRange(material_image, color_wood2, color_wood2, mask_wood2);
-
-        cv::bitwise_or(mask_wood1, mask_wood2, combined_mask);
 
         Element wood = WOOD;
         wood.SolidType = eSolidType::DYNAMIC;
 
-        Box2dWorld::Draw(x, y, combined_mask, visual_image, wood);
+        Box2dWorld::Draw(x, y, mask_wood1, visual_image, wood);
+        Box2dWorld::Draw(x, y, mask_wood2, visual_image, wood);
     }
     void PixelWorld::LoadRandomScene_03(int x, int y)
     {
@@ -1777,16 +1780,15 @@ namespace zz
         cv::Scalar color_wood(97, 62, 2);
         cv::Scalar color_wood2(65, 63, 36);
 
-        cv::Mat mask_wood1, mask_wood2, combined_mask;
+        cv::Mat mask_wood1, mask_wood2;
         cv::inRange(material_image, color_wood, color_wood, mask_wood1);
         cv::inRange(material_image, color_wood2, color_wood2, mask_wood2);
-
-        cv::bitwise_or(mask_wood1, mask_wood2, combined_mask);
 
         Element wood = WOOD;
         wood.SolidType = eSolidType::DYNAMIC;
 
-        Box2dWorld::Draw(x, y, combined_mask, visual_image, wood);
+        Box2dWorld::Draw(x, y, mask_wood1, visual_image, wood);
+        Box2dWorld::Draw(x, y, mask_wood2, visual_image, wood);
     }
 
     bool PixelWorld::InBounds(int x, int y)

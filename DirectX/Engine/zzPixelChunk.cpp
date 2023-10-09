@@ -586,7 +586,8 @@ namespace zz
 
         if (element.FireHP <= 0.f)
         {
-            element = EMPTY;
+            InsertElement(x, y, EMPTY);
+            return;
         }
         else
         {
@@ -601,17 +602,17 @@ namespace zz
                 }
             }   
 
-            if (element.Temperature < element.FlashPoint)
+/*            if (element.Temperature < element.FlashPoint)
             {
                 element.onFire = false;
                 element.Color = getElementColor(element.Id);
                 PixelWorld::GetPixelColor((x + ((y) * 1536))) = element.Color;
                 return;
             }
-            else if(element.Id != eElementID::FIRE)
-            {
+            else */if(element.Id != eElementID::FIRE)
+            //{
                 element.Color = RandomFireColor();
-            }
+            //}
         }
 
         PixelWorld::GetPixelColor((x + ((y) * 1536))) = element.Color;
@@ -625,12 +626,13 @@ namespace zz
 
                 Element& dstElement = GetElementInOrOut(j, i);
 
-                if (dstElement.Id == eElementID::WATER)
-                {
-                    element.Temperature -= 500.f * (float)Time::DeltaTime();
-                }
-                else
-                {
+                //if (dstElement.Id == eElementID::WATER)
+                //{
+                //    element.Temperature -= 500.f * (float)Time::DeltaTime();
+                //}
+                //else
+                /*else
+                {*/
                     if (dstElement.isIgnite)
                     {
                         if (dstElement.Temperature < dstElement.IgnitionPoint)
@@ -642,7 +644,7 @@ namespace zz
                     {
                         dstElement.onFire = true;
                     }
-                }
+                //}
 
 
             }
