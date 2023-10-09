@@ -74,9 +74,13 @@ namespace zz
         static void CreateNextWorld();
 
         static void InsertElementFromImage(int y, int x, const cv::Mat& image, Element& element);
+        static void InsertElementFromImage(int y, int x, const cv::Mat& image, const cv::Mat& lineImage, Element& element, int type);
         static uint32_t Vec3bToColor(const cv::Vec3b& vec3b);
         static uint32_t Vec4bToColor(const cv::Vec4b& vec4b);
         static void RoatateImage(RotateOption option, cv::Mat& image);
+
+        static void DrawRandomSceneImage(const cv::Mat& material_image, const cv::Mat& visual_image, int x, int y);
+        static void InsertElementFromWangColor(uint32_t wangColor, int x, int y);
 
         static void LoadRandomScene_01(int x, int y);
         static void LoadRandomScene_02(int x, int y);

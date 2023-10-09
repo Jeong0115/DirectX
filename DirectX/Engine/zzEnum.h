@@ -17,6 +17,7 @@ namespace zz
         Collider,
         PixelCollider,
         PixelCollider_Lite,
+        HealPoint,
         Levitation,
         Box2dCollider,
         End,
@@ -30,6 +31,7 @@ namespace zz
         Player,
         Monster,
         PlayerAttack,
+        MonsterAttack,
         PixelWorld,
 
         Object,

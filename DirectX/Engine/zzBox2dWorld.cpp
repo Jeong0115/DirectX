@@ -550,7 +550,7 @@ namespace zz
 
         return contours;
     }
-    std::vector<std::vector<cv::Point>> Box2dWorld::getContours(cv::Mat& image)
+    std::vector<std::vector<cv::Point>> Box2dWorld::getContours(const cv::Mat& image)
     {
         std::vector<std::vector<cv::Point>> contours;
         std::vector<cv::Vec4i> hierarchy;
@@ -712,7 +712,7 @@ namespace zz
         mElementsBodys.push_back(body);
     }
 
-    void Box2dWorld::Draw(int x, int y, cv::Mat& mask_image, cv::Mat& visual_image, Element& element)
+    void Box2dWorld::Draw(int x, int y, const cv::Mat& mask_image, const cv::Mat& visual_image, Element& element)
     {
         std::vector<std::vector<cv::Point>> contours = getContours(mask_image);
         auto insidePointsForEachContour = getInsidePointsForEachContour(cv::Mat::zeros(mask_image.rows, mask_image.cols, CV_8UC1), contours);

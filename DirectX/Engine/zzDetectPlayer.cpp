@@ -4,7 +4,7 @@
 
 namespace zz
 {
-    Vector2 DetectPlayer::PlayerPos = Vector2(0.0f, 0.0f);
+    Vector3 DetectPlayer::PlayerPos = Vector3(0.0f, 0.0f, 0.0f);
 
     DetectPlayer::DetectPlayer()
         : Component(eComponentType::DetectPlayer)

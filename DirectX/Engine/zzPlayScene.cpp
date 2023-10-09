@@ -183,7 +183,7 @@ namespace zz
         {
             ShotGunner_Weak* object = new ShotGunner_Weak();
             AddGameObject(object, eLayerType::Monster);
-            object->GetComponent<Transform>()->SetPosition(Vector3(0, 0, 0.2f));
+            object->GetComponent<Transform>()->SetPosition(Vector3(1536.f / 2.f, -30.f, 0.2f));
         }
 
         Scene::Initialize();

@@ -16,9 +16,9 @@ namespace zz
         virtual void Render()       override;
 
         void SetDetectRange(float range) { mDetectRange = range; }
-
+        Vector3 GetPlayerPos() { return PlayerPos; }
         //юс╫ц
-        static Vector2 PlayerPos;
+        static Vector3 PlayerPos;
     private:
         void rayCast();   
 

@@ -17,13 +17,14 @@ namespace zz
         virtual void Render()       override;
 
         void SetAnimator(Animator* ani, const std::wstring name);
+        void SetDir(int dir) { mDir = -dir; }
 
     private:
         void endAnimation();
 
     private:
         Animator* mAnimator;
-
+        int mDir;
     };
 }
 

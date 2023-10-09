@@ -19,10 +19,13 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)zzBomb_UI.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzBox2dCollider.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzBullet.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzFireBall_Small.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzHealth.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzHealthPoint.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzHUD_Icon.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzLevitationEnerge.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzMagicArrow.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzMonsterAttack.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzMuzzleEffect.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzOpeningScene.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzSpeedUp_UI.cpp" />
@@ -146,10 +149,13 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzBomb_UI.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzBox2dCollider.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzBullet.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzFireBall_Small.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzHealth.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzHealthPoint.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzHUD_Icon.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzLevitationEnerge.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzMagicArrow.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzMonsterAttack.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzMuzzleEffect.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzOpeningScene.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzSpeedUp_UI.h" />

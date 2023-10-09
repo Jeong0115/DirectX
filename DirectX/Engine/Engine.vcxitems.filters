@@ -424,6 +424,18 @@
     <Filter Include="GameObject\Spell\Projectile\Bomb">
       <UniqueIdentifier>{969f7fcd-6225-408e-aee5-298e44783e79}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameObject\MonsterAttack">
+      <UniqueIdentifier>{e67ed068-c99f-4b5a-acb3-072d7ceb6b52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\MonsterAttack\Base">
+      <UniqueIdentifier>{d810db05-9245-42e0-aa72-d428a546c7d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\HealthPoint">
+      <UniqueIdentifier>{dcb91e10-60b8-4ca4-971c-048a5381d063}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\MonsterAttack\FireBall_Small">
+      <UniqueIdentifier>{8d65700e-ebda-45af-a70e-03d86af278c3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzEntity.cpp">
@@ -777,6 +789,15 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zztScene.cpp">
       <Filter>Scene\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzMonsterAttack.cpp">
+      <Filter>GameObject\MonsterAttack\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzHealthPoint.cpp">
+      <Filter>Component\HealthPoint</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzFireBall_Small.cpp">
+      <Filter>GameObject\MonsterAttack\FireBall_Small</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1158,6 +1179,15 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zztScene.h">
       <Filter>Scene\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzMonsterAttack.h">
+      <Filter>GameObject\MonsterAttack\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzHealthPoint.h">
+      <Filter>Component\HealthPoint</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzFireBall_Small.h">
+      <Filter>GameObject\MonsterAttack\FireBall_Small</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

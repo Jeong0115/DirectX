@@ -51,13 +51,13 @@ namespace zz
         static void Draw(int x, int y);
         static void Draw2(int x, int y);
 
-        static void Draw(int x, int y, cv::Mat& mask_image, cv::Mat& visual_image, Element& element);
+        static void Draw(int x, int y, const cv::Mat& mask_image, const cv::Mat& visual_image, Element& element);
 
         static double perpendicularDistance(const Position& pt, const Position& lineStart, const Position& lineEnd);
         static void douglasPeucker(const std::vector<Position>& points, double epsilon, std::vector<Position>& out);
 
         static std::vector<std::vector<cv::Point>> getContours(const std::vector<cv::Point>& points, float width, float height);
-        static std::vector<std::vector<cv::Point>> getContours(cv::Mat& image);
+        static std::vector<std::vector<cv::Point>> getContours(const cv::Mat& image);
         static std::vector<std::vector<cv::Point>> getContours(const std::array<std::bitset<64>, 64>& points, float width, float height, float offsetX, float offsetY);
         static std::vector<std::vector<cv::Point>> getInsidePointsForEachContour(const cv::Mat& image, const std::vector<std::vector<cv::Point>>& contours);
 

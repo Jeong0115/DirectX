@@ -7,6 +7,13 @@ namespace zz
     class ShotGunner_Weak : public GameObject
     {
     public:
+        enum class eMonsterState
+        {
+            Freedom,
+            FollowPlayer,
+            Battle,
+        };
+
         ShotGunner_Weak();
         virtual ~ShotGunner_Weak();
 
@@ -21,7 +28,28 @@ namespace zz
 
 
     private:
-        class Animator* mAnimator;
+        void playIdleAnimation();
+
+        void freedom();
+        void followPlayer();
+        void battle();
+
+        class PixelCollider*    mPxCollider;
+        class MuzzleEffect*     mMuzzleEffect;
+        class DetectPlayer*     mDetectPlayer;
+        class Animator*         mAnimator;
+        class RigidBody*        mRigid;
+
+        eMonsterState mState;
+
+        Vector3 mTip;
+
+        float   mChoiceNextAction;
+        float   mDirection;
+
+        int     mActionIndex;
+
+        bool    mbEnterAction;
     };
 }
 

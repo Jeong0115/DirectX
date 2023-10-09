@@ -12,6 +12,7 @@ namespace zz
 {
     MuzzleEffect::MuzzleEffect()
         : mAnimator(nullptr)
+        , mDir(0)
     {
     }
 
@@ -25,9 +26,19 @@ namespace zz
         meshRender->SetMaterial(ResourceManager::Find<Material>(L"m_SpriteAnimation"));
         meshRender->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
 
-        if (Input::IsFlip() == 1.f)
+        if(mDir == 0)
         {
-            GetComponent<Transform>()->SetPositionXFlip();
+            if (Input::IsFlip() == 1.f)
+            {
+                GetComponent<Transform>()->SetPositionXFlip();
+            }
+        }
+        else
+        {
+            if (mDir == 1)
+            {
+                GetComponent<Transform>()->SetPositionXFlip();
+            }
         }
 
         GameObject::Initialize();
@@ -47,7 +58,14 @@ namespace zz
     {
         renderer::FlipCB flipCB = {};
 
-        flipCB.flip.x = Input::IsFlip();
+        if(mDir == 0)
+        {
+            flipCB.flip.x = Input::IsFlip();
+        }
+        else
+        {
+            flipCB.flip.x = mDir;
+        }
 
         ConstantBuffer* cb = renderer::constantBuffer[(UINT)eCBType::Flip];
         cb->SetBufferData(&flipCB);
@@ -62,6 +80,7 @@ namespace zz
 
     void MuzzleEffect::SetAnimator(Animator* ani, const std::wstring name)
     {
+        mAnimator = ani;
         AddComponent<Animator>(ani);
         ani->EndEvent(name) = [this]() { endAnimation(); };
     }

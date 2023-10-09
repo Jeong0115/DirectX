@@ -25,6 +25,7 @@ namespace zz
         void ApplyResistance(float resistance) { mVelocity *= resistance; }
 
         void SetGround(bool isGround);
+        int GetDirection() { return mVelocity.x >= 0 ? 1 : -1; }
 
         void SetRotate(bool isRotate) { mbRotate = isRotate; }
         bool IsGround() { return mbGround; }

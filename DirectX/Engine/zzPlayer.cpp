@@ -19,6 +19,7 @@
 #include "zzLight.h"
 #include "zzDetectPlayer.h"
 #include "zzEventManager.h"
+#include "zzHealthPoint.h"
 
 
 namespace zz
@@ -75,6 +76,9 @@ namespace zz
         mAnimator->PlayAnimation(L"Player_Idle", true);     
 
         mPlayerArm->Initialize();
+
+        HealthPoint* health = AddComponent<HealthPoint>();
+        health->SetMaxHP(100.f);
         //mEquipment->Initialize();
         GameObject::Initialize();
     }
@@ -95,18 +99,22 @@ namespace zz
         Transform* tr = GetComponent<Transform>();
         Vector3 pos = tr->GetPosition();
 
-        //if (Input::GetKeyDown(eKeyCode::W))
-        //{
-        //    mRigid->SetVelocityY(100.f);
-        //    GetComponent<RigidBody>()->SetGround(false);
-        //}
+        if (Input::GetKeyDown(eKeyCode::A))
+        {
+            mAnimator->PlayAnimation(L"Player_Walk", true);
+        }
         if (Input::GetKey(eKeyCode::A))
         {
             mRigid->SetVelocityX(-50.f);
         }
         else if (Input::GetKeyUp(eKeyCode::A))
         {
+            mAnimator->PlayAnimation(L"Player_Idle", true);
             mRigid->SetVelocityX(0.0f);
+        }
+        if (Input::GetKeyDown(eKeyCode::A))
+        {
+            mAnimator->PlayAnimation(L"Player_Walk", true);
         }
         if (Input::GetKey(eKeyCode::D))
         {
@@ -114,12 +122,13 @@ namespace zz
         }
         else if (Input::GetKeyUp(eKeyCode::D))
         {
+            mAnimator->PlayAnimation(L"Player_Idle", true);
             mRigid->SetVelocityX(0.0f);
         }
         
         tr->SetPosition(pos);
 
-        DetectPlayer::PlayerPos = Vector2(pos.x, pos.y);
+        DetectPlayer::PlayerPos = pos;
 
         GameObject::Update();
 
