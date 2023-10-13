@@ -13,11 +13,11 @@ namespace zz
 {
     FireBall_Small::FireBall_Small()
         : mRigid(nullptr)
-        , mDirection(Vector3::Zero)
     {
         mDamage = 20.f;
         mLimitTime = 2.0f;
-        mSpeed = 100.f;
+        mSpeed = 400.f;
+        mDirection = (Vector3::Zero);
     }
     FireBall_Small::~FireBall_Small()
     {
@@ -62,12 +62,8 @@ namespace zz
 
     void FireBall_Small::OnCollisionEnter(GameObject* other)
     {
-        if (other->GetLayerType() == eLayerType::Player)
-        {
-            other->GetComponent<HealthPoint>()->ChangeCurHP(-mDamage);
 
-            DeleteObject(this, eLayerType::MonsterAttack);
-        }
+        MonsterAttack::OnCollisionEnter(other);
     }
     void FireBall_Small::OnCollisionStay(GameObject* other)
     {

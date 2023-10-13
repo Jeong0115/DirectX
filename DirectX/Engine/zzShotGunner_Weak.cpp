@@ -36,7 +36,7 @@ namespace zz
     void ShotGunner_Weak::Initialize()
     {
         GetComponent<Transform>()->SetScale(17.f, 17.f, 1.0f);
-        AddComponent<Collider>()->SetScale(5.f, 10.f, 1.0f); 
+        AddComponent<Collider>()->SetScale(5.f, 10.f, 1.0f);
 
         mPxCollider = AddComponent<PixelCollider>();
         mPxCollider->SetCollision(Vector3(0.0f, -4.0f, 0.0f), Vector3(6.f, 8.f, 0.0f));
@@ -62,7 +62,7 @@ namespace zz
         mAnimator->PlayAnimation(L"shotgunner_weak_stand", true);
 
         mAnimator->EndEvent(L"shotgunner_weak_attack_ranged") = [this]() { playIdleAnimation(); };
-
+        mAnimator->FindAnimation(L"shotgunner_weak_attack_ranged")->SetAnimationEvent(4, [this]() { shoot(); });
 
         GameObject::Initialize();
     }
@@ -115,6 +115,33 @@ namespace zz
         mAnimator->PlayAnimation(L"shotgunner_weak_stand", true);
     }
 
+    void ShotGunner_Weak::shoot()
+    {
+        std::shared_ptr<Texture> muzzleTexture = ResourceManager::Load<Texture>(L"muzzle_medium_05", L"..\\Resources\\Texture\\Monster\\muzzle_medium_05.png");
+
+        Animator* manimator = new Animator();
+        manimator->Create(L"muzzle_medium_05_play", muzzleTexture, Vector2(0.0f, 0.0f), Vector2(16.0f, 16.0f), 1, Vector2::Zero, 0.1f);
+        manimator->PlayAnimation(L"muzzle_medium_05_play", false);
+
+        MuzzleEffect* muzzleEffect = new MuzzleEffect();
+        muzzleEffect->SetAnimator(manimator, L"muzzle_medium_05_play");
+        muzzleEffect->GetComponent<Transform>()->SetScale(16.0f, 16.0f, 1.0f);
+        muzzleEffect->GetComponent<Transform>()->SetParent(GetComponent<Transform>());
+        muzzleEffect->GetComponent<Transform>()->SetPositionX(mTip.x + 5.f);
+        muzzleEffect->SetDir(mDirection);
+        CreateObject(muzzleEffect, eLayerType::Effect);
+
+
+        Vector3 pPos = mDetectPlayer->GetPlayerPos();
+
+        FireBall_Small* fire = new FireBall_Small();
+        fire->GetComponent<Transform>()->SetPosition(GetComponent<Transform>()->GetPosition() + mTip * mDirection);
+        fire->GetComponent<Transform>()->SetScale(4.0f, 4.0f, 1.0f);
+        fire->SetDetectPos(pPos);
+
+        CreateObject(fire, eLayerType::MonsterAttack);
+    }
+
     void ShotGunner_Weak::freedom()
     {
         mChoiceNextAction -= (float)Time::DeltaTime();
@@ -127,7 +154,7 @@ namespace zz
 
         switch (mActionIndex)
         {
-        case 0: 
+        case 0:
         {
             if (mbEnterAction)
             {
@@ -147,7 +174,7 @@ namespace zz
                 mbEnterAction = false;
             }
             break;
-            
+
         }
         case 2:
         {
@@ -183,7 +210,7 @@ namespace zz
         if (mChoiceNextAction <= 0)
         {
             mChoiceNextAction = 2.0f;
-            mActionIndex = randi(1);
+            mActionIndex = randi(2);
             mbEnterAction = true;
         }
 
@@ -193,41 +220,28 @@ namespace zz
         {
             if (mbEnterAction)
             {
-                mAnimator->PlayAnimation(L"shotgunner_weak_attack_ranged", false);
-                //mRigid->SetVelocityX(0.f);
+                mAnimator->PlayAnimation(L"shotgunner_weak_stand", true);
+                mRigid->SetVelocityX(0.f);
                 mbEnterAction = false;
-
-                std::shared_ptr<Texture> muzzleTexture = ResourceManager::Load<Texture>(L"muzzle_medium_05", L"..\\Resources\\Texture\\Monster\\muzzle_medium_05.png");
-
-                Animator* manimator = new Animator();
-                manimator->Create(L"muzzle_medium_05_play", muzzleTexture, Vector2(0.0f, 0.0f), Vector2(16.0f, 16.0f), 1, Vector2::Zero, 0.1f);
-                manimator->PlayAnimation(L"muzzle_medium_05_play", false);
-
-                MuzzleEffect* muzzleEffect = new MuzzleEffect();
-                muzzleEffect->SetAnimator(manimator, L"muzzle_medium_05_play");
-                muzzleEffect->GetComponent<Transform>()->SetScale(16.0f, 16.0f, 1.0f);
-                muzzleEffect->GetComponent<Transform>()->SetParent(GetComponent<Transform>());
-                muzzleEffect->GetComponent<Transform>()->SetPositionX(mTip.x + 5.f);
-                muzzleEffect->SetDir(mDirection);
-                CreateObject(muzzleEffect, eLayerType::Effect);
-
-
-                Vector3 pPos = mDetectPlayer->GetPlayerPos();
-
-                FireBall_Small* fire = new FireBall_Small();
-                fire->GetComponent<Transform>()->SetPosition(GetComponent<Transform>()->GetPosition() + mTip * mDirection);
-                fire->GetComponent<Transform>()->SetScale(4.0f, 4.0f, 1.0f);
-                fire->SetDetectPos(pPos);
-
-                CreateObject(fire, eLayerType::MonsterAttack);
             }
             break;
         }
+
         case 1:
         {
             if (mbEnterAction)
             {
-                mAnimator->PlayAnimation(L"shotgunner_weak_stand", true);
+                mAnimator->PlayAnimation(L"shotgunner_weak_attack_ranged", false);
+                //mRigid->SetVelocityX(0.f);
+                mbEnterAction = false;
+            }
+            break;
+        }
+        case 2:
+        {
+            if (mbEnterAction)
+            {
+                mAnimator->PlayAnimation(L"shotgunner_weak_attack_ranged", true);
                 mRigid->SetVelocityX(0.f);
                 mbEnterAction = false;
             }

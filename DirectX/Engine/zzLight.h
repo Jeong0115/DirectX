@@ -25,6 +25,7 @@ namespace zz
         void SetLightType(int type);
 
         void TrunOff() { mbLight = false; }
+        void TrunOn() { mbLight = true; }
 
     private:
         std::shared_ptr<class Material> mMaterial;

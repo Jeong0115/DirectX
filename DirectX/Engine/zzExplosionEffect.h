@@ -18,12 +18,23 @@ namespace zz
 
         void SetAnimator(Animator* ani, const std::wstring name);
 
+        void SetPosition(Vector3 pos);
+        void SetPosition(float x, float y, float z);
+            
+        void SetScale(Vector3 scale);
+        void SetScale(float x, float y, float z);
+
+        void KeepObjectEndAnimatiom(bool bKeep) { mbDelete = !bKeep; }
+        void Play();
+        
     private:
         void endAnimation();
 
     private:
-        Animator* mAnimator;
+        std::wstring mAnimationName;
 
+        Animator* mAnimator;
+        bool mbDelete;
     };
 }
 

@@ -5,7 +5,7 @@
 #include "zzTransform.h"
 #include "zzGameObject.h"
 #include "zzGraphics.h"
-
+#include "zzApplication.h"
 namespace zz
 {
     
@@ -14,6 +14,8 @@ namespace zz
         , mSharedBuffer(nullptr)
         , mCS(nullptr)
         , mBufferSlot(0)
+        , mbAcitve(true)
+        , mbLight(false)
     {
     }
 
@@ -21,6 +23,11 @@ namespace zz
     {
         delete mBuffer;
         delete mSharedBuffer;
+
+        if (mbLight)
+        {
+            delete lightRenderer;
+        }
     }
 
     void ParticleSystem::Initialize()
@@ -33,13 +40,31 @@ namespace zz
 
     void ParticleSystem::LateUpdate()
     {
+        if (!mbAcitve) return;
+
         mCS->SetParticleBuffer(mBuffer);
         mCS->SetSharedBuffer(mSharedBuffer);
         mCS->OnExcute();
+
+        if (mbLight)
+        {
+            if (Application::LightDisabled) return;
+            mBuffer->BindSRV(eShaderStage::VS);
+            mBuffer->BindSRV(eShaderStage::GS);
+            mBuffer->BindSRV(eShaderStage::PS);
+
+            lightRenderer->GetMesh()->BindBuffer();
+            lightRenderer->GetMaterial()->Binds();
+            lightRenderer->GetMesh()->RenderInstanced(mBuffer->GetStride());
+
+            mBuffer->Clear();
+        }
     }
 
     void ParticleSystem::Render()
     {
+        if (!mbAcitve) return;
+
         //GetOwner()->GetComponent<Transform>()->BindConstantBuffer();
 
         mBuffer->BindSRV(eShaderStage::VS);
@@ -75,7 +100,7 @@ namespace zz
         {
             mBuffer->SetData(data, mBuffer->GetStride());
         }
-        else if (tempType == 1)
+        else if (tempType == 1) 
         {
             mSharedBuffer->SetData(data, mSharedBuffer->GetStride());
         }

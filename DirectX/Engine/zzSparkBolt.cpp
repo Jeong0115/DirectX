@@ -68,7 +68,7 @@ namespace zz
 
         Particle particles[100] = {};
         mParticle->CreateStructedBuffer(sizeof(Particle), 100, eViewType::UAV, particles, true, 0, 14, 0);
-        mParticle->CreateStructedBuffer(sizeof(ProjectileShared), 1, eViewType::UAV, nullptr, true, 1, 14, 1);
+        mParticle->CreateStructedBuffer(sizeof(ParticleShared), 1, eViewType::UAV, nullptr, true, 4, 14, 1);
 
         mSubParticle = AddComponent<ParticleSystem>();
         mSubParticle->SetMaterial(ResourceManager::Find<Material>(L"m_Particle"));
@@ -80,7 +80,7 @@ namespace zz
         mSubParticle->CreateStructedBuffer(sizeof(ParticleShared), 1, eViewType::UAV, nullptr, true, 4, 14, 1);
 
         mShareData.scale = Vector4(1.0f, 1.0f, 1.0f, 0.0f);
-        mShareData.color = Vector4(255.f / 255.f, 80.f / 255.f, 240.f / 255.f, 0.25f);
+        mShareData.color_min = mShareData.color_max = Vector4(255.f / 255.f, 80.f / 255.f, 240.f / 255.f, 0.25f);
 
         mShareData.randPositionMax = Vector2(30.0f, 30.0f);
         mShareData.randPositionMin = Vector2(-30.0f, -30.0f);
@@ -95,10 +95,10 @@ namespace zz
         
         Particle tailParticles[100] = {};
         mTailParticle->CreateStructedBuffer(sizeof(Particle), 100, eViewType::UAV, tailParticles, true, 0, 14, 0);
-        mTailParticle->CreateStructedBuffer(sizeof(SineParticleShared), 1, eViewType::UAV, nullptr, true, 5, 14, 1);
+        mTailParticle->CreateStructedBuffer(sizeof(ParticleShared), 1, eViewType::UAV, nullptr, true, 4, 14, 1);
 
         mTailData.scale = Vector4(1.0f, 1.0f, 1.0f, 0.0f);
-        mTailData.color = Vector4(255.f / 255.f, 80.f / 255.f, 240.f / 255.f, 0.7f);
+        mTailData.color_min = mTailData.color_max = Vector4(255.f / 255.f, 80.f / 255.f, 240.f / 255.f, 0.7f);
 
         mTailData.randPositionMax = Vector2(2.0f, 2.0f);
         mTailData.randPositionMin = Vector2(-2.0f, -2.0f);
@@ -192,7 +192,7 @@ namespace zz
 
         Vector3 curPos = GetComponent<Transform>()->GetPosition();
 
-        ProjectileShared shareData = {};
+        ParticleShared shareData = {};
         shareData.curPosition = curPos + 0.0f;
         shareData.distance = shareData.curPosition - mPrevPos;
         shareData.distance.z = 0;
@@ -203,7 +203,7 @@ namespace zz
         shareData.activeCount = count;
         shareData.totalActiveCount = count;
         shareData.index = mIndex;
-        shareData.color = Vector4(255.f / 255.f, 80.f / 255.f, 240.f / 255.f, 1.0f);
+        shareData.color_min = shareData.color_max = Vector4(255.f / 255.f, 80.f / 255.f, 240.f / 255.f, 1.0f);
         //mIndex += count;
         mParticle->SetStructedBufferData(&shareData, 1, 1);
 

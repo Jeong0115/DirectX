@@ -1,6 +1,7 @@
 #pragma once
 
 #include "zzGameObject.h"
+#include "zzExplosionEffect.h"
 
 namespace zz
 {
@@ -19,10 +20,22 @@ namespace zz
         virtual void OnCollisionStay(GameObject* other);
         virtual void OnCollisionExit(GameObject* other);
 
+        void SetPosition(Vector3 pos);
+        void SetPosition(float x, float y, float z);
+
+        void SetDirection(Vector3 dir) { mDirection = dir; }
+        void SetAngle(float angle) { mAngle = angle; }
+
     protected:
+        virtual void dead();
+
         float mDamage;
         float mTime;
         float mLimitTime;
+        float mAngle;
+        float mSpeed;
+
+        Vector3 mDirection;
     };
 }
 

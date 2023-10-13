@@ -29,6 +29,7 @@ namespace zz
 
     private:
         void playIdleAnimation();
+        void shoot();
 
         void freedom();
         void followPlayer();

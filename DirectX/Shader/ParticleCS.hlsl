@@ -33,7 +33,7 @@ void main(uint3 DTid : SV_DispatchThreadID)
         if (count > 0)
         {
             float2 uv = float2((float) DTid.x / elementCount, 0.5f);
-            uv.x += deltaTime * 154.216f;
+            uv.x += deltaTime * 154.216f * count;
             uv.y += sin((uv.x + deltaTime * 126.276f) * 3.141592f + 2.f * 10.f) * 0.5f;
             
             float4 random = float4
@@ -55,13 +55,15 @@ void main(uint3 DTid : SV_DispatchThreadID)
             randomVelocity.y = (sharedBuffer.randVelocityMax.y - sharedBuffer.randVelocityMin.y) * random.w + sharedBuffer.randVelocityMin.y;
             
             random.x = GaussianBlur(uv + float2(0.4f, 0.f)).x;
+            random.y = GaussianBlur(uv + float2(0.5f, 0.f)).x;
             
             particle.lifeTime = (sharedBuffer.randLifeTime.x - sharedBuffer.randLifeTime.y) * random.x + sharedBuffer.randLifeTime.y;
             
             particle.position = sharedBuffer.curPosition + float4(randomPosition.xy, 0.0f, 0.0f);
             particle.velocity = randomVelocity;
-            particle.color = sharedBuffer.color;
+            particle.color = lerp(sharedBuffer.color, sharedBuffer.color_max, random.y); 
             particle.scale = sharedBuffer.scale;
+            particle.lightScale = sharedBuffer.lightScale;
             particle.active = 1;
             
             ParticleBuffer[DTid.x] = particle;

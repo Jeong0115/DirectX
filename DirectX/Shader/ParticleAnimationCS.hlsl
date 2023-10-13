@@ -49,7 +49,7 @@ void main(uint3 DTid : SV_DispatchThreadID)
             particle.position = sharedBuffer.curPosition;
             
             float2 uv = float2((float) DTid.x / elementCount, 0.5f);
-            uv.x += deltaTime * 154.216f;
+            uv.x += deltaTime * 154.216f * count;
             uv.y += sin((uv.x + deltaTime * 126.276f) * 3.141592f + 2.f * 10.f) * 0.5f;
             
             float4 random = float4

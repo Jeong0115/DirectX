@@ -71,6 +71,8 @@ namespace zz::graphics
 
         //CreatePixelGrid();
         CreateLightMap();
+        CreateBloomRenderTarget();
+
         BindViewPort(&mViewPort);
         mContext->OMSetRenderTargets(1, mRenderTargetView.GetAddressOf(), mDepthStencilView.Get());
 	}
@@ -171,6 +173,13 @@ namespace zz::graphics
         return true;
     }
 
+    bool GraphicsDevice::CreateTexture2d(const D3D11_TEXTURE2D_DESC* pDesc, ID3D11Texture2D** ppTexture2D)
+    {
+        if (FAILED(mDevice->CreateTexture2D(pDesc, nullptr, ppTexture2D)))
+            return false;
+        return true;    
+    }
+
     bool GraphicsDevice::CreateInputLayout(const D3D11_INPUT_ELEMENT_DESC* pInputElementDescs, UINT NumElements, ID3DBlob* byteCode, ID3D11InputLayout** ppInputLayout)
     {
         if (FAILED(mDevice->CreateInputLayout(pInputElementDescs, NumElements 
@@ -236,7 +245,7 @@ namespace zz::graphics
         return true;
     }
 
-    bool GraphicsDevice::CreateUnordedAccessView(ID3D11Resource* pResource, const D3D11_UNORDERED_ACCESS_VIEW_DESC* pDesc, ID3D11UnorderedAccessView** ppUAView)
+    bool GraphicsDevice::CreateUnorderedAccessView(ID3D11Resource* pResource, const D3D11_UNORDERED_ACCESS_VIEW_DESC* pDesc, ID3D11UnorderedAccessView** ppUAView)
     {
         if (FAILED(mDevice->CreateUnorderedAccessView(pResource, pDesc, ppUAView)))
             return false;
@@ -570,6 +579,55 @@ namespace zz::graphics
         
     }
 
+    void GraphicsDevice::CreateBloomRenderTarget()
+    {
+        Application& application = Application::GetInst();
+
+        D3D11_TEXTURE2D_DESC texDesc = {};
+        texDesc.Width = application.GetWidth() / 4;
+        texDesc.Height = application.GetHeight() / 4;
+        texDesc.MipLevels = 1;
+        texDesc.ArraySize = 1;
+        texDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+        texDesc.SampleDesc.Count = 1;
+        texDesc.Usage = D3D11_USAGE_DEFAULT;
+        texDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+        texDesc.CPUAccessFlags = 0;
+        texDesc.MiscFlags = 0;
+
+        HRESULT hr = mDevice->CreateTexture2D(&texDesc, nullptr, &mBloomRenderTarget);
+
+        if (FAILED(hr))
+        {
+            return;
+        }
+
+        D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+        srvDesc.Format = texDesc.Format;
+        srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+        srvDesc.Texture2D.MostDetailedMip = 0;
+        srvDesc.Texture2D.MipLevels = 1;
+
+        hr = mDevice->CreateShaderResourceView(mBloomRenderTarget.Get(), &srvDesc, &mBloomSRV);
+        if (FAILED(hr))
+        {
+            return;
+        }
+
+        D3D11_RENDER_TARGET_VIEW_DESC rtvDesc = {};
+        rtvDesc.Format = texDesc.Format;
+        rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+        rtvDesc.Texture2D.MipSlice = 0;
+
+        hr = mDevice->CreateRenderTargetView(mBloomRenderTarget.Get(), &rtvDesc, &mBloomRenderTargetView);
+        if (FAILED(hr))
+        {
+            return;
+        }
+
+        mBloomViewPort = { 0.0f, 0.0f , 400.f , 225.f, 0.0f, 1.0f };
+    }
+
     void GraphicsDevice::DrawIndexed(UINT IndexCount, UINT StartIndexLocation, INT BaseVertexLocation)
     {
         mContext->DrawIndexed(IndexCount, StartIndexLocation, BaseVertexLocation);
@@ -585,6 +643,15 @@ namespace zz::graphics
         FLOAT bgColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
         mContext->ClearRenderTargetView(mLightRenderTargetView.Get(), bgColor);
         mContext->OMSetRenderTargets(1, mLightRenderTargetView.GetAddressOf(), nullptr);
+        BindViewPort(&mViewPort);
+    }
+
+    void GraphicsDevice::SetBloomRenderTarget()
+    {
+        FLOAT bgColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+        mContext->ClearRenderTargetView(mBloomRenderTargetView.Get(), bgColor);
+        mContext->OMSetRenderTargets(1, mBloomRenderTargetView.GetAddressOf(), nullptr);
+        BindViewPort(&mBloomViewPort);
     }
 
     void GraphicsDevice::ClearRenderTarget()

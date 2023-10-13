@@ -29,6 +29,8 @@ namespace zz
 
             int indexX;
             int indexY;
+
+            int imageBits;
         };
         //struct move
         //{

@@ -12,6 +12,7 @@
 #include "zzBox2dWorld.h"
 #include "zzWrite.h"
 #include "zzThreadPool.h"
+#include "zzBloomManager.h"
 
 #include "zzOpeningScene.h"
 #include "zztScene.h"
@@ -70,6 +71,7 @@ namespace zz
         thread.enqueue([=]() { SceneManager::Initialize(); });
         thread.enqueue([=]() { ObjectPoolManager::Initialize(); });
         thread.enqueue([=]() { Editor::Initialize(); });
+        thread.enqueue([=]() { BloomManager::Initialize(); });
 
         bool isBreak = true;
 
@@ -125,6 +127,7 @@ namespace zz
 
         UIManager::LateUpdate();
         SceneManager::LateUpdate();
+        BloomManager::Update();
 	}
 
 	void Application::Render()
@@ -180,7 +183,7 @@ namespace zz
 
         RECT rt = { 0, 0, (LONG)width , (LONG)height };
         AdjustWindowRect(&rt, WS_OVERLAPPEDWINDOW, true);
-        SetWindowPos(mHwnd, nullptr, 30, -1000, rt.right - rt.left, rt.bottom - rt.top, 0);
+        SetWindowPos(mHwnd, nullptr, 100, -1000, rt.right - rt.left, rt.bottom - rt.top, 0);
         ShowWindow(mHwnd, true);
         UpdateWindow(mHwnd);
 	}

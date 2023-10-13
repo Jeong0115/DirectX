@@ -33,7 +33,7 @@ namespace zz
         bool    mbTimerOn;
 
         ParticleShared          mShareData;
-        SineParticleShared      mTailData;
+        ParticleShared          mTailData;
         UINT                    mIndex;
     };
 }

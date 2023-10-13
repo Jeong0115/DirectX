@@ -120,6 +120,8 @@ namespace zz
         case 1: mMaterial = ResourceManager::Find<Material>(L"m_light_mask_smoothed");  break;
         case 2: mMaterial = ResourceManager::Find<Material>(L"m_particle_glow");        break;
         case 3: mMaterial = ResourceManager::Find<Material>(L"m_light_mask_linear");    break;
+        case 4: mMaterial = ResourceManager::Find<Material>(L"m_explosion_stain");      break;
+        case 5: mMaterial = ResourceManager::Find<Material>(L"m_explosion_hole");      break;
         default: break;
         }
     }

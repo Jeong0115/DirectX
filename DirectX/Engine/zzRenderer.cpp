@@ -145,19 +145,19 @@ namespace zz::renderer
         lightIndexes.push_back(2);
 
         lightVertexes[0].pos = Vector3(-1.0f, 1.0f, 0.0f);
-        lightVertexes[0].color = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+        lightVertexes[0].color = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
         lightVertexes[0].uv = Vector2(0.0f, 0.0f);
         
         lightVertexes[1].pos = Vector3(1.0f, 1.0f, 0.0f);
-        lightVertexes[1].color = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+        lightVertexes[1].color = Vector4(0.0f, 1.0f, 0.0f, 1.0f);
         lightVertexes[1].uv = Vector2(1.0f, 0.0f);
        
         lightVertexes[2].pos = Vector3(-1.0f, -1.0f, 0.0f);
-        lightVertexes[2].color = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+        lightVertexes[2].color = Vector4(0.0f, 0.0f, 1.0f, 1.0f);
         lightVertexes[2].uv = Vector2(0.0f, 1.0f);
        
         lightVertexes[3].pos = Vector3(1.0f, -1.0f, 0.0f);
-        lightVertexes[3].color = Vector4(0.0f, 0.0f, 0.0f, 0.0f);
+        lightVertexes[3].color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
         lightVertexes[3].uv = Vector2(1.0f, 1.0f);
         
         std::shared_ptr<Mesh> lightMesh = std::make_shared<Mesh>();
@@ -226,14 +226,26 @@ namespace zz::renderer
         std::shared_ptr<Shader> lightShader = std::make_shared<Shader>();
         lightShader->CreateShader(eShaderStage::VS, L"LightVS.hlsl", "main");
         lightShader->CreateShader(eShaderStage::PS, L"LightPS.hlsl", "main");
-        lightShader->SetBSState(eBSType::OneOne);
+        lightShader->SetBSState(eBSType::Add);
         ResourceManager::Insert(L"LightShader", lightShader);
 
         std::shared_ptr<Shader> lightMapShader = std::make_shared<Shader>();
         lightMapShader->CreateShader(eShaderStage::VS, L"LightMapVS.hlsl", "main");
         lightMapShader->CreateShader(eShaderStage::PS, L"LightMapPS.hlsl", "main");
-        lightMapShader->SetBSState(eBSType::Light);       
+        lightMapShader->SetBSState(eBSType::Add);
         ResourceManager::Insert(L"LightMapShader", lightMapShader);
+
+        std::shared_ptr<Shader> lightMapShader2 = std::make_shared<Shader>();
+        lightMapShader2->CreateShader(eShaderStage::VS, L"LightMapVS.hlsl", "main");
+        lightMapShader2->CreateShader(eShaderStage::PS, L"BloomPS.hlsl", "main");
+        lightMapShader2->SetBSState(eBSType::Max);
+        ResourceManager::Insert(L"BloomShader", lightMapShader2);
+
+        std::shared_ptr<Shader> lightMapShadert = std::make_shared<Shader>();
+        lightMapShadert->CreateShader(eShaderStage::VS, L"LightMapVS.hlsl", "main");
+        lightMapShadert->CreateShader(eShaderStage::PS, L"BloomPS.hlsl", "main");
+        lightMapShadert->SetBSState(eBSType::MaxRgbAddAlpha);
+        ResourceManager::Insert(L"BloomShaderT", lightMapShadert);
 
         std::shared_ptr<Shader> spriteAnimationShader = std::make_shared<Shader>();
         spriteAnimationShader->CreateShader(eShaderStage::VS, L"SpriteAnimationVS.hlsl", "main");
@@ -261,13 +273,29 @@ namespace zz::renderer
         psSystemShader3->Create(L"ParticleCircleCS.hlsl", "main");
         ResourceManager::Insert(L"ParticleCircleCS", psSystemShader3);
 
+        std::shared_ptr<ParticleShader> psSystemShader4 = std::make_shared<ParticleShader>();
+        psSystemShader4->Create(L"ParticleMakeCircleCS.hlsl", "main");
+        ResourceManager::Insert(L"ParticleMakeCircleCS", psSystemShader4);
+
+        std::shared_ptr<ComputeShader> bloom1 = std::make_shared<ComputeShader>();
+        bloom1->Create(L"BloomExtractionCS.hlsl", "main");
+        ResourceManager::Insert(L"BloomExtractionCS", bloom1);
+
+        std::shared_ptr<ComputeShader> bloom2 = std::make_shared<ComputeShader>();
+        bloom2->Create(L"BloomHorizonCS.hlsl", "main");
+        ResourceManager::Insert(L"BloomHorizonCS", bloom2);
+
+        std::shared_ptr<ComputeShader> bloom3 = std::make_shared<ComputeShader>();
+        bloom3->Create(L"BloomVerticalCS.hlsl", "main");
+        ResourceManager::Insert(L"BloomVerticalCS", bloom3);
+
         std::shared_ptr<Shader> paritcleShader = std::make_shared<Shader>();
         paritcleShader->CreateShader(eShaderStage::VS, L"ParticleVS.hlsl", "main");
         paritcleShader->CreateShader(eShaderStage::GS, L"ParticleGS.hlsl", "main");
         paritcleShader->CreateShader(eShaderStage::PS, L"ParticlePS.hlsl", "main");
         paritcleShader->SetRSState(eRSType::SolidNone);
         paritcleShader->SetDSState(eDSType::NoWrite);
-        paritcleShader->SetBSState(eBSType::AlphaBlend);
+        paritcleShader->SetBSState(eBSType::Add);
         paritcleShader->SetTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
         ResourceManager::Insert(L"ParticleShader", paritcleShader);
 
@@ -284,6 +312,30 @@ namespace zz::renderer
         paritcleAnimationShader->SetBSState(eBSType::AlphaBlend);
         paritcleAnimationShader->SetTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
         ResourceManager::Insert(L"ParticleAnimationShader", paritcleAnimationShader);
+
+
+        std::shared_ptr<Shader> particleLightShader = std::make_shared<Shader>();
+        particleLightShader->CreateShader(eShaderStage::VS, L"ParticleLightVS.hlsl", "main");
+        particleLightShader->CreateShader(eShaderStage::GS, L"ParticleLightGS.hlsl", "main");
+        particleLightShader->CreateShader(eShaderStage::PS, L"ParticleLightPS.hlsl", "main");
+        particleLightShader->SetBSState(eBSType::Add);
+        particleLightShader->SetTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
+        ResourceManager::Insert(L"ParticleLightShader", particleLightShader);
+
+        std::shared_ptr<Shader> paritcleCirceShader = std::make_shared<Shader>();
+        paritcleCirceShader->CreateShader(eShaderStage::VS, L"ParticleMakeCircleVS.hlsl", "main");
+        paritcleCirceShader->CreateShader(eShaderStage::GS, L"ParticleMakeCircleGS.hlsl", "main");
+        paritcleCirceShader->CreateShader(eShaderStage::PS, L"ParticlePS.hlsl", "main");
+        paritcleCirceShader->SetRSState(eRSType::SolidNone);
+        paritcleCirceShader->SetDSState(eDSType::NoWrite);
+        paritcleCirceShader->SetBSState(eBSType::Add);
+        paritcleCirceShader->SetTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
+        ResourceManager::Insert(L"ParticleCirceShader", paritcleCirceShader);
+
+        std::shared_ptr<Shader> ParticleShader2 = ResourceManager::Find<Shader>(L"ParticleCirceShader");
+        std::shared_ptr<Material> material = std::make_shared<Material>();
+        material->SetShader(ParticleShader2);
+        ResourceManager::Insert(L"m_ParticleCirceShader", material);
 
     }
     void LoadResource()
@@ -318,14 +370,14 @@ namespace zz::renderer
             material->SetShader(debugShader);
             ResourceManager::Insert(L"DebugMaterial", material);
         }
-
         {
-            std::shared_ptr<Texture> texture = ResourceManager::Load<Texture>(L"rust", L"..\\Resources\\Texture\\rust.png");
+            std::shared_ptr<Texture> texture = ResourceManager::Load<Texture>(L"background_coalmine", L"..\\Resources\\Texture\\Coalmine\\background_coalmine.png");
 
             std::shared_ptr<Material> spriteMateiral2 = std::make_shared<Material>();
+            spriteMateiral2->SetRenderingMode(eRenderingMode::Opaque);
             spriteMateiral2->SetShader(spriteShader);
             spriteMateiral2->SetTexture(texture);
-            ResourceManager::Insert(L"m_rust", spriteMateiral2);
+            ResourceManager::Insert(L"m_background_coalmine", spriteMateiral2);
         }
         {
             std::shared_ptr<Texture> texture = std::make_shared<PixelTexture>();
@@ -337,168 +389,23 @@ namespace zz::renderer
             ResourceManager::Insert(L"m_PixelTexture", pixelTexture);
         }
 
-#pragma region MountainBG
-        {
-            std::shared_ptr<Texture> texture = ResourceManager::Load<Texture>(L"T_MountainBG0", L"..\\Resources\\Texture\\parallax_clounds_00_color.png");
-
-            std::shared_ptr<Material> spriteMateiral2 = std::make_shared<Material>();
-            spriteMateiral2->SetShader(spriteShader);
-            spriteMateiral2->SetTexture(texture);
-            ResourceManager::Insert(L"M_MountainBG0", spriteMateiral2);
-        }
-
-        {
-            std::shared_ptr<Texture> texture = ResourceManager::Load<Texture>(L"background_coalmine", L"..\\Resources\\Texture\\Coalmine\\background_coalmine.png");
-
-            std::shared_ptr<Material> spriteMateiral2 = std::make_shared<Material>();
-            spriteMateiral2->SetShader(spriteShader);
-            spriteMateiral2->SetTexture(texture);
-            ResourceManager::Insert(L"m_background_coalmine", spriteMateiral2);
-        }
-        {
-            std::shared_ptr<Texture> texture = ResourceManager::Load<Texture>(L"rust", L"..\\Resources\\Texture\\rust.png");
-
-            std::shared_ptr<Material> spriteMateiral2 = std::make_shared<Material>();
-            spriteMateiral2->SetShader(spriteShader);
-            spriteMateiral2->SetTexture(texture);
-            ResourceManager::Insert(L"m_rust", spriteMateiral2);
-        }
-        {
-            std::shared_ptr<Texture> texture = ResourceManager::Load<Texture>(L"T_MountainBG1", L"..\\Resources\\Texture\\parallax_clounds_01.png");
-
-            std::shared_ptr<Material> spriteMateiral2 = std::make_shared<Material>();
-            spriteMateiral2->SetShader(spriteShader);
-            spriteMateiral2->SetTexture(texture);
-            ResourceManager::Insert(L"M_MountainBG1", spriteMateiral2);
-        }
-        {
-            std::shared_ptr<Texture> texture = ResourceManager::Load<Texture>(L"T_MountainBG2", L"..\\Resources\\Texture\\parallax_mountains_02_color.png");
-
-            std::shared_ptr<Material> spriteMateiral = std::make_shared<Material>();
-            spriteMateiral->SetShader(spriteShader);
-            spriteMateiral->SetTexture(texture);
-            ResourceManager::Insert(L"M_MountainBG2", spriteMateiral);
-        }
-        {
-            std::shared_ptr<Texture> texture = ResourceManager::Load<Texture>(L"T_MountainBG3", L"..\\Resources\\Texture\\parallax_clounds_02_color.png");
-
-            std::shared_ptr<Material> spriteMateiral = std::make_shared<Material>();
-            spriteMateiral->SetShader(spriteShader);
-            spriteMateiral->SetTexture(texture);
-            ResourceManager::Insert(L"M_MountainBG3", spriteMateiral);
-        }
-        {
-            std::shared_ptr<Texture> texture = ResourceManager::Load<Texture>(L"T_MountainBG4", L"..\\Resources\\Texture\\parallax_mountains_layer_02_color.png");
-
-            std::shared_ptr<Material> spriteMateiral = std::make_shared<Material>();
-            spriteMateiral->SetShader(spriteShader);
-            spriteMateiral->SetTexture(texture);
-            ResourceManager::Insert(L"M_MountainBG4", spriteMateiral);
-        }
-        {
-            std::shared_ptr<Texture> texture = ResourceManager::Load<Texture>(L"T_MountainBG5", L"..\\Resources\\Texture\\parallax_mountains_layer_01_color.png");
-
-            std::shared_ptr<Material> spriteMateiral = std::make_shared<Material>();
-            spriteMateiral->SetShader(spriteShader);
-            spriteMateiral->SetTexture(texture);
-            ResourceManager::Insert(L"M_MountainBG5", spriteMateiral);
-        }
-#pragma endregion
-#pragma region Mountain
-        //LoadPixelScene("data/biome_impl/mountain/right_entrance_bottom.png", "", x, y + 512, "", true)
-        //LoadPixelScene("data/biome_impl/mountain/right_bottom.png", "", x + 512 - 192, y + 512, "", true)
-        //LoadPixelScene("data/biomea_impl/mountain/right_entrance.png", "data/biome_impl/mountain/right_entrance_visual.png", x, y, "data/biome_impl/mountain/right_entrance_background.png", true)
-
-        {
-            std::shared_ptr<Texture> texture = ResourceManager::Load<Texture>(L"hall_0_0", L"..\\Resources\\Texture\\Mountain\\hall.png");
-            std::shared_ptr<Texture> texture_visual = ResourceManager::Load<Texture>(L"hall_visual_0_0", L"..\\Resources\\Texture\\Mountain\\hall_visual.png");
-
-            PixelWorld::SetImage(0, 0, texture, texture_visual);
-
-            
-      /*      std::shared_ptr<Material> spriteMateiral = std::make_shared<Material>();
-            spriteMateiral->SetShader(spriteShader);
-            spriteMateiral->SetTexture(texture_visual);
-            ResourceManager::Insert(L"m_hall_visual_0_0", spriteMateiral);*/
-
-            texture = ResourceManager::Load<Texture>(L"hall_background_0_0", L"..\\Resources\\Texture\\Mountain\\hall_background.png");
-            std::shared_ptr<Material> spriteMateiral = std::make_shared<Material>();
-            spriteMateiral->SetShader(spriteShader);
-            spriteMateiral->SetTexture(texture);
-            ResourceManager::Insert(L"m_hall_background_0_0", spriteMateiral);
-
-            texture = ResourceManager::Load<Texture>(L"left_entrance_background_-512_0", L"..\\Resources\\Texture\\Mountain\\left_entrance_background.png");
-            spriteMateiral = std::make_shared<Material>();
-            spriteMateiral->SetShader(spriteShader);
-            spriteMateiral->SetTexture(texture);
-            ResourceManager::Insert(L"m_left_entrance_background_-512_0", spriteMateiral);
-        }
-        {
-            //std::shared_ptr<Texture> texture = ResourceManager::Load<Texture>(L"hall_instructions_0_0", L"..\\Resources\\Texture\\Mountain\\hall_instructions.png");
-            //PixelGrid::GetInst().SetImage(0, 0, texture);
-
-            std::shared_ptr<Texture> texture = ResourceManager::Load<Texture>(L"hall_b_0_512", L"..\\Resources\\Texture\\Mountain\\hall_b.png");
-            std::shared_ptr<Texture> texture_visual = ResourceManager::Load<Texture>(L"hall_b_visual_0_512", L"..\\Resources\\Texture\\Mountain\\hall_b_visual.png");
-            PixelWorld::SetImage(0, 512, texture, texture_visual);
-
-            texture = ResourceManager::Load<Texture>(L"hall_b_visual_0_512", L"..\\Resources\\Texture\\Mountain\\hall_b_visual.png");
-            std::shared_ptr<Material> spriteMateiral = std::make_shared<Material>();
-            spriteMateiral = std::make_shared<Material>();
-            spriteMateiral->SetShader(spriteShader);
-            spriteMateiral->SetTexture(texture);
-            ResourceManager::Insert(L"m_hall_b_visual_0_512", spriteMateiral);
-        }
-        {
-            std::shared_ptr<Texture> texture = ResourceManager::Load<Texture>(L"hall_br_512_512", L"..\\Resources\\Texture\\Mountain\\hall_br.png");
-            std::shared_ptr<Texture> texture_visual = ResourceManager::Load<Texture>(L"hall_br_visual_512_512", L"..\\Resources\\Texture\\Mountain\\hall_br_visual.png");
-            PixelWorld::SetImage(512, 512, texture, texture_visual);
-
-            texture = ResourceManager::Load<Texture>(L"hall_br_visual_512_512", L"..\\Resources\\Texture\\Mountain\\hall_br_visual.png");
-            std::shared_ptr<Material> spriteMateiral = std::make_shared<Material>();
-            spriteMateiral = std::make_shared<Material>();
-            spriteMateiral->SetShader(spriteShader);
-            spriteMateiral->SetTexture(texture);
-            ResourceManager::Insert(L"m_hall_br_visual_512_512", spriteMateiral);
-        }
-        {
-            std::shared_ptr<Texture> texture = ResourceManager::Load<Texture>(L"hall_r_512_0", L"..\\Resources\\Texture\\Mountain\\hall_r.png");
-            std::shared_ptr<Texture> texture_visual = ResourceManager::Load<Texture>(L"hall_r_visual_512_0", L"..\\Resources\\Texture\\Mountain\\hall_r_visual.png");
-            PixelWorld::SetImage(512, 0, texture, texture_visual);
-
-            texture = ResourceManager::Load<Texture>(L"hall_r_visual_512_0", L"..\\Resources\\Texture\\Mountain\\hall_r_visual.png");
-            std::shared_ptr<Material> spriteMateiral = std::make_shared<Material>();
-            spriteMateiral = std::make_shared<Material>();
-            spriteMateiral->SetShader(spriteShader);
-            spriteMateiral->SetTexture(texture);
-            ResourceManager::Insert(L"m_hall_r_visual_512_0", spriteMateiral);
-        }
-        {
-            std::shared_ptr<Texture> texture = ResourceManager::Load<Texture>(L"hall_bottom_-512_512", L"..\\Resources\\Texture\\Mountain\\hall_bottom.png");
-            //PixelWorld::GetInst().SetImage(-512, 512, texture); //나중에 해야됩니다
-        }
-        {
-            std::shared_ptr<Texture> texture = ResourceManager::Load<Texture>(L"hall_bottom_2_552_512", L"..\\Resources\\Texture\\Mountain\\hall_bottom_2.png");
-            //PixelGrid::SetImage(552, 512, texture);
-        }
-
-
-
-
-#pragma endregion
-
-#pragma region Player
         std::shared_ptr<Shader> animationShader = ResourceManager::Find<Shader>(L"SpriteAnimationShader");
         std::shared_ptr<Material> material = std::make_shared<Material>();
         material->SetShader(animationShader);
         material->SetRenderingMode(eRenderingMode::Transparent);
         ResourceManager::Insert(L"m_SpriteAnimation", material);
 
+        std::shared_ptr<Shader> animationShader2 = ResourceManager::Find<Shader>(L"SpriteAnimationShader");
+        material = std::make_shared<Material>();
+        material->SetShader(animationShader2);
+        material->SetRenderingMode(eRenderingMode::Opaque);
+        ResourceManager::Insert(L"m_SpriteAnimation_Opaque", material);
+
         std::shared_ptr<Shader> fadeAnimationShader = ResourceManager::Find<Shader>(L"FadeAnimationShader");
         material = std::make_shared<Material>();
         material->SetShader(fadeAnimationShader);
         material->SetRenderingMode(eRenderingMode::Transparent);
         ResourceManager::Insert(L"m_FadeAnimation", material);
-#pragma endregion
     }
    
     void CreateInputLayout()
@@ -547,12 +454,19 @@ namespace zz::renderer
         shader = ResourceManager::Find<Shader>(L"LightMapShader");
         GetDevice()->CreateInputLayout(arrLayout, 3, shader->GetVSCode(), shader->GetInputLayoutAddressOf());
 
+        shader = ResourceManager::Find<Shader>(L"BloomShader");
+        GetDevice()->CreateInputLayout(arrLayout, 3, shader->GetVSCode(), shader->GetInputLayoutAddressOf());
+
+        shader = ResourceManager::Find<Shader>(L"BloomShaderT");
+        GetDevice()->CreateInputLayout(arrLayout, 3, shader->GetVSCode(), shader->GetInputLayoutAddressOf());
+
         shader = ResourceManager::Find<Shader>(L"SpriteAnimationShader");
         GetDevice()->CreateInputLayout(arrLayout, 3, shader->GetVSCode(), shader->GetInputLayoutAddressOf());
 
         shader = ResourceManager::Find<Shader>(L"FadeAnimationShader");
         GetDevice()->CreateInputLayout(arrLayout, 3, shader->GetVSCode(), shader->GetInputLayoutAddressOf());
 
+        
         D3D11_INPUT_ELEMENT_DESC particleLayout[1] = {};
 
         particleLayout[0].AlignedByteOffset = 0;
@@ -568,6 +482,11 @@ namespace zz::renderer
         shader = ResourceManager::Find<Shader>(L"ParticleAnimationShader");
         GetDevice()->CreateInputLayout(particleLayout, 1, shader->GetVSCode(), shader->GetInputLayoutAddressOf());
 
+        shader = ResourceManager::Find<Shader>(L"ParticleCirceShader");
+        GetDevice()->CreateInputLayout(particleLayout, 1, shader->GetVSCode(), shader->GetInputLayoutAddressOf());
+
+        shader = ResourceManager::Find<Shader>(L"ParticleLightShader");
+        GetDevice()->CreateInputLayout(particleLayout, 1, shader->GetVSCode(), shader->GetInputLayoutAddressOf());
 
         D3D11_INPUT_ELEMENT_DESC triangleLayout[2] = {};
 
@@ -597,10 +516,12 @@ namespace zz::renderer
         desc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
         GetDevice()->CreateSamplerState(&desc, samplerStates[(UINT)eSamplerType::Point].GetAddressOf());
         GetDevice()->BindSamplerState(eShaderStage::PS, 0, samplerStates[(UINT)eSamplerType::Point].GetAddressOf());
+        GetDevice()->BindSamplerState(eShaderStage::CS, 0, samplerStates[(UINT)eSamplerType::Point].GetAddressOf());
 
         desc.Filter = D3D11_FILTER_ANISOTROPIC;
         GetDevice()->CreateSamplerState(&desc, samplerStates[(UINT)eSamplerType::Anisotropic].GetAddressOf());
         GetDevice()->BindSamplerState(eShaderStage::PS, 1, samplerStates[(UINT)eSamplerType::Anisotropic].GetAddressOf());
+        GetDevice()->BindSamplerState(eShaderStage::CS, 1, samplerStates[(UINT)eSamplerType::Anisotropic].GetAddressOf());
     }
     void CreateRasterizerState()
     {
@@ -667,23 +588,54 @@ namespace zz::renderer
         desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
         GetDevice()->CreateBlendState(&desc, blendStates[(UINT)eBSType::AlphaBlend].GetAddressOf());
 
-        desc.AlphaToCoverageEnable = false;
-        desc.IndependentBlendEnable = false;
-        desc.RenderTarget[0].BlendEnable = true;
-        desc.RenderTarget[0].BlendOp = D3D11_BLEND_OP::D3D11_BLEND_OP_ADD;
-        desc.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
-        desc.RenderTarget[0].DestBlend = D3D11_BLEND_ONE;
-        desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-        GetDevice()->CreateBlendState(&desc, blendStates[(UINT)eBSType::OneOne].GetAddressOf());
+        D3D11_BLEND_DESC blendDesc = {};
+        blendDesc.RenderTarget[0].BlendEnable = true;
+        blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;         // Use the source color
+        blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_ONE;       // Use the destination color
+        blendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;      // Add source and destination
+        blendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;   // Use the source alpha
+        blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;  // Use the destination alpha
+        blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD; // Add source and destination alpha
+        blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+        GetDevice()->CreateBlendState(&blendDesc, blendStates[(UINT)eBSType::Add].GetAddressOf());
+
+        D3D11_BLEND_DESC sblendDesc = {};
+        sblendDesc.RenderTarget[0].BlendEnable = true;
+        sblendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_COLOR;     // Use the source color (original image)
+        sblendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_ZERO;         // Ignore destination color (light map)
+        sblendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;         // Add source and destination (though destination is ignored due to D3D11_BLEND_ZERO)
+        sblendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;      // Use the source alpha
+        sblendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;    // Ignore destination alpha
+        sblendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;    // Add source and destination alpha (though destination is ignored due to D3D11_BLEND_ZERO)
+        sblendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+        GetDevice()->CreateBlendState(&blendDesc, blendStates[(UINT)eBSType::Max].GetAddressOf());
+
+
+        D3D11_BLEND_DESC blendDesc2 = {};
+        blendDesc2.RenderTarget[0].BlendEnable = true;
+        blendDesc2.RenderTarget[0].SrcBlend = D3D11_BLEND_DEST_COLOR;     // Multiply by the destination color (target color)
+        blendDesc2.RenderTarget[0].DestBlend = D3D11_BLEND_ZERO;         // Ignore source color (since we're multiplying it above)
+        blendDesc2.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;         // The addition operation, but effectively this becomes multiplication due to the blend factors
+        blendDesc2.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_DEST_ALPHA; // Multiply by the destination alpha
+        blendDesc2.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;    // Ignore source alpha
+        blendDesc2.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;    // The addition operation for alpha, but effectively this becomes multiplication due to the blend factors
+        blendDesc2.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+        GetDevice()->CreateBlendState(&blendDesc2, blendStates[(UINT)eBSType::MaxRgbAddAlpha].GetAddressOf());
+
 
         desc.RenderTarget[0].BlendEnable = true;
+        desc.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
+        desc.RenderTarget[0].DestBlend = D3D11_BLEND_ZERO;
         desc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-        desc.RenderTarget[0].SrcBlend = D3D11_BLEND_ZERO;
-        desc.RenderTarget[0].DestBlend = D3D11_BLEND_SRC_COLOR;
-        desc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ZERO;
-        desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;
+        desc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+        desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+        desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
         desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-        GetDevice()->CreateBlendState(&desc, blendStates[(UINT)eBSType::Light].GetAddressOf());
+        GetDevice()->CreateBlendState(&desc, blendStates[(UINT)eBSType::InsertBloom].GetAddressOf());
+
+
+  
 
 
     }
@@ -762,12 +714,14 @@ namespace zz::renderer
 
         std::shared_ptr<Texture> rock_hard_alt = ResourceManager::Load<Texture>(L"rock_hard_alt", L"..\\Resources\\Texture\\Material\\rock_hard_alt.png");
         material = std::make_shared<Material>();
+        material->SetRenderingMode(eRenderingMode::Opaque);
         material->SetShader(spriteShader);
         material->SetTexture(rock_hard_alt);
         ResourceManager::Insert(L"m_rock_hard_alt", material);
 
         std::shared_ptr<Texture> wall_background = ResourceManager::Load<Texture>(L"wall_background", L"..\\Resources\\Texture\\Temple\\wall_background.png");
         material = std::make_shared<Material>();
+        material->SetRenderingMode(eRenderingMode::Opaque);
         material->SetShader(spriteShader);
         material->SetTexture(wall_background);
         ResourceManager::Insert(L"m_wall_background", material);
@@ -976,6 +930,35 @@ namespace zz::renderer
     void LoadMonsterResource()
     {
         ResourceManager::Load<Texture>(L"shotgunner_weak", L"..\\Resources\\Texture\\Monster\\shotgunner_weak.png");
+
+        ResourceManager::Load<Texture>(L"body", L"..\\Resources\\Texture\\Centipede\\body.png");
+        ResourceManager::Load<Texture>(L"limb_long_a", L"..\\Resources\\Texture\\Centipede\\limb_long_a.png");
+        ResourceManager::Load<Texture>(L"limb_long_b", L"..\\Resources\\Texture\\Centipede\\limb_long_b.png");
+        ResourceManager::Load<Texture>(L"limb_long_knee", L"..\\Resources\\Texture\\Centipede\\limb_long_knee.png");
+        ResourceManager::Load<Texture>(L"orb_pink_glowy", L"..\\Resources\\Texture\\Centipede\\orb_pink_glowy.png");
+        ResourceManager::Load<Texture>(L"explosion_016_plasma", L"..\\Resources\\Texture\\Centipede\\explosion_016_plasma.png");
+        ResourceManager::Load<Texture>(L"explosion_016_plasma_pink", L"..\\Resources\\Texture\\Centipede\\explosion_016_plasma_pink.png");
+        ResourceManager::Load<Texture>(L"explosion_032_pink", L"..\\Resources\\Texture\\Centipede\\explosion_032_pink.png");
+        ResourceManager::Load<Texture>(L"explosion_016", L"..\\Resources\\Texture\\Centipede\\explosion_016.png");
+        ResourceManager::Load<Texture>(L"grenade_large", L"..\\Resources\\Texture\\Centipede\\grenade_large.png");
+        ResourceManager::Load<Texture>(L"orb_blue_big", L"..\\Resources\\Texture\\Centipede\\orb_blue_big.png");
+
+        std::shared_ptr<Shader> spriteShader = ResourceManager::Find<Shader>(L"SpriteShader");
+        std::shared_ptr<Material> material;
+
+        std::shared_ptr<Texture> tail = ResourceManager::Load<Texture>(L"tail", L"..\\Resources\\Texture\\Centipede\\tail.png");
+        material = std::make_shared<Material>();
+        material->SetTexture(tail);
+        material->SetShader(spriteShader);
+        material->SetRenderingMode(eRenderingMode::Transparent);
+        ResourceManager::Insert(L"m_tail", material);
+
+        std::shared_ptr<Texture> tail_big = ResourceManager::Load<Texture>(L"tail_big", L"..\\Resources\\Texture\\Centipede\\tail_big.png");
+        material = std::make_shared<Material>();
+        material->SetTexture(tail);
+        material->SetShader(spriteShader);
+        material->SetRenderingMode(eRenderingMode::Transparent);
+        ResourceManager::Insert(L"m_tail_big", material);
     }
 
     void LoadSpellResource()
@@ -1071,6 +1054,7 @@ namespace zz::renderer
         ResourceManager::Load<Texture>(L"explosion_128", L"..\\Resources\\Texture\\Effect\\explosion_128.png");
         ResourceManager::Load<Texture>(L"explosion_128_poof", L"..\\Resources\\Texture\\Effect\\explosion_128_poof.png");
 
+        std::shared_ptr<Shader> particleLightShader = ResourceManager::Find<Shader>(L"ParticleLightShader");
         std::shared_ptr<Shader> lightShader = ResourceManager::Find<Shader>(L"LightShader");
         std::shared_ptr<Material> material;
         
@@ -1092,11 +1076,35 @@ namespace zz::renderer
         material->SetTexture(particle_glow);
         ResourceManager::Insert(L"m_particle_glow", material);
 
+        std::shared_ptr<Texture> particle_glow_particleLight = ResourceManager::Load<Texture>(L"particle_glow", L"..\\Resources\\Texture\\Light\\particle_glow.png");
+        material = std::make_shared<Material>();
+        material->SetShader(particleLightShader);
+        material->SetTexture(particle_glow_particleLight);
+        ResourceManager::Insert(L"m_particle_glow_particleLight", material);
+
         std::shared_ptr<Texture> light_mask_linear = ResourceManager::Load<Texture>(L"light_mask_linear", L"..\\Resources\\Texture\\Light\\light_mask_linear.png");
         material = std::make_shared<Material>();
         material->SetShader(lightShader);
         material->SetTexture(light_mask_linear);
         ResourceManager::Insert(L"m_light_mask_linear", material);
+
+        std::shared_ptr<Texture> explosion_hole = ResourceManager::Load<Texture>(L"explosion_hole", L"..\\Resources\\Texture\\Light\\explosion_hole.png");
+        material = std::make_shared<Material>();
+        material->SetShader(lightShader);
+        material->SetTexture(explosion_hole);
+        ResourceManager::Insert(L"m_explosion_hole", material);
+
+        std::shared_ptr<Texture> explosion_stain = ResourceManager::Load<Texture>(L"explosion_stain", L"..\\Resources\\Texture\\Light\\explosion_stain.png");
+        material = std::make_shared<Material>();
+        material->SetShader(lightShader);
+        material->SetTexture(explosion_stain);
+        ResourceManager::Insert(L"m_explosion_stain", material);
+
+        std::shared_ptr<Texture> explosion_stain_particleLight = ResourceManager::Load<Texture>(L"explosion_stain", L"..\\Resources\\Texture\\Light\\explosion_stain.png");
+        material = std::make_shared<Material>();
+        material->SetShader(particleLightShader);
+        material->SetTexture(explosion_stain_particleLight);
+        ResourceManager::Insert(L"m_explosion_stain_particleLight", material);
     }
 
     void LoadParticleResource()

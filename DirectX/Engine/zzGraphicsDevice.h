@@ -21,6 +21,7 @@ namespace zz::graphics
 
         bool CreateSwapChain(const DXGI_SWAP_CHAIN_DESC* desc, HWND hWnd);
         bool CreateTexture(const D3D11_TEXTURE2D_DESC* desc, void* data);
+        bool CreateTexture2d(const D3D11_TEXTURE2D_DESC* pDesc, ID3D11Texture2D** ppTexture2D);
         bool CreateInputLayout(const D3D11_INPUT_ELEMENT_DESC* pInputElementDescs, UINT NumElements, ID3DBlob* byteCode, ID3D11InputLayout** ppInputLayout);
         bool CreateBuffer(ID3D11Buffer** buffer, D3D11_BUFFER_DESC* desc, D3D11_SUBRESOURCE_DATA* data);
         bool CreateSamplerState(const D3D11_SAMPLER_DESC* pSamplerDesc, ID3D11SamplerState** ppSamplerState);
@@ -29,7 +30,7 @@ namespace zz::graphics
         bool CreateBlendState(const D3D11_BLEND_DESC* pBlendStateDesc, ID3D11BlendState** ppBlendState);
         bool CreateShaderResourceView(ID3D11Resource* pResource, const D3D11_SHADER_RESOURCE_VIEW_DESC* pDesc, ID3D11ShaderResourceView** ppSRView);
         bool CreateRenderTargetView(ID3D11Resource* pResource, const D3D11_RENDER_TARGET_VIEW_DESC* pDesc, ID3D11RenderTargetView** ppRTView);
-        bool CreateUnordedAccessView(ID3D11Resource* pResource, const D3D11_UNORDERED_ACCESS_VIEW_DESC* pDesc, ID3D11UnorderedAccessView** ppUAView);
+        bool CreateUnorderedAccessView(ID3D11Resource* pResource, const D3D11_UNORDERED_ACCESS_VIEW_DESC* pDesc, ID3D11UnorderedAccessView** ppUAView);
 
         bool CompileFromfile(const std::wstring& fileName, const std::string& funcName, const std::string& version, ID3DBlob** ppCode);
         
@@ -67,10 +68,12 @@ namespace zz::graphics
         void CopyResource(ID3D11Resource* pDstResource, ID3D11Resource* pSrcResource);
 
         void CreateLightMap();
+        void CreateBloomRenderTarget();
 
         void DrawIndexed(UINT IndexCount, UINT StartIndexLocation, INT BaseVertexLocation);
         void DrawIndexedInstanced(UINT IndexCountPerInstance, UINT InstanceCount, UINT StartIndexLocation, INT BaseVertexLocation, UINT StartInstanceLocation);
         void SetLightMapRenderTarget();
+        void SetBloomRenderTarget();
         void ClearRenderTarget();
         void UpdateViewPort();
         void Draw();
@@ -82,6 +85,8 @@ namespace zz::graphics
         ID3D11DeviceContext* GetID3D11DeviceContext() { return mContext.Get(); }
         ID3D11ShaderResourceView* GetLightMapResource() { return mLightSRV.Get(); }
 
+        ID3D11ShaderResourceView* GetBloomResource() { return mBloomSRV.Get(); }
+        ID3D11Texture2D* GetBloomTexture() { return mBloomRenderTarget.Get(); }
 	private:
 		Microsoft::WRL::ComPtr<ID3D11Device> mDevice;
 		Microsoft::WRL::ComPtr<ID3D11DeviceContext> mContext;
@@ -95,7 +100,12 @@ namespace zz::graphics
         Microsoft::WRL::ComPtr<ID3D11RenderTargetView> mLightRenderTargetView;
         Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mLightSRV;
 
+        Microsoft::WRL::ComPtr<ID3D11Texture2D> mBloomRenderTarget;
+        Microsoft::WRL::ComPtr<ID3D11RenderTargetView> mBloomRenderTargetView;
+        Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mBloomSRV;
+
         D3D11_VIEWPORT mViewPort;
+        D3D11_VIEWPORT mBloomViewPort;
 	};
 
     inline GraphicsDevice*& GetDevice()

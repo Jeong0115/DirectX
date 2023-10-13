@@ -47,7 +47,7 @@ namespace zz
 
         Particle particles[15] = {};
         mParticle->CreateStructedBuffer(sizeof(Particle), 15, eViewType::UAV, particles, true, 0, 14, 0);
-        mParticle->CreateStructedBuffer(sizeof(ProjectileShared), 1, eViewType::UAV, nullptr, true, 1, 14, 1);
+        mParticle->CreateStructedBuffer(sizeof(ParticleShared), 1, eViewType::UAV, nullptr, true, 4, 14, 1);
     }
 
     Smoke_Orange::~Smoke_Orange()
@@ -79,11 +79,11 @@ namespace zz
     {
         Vector3 curPos = GetComponent<Transform>()->GetPosition();
 
-        ProjectileShared shareData = {};
+        ParticleShared shareData = {};
         shareData.curPosition = Vector4((int)curPos.x, (int)curPos.y, (int)curPos.z, 0.0f);
         shareData.distance = shareData.curPosition - mPrevPos;
         shareData.distance.z = 0;
-        shareData.color = Vector4(255.f / 255.f, 96.f / 255.f, 0.f / 255.f, 127.f / 255.f);
+        shareData.color_min = shareData.color_max = Vector4(255.f / 255.f, 96.f / 255.f, 0.f / 255.f, 127.f / 255.f);
         shareData.angle = GetComponent<Transform>()->GetRotation().z;
 
         UINT count = (UINT)std::max(fabs(shareData.distance.x), fabs(shareData.distance.y));

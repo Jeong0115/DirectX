@@ -62,8 +62,10 @@ namespace zz
         pxCollier->SetClimbY(3.0f);
 
         mRigid = AddComponent<RigidBody>();
+
+        mRigid->SetGravity(0.f);
         AddComponent<Collider>()->SetScale(6.0f, 10.f, 1.0f);
-        AddComponent<Light>()->SetLightScale(400.f, 400.f, 1.0f);
+        //AddComponent<Light>()->SetLightScale(600.f, 400.f, 1.0f);
 
         mAnimator = AddComponent<Animator>();
 

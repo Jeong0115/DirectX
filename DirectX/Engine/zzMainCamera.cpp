@@ -9,7 +9,8 @@
 #include "zzGraphicsDevice.h"
 #include "zzResourceManager.h"
 #include "zzApplication.h"
-
+#include "zzBloomManager.h"
+#include "zzExplosion_128.h"
 namespace zz
 {
     bool CompareZSort(GameObject* a, GameObject* b)
@@ -59,21 +60,23 @@ namespace zz
         RenderOpaque();
 
         DisableDepthStencilState();
-        RenderCutOut();
+        RenderCutOut();     
         RenderTransparent();
         EnableDepthStencilState();
 
         if (Application::LightDisabled) return;
 
         ResourceManager::Find<Mesh>(L"LightMesh")->BindBuffer();
-        ResourceManager::Find<Shader>(L"LightMapShader")->BindShaders();
-        ID3D11ShaderResourceView* srv = graphics::GetDevice()->GetLightMapResource();
+        ResourceManager::Find<Shader>(L"BloomShader")->BindShaders();
 
-        graphics::GetDevice()->BindShaderResource(eShaderStage::PS, 0, &srv);
-        graphics::GetDevice()->DrawIndexed(6, 0, 0);
 
-        ID3D11ShaderResourceView* srv2 = nullptr;
-        graphics::GetDevice()->BindShaderResource(eShaderStage::PS, 0, &srv2);
+        BloomManager::Render();
+        DisableDepthStencilState();
+        ResourceManager::Find<Mesh>(L"LightMesh")->BindBuffer();
+        ResourceManager::Find<Shader>(L"BloomShaderT")->BindShaders();
+        ResourceManager::Find<Texture>(L"light_mask")->BindShader(eShaderStage::PS, 2);
+        ResourceManager::Find<Mesh>(L"LightMesh")->Render();
+        
     }
 
 

@@ -18,6 +18,8 @@ namespace zz
         virtual void Binds();
         virtual void Clear();
 
+		void SetGroupCount(UINT x, UINT y, UINT z) { mGroupX = x; mGroupY = y; mGroupZ = z; }
+
     protected:
         Microsoft::WRL::ComPtr<ID3DBlob> mCSBlob;
         Microsoft::WRL::ComPtr<ID3D11ComputeShader> mCS;

@@ -13,6 +13,7 @@ namespace zz
         , mRotation(Vector3::Zero)
         , mScale(Vector3::One)
         , mParent(nullptr)
+        , mbRevolution(false)
     {
     }
 
@@ -33,14 +34,31 @@ namespace zz
         mWorld = Matrix::Identity;
 
         Matrix scale = Matrix::CreateScale(mScale);
-
         Matrix rotation;
-        rotation = Matrix::CreateRotationX(mRotation.x);    
-        rotation *= Matrix::CreateRotationY(mRotation.y);
-        rotation *= Matrix::CreateRotationZ(mRotation.z);
 
-        Matrix position = Matrix::CreateTranslation(mPosition);
-        mWorld = scale * rotation * position;
+        if (mbRevolution)
+        {
+            //Matrix translateToOrbitCenter = Matrix::CreateTranslation(-mParent->mPosition);
+             Matrix translateToOrbitCenter = Matrix::CreateTranslation(-mOrbitCenter);
+            rotation = Matrix::CreateRotationX(mRotation.x);
+            rotation *= Matrix::CreateRotationY(mRotation.y);
+            rotation *= Matrix::CreateRotationZ(mRotation.z);
+
+            Matrix translateBackFromOrbitCenter = Matrix::CreateTranslation(mOrbitCenter);
+
+            Matrix position = Matrix::CreateTranslation(mPosition);
+
+            mWorld = scale * translateToOrbitCenter * rotation * translateBackFromOrbitCenter * position;
+        }
+        else
+        {
+            rotation = Matrix::CreateRotationX(mRotation.x);
+            rotation *= Matrix::CreateRotationY(mRotation.y);
+            rotation *= Matrix::CreateRotationZ(mRotation.z);
+
+            Matrix position = Matrix::CreateTranslation(mPosition);
+            mWorld = scale * rotation * position;
+        }
 
         mUp = Vector3::TransformNormal(Vector3::Up, rotation);
         mFoward = Vector3::TransformNormal(Vector3::Forward, rotation);

@@ -47,7 +47,7 @@ namespace zz
         {
             D3D11_SUBRESOURCE_DATA sub = {};
             sub.pSysMem = data;
-
+           
             if (!(GetDevice()->CreateBuffer(buffer.GetAddressOf(), &desc, &sub)))
                 return false;
         }
@@ -70,7 +70,7 @@ namespace zz
             uavDesc.Buffer.NumElements = mStride;
             uavDesc.ViewDimension = D3D11_UAV_DIMENSION_BUFFER;
 
-            if (!GetDevice()->CreateUnordedAccessView(buffer.Get(), &uavDesc, mUAV.GetAddressOf()))
+            if (!GetDevice()->CreateUnorderedAccessView(buffer.Get(), &uavDesc, mUAV.GetAddressOf()))
                 return false;
         }
 

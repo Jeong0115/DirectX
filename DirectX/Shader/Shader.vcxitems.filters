@@ -16,6 +16,12 @@
     <Filter Include="Light">
       <UniqueIdentifier>{0011c631-ca96-403c-aff2-9d75d2009e1c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Makecircle">
+      <UniqueIdentifier>{891c0a10-3701-45fe-88c9-bc697964c89f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Bloom">
+      <UniqueIdentifier>{9984232a-2549-4376-9a58-2292e8d70b7a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="$(MSBuildThisFileDirectory)DebugVS.hlsl">
@@ -49,9 +55,6 @@
       <Filter>ParticleAnimation</Filter>
     </FxCompile>
     <FxCompile Include="$(MSBuildThisFileDirectory)ParticlePS.hlsl">
-      <Filter>Particle</Filter>
-    </FxCompile>
-    <FxCompile Include="$(MSBuildThisFileDirectory)ParticleGS.hlsl">
       <Filter>Particle</Filter>
     </FxCompile>
     <FxCompile Include="$(MSBuildThisFileDirectory)ParticleVS.hlsl">
@@ -96,12 +99,48 @@
     <FxCompile Include="$(MSBuildThisFileDirectory)ParticleCircleCS.hlsl">
       <Filter>Particle</Filter>
     </FxCompile>
+    <FxCompile Include="$(MSBuildThisFileDirectory)ParticleMakeCircleCS.hlsl">
+      <Filter>Makecircle</Filter>
+    </FxCompile>
+    <FxCompile Include="$(MSBuildThisFileDirectory)ParticleMakeCircleVS.hlsl">
+      <Filter>Makecircle</Filter>
+    </FxCompile>
+    <FxCompile Include="$(MSBuildThisFileDirectory)ParticleGS.hlsl">
+      <Filter>Particle</Filter>
+    </FxCompile>
+    <FxCompile Include="$(MSBuildThisFileDirectory)ParticleMakeCircleGS.hlsl">
+      <Filter>Makecircle</Filter>
+    </FxCompile>
+    <FxCompile Include="$(MSBuildThisFileDirectory)ParticleLightVS.hlsl">
+      <Filter>Light</Filter>
+    </FxCompile>
+    <FxCompile Include="$(MSBuildThisFileDirectory)ParticleLightGS.hlsl">
+      <Filter>Light</Filter>
+    </FxCompile>
+    <FxCompile Include="$(MSBuildThisFileDirectory)ParticleLightPS.hlsl">
+      <Filter>Light</Filter>
+    </FxCompile>
+    <FxCompile Include="$(MSBuildThisFileDirectory)BloomHorizonCS.hlsl">
+      <Filter>Bloom</Filter>
+    </FxCompile>
+    <FxCompile Include="$(MSBuildThisFileDirectory)BloomVerticalCS.hlsl">
+      <Filter>Bloom</Filter>
+    </FxCompile>
+    <FxCompile Include="$(MSBuildThisFileDirectory)BloomExtractionCS.hlsl">
+      <Filter>Bloom</Filter>
+    </FxCompile>
+    <FxCompile Include="$(MSBuildThisFileDirectory)BloomPS.hlsl">
+      <Filter>Light</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)Common.hlsli" />
     <None Include="$(MSBuildThisFileDirectory)Particle.hlsli" />
     <None Include="$(MSBuildThisFileDirectory)LightMapVS.hlsl">
       <Filter>Light</Filter>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)Bloom.hlsli">
+      <Filter>Bloom</Filter>
     </None>
   </ItemGroup>
 </Project>

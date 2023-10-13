@@ -25,10 +25,10 @@ void main(uint3 DTid : SV_DispatchThreadID)
             ParticleBuffer[DTid.x] = particle;
         }
     }
-    else if (SineParticleSharedBuffer[0].activeCount > 0)
+    else if (ParticleSharedBuffer[0].activeCount > 0)
     {
         int count;
-        InterlockedAdd(SineParticleSharedBuffer[0].activeCount, -1, count);
+        InterlockedAdd(ParticleSharedBuffer[0].activeCount, -1, count);
         
         if (count > 0)
         {
@@ -44,7 +44,7 @@ void main(uint3 DTid : SV_DispatchThreadID)
                 , GaussianBlur(uv + float2(0.3f, 0.f)).x
 
             );
-            SineParticleShared sharedBuffer = SineParticleSharedBuffer[0];
+            ParticleShared sharedBuffer = ParticleSharedBuffer[0];
             
             int index = sharedBuffer.index - count;
             float angle = sharedBuffer.angle;

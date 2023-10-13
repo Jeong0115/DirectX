@@ -19,6 +19,8 @@
 #include "zzCollisionManger.h"
 #include "zzTeleport.h"
 
+#include "zzCentipede.h"
+
 namespace zz
 {
     GameObject* camera;
@@ -31,32 +33,10 @@ namespace zz
     {
     }
 
-    void PlayScene::MakeBG(std::wstring material, Vector3 scale, Vector3 pos, float moveSpeed, float parallaxScale)
-    {
-        for (int i = 0; i < 2; i++)
-        {
-            GameObject* bg = new GameObject();
-            AddGameObject(bg, eLayerType::BG);
-
-            MeshRenderer* meshRenderer = bg->AddComponent<MeshRenderer>();
-            meshRenderer->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
-            meshRenderer->SetMaterial(ResourceManager::Find<Material>(material));
-
-            Transform* tr = bg->GetComponent<Transform>();
-            tr->SetScale(scale);
-            tr->SetPosition(Vector3(pos.x + scale.x * i, pos.y, pos.z));
-
-            BGScript* script = bg->AddComponent<BGScript>();
-            script->SetCamera(camera);
-            script->SetMoveSpeed(moveSpeed);
-            script->SetParallaxScale(parallaxScale);
-        }
-    }
-
     void PlayScene::Initialize()
     {
         CollisionManger::SetCollision(eLayerType::Monster, eLayerType::PlayerAttack, true);
-        CollisionManger::SetCollision(eLayerType::Object, eLayerType::Player, true);
+       // CollisionManger::SetCollision(eLayerType::Object, eLayerType::Player, true);
 
         camera = new GameObject();
         AddGameObject(camera, eLayerType::Camera);
@@ -112,7 +92,7 @@ namespace zz
             {
                 GameObject* bg = new GameObject();
                 AddGameObject(bg, eLayerType::PixelWorld);
-                bg->GetComponent<Transform>()->SetPosition(Vector3(-48.f - (x * 96.f), -48.f - (y * 96.f), 1.0f));
+                bg->GetComponent<Transform>()->SetPosition(Vector3(-48.f - (x * 96.f), -48.f - (y * 96.f), 0.999f));
                 bg->GetComponent<Transform>()->SetScale(Vector3(96.f, 96.f, 1.0f));
                 MeshRenderer* bgmesh = bg->AddComponent<MeshRenderer>();
                 bgmesh->SetMaterial(ResourceManager::Find<Material>(L"m_rock_hard_alt"));
@@ -155,7 +135,7 @@ namespace zz
         {
             GameObject* bg = new GameObject();
             AddGameObject(bg, eLayerType::PixelWorld);
-            bg->GetComponent<Transform>()->SetPosition(Vector3(480.f, 96.f, 1.0f));
+            bg->GetComponent<Transform>()->SetPosition(Vector3(480.f, 96.f, 0.999f));
             bg->GetComponent<Transform>()->SetScale(Vector3(960.f, 192.f, 1.0f));
             MeshRenderer* bgmesh = bg->AddComponent<MeshRenderer>();
             bgmesh->SetMaterial(material);
@@ -175,10 +155,12 @@ namespace zz
             bgmesh->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
         }
 
-        Teleport* teleport = new Teleport();
-        teleport->GetComponent<Transform>()->SetPosition(256.f, -1747.f - 86.f, 0.00f);
-        CreateObject(teleport, eLayerType::Object);
-
+        for(int i=0; i<3; i++)
+        {
+            Teleport* teleport = new Teleport();
+            teleport->GetComponent<Transform>()->SetPosition(256.f + 512.f * i, -1747.f - 86.f, 0.00f);
+            CreateObject(teleport, eLayerType::Object);
+        }
 
         {
             ShotGunner_Weak* object = new ShotGunner_Weak();
@@ -186,22 +168,18 @@ namespace zz
             object->GetComponent<Transform>()->SetPosition(Vector3(1536.f / 2.f, -30.f, 0.2f));
         }
 
+        Centipede* boss = new Centipede();
+        AddGameObject(boss, eLayerType::Monster);
+        boss->GetComponent<Transform>()->SetPosition(100.f, -100.f, 0.2f);
+
         Scene::Initialize();
         {
             Player* player;
             player = new Player();
             AddGameObject(player, eLayerType::Player);
-            player->GetComponent<Transform>()->SetPosition(Vector3(1536.f / 2.f, -10.f, 0.200f));
+            player->GetComponent<Transform>()->SetPosition(Vector3(200.f / 2.f, -10.f, 0.200f));
             player->GetComponent<Transform>()->SetScale(Vector3(12.f, 19.f, 1.0f));
             //player->SetCamera(camera);
-            //player->AddComponent<ParticleSystem>();
-
-
-            //GameObject* aa = new GameObject();;
-            //AddGameObject(aa, eLayerType::Player);
-            //aa->GetComponent<Transform>()->SetPosition(Vector3(0.f, 0.f, 0.000f));
-            //aa->GetComponent<Transform>()->SetScale(Vector3(12.f, 12.f, 1.0f));
-            //aa->AddComponent<ParticleSystem>();
 
             PlayerArm* player_arm = new PlayerArm();
 
@@ -220,7 +198,6 @@ namespace zz
 
     void PlayScene::Update()
     {
-
         Scene::Update();
     }
 

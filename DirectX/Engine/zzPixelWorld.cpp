@@ -48,6 +48,7 @@ namespace zz
 
     void PixelWorld::Initialize()
     {
+      
         InitializeElement();
         for (int i = 0; i <= 3; i++)
         {
@@ -57,6 +58,16 @@ namespace zz
             }
         }
 
+        for (int i = 0; i < 5; i++)
+        {
+            for (int j = 0; j < 500; j++)
+            {
+                Element a = ROCK;
+                a.Type = eElementType::LIQUID;
+
+                InsertElement(j, i*100,a);
+            }
+        }
         mElementMap.insert({ 'w', WATER });
         mElementMap.insert({ 'o', OIL });
         mElementMap.insert({ 's', SAND });
@@ -66,7 +77,7 @@ namespace zz
         mElementMap.insert({ 'g', SMOKE });
         mElementMap.insert({ 'e', EMPTY });
         mSelectElement = mElementMap.find('e')->second;
-
+        return;
         loadMaterialImage();
         CreateNewWorld();
         Box2dWorld::Initialize();
@@ -840,27 +851,36 @@ namespace zz
 
         for (int i = 1747; i < 2047; i++)
         {
-
             for (int cnt = 0; cnt < 3; cnt++)
             {
                 for (int j = 0; j < 512; j++)
                 {
-
                     uint32_t color = Vec3bToColor(material_image.at<cv::Vec3b>(i - 1747, j));
                     if (color == 0xFF786C42)
                     {
                         cv::Vec4b visual_color = visual_image.at<cv::Vec4b>(i - 1747, j);
+                        
+                        if (visual_color[3] == 0)
+                        {
+                            Element element = ROCK;
+                            element.Color = getMaterialColor(L"templebrick");
+                            
+                            InsertElement(j + cnt * 512, i, element);
+                        }
+                        else
+                        {
+                            getMaterialColor(L"templebrick");
+                            uint32_t converted_color =
+                                (visual_color[3] << 24) |
+                                (visual_color[2] << 16) |
+                                (visual_color[1] << 8) |
+                                (visual_color[0]);
 
-                        uint32_t converted_color =
-                            (visual_color[3] << 24) |
-                            (visual_color[2] << 16) |
-                            (visual_color[1] << 8) |
-                            (visual_color[0]);
+                            Element element = ROCK;
+                            element.Color = converted_color;
 
-                        Element element = ROCK;
-                        element.Color = converted_color;
-
-                        InsertElement(j + cnt * 512, i, element);
+                            InsertElement(j + cnt * 512, i, element);
+                        }
                     }
                     else
                     {
@@ -2138,8 +2158,23 @@ namespace zz
         auto iter = mMaterialImages.find(material_name);
         auto image = iter->second;
 
-        cv::Vec4b color = image->image.at<cv::Vec4b>(image->indexY, image->indexX++);
-        uint32_t converted_color = Vec4bToColor(color);
+       
+        uint32_t converted_color;
+
+        if (image->imageBits == 24)
+        {
+            cv::Vec3b color = image->image.at<cv::Vec3b>(image->indexY, image->indexX++);
+
+            converted_color = 0xFF000000;
+            converted_color |= (color[2] << 16);
+            converted_color |= (color[1] << 8);
+            converted_color |= color[0];          
+        }
+        else
+        {
+            cv::Vec4b color = image->image.at<cv::Vec4b>(image->indexY, image->indexX++);
+            converted_color = Vec4bToColor(color);
+        }
 
         if (image->indexX >= image->width)
         {
@@ -2164,6 +2199,7 @@ namespace zz
             image->height = image->image.rows;
             image->indexX = 0;
             image->indexY = 0;
+            image->imageBits = 32;
 
             mMaterialImages.insert({ L"rock", image });
         }
@@ -2175,6 +2211,7 @@ namespace zz
             image->height = image->image.rows;
             image->indexX = 0;
             image->indexY = 0;
+            image->imageBits = 32;
 
             mMaterialImages.insert({ L"earth", image });
         }
@@ -2186,6 +2223,7 @@ namespace zz
             image->height = image->image.rows;
             image->indexX = 0;
             image->indexY = 0;
+            image->imageBits = 32;
 
             mMaterialImages.insert({ L"grass", image });
         }
@@ -2197,6 +2235,7 @@ namespace zz
             image->height = image->image.rows;
             image->indexX = 0;
             image->indexY = 0;
+            image->imageBits = 32;
 
             mMaterialImages.insert({ L"rock_alt2", image });
         }
@@ -2208,6 +2247,7 @@ namespace zz
             image->height = image->image.rows;
             image->indexX = 0;
             image->indexY = 0;
+            image->imageBits = 32;
 
             mMaterialImages.insert({ L"coal", image });
         }
@@ -2219,6 +2259,7 @@ namespace zz
             image->height = image->image.rows;
             image->indexX = 0;
             image->indexY = 0;
+            image->imageBits = 32;
 
             mMaterialImages.insert({ L"gunpowder_tnt", image });
         }
@@ -2230,8 +2271,21 @@ namespace zz
             image->height = image->image.rows;
             image->indexX = 0;
             image->indexY = 0;
+            image->imageBits = 24;
 
             mMaterialImages.insert({ L"rock_radioactive", image });
+        }
+        {
+            MaterialImage* image = new MaterialImage();
+
+            image->image = cv::imread("..\\Resources\\Texture\\Material\\templebrick.png", cv::IMREAD_UNCHANGED);
+            image->width = image->image.cols;
+            image->height = image->image.rows;
+            image->indexX = 0;
+            image->indexY = 0;
+            image->imageBits = 24;
+
+            mMaterialImages.insert({ L"templebrick", image });
         }
     }
 

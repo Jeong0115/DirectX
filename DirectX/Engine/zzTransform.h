@@ -26,6 +26,7 @@ namespace zz
 
         void SetRotation(Vector3 rotation)  { mRotation = rotation; }
         void SetRotationZ(float z) { mRotation.z = z; }
+        void ShiftRotationZ(float z) { mRotation.z += z; }
 
         void SetScale(Vector3 scale)        { mScale = scale; }
 
@@ -34,6 +35,7 @@ namespace zz
         void SetScale(float x, float y, float z)    { mScale = Vector3(x, y, z); }
 
         void SetPositionXFlip() { mPosition.x *= -1; }
+        void SetRevolution(Vector3 center) { mOrbitCenter = center; mbRevolution = true; }
 
         Vector3 GetPosition()   { return mPosition; }
         Vector3 GetRotation()   { return mRotation; }
@@ -64,6 +66,9 @@ namespace zz
         Matrix  mWorld;
 
         Transform* mParent;
+
+        Vector3 mOrbitCenter;
+        bool mbRevolution;
     };
 }
 

@@ -24,9 +24,6 @@ namespace zz
 
     private:
         class RigidBody* mRigid;
-
-        float   mSpeed;
-        Vector3 mDirection;
     };
 }
 

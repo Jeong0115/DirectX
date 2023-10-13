@@ -83,8 +83,10 @@ namespace zz
     {
         Default,
         AlphaBlend,
-        OneOne,
-        Light,
+        Add,
+        MaxRgbAddAlpha,
+        Max,
+        InsertBloom,
         End,
     };
 
@@ -128,27 +130,14 @@ namespace zz
         math::Vector4 position;
         math::Vector4 scale;
         math::Vector4 color;
+        math::Vector4 lightScale;
 
         math::Vector2 velocity;
 
         float lifeTime;
+        float startTime;
 
         UINT active;
-    };
-
-    struct ProjectileShared
-    {
-        math::Vector4 curPosition;
-        math::Vector4 distance;
-        math::Vector4 color;
-
-        math::Vector2 randLifeTime;
-
-        float index;
-        float angle;
-
-        UINT activeCount;
-        UINT totalActiveCount;
     };
 
     struct ParticleAnimation
@@ -180,22 +169,10 @@ namespace zz
     {
         math::Vector4 curPosition;
         math::Vector4 scale;
-        math::Vector4 color;
-
-        math::Vector2 randPositionMin;
-        math::Vector2 randPositionMax;
-        math::Vector2 randVelocityMin;
-        math::Vector2 randVelocityMax;
-        math::Vector2 randLifeTime;
-
-        UINT activeCount;
-    };
-
-    struct SineParticleShared
-    {
-        math::Vector4 curPosition;
-        math::Vector4 scale;
-        math::Vector4 color;    
+        math::Vector4 color_min;
+        math::Vector4 color_max;
+		math::Vector4 lightScale;
+        math::Vector4 distance;
 
         math::Vector2 randPositionMin;
         math::Vector2 randPositionMax;
@@ -207,7 +184,9 @@ namespace zz
         float index;
 
         UINT activeCount;
+        UINT totalActiveCount;
     };
+
 
     struct ParticleCircleShared
     {
@@ -228,4 +207,26 @@ namespace zz
 
         bool create;
     };
+
+    struct ParticleMakeCircleShared
+    {
+        math::Vector4 curPosition;
+        math::Vector4 scale;
+        math::Vector4 color_min;
+        math::Vector4 color_max;
+        math::Vector4 lightScale;
+
+        math::Vector2 randVelocityMin;
+        math::Vector2 randVelocityMax;
+        math::Vector2 randLifeTime;
+
+        float radius;
+        float createRate;
+        float createTime;
+
+        int particleCnt;
+
+        bool create;
+    };
+
 }

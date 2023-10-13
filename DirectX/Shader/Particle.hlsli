@@ -4,28 +4,16 @@ struct Particle
     float4 position;
     float4 scale;
     float4 color;
+    float4 lightScale;
     
     float2 velocity;
     
     float lifeTime;
+    float startTime;
     
     uint active;
 };
 
-struct ProjectileShared
-{
-    float4 curPosition;
-    float4 distance;
-    float4 color;
-    
-    float2 randLifeTime;
-    
-    float index;
-    float angle;
-    
-    uint activeCount;
-    uint totalActiveCount;
-};
 
 struct ParticleAnimation
 {
@@ -57,21 +45,9 @@ struct ParticleShared
     float4 curPosition;
     float4 scale;
     float4 color;
-    
-    float2 randPositionMin;
-    float2 randPositionMax;
-    float2 randVelocityMin;
-    float2 randVelocityMax;
-    float2 randLifeTime;
-    
-    uint activeCount;
-};
-
-struct SineParticleShared
-{
-    float4 curPosition;
-    float4 scale;
-    float4 color;
+    float4 color_max;
+    float4 lightScale;
+    float4 distance;
     
     float2 randPositionMin;
     float2 randPositionMax;
@@ -83,7 +59,9 @@ struct SineParticleShared
     float index;
     
     uint activeCount;
+    uint totalActiveCount;
 };
+
 
 struct ParticleCircleShared
 {
@@ -105,13 +83,35 @@ struct ParticleCircleShared
     bool create;
 };
 
+struct ParticleMakeCircleShared
+{
+    float4 curPosition;
+    float4 scale;
+    float4 color_min;
+    float4 color_max;
+    float4 lightScale;
+    
+    float2 randVelocityMin;
+    float2 randVelocityMax;
+    
+    float2 randLifeTime;
+    
+    float radius;
+    float createRate;
+    float createTime;
+    
+    int particleCnt;
+
+    
+    bool create;
+};
+
 RWStructuredBuffer<Particle> ParticleBuffer : register(u0);
-RWStructuredBuffer<ProjectileShared> ProjectileSharedBuffer : register(u1);
 RWStructuredBuffer<ParticleAnimation> ParticleAnimationBuffer : register(u2);
 RWStructuredBuffer<AnimationShared> AnimationSharedBuffer : register(u3);
 RWStructuredBuffer<ParticleShared> ParticleSharedBuffer : register(u4);
-RWStructuredBuffer<SineParticleShared> SineParticleSharedBuffer : register(u5);
 RWStructuredBuffer<ParticleCircleShared> ParticleCircleSharedBuffer : register(u6);
+RWStructuredBuffer<ParticleMakeCircleShared> MakeCircleSharedBuffer : register(u7);
 
 StructuredBuffer<Particle> particles : register(t14);
 StructuredBuffer<ParticleAnimation> particlesAnimation : register(t15);

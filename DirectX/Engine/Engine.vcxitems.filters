@@ -436,6 +436,54 @@
     <Filter Include="GameObject\MonsterAttack\FireBall_Small">
       <UniqueIdentifier>{8d65700e-ebda-45af-a70e-03d86af278c3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameObject\Centipede">
+      <UniqueIdentifier>{1ddfe771-16a4-4e71-abcd-30b5a6285745}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Centipede\Body">
+      <UniqueIdentifier>{1adf72b6-3f0e-405c-b2db-2b3b3896bc2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Centipede\Limp">
+      <UniqueIdentifier>{d88f655f-4687-46aa-82cc-c9293dcb0a9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Centipede\Limp\LimbA">
+      <UniqueIdentifier>{7c92d6c1-de60-4f26-89ea-048920b3d4bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Centipede\Limp\LimbB">
+      <UniqueIdentifier>{fdc1c6d3-71d5-4728-86f9-e31fc08fca5d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Centipede\Limp\LimbKnee">
+      <UniqueIdentifier>{1a4c1350-82d9-4c7b-9e1c-2c0ea7700420}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Centipede\Tail">
+      <UniqueIdentifier>{fa3393e6-5234-4364-a5e3-34f48148a239}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Centipede\Tail\Tail1">
+      <UniqueIdentifier>{64c29384-aa33-4b5e-92b7-2dbcc4cda297}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Centipede\Tail\Tail2">
+      <UniqueIdentifier>{2cee3ced-085c-47d5-9994-e4502bcbcf61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Centipede\Attack">
+      <UniqueIdentifier>{1a241812-9396-49c2-9305-81941869b854}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Centipede\Attack\OrbPink">
+      <UniqueIdentifier>{5f9a5494-6df2-4e13-a730-2ebc5539ab73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Centipede\Attack\Grenade">
+      <UniqueIdentifier>{16dbe71b-9ecb-49fc-96dc-045ac9503f76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Centipede\Attack\CentipedeParticle">
+      <UniqueIdentifier>{4bbe9837-8fd2-497e-9d10-a1b248a0e65d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Centipede\Attack\NewFilter1">
+      <UniqueIdentifier>{91696afb-385a-4444-8475-5eabeb6ee57b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Manager\BloomManager">
+      <UniqueIdentifier>{313810dc-b606-41de-b53e-51baba7dc5e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Texture2D">
+      <UniqueIdentifier>{a76ad5f0-b25c-4bb9-9784-ca67379b2a5c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzEntity.cpp">
@@ -799,6 +847,39 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)zzFireBall_Small.cpp">
       <Filter>GameObject\MonsterAttack\FireBall_Small</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzLimbKnee.cpp">
+      <Filter>GameObject\Centipede\Limp\LimbKnee</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzLimbB.cpp">
+      <Filter>GameObject\Centipede\Limp\LimbB</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzLimbA.cpp">
+      <Filter>GameObject\Centipede\Limp\LimbA</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzCentipede.cpp">
+      <Filter>GameObject\Centipede\Body</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzTail1.cpp">
+      <Filter>GameObject\Centipede\Tail\Tail1</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzTail2.cpp">
+      <Filter>GameObject\Centipede\Tail\Tail2</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzOrbPink.cpp">
+      <Filter>GameObject\Centipede\Attack\OrbPink</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzGrenade.cpp">
+      <Filter>GameObject\Centipede\Attack\Grenade</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzCentipedeParticle.cpp">
+      <Filter>GameObject\Centipede\Attack\CentipedeParticle</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzBloomManager.cpp">
+      <Filter>Manager\BloomManager</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzTexture2D.cpp">
+      <Filter>Graphics\Texture2D</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzEntity.h">
@@ -1065,9 +1146,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzObjectPoolManager.h">
       <Filter>Manager\ObjectPoolManager</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)zzShotGunner_Weak.h">
-      <Filter>GameObject\Monster\ShotGunner_Weak</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzPixelCollider.h">
       <Filter>Component\PixelCollider</Filter>
     </ClInclude>
@@ -1188,6 +1266,42 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzFireBall_Small.h">
       <Filter>GameObject\MonsterAttack\FireBall_Small</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzLimbKnee.h">
+      <Filter>GameObject\Centipede\Limp\LimbKnee</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzLimbB.h">
+      <Filter>GameObject\Centipede\Limp\LimbB</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzLimbA.h">
+      <Filter>GameObject\Centipede\Limp\LimbA</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzCentipede.h">
+      <Filter>GameObject\Centipede\Body</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzShotGunner_Weak.h">
+      <Filter>GameObject\Monster\ShotGunner_Weak</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzTail1.h">
+      <Filter>GameObject\Centipede\Tail\Tail1</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzTail2.h">
+      <Filter>GameObject\Centipede\Tail\Tail2</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzOrbPink.h">
+      <Filter>GameObject\Centipede\Attack\OrbPink</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzGrenade.h">
+      <Filter>GameObject\Centipede\Attack\Grenade</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzCentipedeParticle.h">
+      <Filter>GameObject\Centipede\Attack\CentipedeParticle</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzBloomManager.h">
+      <Filter>Manager\BloomManager</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzTexture2D.h">
+      <Filter>Graphics\Texture2D</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

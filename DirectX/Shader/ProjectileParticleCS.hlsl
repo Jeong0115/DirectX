@@ -24,34 +24,32 @@ void main(uint3 DTid : SV_DispatchThreadID)
             ParticleBuffer[DTid.x] = particle;
         }
     }
-    else if (ProjectileSharedBuffer[0].activeCount > 0)
+    else if (ParticleSharedBuffer[0].activeCount > 0)
     {
         int count;
-        InterlockedAdd(ProjectileSharedBuffer[0].activeCount, -1, count);
+        InterlockedAdd(ParticleSharedBuffer[0].activeCount, -1, count);
         
         if (count > 0)
         {
             float2 uv = float2((float) DTid.x / elementCount, 0.5f);
-            uv.x += deltaTime * 154.216f;
+            uv.x += deltaTime * 154.216f * count;
             uv.y += sin((uv.x + deltaTime * 126.276f) * 3.141592f + 2.f * 10.f) * 0.5f;
             
             float4 random = float4
             (
-                  GaussianBlur(uv + float2(0.f, 0.f)).x
+                  GaussianBlur(uv + float2(0.0f, 0.f)).x
                 , GaussianBlur(uv + float2(0.1f, 0.f)).x
                 , GaussianBlur(uv + float2(0.2f, 0.f)).x
                 , GaussianBlur(uv + float2(0.3f, 0.f)).x
 
             );
-            ProjectileShared projectile = ProjectileSharedBuffer[0];
+            ParticleShared projectile = ParticleSharedBuffer[0];
             
             particle.position = projectile.curPosition - (projectile.distance * ((float) count / projectile.totalActiveCount));
             
-            int index = projectile.index + projectile.totalActiveCount - count;
-             
-            
-            particle.lifeTime = (projectile.randLifeTime.y - projectile.randLifeTime.x) * random.x + projectile.randLifeTime.x;
-            
+            int index = projectile.index + projectile.totalActiveCount - count;            
+
+            particle.lifeTime = (projectile.randLifeTime.y - projectile.randLifeTime.x) * random.x + projectile.randLifeTime.x;           
             particle.color = projectile.color;
             particle.active = 1;
             particle.scale = float4(1.0f, 1.0f, 1.0f, 0.0f);

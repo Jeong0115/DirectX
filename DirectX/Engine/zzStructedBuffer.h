@@ -30,6 +30,7 @@ namespace zz
 
         Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mSRV;
         Microsoft::WRL::ComPtr<ID3D11UnorderedAccessView> mUAV;
+
         eViewType mType;
 
         UINT mSize;
