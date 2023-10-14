@@ -18,6 +18,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)zzBloomManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzBomb.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzBomb_UI.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzBossArenaScene.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzBox2dCollider.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzBullet.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzCentipede.cpp" />
@@ -35,6 +36,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)zzMonsterAttack.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzMuzzleEffect.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzOpeningScene.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzOrbBlue.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzOrbPink.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzSpeedUp_UI.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzDetectPlayer.cpp" />
@@ -159,6 +161,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzBloomManager.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzBomb.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzBomb_UI.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzBossArenaScene.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzBox2dCollider.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzBullet.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzCentipede.h" />
@@ -176,6 +179,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzMonsterAttack.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzMuzzleEffect.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzOpeningScene.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzOrbBlue.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzOrbPink.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzSpeedUp_UI.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzDetectPlayer.h" />

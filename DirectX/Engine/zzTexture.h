@@ -44,8 +44,11 @@ namespace zz
     class PixelTexture : public Texture
     {
     public:
-        PixelTexture();
+        PixelTexture(int width, int heigh);
         virtual ~PixelTexture();
         virtual void BindShader(eShaderStage stage, UINT startSlot) override;
+
+    private:
+        int mWidth;
     };
 }

@@ -87,13 +87,14 @@ namespace zz
     }
 
 
-    PixelTexture::PixelTexture()
+    PixelTexture::PixelTexture(int width, int heigh)
     {
+        mWidth = width;
         std::vector<uint32_t>& pixelTexture = PixelWorld::GetPixelColor();
 
         TexMetadata metadata;
-        metadata.width = 1536;
-        metadata.height = 2048;
+        metadata.width = width;
+        metadata.height = heigh;
         metadata.depth = 1;
         metadata.arraySize = 1;
         metadata.mipLevels = 1;
@@ -103,8 +104,8 @@ namespace zz
         HRESULT hr2 = mImage.Initialize(metadata, CP_FLAGS_NONE);
 
         Image image;
-        image.width = 1536;
-        image.height = 2048;
+        image.width = width;
+        image.height = heigh;
         image.format = DXGI_FORMAT_B8G8R8A8_UNORM;
         image.rowPitch = image.width * sizeof(uint32_t);  // for DXGI_FORMAT_R8G8B8A8_UNORM
         image.slicePitch = image.rowPitch * image.height;
@@ -130,7 +131,7 @@ namespace zz
     void PixelTexture::BindShader(eShaderStage stage, UINT startSlot)
     {
         std::vector<uint32_t>& pixelTexture = PixelWorld::GetPixelColor();
-        zz::graphics::GetDevice()->UpdateSubresource(mTexture.Get(), pixelTexture.data());
+        zz::graphics::GetDevice()->UpdateSubresource(mTexture.Get(), pixelTexture.data(), mWidth);
         Texture::BindShader(stage, startSlot);
     }
 }

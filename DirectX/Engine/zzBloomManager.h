@@ -14,6 +14,8 @@ namespace zz
         static void Initialize();
         static void Update();
         static void Render();
+        static void Release();
+
         static void SetComputeShader(std::shared_ptr<ComputeShader> shader, int type);
     private:
 

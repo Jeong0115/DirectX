@@ -70,6 +70,7 @@ void main(uint3 DTid : SV_DispatchThreadID)
             particle.lifeTime = (sharedBuffer.randLifeTime.y - sharedBuffer.randLifeTime.x) * random.w + sharedBuffer.randLifeTime.x;
             
             particle.position = sharedBuffer.curPosition + float4(position.xy + offsetPosition.xy, 0.0f, 0.0f);
+            particle.lightScale = sharedBuffer.lightScale;
             particle.color = sharedBuffer.color;
             particle.scale = sharedBuffer.scale;
             particle.active = 1;

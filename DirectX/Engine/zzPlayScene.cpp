@@ -18,6 +18,7 @@
 #include "zzShotGunner_Weak.h"
 #include "zzCollisionManger.h"
 #include "zzTeleport.h"
+#include "zzPixelWorld.h"
 
 #include "zzCentipede.h"
 
@@ -36,7 +37,7 @@ namespace zz
     void PlayScene::Initialize()
     {
         CollisionManger::SetCollision(eLayerType::Monster, eLayerType::PlayerAttack, true);
-       // CollisionManger::SetCollision(eLayerType::Object, eLayerType::Player, true);
+        CollisionManger::SetCollision(eLayerType::Object, eLayerType::Player, true);
 
         camera = new GameObject();
         AddGameObject(camera, eLayerType::Camera);
@@ -63,13 +64,16 @@ namespace zz
         float x = 256;
         float y = -256;
 
+        std::shared_ptr<Texture> pxTex = std::make_shared<PixelTexture>(PixelWorld::mWorldWidth, PixelWorld::mWorldHeight);
+        std::shared_ptr<Material> mat = ResourceManager::Find<Material>(L"m_PixelTexture");
+        mat->SetTexture(pxTex);
 
         GameObject* object = new GameObject();
         AddGameObject(object, eLayerType::PixelWorld);
         object->GetComponent<Transform>()->SetPosition(Vector3(x + 768 - 256, y - 1024 + 256, PIXEL_WORLD_Z));
         object->GetComponent<Transform>()->SetScale(Vector3(1536.f, 2048.f, 1.0f));
         MeshRenderer* mesh = object->AddComponent<MeshRenderer>();
-        mesh->SetMaterial(ResourceManager::Find<Material>(L"m_PixelTexture"));
+        mesh->SetMaterial(mat);
         mesh->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
 
         for (int y = 0; y < 8; y++)
@@ -158,7 +162,8 @@ namespace zz
         for(int i=0; i<3; i++)
         {
             Teleport* teleport = new Teleport();
-            teleport->GetComponent<Transform>()->SetPosition(256.f + 512.f * i, -1747.f - 86.f, 0.00f);
+            //teleport->GetComponent<Transform>()->SetPosition(256.f + 512.f * i, -1747.f - 86.f, 0.00f);
+            teleport->GetComponent<Transform>()->SetPosition(0.f, 0.f + i * - 100.f, 0.0f);
             CreateObject(teleport, eLayerType::Object);
         }
 

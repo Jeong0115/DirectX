@@ -23,7 +23,9 @@ namespace zz
         void SetVelocityX(float speedX)     { mVelocity.x = speedX; }
         void SetVelocityY(float speedY)     { mVelocity.y = speedY; }
         void ApplyResistance(float resistance) { mVelocity *= resistance; }
+        void OrbitalMotion();
 
+        void SetOrbitalMotion(bool isOrbitalMotion, Vector3 center = Vector3::Zero) { mbOrbitalMotion = isOrbitalMotion; mOrbitalCenter = center; }
         void SetGround(bool isGround);
         int GetDirection() { return mVelocity.x >= 0 ? 1 : -1; }
 
@@ -37,11 +39,13 @@ namespace zz
         class Transform* mTransform;
 
         Vector3 mVelocity;
+        Vector3 mOrbitalCenter;
         float   mAirFriction;
         float   mGravity;
 
         bool    mbGround;
         bool    mbRotate;
+        bool    mbOrbitalMotion;
     };
 }
 

@@ -15,7 +15,7 @@ namespace zz
 	class Application
 	{
     public:
-        SINGLETON(Application) // ; 세미콜론 추가하면 녹색 밑줄
+        SINGLETON(Application);
 
     private:
         Application();

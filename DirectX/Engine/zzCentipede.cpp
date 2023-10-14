@@ -3,6 +3,7 @@
 #include "zzAnimator.h"
 #include "zzTransform.h"
 #include "zzMeshRenderer.h"
+#include "zzDetectPlayer.h"
 
 #include "zzLimbA.h"
 #include "zzLimbB.h"
@@ -13,6 +14,7 @@
 #include "zzCentipedeParticle.h"
 #include "zzOrbPink.h"
 #include "zzGrenade.h"
+#include "zzOrbBlue.h"
 
 #include "zzInput.h"
 #include "zzTime.h"
@@ -54,6 +56,8 @@ namespace zz
 
         mAnimator->PlayAnimation(L"body_stand", true);
 
+        mDetectPlayer = AddComponent<DetectPlayer>();
+
         makeBody();
         
         mExplosion32Pink = new ExplosionEffect();
@@ -76,6 +80,7 @@ namespace zz
     void Centipede::Update()
     {
         Vector3 pos = GetComponent<Transform>()->GetPosition();
+        mTime += (float)Time::DeltaTime();
 
         if (Input::GetKey(eKeyCode::W))
         {
@@ -94,28 +99,47 @@ namespace zz
             pos.x += 50.f * (float)Time::DeltaTime();
         }
 
+        static int i = 0;
+
+        if (Input::GetKeyDown(eKeyCode::O))
+        {
+            limbAs[i++]->SetMoveState(LimbA::eMoveState::Bend);
+            if (i > 9) i = 0;
+        }
+
         if (Input::GetKeyDown(eKeyCode::C))
         {
             mState = eCentipedeState::CircleShoot;
+            mTime = 0.f;
         }
         else if (Input::GetKeyDown(eKeyCode::F))
         {
             mState = eCentipedeState::FirePillar;
+            mTime = 0.f;
         }
         else if (Input::GetKeyDown(eKeyCode::Q))
         {
             mCircleParticle->GetComponent<Transform>()->SetPosition(pos);
             mCircleParticle->Play();
+            mTime = 0.f;
         }
-        //GetComponent<Transform>()->SetPosition(pos);
+        else if (Input::GetKeyDown(eKeyCode::B))
+        {
+            mState = eCentipedeState::OrbBlue;
+            mTime = 0.f;
+        }
+        GetComponent<Transform>()->SetPosition(pos);
 
 
         switch (mState)
         {
         case eCentipedeState::Sleep: break;
-        case eCentipedeState::ChoiceNextAttack: battle(); break;
+        case eCentipedeState::Wait: wait(); break;
+        case eCentipedeState::ChoiceNextAttack: choice(); break;
         case eCentipedeState::CircleShoot: circleShoot(); break;
         case eCentipedeState::FirePillar: firePillar(); break;
+        case eCentipedeState::CleanMaterial: cleanMaterial(); break;
+        case eCentipedeState::OrbBlue: orbBlue(); break;
         default: break;
         }
 
@@ -182,17 +206,32 @@ namespace zz
         tail1_5_tr->SetParent(tail1_4_tr);
     }
 
-    void Centipede::battle()
+    void Centipede::wait()
     {
-        mState = eCentipedeState::ChoiceNextAttack;
+        mTime += rand() * 2.0f;
+        if (mTime >= 5.0f)
+        {
+           // mState = eCentipedeState::ChoiceNextAttack;
+        }
         mActionCnt = 0;
-        mTime = 0.f;
+    }
+
+    void Centipede::choice()
+    {
+        int random = randi(3);
+
+        switch (random)
+        {
+        case 0: mState = eCentipedeState::CircleShoot; break;
+        case 1: mState = eCentipedeState::FirePillar; break;
+        case 2: mState = eCentipedeState::CleanMaterial; break;
+        case 3: mState = eCentipedeState::OrbBlue; break;
+        }
+        mTime = 0.0f;
     }
 
     void Centipede::circleShoot()
     {
-        mTime += (float)Time::DeltaTime();
-
         if (mTime >= 0.3f)
         {
             Vector3 pos = GetComponent<Transform>()->GetPosition();
@@ -211,6 +250,10 @@ namespace zz
             mTime = 0.f;
             mActionCnt++;
         }
+        if (mActionCnt >= 6)
+        {
+            mState = eCentipedeState::Wait;
+        }
     }
 
     void Centipede::firePillar()
@@ -225,6 +268,63 @@ namespace zz
 
             CreateObject(grenade, eLayerType::MonsterAttack);
         }
-        mState = eCentipedeState::Sleep;
+        mState = eCentipedeState::Wait;
+    }
+
+    void Centipede::orbBlue()
+    {
+        Vector3 pos = GetComponent<Transform>()->GetPosition();
+
+        int rand = randi(1);
+        if (rand == 0)
+        {
+            if(mActionCnt == 0)
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    OrbBlue* orb = new OrbBlue(rand);
+                    orb->SetPosition(pos.x, pos.y, pos.z - 0.05f);
+                    orb->SetAngle(PI * 2 * i / 4);
+
+                    CreateObject(orb, eLayerType::MonsterAttack);
+                }
+                mState = eCentipedeState::Wait;
+            }
+        }
+        else
+        {
+            if (mActionCnt == 0) mActionCnt++;
+        }
+        
+        if (mTime >= 0.3f)
+        {
+            Vector3 direction = DetectPlayer::PlayerPos - pos;
+            direction.Normalize();
+
+            OrbBlue* orb = new OrbBlue(1);
+            orb->SetPosition(pos.x, pos.y, pos.z - 0.05f);
+            orb->SetDirection(direction);
+
+            CreateObject(orb, eLayerType::MonsterAttack);
+
+            mTime = 0.f;
+            mActionCnt++;
+
+            if (mActionCnt >= 3)
+            {
+                mState = eCentipedeState::Wait;
+            }
+        }
+   
+    }
+
+    void Centipede::cleanMaterial()
+    {
+        Vector3 pos = GetComponent<Transform>()->GetPosition();
+
+        mCircleParticle->GetComponent<Transform>()->SetPosition(pos);
+        mCircleParticle->Play();
+
+        mState = eCentipedeState::Wait;
     }
 }

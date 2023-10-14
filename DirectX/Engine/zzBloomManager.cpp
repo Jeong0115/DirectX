@@ -5,6 +5,7 @@
 #include "zzShader.h"
 #include "zzGraphicsDevice.h"
 #include "zzRenderer.h"
+#include "zzTexture.h"
 
 using namespace zz::graphics;
 namespace zz
@@ -21,7 +22,6 @@ namespace zz
     }   
     BloomManager::~BloomManager()
     {
-        //delete mBloomBuffer;
     }
 
     void BloomManager::Initialize()
@@ -59,6 +59,14 @@ namespace zz
         device->DrawIndexed(6, 0, 0);
         device->BindShaderResource(eShaderStage::PS, 0, &null);
 
+
+        //device->SetLightMapRenderTarget(false);
+        //ResourceManager::Find<Mesh>(L"LightMesh")->BindBuffer();
+        //ResourceManager::Find<Shader>(L"BloomShader")->BindShaders();
+        //ResourceManager::Find<Texture>(L"light_mask")->BindShader(eShaderStage::PS, 2);
+        //ResourceManager::Find<Mesh>(L"LightMesh")->Render();
+
+
         device->ClearRenderTarget();
 
         ID3D11ShaderResourceView* bloomSrv = device->GetBloomResource();
@@ -86,13 +94,12 @@ namespace zz
         GetDevice()->DrawIndexed(6, 0, 0);
 
         mBloomPingTex->Clear();
+    }
 
-        //ID3D11ShaderResourceView* lightSrv = GetDevice()->GetLightMapResource();
-        //ID3D11ShaderResourceView* null = nullptr;
-
-        //GetDevice()->BindShaderResource(eShaderStage::PS, 2, &lightSrv);
-        //GetDevice()->DrawIndexed(6, 0, 0);
-        //GetDevice()->BindShaderResource(eShaderStage::PS, 2, &null);
+    void BloomManager::Release()
+    {
+        delete mBloomPingTex;
+        delete mBloomPongTex;
     }
 
     void BloomManager::SetComputeShader(std::shared_ptr<ComputeShader> shader, int type)

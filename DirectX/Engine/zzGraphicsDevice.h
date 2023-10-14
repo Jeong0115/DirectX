@@ -72,14 +72,14 @@ namespace zz::graphics
 
         void DrawIndexed(UINT IndexCount, UINT StartIndexLocation, INT BaseVertexLocation);
         void DrawIndexedInstanced(UINT IndexCountPerInstance, UINT InstanceCount, UINT StartIndexLocation, INT BaseVertexLocation, UINT StartInstanceLocation);
-        void SetLightMapRenderTarget();
+        void SetLightMapRenderTarget(bool bClear = true);
         void SetBloomRenderTarget();
         void ClearRenderTarget();
         void UpdateViewPort();
         void Draw();
         void Present();
 
-        void UpdateSubresource(ID3D11Resource* pDstResource, const void* pSrcData) { mContext->UpdateSubresource(pDstResource, 0, NULL, pSrcData, 1536 * 4, 0); }
+        void UpdateSubresource(ID3D11Resource* pDstResource, const void* pSrcData, int width) { mContext->UpdateSubresource(pDstResource, 0, NULL, pSrcData, width * 4, 0); }
 
         ID3D11Device* GetID3D11Device() { return mDevice.Get(); }
         ID3D11DeviceContext* GetID3D11DeviceContext() { return mContext.Get(); }

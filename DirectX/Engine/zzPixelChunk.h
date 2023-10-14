@@ -10,7 +10,7 @@ namespace zz
     class PixelChunk
     {
     public:
-        PixelChunk(size_t width, size_t height, int x, int y);
+        PixelChunk(size_t width, size_t height, int x, int y, int worldWidth, int worldHeight);
         ~PixelChunk();
 
         void Update();
@@ -72,6 +72,9 @@ namespace zz
         int mMinY;
         int mMaxX; 
         int mMaxY;
+
+        int mWorldWidth;
+        int mWorldHeight;
 
         size_t mElementCount;
 

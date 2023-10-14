@@ -38,6 +38,6 @@ namespace zz
 #define EMPTY_COLOR &emptyColor
 #define WHITE_COLOR &whiteColor
 
-    void CreateObject(class GameObject* obj, eLayerType type);
+    void CreateObject(class GameObject* obj, eLayerType type, float x = 0.0f, float y = 0.0f, float z = 0.0f);
     void DeleteObject(class GameObject* obj, eLayerType type);
 }

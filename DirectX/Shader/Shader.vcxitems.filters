@@ -130,6 +130,9 @@
       <Filter>Bloom</Filter>
     </FxCompile>
     <FxCompile Include="$(MSBuildThisFileDirectory)BloomPS.hlsl">
+      <Filter>Bloom</Filter>
+    </FxCompile>
+    <FxCompile Include="$(MSBuildThisFileDirectory)AddDarkPS.hlsl">
       <Filter>Light</Filter>
     </FxCompile>
   </ItemGroup>

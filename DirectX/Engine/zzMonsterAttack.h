@@ -25,6 +25,7 @@ namespace zz
 
         void SetDirection(Vector3 dir) { mDirection = dir; }
         void SetAngle(float angle) { mAngle = angle; }
+        void SetSpeed(float speed) { mSpeed = speed; }
 
     protected:
         virtual void dead();

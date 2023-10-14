@@ -16,7 +16,7 @@ namespace zz
 {
     LimbA::LimbA(GameObject* body)
         : mTime(0.f)
-        , mDuration(0.1f)
+        , mDuration(1.0f)
         , dir(1)
         , limbB(nullptr)
         , mCurAngle(0.0f)
@@ -149,7 +149,7 @@ namespace zz
             GetComponent<Transform>()->SetRevolution(Vector3(-40.f + 40.f * (mTime / mDuration), 0.f, 0.f));
         }
     }
-
+    int a = 0;
     void LimbA::search()
     {
         float randomAngle = random() * PI * 2;
@@ -177,25 +177,25 @@ namespace zz
                 
                 if (randomAngle <= PI / 2)
                 {
-                    limbB->SetMove(2 * angle);
-                    mRotationAngle = randomAngle + angle;
+                    limbB->SetMove( -angle * 2);
+                    mRotationAngle = randomAngle - angle;
                 }
                 else if (randomAngle <= PI / 2 * 3)
                 {
-                    mRotationAngle = (fabs((-angle) + randomAngle));
-                    if (mRotationAngle <= PI / 2)
+                    if (randomAngle <= PI * 2)
                     {
-                        limbB->SetMove(-2 * angle);
+                        mRotationAngle = (fabs((angle) + randomAngle));
+                        limbB->SetMove(2 * angle - 2* PI);
                     }
                     else
                     {
-                        limbB->SetMove(2 * angle);
+                        mRotationAngle = (fabs((angle) - randomAngle));
+                        limbB->SetMove(-2 * angle);
                     }
-                    
                 }
                 else
                 {
-                    limbB->SetMove(2 * angle);
+                    limbB->SetMove(-(PI * 2 - 2 * angle));
                     mRotationAngle = randomAngle + angle;
                 }
 
@@ -215,6 +215,15 @@ namespace zz
     void LimbA::move()
     {
         mTime += (float)Time::DeltaTime();
+
+        GetComponent<Transform>()->SetPositionX(40.f);
+        GetComponent<Transform>()->SetRevolution(Vector3(-40.f, 0.f, 0.f));
+
+
+        GetComponent<Transform>()->SetRotationZ(mRotationAngle);
+        mMoveState = eMoveState::Stay;
+        mTime = 0.f;
+        return;
 
         if (mTime >= mDuration)
         {
@@ -236,44 +245,56 @@ namespace zz
     }
     void LimbA::stay()
     {
+        //return;
         Vector3 bodyPos = mBody->GetComponent<Transform>()->GetPosition();
-
         float randomAngle = atan2(landPos.y - bodyPos.y, landPos.x - bodyPos.x);
-
         float distance = sqrt(pow(landPos.x - bodyPos.x, 2) + pow(landPos.y - bodyPos.y, 2));
 
         if (distance > RAY_LEN)
         {
             SetMoveState(LimbA::eMoveState::Bend);
         }
+
         float cos = (distance / 2.f) / (RAY_LEN / 2.f);
         cos = std::max(-1.0f, std::min(1.0f, cos));
         float angle = std::acos(cos);
 
         if (randomAngle <= PI / 2)
         {
-            limbB->SetAngle(2 * angle);
-            mRotationAngle = randomAngle + angle;
+            limbB->SetAngle( -angle * 2);
+            mRotationAngle = randomAngle - angle;
+
+            //limbB->SetAngle(2 * angle);
+            //mRotationAngle = randomAngle + angle;
             GetComponent<Transform>()->SetRotationZ(mRotationAngle);
         }
         else if (randomAngle <= PI / 2 * 3)
         {
-            mRotationAngle = (fabs((-angle) + randomAngle));
-            GetComponent<Transform>()->SetRotationZ(mRotationAngle);
-            if (mRotationAngle <= PI / 2)
+            //if (mRotationAngle <= PI / 2)
+            //{
+            //    limbB->SetAngle(-2 * angle);
+            //}
+            //else
+            //{
+            //    limbB->SetAngle(2 * angle);
+            //}
+
+            if (randomAngle <= PI * 2)
             {
+                mRotationAngle = (fabs((angle)+randomAngle));
                 limbB->SetAngle(-2 * angle);
             }
             else
             {
+                mRotationAngle = (fabs((angle)-randomAngle));
                 limbB->SetAngle(2 * angle);
             }
-
+            GetComponent<Transform>()->SetRotationZ(mRotationAngle);
         }
         else
         {
-            limbB->SetAngle(2 * angle);
-            mRotationAngle = randomAngle + angle;
+            limbB->SetAngle(-(PI * 2 - 2 * angle));
+            mRotationAngle = randomAngle - angle;
             GetComponent<Transform>()->SetRotationZ(mRotationAngle);
         }
 

@@ -226,25 +226,25 @@ namespace zz::renderer
         std::shared_ptr<Shader> lightShader = std::make_shared<Shader>();
         lightShader->CreateShader(eShaderStage::VS, L"LightVS.hlsl", "main");
         lightShader->CreateShader(eShaderStage::PS, L"LightPS.hlsl", "main");
-        lightShader->SetBSState(eBSType::Add);
+        lightShader->SetBSState(eBSType::LightMap);
         ResourceManager::Insert(L"LightShader", lightShader);
 
         std::shared_ptr<Shader> lightMapShader = std::make_shared<Shader>();
         lightMapShader->CreateShader(eShaderStage::VS, L"LightMapVS.hlsl", "main");
         lightMapShader->CreateShader(eShaderStage::PS, L"LightMapPS.hlsl", "main");
-        lightMapShader->SetBSState(eBSType::Add);
+        lightMapShader->SetBSState(eBSType::LightMap);
         ResourceManager::Insert(L"LightMapShader", lightMapShader);
 
         std::shared_ptr<Shader> lightMapShader2 = std::make_shared<Shader>();
         lightMapShader2->CreateShader(eShaderStage::VS, L"LightMapVS.hlsl", "main");
         lightMapShader2->CreateShader(eShaderStage::PS, L"BloomPS.hlsl", "main");
-        lightMapShader2->SetBSState(eBSType::Max);
+        lightMapShader2->SetBSState(eBSType::AddLIght);
         ResourceManager::Insert(L"BloomShader", lightMapShader2);
 
         std::shared_ptr<Shader> lightMapShadert = std::make_shared<Shader>();
         lightMapShadert->CreateShader(eShaderStage::VS, L"LightMapVS.hlsl", "main");
-        lightMapShadert->CreateShader(eShaderStage::PS, L"BloomPS.hlsl", "main");
-        lightMapShadert->SetBSState(eBSType::MaxRgbAddAlpha);
+        lightMapShadert->CreateShader(eShaderStage::PS, L"AddDarkPS.hlsl", "main");
+        lightMapShadert->SetBSState(eBSType::AddDark);
         ResourceManager::Insert(L"BloomShaderT", lightMapShadert);
 
         std::shared_ptr<Shader> spriteAnimationShader = std::make_shared<Shader>();
@@ -295,7 +295,7 @@ namespace zz::renderer
         paritcleShader->CreateShader(eShaderStage::PS, L"ParticlePS.hlsl", "main");
         paritcleShader->SetRSState(eRSType::SolidNone);
         paritcleShader->SetDSState(eDSType::NoWrite);
-        paritcleShader->SetBSState(eBSType::Add);
+        paritcleShader->SetBSState(eBSType::LightMap);
         paritcleShader->SetTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
         ResourceManager::Insert(L"ParticleShader", paritcleShader);
 
@@ -318,7 +318,7 @@ namespace zz::renderer
         particleLightShader->CreateShader(eShaderStage::VS, L"ParticleLightVS.hlsl", "main");
         particleLightShader->CreateShader(eShaderStage::GS, L"ParticleLightGS.hlsl", "main");
         particleLightShader->CreateShader(eShaderStage::PS, L"ParticleLightPS.hlsl", "main");
-        particleLightShader->SetBSState(eBSType::Add);
+        particleLightShader->SetBSState(eBSType::LightMap);
         particleLightShader->SetTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
         ResourceManager::Insert(L"ParticleLightShader", particleLightShader);
 
@@ -328,7 +328,7 @@ namespace zz::renderer
         paritcleCirceShader->CreateShader(eShaderStage::PS, L"ParticlePS.hlsl", "main");
         paritcleCirceShader->SetRSState(eRSType::SolidNone);
         paritcleCirceShader->SetDSState(eDSType::NoWrite);
-        paritcleCirceShader->SetBSState(eBSType::Add);
+        paritcleCirceShader->SetBSState(eBSType::LightMap);
         paritcleCirceShader->SetTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
         ResourceManager::Insert(L"ParticleCirceShader", paritcleCirceShader);
 
@@ -363,6 +363,16 @@ namespace zz::renderer
         }
 
         {
+            std::shared_ptr<Texture> texture = ResourceManager::Load<Texture>(L"boss_arena_background", L"..\\Resources\\Texture\\BossArena\\boss_arena_background.png");
+            std::shared_ptr<Material> material = std::make_shared<Material>();
+
+            material = std::make_shared<Material>();
+            material->SetShader(spriteShader);
+            material->SetTexture(texture);
+            ResourceManager::Insert(L"m_boss_arena_background", material);
+        }
+
+        {
             std::shared_ptr<Shader> debugShader = ResourceManager::Find<Shader>(L"DebugShader");
             std::shared_ptr<Material> material = std::make_shared<Material>();
 
@@ -379,15 +389,11 @@ namespace zz::renderer
             spriteMateiral2->SetTexture(texture);
             ResourceManager::Insert(L"m_background_coalmine", spriteMateiral2);
         }
-        {
-            std::shared_ptr<Texture> texture = std::make_shared<PixelTexture>();
+		
 
-            std::shared_ptr<Material> pixelTexture = std::make_shared<Material>();
-            pixelTexture->SetShader(spriteShader);
-            pixelTexture->SetTexture(texture);
-
-            ResourceManager::Insert(L"m_PixelTexture", pixelTexture);
-        }
+		std::shared_ptr<Material> pixelTexture = std::make_shared<Material>();
+		pixelTexture->SetShader(spriteShader);
+		ResourceManager::Insert(L"m_PixelTexture", pixelTexture);
 
         std::shared_ptr<Shader> animationShader = ResourceManager::Find<Shader>(L"SpriteAnimationShader");
         std::shared_ptr<Material> material = std::make_shared<Material>();
@@ -597,7 +603,7 @@ namespace zz::renderer
         blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;  // Use the destination alpha
         blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD; // Add source and destination alpha
         blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-        GetDevice()->CreateBlendState(&blendDesc, blendStates[(UINT)eBSType::Add].GetAddressOf());
+        GetDevice()->CreateBlendState(&blendDesc, blendStates[(UINT)eBSType::LightMap].GetAddressOf());
 
         D3D11_BLEND_DESC sblendDesc = {};
         sblendDesc.RenderTarget[0].BlendEnable = true;
@@ -609,7 +615,7 @@ namespace zz::renderer
         sblendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;    // Add source and destination alpha (though destination is ignored due to D3D11_BLEND_ZERO)
         sblendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 
-        GetDevice()->CreateBlendState(&blendDesc, blendStates[(UINT)eBSType::Max].GetAddressOf());
+        GetDevice()->CreateBlendState(&blendDesc, blendStates[(UINT)eBSType::AddLIght].GetAddressOf());
 
 
         D3D11_BLEND_DESC blendDesc2 = {};
@@ -621,23 +627,7 @@ namespace zz::renderer
         blendDesc2.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;    // Ignore source alpha
         blendDesc2.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;    // The addition operation for alpha, but effectively this becomes multiplication due to the blend factors
         blendDesc2.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-        GetDevice()->CreateBlendState(&blendDesc2, blendStates[(UINT)eBSType::MaxRgbAddAlpha].GetAddressOf());
-
-
-        desc.RenderTarget[0].BlendEnable = true;
-        desc.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
-        desc.RenderTarget[0].DestBlend = D3D11_BLEND_ZERO;
-        desc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-        desc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
-        desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
-        desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-        desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-        GetDevice()->CreateBlendState(&desc, blendStates[(UINT)eBSType::InsertBloom].GetAddressOf());
-
-
-  
-
-
+        GetDevice()->CreateBlendState(&blendDesc2, blendStates[(UINT)eBSType::AddDark].GetAddressOf());
     }
 
     void SetupState()

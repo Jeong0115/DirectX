@@ -475,14 +475,17 @@
     <Filter Include="GameObject\Centipede\Attack\CentipedeParticle">
       <UniqueIdentifier>{4bbe9837-8fd2-497e-9d10-a1b248a0e65d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GameObject\Centipede\Attack\NewFilter1">
-      <UniqueIdentifier>{91696afb-385a-4444-8475-5eabeb6ee57b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Manager\BloomManager">
       <UniqueIdentifier>{313810dc-b606-41de-b53e-51baba7dc5e2}</UniqueIdentifier>
     </Filter>
     <Filter Include="Graphics\Texture2D">
       <UniqueIdentifier>{a76ad5f0-b25c-4bb9-9784-ca67379b2a5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Centipede\Attack\OrbBlue">
+      <UniqueIdentifier>{91696afb-385a-4444-8475-5eabeb6ee57b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Scene\BossArena">
+      <UniqueIdentifier>{95b5f3e9-0485-4c20-979b-4370919ba8c7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -879,6 +882,12 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzTexture2D.cpp">
       <Filter>Graphics\Texture2D</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzOrbBlue.cpp">
+      <Filter>GameObject\Centipede\Attack\OrbBlue</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzBossArenaScene.cpp">
+      <Filter>Scene\Scene\BossArena</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1302,6 +1311,12 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzTexture2D.h">
       <Filter>Graphics\Texture2D</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzOrbBlue.h">
+      <Filter>GameObject\Centipede\Attack\OrbBlue</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzBossArenaScene.h">
+      <Filter>Scene\Scene\BossArena</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

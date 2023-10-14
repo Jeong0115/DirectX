@@ -12,7 +12,7 @@ namespace zz
     LimbB::LimbB()
         : mTime(0.0f)
         , mbBend(false)
-        , mDuration(0.1f)
+        , mDuration(1.0f)
         , mMoveState(eMoveState::Stay)
         , dir(-1)
         , mCurAngle(0.f)
@@ -87,7 +87,7 @@ namespace zz
         mMoveState = eMoveState::Move;
         mTime = 0.f;
     }
-
+    
 
     void LimbB::bend()
     {
@@ -108,6 +108,9 @@ namespace zz
     {
         mTime += (float)Time::DeltaTime();
 
+        GetComponent<Transform>()->SetRotationZ(mNextAngle * dir);
+        mMoveState = eMoveState::Land;
+        return;
         if (mTime >= mDuration)
         {
             GetComponent<Transform>()->SetRotationZ(mNextAngle * dir);
@@ -121,6 +124,7 @@ namespace zz
 
     void LimbB::land()
     {
+        
         GetComponent<Transform>()->SetRotationZ(mCurAngle * dir);
     }
 }

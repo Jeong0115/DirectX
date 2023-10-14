@@ -71,12 +71,25 @@ namespace zz
 
 
         BloomManager::Render();
+
         DisableDepthStencilState();
+
+
+        //ResourceManager::Find<Mesh>(L"LightMesh")->BindBuffer();
+        //ResourceManager::Find<Shader>(L"BloomShaderT")->BindShaders();
+        //
+        //ID3D11ShaderResourceView* lightSrv = graphics::GetDevice()->GetLightMapResource();
+        //ID3D11ShaderResourceView* null = nullptr;
+        //
+        //graphics::GetDevice()->BindShaderResource(eShaderStage::PS, 2, &lightSrv);
+        //graphics::GetDevice()->DrawIndexed(6, 0, 0);
+        //graphics::GetDevice()->BindShaderResource(eShaderStage::PS, 2, &null);
+        
+       
         ResourceManager::Find<Mesh>(L"LightMesh")->BindBuffer();
         ResourceManager::Find<Shader>(L"BloomShaderT")->BindShaders();
         ResourceManager::Find<Texture>(L"light_mask")->BindShader(eShaderStage::PS, 2);
         ResourceManager::Find<Mesh>(L"LightMesh")->Render();
-        
     }
 
 

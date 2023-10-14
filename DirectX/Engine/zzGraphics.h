@@ -83,9 +83,9 @@ namespace zz
     {
         Default,
         AlphaBlend,
-        Add,
-        MaxRgbAddAlpha,
-        Max,
+        LightMap,
+        AddDark,
+        AddLIght,
         InsertBloom,
         End,
     };
@@ -193,6 +193,7 @@ namespace zz
         math::Vector4 curPosition;
         math::Vector4 scale;
         math::Vector4 color;
+        math::Vector4 lightScale;
 
         math::Vector2 randPositionMin;
         math::Vector2 randPositionMax;

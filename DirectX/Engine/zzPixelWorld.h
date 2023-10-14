@@ -74,6 +74,8 @@ namespace zz
         
         static void CreateNewWorld();
         static void CreateNextWorld();
+        static void CreateBossArena();
+        static void DeletePrevWorld();
 
         static void InsertElementFromImage(int y, int x, const cv::Mat& image, Element& element);
         static void InsertElementFromImage(int y, int x, const cv::Mat& image, const cv::Mat& lineImage, Element& element, int type);
@@ -106,9 +108,12 @@ namespace zz
         static void Temp();
         static uint16_t FrameCount;
 
+        static int mWorldWidth;
+        static int mWorldHeight;
+
     private:
         static PixelChunkMap* CreateChunkMap(std::pair<int, int> location);
-        static uint32_t getMaterialColor(const std::wstring& material_name);
+        static uint32_t getMaterialColor(const std::wstring& material_name, int x, int y);
         static void loadMaterialImage();
         static void createVegetation(int x, int y);
 
@@ -125,6 +130,7 @@ namespace zz
         static const UINT mChunkMapHeight;
 
         static float mTime;
+
         //static std::vector<std::vector<Box2dWorld::StaticElementInfo>>& mStaticElements;
     };
 }

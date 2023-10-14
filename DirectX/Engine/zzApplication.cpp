@@ -15,6 +15,7 @@
 #include "zzBloomManager.h"
 
 #include "zzOpeningScene.h"
+#include "zzBossArenaScene.h"
 #include "zztScene.h"
 namespace zz
 {	
@@ -156,6 +157,7 @@ namespace zz
 
     void Application::Release()
     {
+        BloomManager::Release();
         SceneManager::Release();
         UIManager::Release();
         ObjectPoolManager::Release();
@@ -198,9 +200,12 @@ namespace zz
 
     void Application::LoadExcavationsite()
     {
-        tScene* scene = new tScene();
+        BossArenaScene* scene = new BossArenaScene();
 
         SceneManager::LoadScene(L"Excavationsite", scene);
-        PixelWorld::CreateNextWorld();
+        PixelWorld::CreateBossArena();
+        scene->Initialize();
+        //PixelWorld::CreateNextWorld();
+        
     }
 }

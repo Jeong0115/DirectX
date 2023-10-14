@@ -638,10 +638,13 @@ namespace zz::graphics
         mContext->DrawIndexedInstanced(IndexCountPerInstance, InstanceCount, StartIndexLocation, BaseVertexLocation, StartInstanceLocation);
     }
 
-    void GraphicsDevice::SetLightMapRenderTarget()
+    void GraphicsDevice::SetLightMapRenderTarget(bool bClear)
     {
-        FLOAT bgColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
-        mContext->ClearRenderTargetView(mLightRenderTargetView.Get(), bgColor);
+        if(bClear)
+        {
+            FLOAT bgColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+            mContext->ClearRenderTargetView(mLightRenderTargetView.Get(), bgColor);
+        }
         mContext->OMSetRenderTargets(1, mLightRenderTargetView.GetAddressOf(), nullptr);
         BindViewPort(&mViewPort);
     }

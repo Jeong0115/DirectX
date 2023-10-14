@@ -43,7 +43,7 @@ namespace zz
     void SceneManager::LoadScene(const std::wstring& name, Scene* scene)
     {
         mScenes.insert(std::make_pair(name, scene));
-        scene->Initialize();
+        
 
         Layer& cameraLayer = mActiveScene->GetLayer(eLayerType::Camera);
 

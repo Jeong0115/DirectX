@@ -57,9 +57,9 @@ namespace zz
 
         AddComponent<Levitation>()->SetMaxEnergy(3.0f);
 
-        PixelCollider* pxCollier = AddComponent<PixelCollider>();
-        pxCollier->SetCollision(Vector3(0.0f, -4.0f, 0.0f), Vector3(6.f, 8.f, 0.0f));
-        pxCollier->SetClimbY(3.0f);
+        //PixelCollider* pxCollier = AddComponent<PixelCollider>();
+        //pxCollier->SetCollision(Vector3(0.0f, -4.0f, 0.0f), Vector3(6.f, 8.f, 0.0f));
+        //pxCollier->SetClimbY(3.0f);
 
         mRigid = AddComponent<RigidBody>();
 
@@ -87,12 +87,12 @@ namespace zz
 
     void Player::Update()
     {
-        if (Input::GetKeyDown(eKeyCode::B))
-        {
-            Explosion_128* bomb = new Explosion_128();
-            bomb->GetComponent<Transform>()->SetPosition(Input::GetMouseWorldPos().x, Input::GetMouseWorldPos().y, 0.02f);
-            CreateObject(bomb, eLayerType::Effect);
-        }
+        //if (Input::GetKeyDown(eKeyCode::B))
+        //{
+        //    Explosion_128* bomb = new Explosion_128();
+        //    bomb->GetComponent<Transform>()->SetPosition(Input::GetMouseWorldPos().x, Input::GetMouseWorldPos().y, 0.02f);
+        //    CreateObject(bomb, eLayerType::Effect);
+        //}
         if (Input::GetKeyDown(eKeyCode::TAB))
         {
             UIManager::SetOpenOrCloseInventory();
@@ -126,6 +126,10 @@ namespace zz
         {
             mAnimator->PlayAnimation(L"Player_Idle", true);
             mRigid->SetVelocityX(0.0f);
+        }
+        if (Input::GetKey(eKeyCode::S))
+        {
+            mRigid->SetVelocityY(-50.f);
         }
         
         tr->SetPosition(pos);

@@ -68,6 +68,7 @@ struct ParticleCircleShared
     float4 curPosition;
     float4 scale;
     float4 color;
+    float4 lightScale;
     
     float2 randPositionMin;
     float2 randPositionMax;

@@ -763,13 +763,15 @@
 //
 namespace zz
 {
-    PixelGridColor::PixelGridColor()
+    PixelGridColor::PixelGridColor(int width, int height)
         : mHdc(NULL)
+        , mHeigh(height)
+        , mWidth(width)
     {
         BITMAPINFO bmi = { 0 };
         bmi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
-        bmi.bmiHeader.biWidth = 1536;
-        bmi.bmiHeader.biHeight = -2048; // top-down
+        bmi.bmiHeader.biWidth = width;
+        bmi.bmiHeader.biHeight = -height; // top-down
         bmi.bmiHeader.biPlanes = 1;
         bmi.bmiHeader.biBitCount = 32;
         bmi.bmiHeader.biCompression = BI_RGB;
@@ -794,7 +796,7 @@ namespace zz
     void PixelGridColor::Update(std::vector<uint32_t>& pixelColor, HDC BackDC, float x, float y)
     {
         memcpy(bits, pixelColor.data(), pixelColor.size());
-        BitBlt(BackDC, 0, 0, 1536, 2048, mHdc, (int)x, (int)-y, SRCCOPY);
+        BitBlt(BackDC, 0, 0, mWidth, mHeigh, mHdc, (int)x, (int)-y, SRCCOPY);
     }
 }
 

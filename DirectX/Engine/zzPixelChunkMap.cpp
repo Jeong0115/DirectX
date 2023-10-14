@@ -19,7 +19,7 @@ namespace zz
             for (int j = 0; j < 8; j++)
             {
                 mChunks.push_back(new PixelChunk(mChunkWidth, mChunkHeight
-                    , mStartX + mChunkWidth * j, mStartY + mChunkHeight * i));
+                    , mStartX + mChunkWidth * j, mStartY + mChunkHeight * i, PixelWorld::mWorldWidth, PixelWorld::mWorldHeight));
             }
         }
     }

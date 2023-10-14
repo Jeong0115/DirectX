@@ -11,9 +11,12 @@ namespace zz
         enum class eCentipedeState
         {
             Sleep,
+            Wait,
             ChoiceNextAttack,
             CircleShoot,
             FirePillar,
+            CleanMaterial,
+            OrbBlue,
         };
         Centipede();
         virtual ~Centipede();
@@ -25,11 +28,15 @@ namespace zz
 
     private:
         void makeBody();
-        void battle();
+        void wait();
+        void choice();
         void circleShoot();
         void firePillar();
+        void orbBlue();
+        void cleanMaterial();
 
         class CentipedeParticle* mCircleParticle;
+        class DetectPlayer* mDetectPlayer;
         class Animator* mAnimator;
         class LimbA* limbAs[10];
 

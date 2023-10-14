@@ -6,7 +6,7 @@
 namespace zz
 {
 
-    PixelChunk::PixelChunk(size_t width, size_t height, int x, int y)
+    PixelChunk::PixelChunk(size_t width, size_t height, int x, int y, int worldWidth, int worldHeight)
         : mWidth((int)width)
         , mHeight((int)height)
         , mStartX(x)
@@ -23,6 +23,8 @@ namespace zz
         , mStaticCount{}
         , mBodies{}
         , mbChange(false)
+        , mWorldWidth(worldWidth)
+        , mWorldHeight(worldHeight)
     {
         mElements = new Element[mWidth * mHeight];
         for (int i = 0; i < mWidth * mHeight; i++)
@@ -137,8 +139,8 @@ namespace zz
         //PixelWorld::GetPixelColor((srcX + ((srcY) * 2048))) = srcElement.Color;
         //PixelWorld::GetPixelColor((dstX + ((dstY) * 2048))) = dstElement.Color;
 
-        memcpy(&PixelWorld::GetPixelColor((srcX + ((srcY) * 1536))), &srcElement.Color, 4);
-        memcpy(&PixelWorld::GetPixelColor((dstX + ((dstY) * 1536))), &dstElement.Color, 4);
+        memcpy(&PixelWorld::GetPixelColor((srcX + ((srcY) *mWorldWidth))), &srcElement.Color, 4);
+        memcpy(&PixelWorld::GetPixelColor((dstX + ((dstY) *mWorldWidth))), &dstElement.Color, 4);
 
 
         if (InBounds(dstX, dstY))
@@ -167,7 +169,7 @@ namespace zz
                 mElements[index] = element;
                 mElements[index].destoryBody = body;
                 *body = true;
-                PixelWorld::GetPixelColor(mStartX + index % mWidth + ((mStartY + index / mWidth) * 1536)) = element.Color;
+                PixelWorld::GetPixelColor(mStartX + index % mWidth + ((mStartY + index / mWidth) * mWorldWidth)) = element.Color;
                 KeepAlive(index);
 
                 return;
@@ -180,7 +182,7 @@ namespace zz
         }
 
         mElements[index] = element;
-        PixelWorld::GetPixelColor(mStartX + index % mWidth + ((mStartY + index / mWidth) * 1536)) = element.Color;
+        PixelWorld::GetPixelColor(mStartX + index % mWidth + ((mStartY + index / mWidth) * mWorldWidth)) = element.Color;
         KeepAlive(index);
     }
 
@@ -206,7 +208,7 @@ namespace zz
             mElements[index] = element;
             mElementCount++;
 
-            PixelWorld::GetPixelColor(mStartX + index % mWidth + ((mStartY + index / mWidth) * 1536)) = element.Color;
+            PixelWorld::GetPixelColor(mStartX + index % mWidth + ((mStartY + index / mWidth) * mWorldWidth)) = element.Color;
 
             KeepAlive(index);
         }
@@ -224,7 +226,7 @@ namespace zz
         }
 
         mElements[index] = element;
-        PixelWorld::GetPixelColor(mStartX + index % mWidth + ((mStartY + index / mWidth) * 1536)) = mElements[index].Color;
+        PixelWorld::GetPixelColor(mStartX + index % mWidth + ((mStartY + index / mWidth) * mWorldWidth)) = mElements[index].Color;
     }
 
     void PixelChunk::DelteElement(size_t index)
@@ -232,7 +234,7 @@ namespace zz
         mElements[index] = EMPTY;
         mElementCount--;
         
-        PixelWorld::GetPixelColor(mStartX + index % mWidth + ((mStartY + index / mWidth) * 1536)) = mElements[index].Color;
+        PixelWorld::GetPixelColor(mStartX + index % mWidth + ((mStartY + index / mWidth) * mWorldWidth)) = mElements[index].Color;
         KeepAlive(index);
     }
 
@@ -245,7 +247,7 @@ namespace zz
         else
         {
             mElements[index] = EMPTY;
-            PixelWorld::GetPixelColor(mStartX + index % mWidth + ((mStartY + index / mWidth) * 1536)) = mElements[index].Color;
+            PixelWorld::GetPixelColor(mStartX + index % mWidth + ((mStartY + index / mWidth) * mWorldWidth)) = mElements[index].Color;
             return true;
         }
     }
@@ -274,7 +276,7 @@ namespace zz
             else if (relativeY >= mHeight - 3)
                 y += 3;
 
-            if (x >= 0 && y >= 0 && x < 1536 && y < 2048)
+            if (x >= 0 && y >= 0 && x < mWorldWidth && y < mWorldHeight)
                 PixelWorld::GetChunk(x, y)->KeepAliveBoundary(x, y);
         }
     }
@@ -615,7 +617,7 @@ namespace zz
             //}
         }
 
-        PixelWorld::GetPixelColor((x + ((y) * 1536))) = element.Color;
+        PixelWorld::GetPixelColor((x + ((y) *mWorldWidth))) = element.Color;
 
         for (int i = y - 1; i <= y + 1; i++)
         {

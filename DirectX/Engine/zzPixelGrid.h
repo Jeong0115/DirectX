@@ -81,7 +81,7 @@ namespace zz
     class PixelGridColor
     {
     public:
-        PixelGridColor();
+        PixelGridColor(int width, int height);
         ~PixelGridColor();
 
         void Update(std::vector<uint32_t>& pixelColor, HDC BackDC, float x, float y);
@@ -90,8 +90,11 @@ namespace zz
         HBITMAP mBitmap;
         HDC mHdc;
         void* bits;
+
+        int mWidth;
+        int mHeigh;
     };
-    
+        
     
 }
 

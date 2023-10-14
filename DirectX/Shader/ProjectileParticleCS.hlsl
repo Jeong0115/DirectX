@@ -53,6 +53,7 @@ void main(uint3 DTid : SV_DispatchThreadID)
             particle.color = projectile.color;
             particle.active = 1;
             particle.scale = float4(1.0f, 1.0f, 1.0f, 0.0f);
+            particle.lightScale = projectile.lightScale;
             
             ParticleBuffer[DTid.x] = particle;
         }

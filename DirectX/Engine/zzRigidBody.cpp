@@ -29,6 +29,11 @@ namespace zz
     {
         Vector3 pos = mTransform->GetPosition();
 
+        if (mbOrbitalMotion)
+        {
+            OrbitalMotion();
+        }
+
         if (!mbGround)
         {
             mVelocity.y -= mGravity * (float)Time::DeltaTime();
@@ -41,7 +46,6 @@ namespace zz
 
         pos += mVelocity * (float)Time::DeltaTime();
 
-
         if (mbRotate)
         {
             Vector3 normalize = mVelocity;
@@ -52,10 +56,6 @@ namespace zz
             mTransform->SetRotationZ(angle);
         }
 
-        //if (fabsf(mVelocity.x) <= 1.0f)
-        //{
-        //    mVelocity.x = 0.0f;
-        //}
 
         mTransform->SetPosition(pos);
     }
@@ -78,6 +78,20 @@ namespace zz
     {
         mVelocity.x = direction.x * speed;
         mVelocity.y = direction.y * speed;
+    }
+
+    void RigidBody::OrbitalMotion()
+    {
+        Vector3 pos = mTransform->GetPosition();
+        Vector3 toCenter = mOrbitalCenter - pos;
+        
+        float speed = sqrt(mVelocity.x * mVelocity.x + mVelocity.y * mVelocity.y);
+
+        Vector3 perpendicular = Vector3(-toCenter.y, toCenter.x, 0.0f);
+        perpendicular.Normalize();
+
+        mVelocity = perpendicular * speed;
+
     }
 
     void RigidBody::SetGround(bool isGround)
