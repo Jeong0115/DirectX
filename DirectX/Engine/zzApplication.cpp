@@ -3,6 +3,7 @@
 #include "zzRenderer.h"
 #include "zzTime.h"
 #include "zzInput.h"
+#include "zzFmod.h"
 #include "..\\Editor\\zzEditor.h"
 #include "zzPixelWorld.h"
 #include "zzUIManager.h"
@@ -16,6 +17,9 @@
 
 #include "zzOpeningScene.h"
 #include "zzBossArenaScene.h"
+
+#include "zzResourceManager.h"
+#include "zzTexture.h"
 #include "zztScene.h"
 namespace zz
 {	
@@ -60,13 +64,14 @@ namespace zz
         ThreadPool thread(1);
 
         Time::Initialize();
-        Input::Initialize();  
+        Input::Initialize();
+        Fmod::Initialize();
         renderer::Initialize();
 
         OpeningScene* opening = new OpeningScene();
         opening->Initialize();
 
-        thread.enqueue([=]() { PixelWorld::Initialize(); });
+      //  thread.enqueue([=]() { PixelWorld::Initialize(); });
         thread.enqueue([=]() { WriteManager::Initialize(); });
         thread.enqueue([=]() { UIManager::Initialize(); });
         thread.enqueue([=]() { SceneManager::Initialize(); });
@@ -117,6 +122,7 @@ namespace zz
         PixelWorld::Update();
         SceneManager::Update();
         CollisionManger::Update();
+ 
 	}
 
 	void Application::LateUpdate()
@@ -125,6 +131,11 @@ namespace zz
         {
             graphicDevice->SetLightMapRenderTarget();
         }
+
+       //ResourceManager::Find<Mesh>(L"LightMesh")->BindBuffer();
+       //ResourceManager::Find<Shader>(L"LightMapShader")->BindShaders();
+       //ResourceManager::Find<Texture>(L"light_mask")->BindShader(eShaderStage::PS, 0);
+       //ResourceManager::Find<Mesh>(L"LightMesh")->Render();
 
         UIManager::LateUpdate();
         SceneManager::LateUpdate();
@@ -141,6 +152,14 @@ namespace zz
         Camera* mainCamara = renderer::mainCamera;
         Camera::SetGpuViewMatrix(mainCamara->GetViewMatrix());
         Camera::SetGpuProjectionMatrix(mainCamara->GetProjectionMatrix());
+
+        renderer::TransformCB trCB = {};
+        trCB.mView = Camera::GetGpuViewMatrix();
+        trCB.mProjection = Camera::GetGpuProjectionMatrix();
+
+        ConstantBuffer* cb = renderer::constantBuffer[(UINT)eCBType::Transform];
+        cb->SetBufferData(&trCB);
+        cb->BindConstantBuffer(eShaderStage::VS);
 
         if (IsDrawBox2d)
         {

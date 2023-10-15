@@ -3,6 +3,7 @@
 #include "zzResourceManager.h"
 #include "zzMaterial.h"
 #include "zzParticleShader.h"
+#include "zzAudioClip.h"
 
 #include "zzPixelWorld.h"
 
@@ -165,7 +166,6 @@ namespace zz::renderer
         lightMesh->CreateIndexBuffer(lightIndexes.data(), (UINT)lightIndexes.size());
         ResourceManager::Insert(L"LightMesh", lightMesh);
 
-
         constantBuffer[(UINT)eCBType::Transform] = new ConstantBuffer(eCBType::Transform);
         constantBuffer[(UINT)eCBType::Transform]->CreateConstantBuffer(sizeof(TransformCB));
 
@@ -186,6 +186,9 @@ namespace zz::renderer
 
         constantBuffer[(UINT)eCBType::Noise] = new ConstantBuffer(eCBType::Noise);
         constantBuffer[(UINT)eCBType::Noise]->CreateConstantBuffer(sizeof(NoiseCB));
+
+        constantBuffer[(UINT)eCBType::ColorRange] = new ConstantBuffer(eCBType::ColorRange);
+        constantBuffer[(UINT)eCBType::ColorRange]->CreateConstantBuffer(sizeof(ColorRangeCB));
     }
     void LoadShader()
     {
@@ -288,6 +291,10 @@ namespace zz::renderer
         std::shared_ptr<ComputeShader> bloom3 = std::make_shared<ComputeShader>();
         bloom3->Create(L"BloomVerticalCS.hlsl", "main");
         ResourceManager::Insert(L"BloomVerticalCS", bloom3);
+
+        std::shared_ptr<ParticleShader> particleImageCS = std::make_shared<ParticleShader>();
+        particleImageCS->Create(L"ParticleImageCS.hlsl", "main");
+        ResourceManager::Insert(L"ParticleImageCS", particleImageCS);
 
         std::shared_ptr<Shader> paritcleShader = std::make_shared<Shader>();
         paritcleShader->CreateShader(eShaderStage::VS, L"ParticleVS.hlsl", "main");
@@ -962,6 +969,8 @@ namespace zz::renderer
         ResourceManager::Insert(L"m_Particle", material);
 
         ResourceManager::Load<Texture>(L"SparkBolt", L"..\\Resources\\Texture\\Spell\\SparkBolt\\spark.png");
+        ResourceManager::Load<AudioClip>(L"SparkBolt_Sound", L"..\\Resources\\Audio\\Projectiles\\spell_shoot_ver1_1.wav");
+
         ResourceManager::Load<Texture>(L"Explosion_SparkBolt", L"..\\Resources\\Texture\\Spell\\SparkBolt\\explosion_008_pink.png");
         ResourceManager::Load<Texture>(L"Muzzle_SparkBolt", L"..\\Resources\\Texture\\Spell\\SparkBolt\\muzzle_large_pink.png");
 
@@ -976,8 +985,25 @@ namespace zz::renderer
         material->SetShader(spriteShader);
         material->SetTexture(light_bullet);
         ResourceManager::Insert(L"m_light_bullet", material);
+        
+        ResourceManager::Load<Texture>(L"muzzle_launcher_01", L"..\\Resources\\Texture\\Spell\\Megalaser\\muzzle_launcher_01.png");
+        ResourceManager::Load<Texture>(L"wand_64", L"..\\Resources\\Texture\\Spell\\Megalaser\\wand_64.png");
+        ResourceManager::Load<Texture>(L"plasma_fading_green", L"..\\Resources\\Texture\\Spell\\Megalaser\\plasma_fading_green.png");
+        ResourceManager::Load<Texture>(L"explosion_016_plasma_green", L"..\\Resources\\Texture\\Spell\\Megalaser\\explosion_016_plasma_green.png");
+
+        std::shared_ptr<Texture> megalaser_ui = ResourceManager::Load<Texture>(L"megalaser_ui", L"..\\Resources\\Texture\\Spell\\Megalaser\\megalaser.png");
+        material = std::make_shared<Material>();
+        material->SetShader(spriteShader);
+        material->SetTexture(megalaser_ui);
+        ResourceManager::Insert(L"m_megalaser_ui", material);
+
+        material = std::make_shared<Material>();
+        material->SetShader(ParticleShader);
+        material->SetTexture(ResourceManager::Find<Texture>(L"plasma_fading_green"));
+        ResourceManager::Insert(L"m_plasma_fading_green", material);
 
         ResourceManager::Load<Texture>(L"light_arrow", L"..\\Resources\\Texture\\Spell\\MagicArrow\\light_arrow.png");
+        ResourceManager::Load<AudioClip>(L"MagicArrow_Sound", L"..\\Resources\\Audio\\Projectiles\\spell_shoot_ver2_1.wav");
         ResourceManager::Load<Texture>(L"explosion_016_slime", L"..\\Resources\\Texture\\Spell\\MagicArrow\\explosion_016_slime.png");
         ResourceManager::Load<Texture>(L"muzzle_laser_green_01", L"..\\Resources\\Texture\\Spell\\MagicArrow\\muzzle_laser_green_01.png");
 

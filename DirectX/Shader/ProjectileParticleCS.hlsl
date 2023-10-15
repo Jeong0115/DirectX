@@ -52,7 +52,7 @@ void main(uint3 DTid : SV_DispatchThreadID)
             particle.lifeTime = (projectile.randLifeTime.y - projectile.randLifeTime.x) * random.x + projectile.randLifeTime.x;           
             particle.color = projectile.color;
             particle.active = 1;
-            particle.scale = float4(1.0f, 1.0f, 1.0f, 0.0f);
+            particle.scale = projectile.scale;
             particle.lightScale = projectile.lightScale;
             
             ParticleBuffer[DTid.x] = particle;

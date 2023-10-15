@@ -74,6 +74,10 @@ namespace zz
 
         DisableDepthStencilState();
 
+        ResourceManager::Find<Mesh>(L"LightMesh")->BindBuffer();
+        ResourceManager::Find<Shader>(L"BloomShaderT")->BindShaders();
+        ResourceManager::Find<Texture>(L"light_mask")->BindShader(eShaderStage::PS, 2);
+        ResourceManager::Find<Mesh>(L"LightMesh")->Render();
 
         //ResourceManager::Find<Mesh>(L"LightMesh")->BindBuffer();
         //ResourceManager::Find<Shader>(L"BloomShaderT")->BindShaders();
@@ -86,10 +90,7 @@ namespace zz
         //graphics::GetDevice()->BindShaderResource(eShaderStage::PS, 2, &null);
         
        
-        ResourceManager::Find<Mesh>(L"LightMesh")->BindBuffer();
-        ResourceManager::Find<Shader>(L"BloomShaderT")->BindShaders();
-        ResourceManager::Find<Texture>(L"light_mask")->BindShader(eShaderStage::PS, 2);
-        ResourceManager::Find<Mesh>(L"LightMesh")->Render();
+
     }
 
 

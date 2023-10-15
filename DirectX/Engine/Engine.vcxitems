@@ -14,6 +14,11 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzMegalaserProj.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzAudioClip.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzAudioListener.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzAudioSource.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzFmod.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzBarBackGround.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzBloomManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzBomb.cpp" />
@@ -33,6 +38,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)zzLimbB.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzLimbKnee.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzMagicArrow.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzMegalaser.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzMegalaserUI.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzMonsterAttack.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzMuzzleEffect.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzOpeningScene.cpp" />
@@ -157,6 +164,11 @@
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)CommonInclude.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)define.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzMegalaserProj.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzAudioClip.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzAudioListener.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzAudioSource.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzFmod.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzBarBackGround.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzBloomManager.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzBomb.h" />
@@ -176,6 +188,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzLimbB.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzLimbKnee.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzMagicArrow.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzMegalaser.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzMegalaserUI.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzMonsterAttack.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzMuzzleEffect.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzOpeningScene.h" />

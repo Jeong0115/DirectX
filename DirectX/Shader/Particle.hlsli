@@ -67,16 +67,22 @@ struct ParticleCircleShared
 {
     float4 curPosition;
     float4 scale;
-    float4 color;
+    float4 color_min;
+    float4 color_max;
     float4 lightScale;
     
     float2 randPositionMin;
     float2 randPositionMax;
     
+    float2 randVelocityMin;
+    float2 randVelocityMax;
+    
     float2 randSpeed;
     float2 randLifeTime;
     
     float radius;
+    float createRate;
+    float createTime;
     
     int particleCnt;
     int maxParticleCnt;
@@ -84,7 +90,8 @@ struct ParticleCircleShared
     bool create;
 };
 
-struct ParticleMakeCircleShared
+
+struct ParticleImageShared
 {
     float4 curPosition;
     float4 scale;
@@ -96,15 +103,9 @@ struct ParticleMakeCircleShared
     float2 randVelocityMax;
     
     float2 randLifeTime;
+    float2 imageSize;
     
-    float radius;
-    float createRate;
-    float createTime;
-    
-    int particleCnt;
-
-    
-    bool create;
+    float angle;
 };
 
 RWStructuredBuffer<Particle> ParticleBuffer : register(u0);
@@ -112,14 +113,16 @@ RWStructuredBuffer<ParticleAnimation> ParticleAnimationBuffer : register(u2);
 RWStructuredBuffer<AnimationShared> AnimationSharedBuffer : register(u3);
 RWStructuredBuffer<ParticleShared> ParticleSharedBuffer : register(u4);
 RWStructuredBuffer<ParticleCircleShared> ParticleCircleSharedBuffer : register(u6);
-RWStructuredBuffer<ParticleMakeCircleShared> MakeCircleSharedBuffer : register(u7);
+RWStructuredBuffer<ParticleImageShared> ParticleImageSharedBuffer : register(u7);
 
 StructuredBuffer<Particle> particles : register(t14);
 StructuredBuffer<ParticleAnimation> particlesAnimation : register(t15);
 
 Texture2D noiseTexture : register(t1);
+Texture2D particleTexture : register(t10);
 
 cbuffer Noise : register(b6) { float4 noiseTextureSize; }
+cbuffer ColorRange : register(b7) { float2 colorRange; }
 
 static float GaussianFilter[5][5] =
 {

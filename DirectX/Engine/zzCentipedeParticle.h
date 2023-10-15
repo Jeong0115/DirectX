@@ -19,7 +19,7 @@ namespace zz
 
     private:
         class ParticleSystem* mParticle;    
-        struct ParticleMakeCircleShared mShareData;
+        struct ParticleCircleShared mShareData;
 
         bool mbCreate;
         float mTime;

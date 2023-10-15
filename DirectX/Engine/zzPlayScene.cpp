@@ -21,6 +21,8 @@
 #include "zzPixelWorld.h"
 
 #include "zzCentipede.h"
+#include "zzAudioSource.h"
+#include "zzAudioListener.h"
 
 namespace zz
 {
@@ -45,6 +47,9 @@ namespace zz
         MainCamera* cameraComp = camera->AddComponent<MainCamera>();
         camera->AddComponent<CameraScript>();
         cameraComp->SetSize(0.25f);
+
+        
+        //as->SetLoop(true);
 
         renderer::cameras.push_back(cameraComp);
         renderer::mainCamera = cameraComp;

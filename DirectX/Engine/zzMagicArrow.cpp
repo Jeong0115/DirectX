@@ -56,14 +56,16 @@ namespace zz
         ani->Create(L"light_arrow_Idle", texture, Vector2(0.0f, 0.0f), Vector2(9.0f, 5.0f), 1, Vector2::Zero, 1.0f);
         ani->PlayAnimation(L"light_arrow_Idle", true);
 
+        mSound = ResourceManager::Find<AudioClip>(L"MagicArrow_Sound");
+
         GetComponent<Transform>()->SetScale(9.f, 5.f, 1.0f);
         AddComponent<Collider>()->SetScale(9.f, 5.f, 1.0f);
 
         Light* light = AddComponent<Light>(); 
+
         light->SetLightType(1);
         light->SetLightScale(40.f, 40.f, 1.0f);
         light->SetLightColor(40.f / 255.f, 120.f / 255.f, 10.f / 255.f, 1.f);
-        light->SetAfterimageEffect(0.25f);
 
         mRigid = AddComponent<RigidBody>();
         mRigid->SetStartVelocity(mSpeed, mDirection);
@@ -74,6 +76,7 @@ namespace zz
         mParticle->SetMaterial(ResourceManager::Find<Material>(L"m_Particle"));
         mParticle->SetMesh(ResourceManager::Find<Mesh>(L"PointMesh"));
         mParticle->SetParticleShader(ResourceManager::Find<ParticleShader>(L"ProjectileParticleCS"));
+
 
         Particle particles[100] = {};
         mParticle->CreateStructedBuffer(sizeof(Particle), 100, eViewType::UAV, particles, true, 0, 14, 0);
@@ -104,10 +107,16 @@ namespace zz
         Particle tailParticles[100] = {};
         mTailParticle->CreateStructedBuffer(sizeof(Particle), 100, eViewType::UAV, tailParticles, true, 0, 14, 0);
         mTailParticle->CreateStructedBuffer(sizeof(ParticleShared), 1, eViewType::UAV, nullptr, true, 4, 14, 1);
+        
+        MeshRenderer* particleLight = new MeshRenderer();
+        particleLight->SetMaterial(ResourceManager::Find<Material>(L"m_particle_glow_particleLight"));
+        particleLight->SetMesh(ResourceManager::Find<Mesh>(L"PointMesh"));
+        mTailParticle->SetParticleLight(particleLight);
 
         mTailData.scale = Vector4(1.0f, 1.0f, 1.0f, 0.0f);
-        mTailData.color_min = mTailData.color_max = Vector4(150.f / 255.f, 255.f / 255.f, 70.f / 255.f, 0.7f);
+        mTailData.color_min = mTailData.color_max = Vector4(150.f / 255.f, 255.f / 255.f, 70.f / 255.f, 1.0f);
 
+        mTailData.lightScale = Vector4(6.0f, 6.0f, 1.0f, 0.0f);
         mTailData.randPositionMax = Vector2(2.0f, 2.0f);
         mTailData.randPositionMin = Vector2(-2.0f, -2.0f);
         mTailData.randVelocityMax = Vector2(20.0f, 40.0f);
@@ -210,6 +219,7 @@ namespace zz
         shareData.distance.z = 0;
         shareData.randLifeTime = Vector2(0.05f, 0.05f);
         shareData.angle = GetComponent<Transform>()->GetRotation().z;
+        shareData.scale = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 
         UINT count = (UINT)max(fabs(shareData.distance.x), fabs(shareData.distance.y));
         shareData.activeCount = count;

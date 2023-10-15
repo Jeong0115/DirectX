@@ -13,6 +13,7 @@
 #include "zzExplosionEffect.h"
 #include "zzRigidBody.h"
 #include "zzLight.h"
+#include "zzAudioSource.h"
 namespace zz
 {
     using namespace std;
@@ -54,7 +55,9 @@ namespace zz
 
         GetComponent<Transform>()->SetScale(10.f, 10.f, 1.0f);
         AddComponent<Collider>()->SetScale(10.f, 4.f, 1.0f);
-        //AddComponent<Light>()->SetLightScale(10.f, 10.f, 1.0f);
+
+        mSound = ResourceManager::Find<AudioClip>(L"SparkBolt_Sound");
+
 
         mRigid = AddComponent<RigidBody>();
         mRigid->SetStartVelocity(mSpeed, mDirection);

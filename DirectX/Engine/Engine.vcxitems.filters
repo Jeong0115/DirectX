@@ -487,6 +487,18 @@
     <Filter Include="Scene\Scene\BossArena">
       <UniqueIdentifier>{95b5f3e9-0485-4c20-979b-4370919ba8c7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameObject\Spell\Projectile\Megalaser">
+      <UniqueIdentifier>{ccb3c4df-2915-4598-8404-ab9a124ef10b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Audio">
+      <UniqueIdentifier>{6918cac9-15c2-4c9f-a067-8c8f351be7e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\SpellUI\Megalaser">
+      <UniqueIdentifier>{589b6ea2-53c3-4bce-bedf-d7fc1f55270a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Spell\Projectile\Megalaser\Child">
+      <UniqueIdentifier>{ce717d35-e048-4a63-ae4a-c80fec864da2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzEntity.cpp">
@@ -888,6 +900,27 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzBossArenaScene.cpp">
       <Filter>Scene\Scene\BossArena</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzAudioClip.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzAudioListener.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzAudioSource.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzFmod.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzMegalaser.cpp">
+      <Filter>GameObject\Spell\Projectile\Megalaser</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzMegalaserUI.cpp">
+      <Filter>UI\SpellUI\Megalaser</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzMegalaserProj.cpp">
+      <Filter>GameObject\Spell\Projectile\Megalaser\Child</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1317,6 +1350,27 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzBossArenaScene.h">
       <Filter>Scene\Scene\BossArena</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzAudioClip.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzAudioListener.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzAudioSource.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzFmod.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzMegalaser.h">
+      <Filter>GameObject\Spell\Projectile\Megalaser</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzMegalaserUI.h">
+      <Filter>UI\SpellUI\Megalaser</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzMegalaserProj.h">
+      <Filter>GameObject\Spell\Projectile\Megalaser\Child</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

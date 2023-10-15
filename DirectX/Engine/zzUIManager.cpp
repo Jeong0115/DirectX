@@ -23,6 +23,7 @@
 #include "zzWaterTrail_UI.h"
 #include "zzSpeedUp_UI.h"
 #include "zzBomb_UI.h"
+#include "zzMegalaserUI.h"
 
 #include "zzHealth.h"
 #include "zzLevitationEnerge.h"
@@ -68,6 +69,11 @@ namespace zz
         }
         {
             Bomb_UI* spell = new Bomb_UI();
+            spell->Initialize();
+            AcquireSpell(spell);
+        }
+        {
+            MegalaserUI* spell = new MegalaserUI();
             spell->Initialize();
             AcquireSpell(spell);
         }

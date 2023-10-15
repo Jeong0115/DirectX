@@ -7,6 +7,7 @@
 #include "zzInput.h"
 #include "zzTextObject.h"
 #include "zzEventManager.h"
+#include "zzAudioSource.h"
 
 #include "zzUIManager.h"
 #include "zzPlayer.h"
@@ -30,6 +31,7 @@ namespace zz
         , mCurReChargeTime(0.0f)
         , mbCastDelay(false)
         , mbReCharge(false)
+        , mSpellSound(nullptr)
     {
     }
 
@@ -39,6 +41,7 @@ namespace zz
 
     void Wand::Initialize()
     {
+        mSpellSound = AddComponent<AudioSource>();
         GameObject::Initialize();
     }
 
@@ -191,6 +194,13 @@ namespace zz
                         muzzle->GetComponent<Transform>()->SetParent(GetComponent<Transform>());
 
                         SceneManager::GetActiveScene()->AddGameObject(attackSpell, eLayerType::PlayerAttack);
+                        mSpellSound->SetClip(attackSpell->GetAudioClip());
+                        
+                        if (mSpellSound->GetClip() != nullptr)
+                        {
+                            mSpellSound->SetLoop(false);
+                            mSpellSound->Play();
+                        }
                         mCurSpellIndex++;
 
 

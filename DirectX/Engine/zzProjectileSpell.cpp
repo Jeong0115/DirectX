@@ -17,6 +17,7 @@ namespace zz
         , mTime(0.0f)
         , mRigid(nullptr)
         , mPrevPos(Vector4::Zero)
+        , mSound(nullptr)
     {
         mType = eSpellType::Projectile;
     }

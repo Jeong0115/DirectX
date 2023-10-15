@@ -52,6 +52,8 @@ namespace zz
         std::wstring mInformation;
 
     private:
+        class AudioSource* mSpellSound;
+
         InfoBox* mInfoBox;
     };
 }

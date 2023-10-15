@@ -17,12 +17,15 @@ namespace zz
         virtual void LateUpdate()   override;
         virtual void Render()       override;
 
+        void SetGroupCount(float x, float y, float z) { mCS->SetGroupCount(x, y, z); }
+
         void CreateStructedBuffer(UINT size, UINT stride, eViewType type, void* data, bool isStaging, UINT uavSlot, UINT srvSlot, int tempType);
         void SetStructedBufferData(void* data, UINT bufferCount, int tempType);
         void SetParticleShader(std::shared_ptr<ParticleShader> shader) { mCS = shader; }
 
         void SetActive(bool b) { mbAcitve = b; }
         void SetParticleLight(MeshRenderer* render) { lightRenderer = render; mbLight = true; }
+
     private:
         StructedBuffer* mBuffer;
         StructedBuffer* mSharedBuffer;

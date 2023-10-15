@@ -9,6 +9,8 @@ namespace zz
         RigidBody,
         Particle,
         MeshRenderer,
+        AudioSource,
+        AudioListener,
         Light,
         Script,
         DetectPlayer,
@@ -69,6 +71,7 @@ namespace zz
         Material,
         Mesh,
         Animation,
+        AudioClip,
         ComputeShader,
         End,
     };

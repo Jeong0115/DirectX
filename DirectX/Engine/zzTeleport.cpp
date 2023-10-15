@@ -46,7 +46,7 @@ namespace zz
         mParticle->CreateStructedBuffer(sizeof(ParticleCircleShared), 1, eViewType::UAV, nullptr, true, 6, 14, 1);
 
         mShareData.scale = Vector4(1.0f, 1.0f, 1.0f, 0.0f);
-        mShareData.color = Vector4(117.f / 255.f, 65.f / 255.f, 129.f / 255.f, 0.5f);
+        mShareData.color_min = mShareData.color_max = Vector4(117.f / 255.f, 65.f / 255.f, 129.f / 255.f, 0.06f);
 
         mShareData.curPosition = GetComponent<Transform>()->GetPosition() + 0.0f;
         mShareData.randPositionMax = Vector2(0.0f, 0.0f);

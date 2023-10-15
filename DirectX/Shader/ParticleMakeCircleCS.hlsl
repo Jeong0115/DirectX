@@ -10,10 +10,10 @@ void main(uint3 DTid : SV_DispatchThreadID)
     Particle particle = ParticleBuffer[DTid.x];
     
     
-    if (MakeCircleSharedBuffer[0].create)
+    if (ParticleCircleSharedBuffer[0].create)
     {
         int count;
-        InterlockedAdd(MakeCircleSharedBuffer[0].particleCnt, -1, count);
+        InterlockedAdd(ParticleCircleSharedBuffer[0].particleCnt, -1, count);
         
         if (count > 0)
         {
@@ -29,7 +29,7 @@ void main(uint3 DTid : SV_DispatchThreadID)
                 , GaussianBlur(uv + float2(0.3f, 0.f)).x
 
             );
-            ParticleMakeCircleShared sharedBuffer = MakeCircleSharedBuffer[0];
+            ParticleCircleShared sharedBuffer = ParticleCircleSharedBuffer[0];
             
             if (sharedBuffer.createRate < random.x) return;       
 

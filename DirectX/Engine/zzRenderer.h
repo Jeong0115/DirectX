@@ -65,6 +65,11 @@ namespace zz::renderer
         Vector4 textureSize;
     };
 
+    CBUFFER(ColorRangeCB, CBSLOT_COLOR_RANGE)
+    {
+        Vector2 colorRange;
+    };
+
     extern Vertex vertexes[];
     extern Vertex debugVertexes[];
     extern ConstantBuffer* constantBuffer[(UINT)eCBType::End];

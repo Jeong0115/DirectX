@@ -19,6 +19,7 @@
 #define CBSLOT_FLIP		        4
 #define CBSLOT_PARTICLE			5
 #define CBSLOT_NOISE			6
+#define CBSLOT_COLOR_RANGE		7
 
 namespace zz
 {
@@ -42,6 +43,7 @@ namespace zz
         Flip,
         Particle,
         Noise,
+        ColorRange,
         End,
     };
 
@@ -192,16 +194,22 @@ namespace zz
     {
         math::Vector4 curPosition;
         math::Vector4 scale;
-        math::Vector4 color;
+        math::Vector4 color_min;
+        math::Vector4 color_max;
         math::Vector4 lightScale;
 
         math::Vector2 randPositionMin;
         math::Vector2 randPositionMax;
 
+        math::Vector2 randVelocityMin;
+        math::Vector2 randVelocityMax;
+
         math::Vector2 randSpeed;
         math::Vector2 randLifeTime;
 
         float radius;
+        float createRate;
+        float createTime;
 
         int particleCnt;
         int maxParticleCnt;
@@ -209,7 +217,7 @@ namespace zz
         bool create;
     };
 
-    struct ParticleMakeCircleShared
+    struct ParticleImageShared
     {
         math::Vector4 curPosition;
         math::Vector4 scale;
@@ -219,15 +227,11 @@ namespace zz
 
         math::Vector2 randVelocityMin;
         math::Vector2 randVelocityMax;
+
         math::Vector2 randLifeTime;
+        math::Vector2 imageSize;
 
-        float radius;
-        float createRate;
-        float createTime;
-
-        int particleCnt;
-
-        bool create;
+        float angle;
     };
 
 }

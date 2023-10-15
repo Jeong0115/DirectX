@@ -32,6 +32,7 @@ namespace zz
 
     void ParticleSystem::Initialize()
     {
+        mCS->Initialize(mBuffer, mSharedBuffer);
     }
 
     void ParticleSystem::Update()

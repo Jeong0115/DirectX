@@ -71,7 +71,7 @@ void main(uint3 DTid : SV_DispatchThreadID)
             
             particle.position = sharedBuffer.curPosition + float4(position.xy + offsetPosition.xy, 0.0f, 0.0f);
             particle.lightScale = sharedBuffer.lightScale;
-            particle.color = sharedBuffer.color;
+            particle.color = sharedBuffer.color_min;
             particle.scale = sharedBuffer.scale;
             particle.active = 1;
             

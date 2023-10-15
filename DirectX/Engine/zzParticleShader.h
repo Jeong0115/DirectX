@@ -11,6 +11,8 @@ namespace zz
         ParticleShader();
         ~ParticleShader();
 
+        void Initialize(StructedBuffer* particleBuffer, StructedBuffer* sharedBuffer);
+
         virtual void Binds() override;
         virtual void Clear() override;
 

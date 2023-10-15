@@ -25,6 +25,7 @@ namespace zz
         class ParticleSystem*   mSubParticle;
         class ParticleSystem*   mTailParticle;
         class ExplosionEffect*  mExplosion;
+        
 
         float   mSubParticleTime;
         float   mSleepTime;

@@ -20,6 +20,7 @@
 #include "zzDetectPlayer.h"
 #include "zzEventManager.h"
 #include "zzHealthPoint.h"
+#include "zzAudioListener.h"
 
 
 namespace zz
@@ -56,7 +57,7 @@ namespace zz
         mesh->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
 
         AddComponent<Levitation>()->SetMaxEnergy(3.0f);
-
+        AddComponent<AudioListener>();
         //PixelCollider* pxCollier = AddComponent<PixelCollider>();
         //pxCollier->SetCollision(Vector3(0.0f, -4.0f, 0.0f), Vector3(6.f, 8.f, 0.0f));
         //pxCollier->SetClimbY(3.0f);
