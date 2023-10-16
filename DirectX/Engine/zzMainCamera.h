@@ -24,7 +24,7 @@ namespace zz
         void RenderCutOut();
         void RenderTransparent();
 
-
+        void RenderPlayerView();
 
     private:
         std::bitset<(UINT)eLayerType::End>  mLayerMask;

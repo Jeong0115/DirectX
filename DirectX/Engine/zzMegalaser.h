@@ -21,13 +21,14 @@ namespace zz
         void OnCollision(struct Element& element);
 
     private:
-        class ParticleSystem* mParticle;
-        struct ParticleImageShared mSharedData;
+        class ParticleSystem*       mParticle;
+        struct ParticleImageShared  mSharedData;
 
-        Particle* mParticleBuffer;
-        float mParticleTime;
+        Vector3     mOffset;
+        Particle*   mParticleBuffer;
+        float       mParticleTime;
 
-        bool mbCreate;
+        bool        mbCreate;
     };
 }
 

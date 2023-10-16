@@ -138,6 +138,9 @@
     <FxCompile Include="$(MSBuildThisFileDirectory)ParticleImageCS.hlsl">
       <Filter>Particle</Filter>
     </FxCompile>
+    <FxCompile Include="$(MSBuildThisFileDirectory)AddDarkVS.hlsl">
+      <Filter>Light</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)Common.hlsli" />

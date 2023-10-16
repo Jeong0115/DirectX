@@ -87,6 +87,7 @@ namespace zz
         AlphaBlend,
         LightMap,
         AddDark,
+        View,
         AddLIght,
         InsertBloom,
         End,

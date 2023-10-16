@@ -69,11 +69,13 @@ namespace zz::graphics
 
         void CreateLightMap();
         void CreateBloomRenderTarget();
+        void CreateVisibility(UINT width, UINT height);
 
         void DrawIndexed(UINT IndexCount, UINT StartIndexLocation, INT BaseVertexLocation);
         void DrawIndexedInstanced(UINT IndexCountPerInstance, UINT InstanceCount, UINT StartIndexLocation, INT BaseVertexLocation, UINT StartInstanceLocation);
         void SetLightMapRenderTarget(bool bClear = true);
         void SetBloomRenderTarget();
+        void SetVisibilityRenderTarget();
         void ClearRenderTarget();
         void UpdateViewPort();
         void Draw();
@@ -87,6 +89,8 @@ namespace zz::graphics
 
         ID3D11ShaderResourceView* GetBloomResource() { return mBloomSRV.Get(); }
         ID3D11Texture2D* GetBloomTexture() { return mBloomRenderTarget.Get(); }
+
+        ID3D11ShaderResourceView* GetVisibilityResource() { return mVisibilitySRV.Get(); }
 	private:
 		Microsoft::WRL::ComPtr<ID3D11Device> mDevice;
 		Microsoft::WRL::ComPtr<ID3D11DeviceContext> mContext;
@@ -104,8 +108,13 @@ namespace zz::graphics
         Microsoft::WRL::ComPtr<ID3D11RenderTargetView> mBloomRenderTargetView;
         Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mBloomSRV;
 
+        Microsoft::WRL::ComPtr<ID3D11Texture2D> mVisibilityRenderTarget;
+        Microsoft::WRL::ComPtr<ID3D11RenderTargetView> mVisibilityRenderTargetView;
+        Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mVisibilitySRV;
+
         D3D11_VIEWPORT mViewPort;
         D3D11_VIEWPORT mBloomViewPort;
+        D3D11_VIEWPORT mVisibilityViewPort;
 	};
 
     inline GraphicsDevice*& GetDevice()

@@ -21,8 +21,10 @@
 #include "zzEventManager.h"
 #include "zzHealthPoint.h"
 #include "zzAudioListener.h"
+#include "zzGraphicsDevice.h"
+#include "zzPlayerView.h"
 
-
+using namespace zz::graphics;
 namespace zz
 {
     Player::Player()
@@ -43,6 +45,8 @@ namespace zz
             delete mPlayerArm;
             mPlayerArm = nullptr;
         }
+        delete mPlayerView;
+        mPlayerView = nullptr;
     }
 
     void Player::Initialize()
@@ -58,13 +62,16 @@ namespace zz
 
         AddComponent<Levitation>()->SetMaxEnergy(3.0f);
         AddComponent<AudioListener>();
-        //PixelCollider* pxCollier = AddComponent<PixelCollider>();
-        //pxCollier->SetCollision(Vector3(0.0f, -4.0f, 0.0f), Vector3(6.f, 8.f, 0.0f));
-        //pxCollier->SetClimbY(3.0f);
+        PixelCollider* pxCollier = AddComponent<PixelCollider>();
+        pxCollier->SetCollision(Vector3(0.0f, -4.0f, 0.0f), Vector3(6.f, 8.f, 0.0f));
+        pxCollier->SetClimbY(3.0f);
+
+        mPlayerView = new PlayerView();
+        mPlayerView->SetPlayer(this);
+        mPlayerView->Initialize();
 
         mRigid = AddComponent<RigidBody>();
-
-        mRigid->SetGravity(0.f);
+        //mRigid->SetGravity(0.f);
         AddComponent<Collider>()->SetScale(6.0f, 10.f, 1.0f);
         //AddComponent<Light>()->SetLightScale(600.f, 400.f, 1.0f);
 
@@ -169,6 +176,8 @@ namespace zz
         mPlayerArm->LateUpdate();
         if (mEquipment != nullptr)
             mEquipment->LateUpdate();
+
+        mPlayerView->LateUpdate();
     }
 
     void Player::Render()
@@ -213,5 +222,10 @@ namespace zz
     }
     void Player::OnCollisionExit(GameObject* other)
     {
+    }
+
+    void Player::SetPlayerView()
+    {
+
     }
 }

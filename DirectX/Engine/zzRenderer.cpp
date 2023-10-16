@@ -211,6 +211,14 @@ namespace zz::renderer
         spriteShader->CreateShader(eShaderStage::PS, L"SpritePS.hlsl", "main");
         ResourceManager::Insert(L"SpriteShader", spriteShader);
 
+        std::shared_ptr<Shader> ViewShader = std::make_shared<Shader>();
+        ViewShader->CreateShader(eShaderStage::VS, L"SpriteVS.hlsl", "main");
+        ViewShader->CreateShader(eShaderStage::PS, L"SpritePS.hlsl", "main");
+        ViewShader->SetBSState(eBSType::View);
+        ViewShader->SetDSState(eDSType::None);
+        ViewShader->SetRSState(eRSType::SolidNone);
+        ResourceManager::Insert(L"ViewShader", ViewShader);
+
         std::shared_ptr<Shader> sliderShader = std::make_shared<Shader>();
         sliderShader->CreateShader(eShaderStage::VS, L"SpriteVS.hlsl", "main");
         sliderShader->CreateShader(eShaderStage::PS, L"SliderPS.hlsl", "main");
@@ -245,10 +253,10 @@ namespace zz::renderer
         ResourceManager::Insert(L"BloomShader", lightMapShader2);
 
         std::shared_ptr<Shader> lightMapShadert = std::make_shared<Shader>();
-        lightMapShadert->CreateShader(eShaderStage::VS, L"LightMapVS.hlsl", "main");
+        lightMapShadert->CreateShader(eShaderStage::VS, L"AddDarkVS.hlsl", "main");
         lightMapShadert->CreateShader(eShaderStage::PS, L"AddDarkPS.hlsl", "main");
         lightMapShadert->SetBSState(eBSType::AddDark);
-        ResourceManager::Insert(L"BloomShaderT", lightMapShadert);
+        ResourceManager::Insert(L"AddDarkShader", lightMapShadert);
 
         std::shared_ptr<Shader> spriteAnimationShader = std::make_shared<Shader>();
         spriteAnimationShader->CreateShader(eShaderStage::VS, L"SpriteAnimationVS.hlsl", "main");
@@ -452,6 +460,9 @@ namespace zz::renderer
         shader = ResourceManager::Find<Shader>(L"SpriteShader");
         GetDevice()->CreateInputLayout(arrLayout, 3, shader->GetVSCode(), shader->GetInputLayoutAddressOf());
 
+        shader = ResourceManager::Find<Shader>(L"ViewShader");
+        GetDevice()->CreateInputLayout(arrLayout, 3, shader->GetVSCode(), shader->GetInputLayoutAddressOf());
+
         shader = ResourceManager::Find<Shader>(L"SliderShader");
         GetDevice()->CreateInputLayout(arrLayout, 3, shader->GetVSCode(), shader->GetInputLayoutAddressOf());
 
@@ -470,7 +481,7 @@ namespace zz::renderer
         shader = ResourceManager::Find<Shader>(L"BloomShader");
         GetDevice()->CreateInputLayout(arrLayout, 3, shader->GetVSCode(), shader->GetInputLayoutAddressOf());
 
-        shader = ResourceManager::Find<Shader>(L"BloomShaderT");
+        shader = ResourceManager::Find<Shader>(L"AddDarkShader");
         GetDevice()->CreateInputLayout(arrLayout, 3, shader->GetVSCode(), shader->GetInputLayoutAddressOf());
 
         shader = ResourceManager::Find<Shader>(L"SpriteAnimationShader");
@@ -635,6 +646,18 @@ namespace zz::renderer
         blendDesc2.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;    // The addition operation for alpha, but effectively this becomes multiplication due to the blend factors
         blendDesc2.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
         GetDevice()->CreateBlendState(&blendDesc2, blendStates[(UINT)eBSType::AddDark].GetAddressOf());
+
+        D3D11_BLEND_DESC vblendDesc = {};
+        vblendDesc.RenderTarget[0].BlendEnable = true;
+        vblendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;        // Use the full source color
+        vblendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_ONE;       // Use the full destination color
+        vblendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_MAX;      // Use the maximum of source and destination colors
+        vblendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;   // Use the full source alpha
+        vblendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;  // Use the full destination alpha
+        vblendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_MAX; // Use the maximum of source and destination alpha
+        vblendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+        GetDevice()->CreateBlendState(&vblendDesc, blendStates[(UINT)eBSType::View].GetAddressOf());
     }
 
     void SetupState()
@@ -990,13 +1013,14 @@ namespace zz::renderer
         ResourceManager::Load<Texture>(L"wand_64", L"..\\Resources\\Texture\\Spell\\Megalaser\\wand_64.png");
         ResourceManager::Load<Texture>(L"plasma_fading_green", L"..\\Resources\\Texture\\Spell\\Megalaser\\plasma_fading_green.png");
         ResourceManager::Load<Texture>(L"explosion_016_plasma_green", L"..\\Resources\\Texture\\Spell\\Megalaser\\explosion_016_plasma_green.png");
+        ResourceManager::Load<Texture>(L"laser_green_big", L"..\\Resources\\Texture\\Spell\\Megalaser\\laser_green_big.png");
 
         std::shared_ptr<Texture> megalaser_ui = ResourceManager::Load<Texture>(L"megalaser_ui", L"..\\Resources\\Texture\\Spell\\Megalaser\\megalaser.png");
         material = std::make_shared<Material>();
         material->SetShader(spriteShader);
         material->SetTexture(megalaser_ui);
         ResourceManager::Insert(L"m_megalaser_ui", material);
-
+            
         material = std::make_shared<Material>();
         material->SetShader(ParticleShader);
         material->SetTexture(ResourceManager::Find<Texture>(L"plasma_fading_green"));
@@ -1181,5 +1205,11 @@ namespace zz::renderer
         material->SetShader(spriteShader);
         material->SetTexture(teleport_center);
         ResourceManager::Insert(L"m_teleport_center", material);
+
+        std::shared_ptr<Texture> light_mask = ResourceManager::Load<Texture>(L"light_mask", L"..\\Resources\\Texture\\Light\\light_mask.png");
+        material = std::make_shared<Material>();
+        material->SetShader(ResourceManager::Find<Shader>(L"ViewShader"));
+        material->SetTexture(light_mask);
+        ResourceManager::Insert(L"m_view", material);
     }
 }

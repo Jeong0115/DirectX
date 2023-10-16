@@ -20,6 +20,7 @@
 
 #define STB_HERRINGBONE_WANG_TILE_IMPLEMENTATION
 #include "..\External\Herringbone\include\stb_herringbone_wang_tile.h"
+#include "zzGraphicsDevice.h"
 
 namespace zz
 {
@@ -52,7 +53,6 @@ namespace zz
 
     void PixelWorld::Initialize()
     {
-
         InitializeElement();
         for (int i = 0; i <= 3; i++)
         {
@@ -82,7 +82,8 @@ namespace zz
         mElementMap.insert({ 'e', EMPTY });
         mSelectElement = mElementMap.find('e')->second;
         loadMaterialImage();
-        return;
+
+        graphics::GetDevice()->CreateVisibility((UINT)mWorldWidth, (UINT)mWorldHeight);
 
         CreateNewWorld();
         Box2dWorld::Initialize();

@@ -71,7 +71,7 @@ namespace zz
         OpeningScene* opening = new OpeningScene();
         opening->Initialize();
 
-      //  thread.enqueue([=]() { PixelWorld::Initialize(); });
+        thread.enqueue([=]() { PixelWorld::Initialize(); });
         thread.enqueue([=]() { WriteManager::Initialize(); });
         thread.enqueue([=]() { UIManager::Initialize(); });
         thread.enqueue([=]() { SceneManager::Initialize(); });
@@ -169,7 +169,9 @@ namespace zz
         {
             Editor::Run();
         }
+       
         Present();
+        
 
         EventManager::Update();
 	}
@@ -180,6 +182,7 @@ namespace zz
         SceneManager::Release();
         UIManager::Release();
         ObjectPoolManager::Release();
+        Fmod::Release();
     }
 
     void Application::Present()

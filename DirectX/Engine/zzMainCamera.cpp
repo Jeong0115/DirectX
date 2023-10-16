@@ -11,6 +11,10 @@
 #include "zzApplication.h"
 #include "zzBloomManager.h"
 #include "zzExplosion_128.h"
+
+#include "zzTransform.h"
+#include "zzPixelWorld.h"
+
 namespace zz
 {
     bool CompareZSort(GameObject* a, GameObject* b)
@@ -66,19 +70,22 @@ namespace zz
 
         if (Application::LightDisabled) return;
 
+        DisableDepthStencilState();
+
+        RenderPlayerView();
+        //ResourceManager::Find<Mesh>(L"LightMesh")->BindBuffer();
+        //ResourceManager::Find<Shader>(L"BloomShaderT")->BindShaders();
+        //ResourceManager::Find<Texture>(L"light_mask")->BindShader(eShaderStage::PS, 2);
+        //ResourceManager::Find<Mesh>(L"LightMesh")->Render();
+
         ResourceManager::Find<Mesh>(L"LightMesh")->BindBuffer();
         ResourceManager::Find<Shader>(L"BloomShader")->BindShaders();
 
 
         BloomManager::Render();
 
-        DisableDepthStencilState();
-
-        ResourceManager::Find<Mesh>(L"LightMesh")->BindBuffer();
-        ResourceManager::Find<Shader>(L"BloomShaderT")->BindShaders();
-        ResourceManager::Find<Texture>(L"light_mask")->BindShader(eShaderStage::PS, 2);
-        ResourceManager::Find<Mesh>(L"LightMesh")->Render();
-
+ 
+        
         //ResourceManager::Find<Mesh>(L"LightMesh")->BindBuffer();
         //ResourceManager::Find<Shader>(L"BloomShaderT")->BindShaders();
         //
@@ -189,5 +196,34 @@ namespace zz
 
             gameObj->Render();
         }
+    }
+
+    void MainCamera::RenderPlayerView()
+    {
+        Vector3 pos = Vector3(PixelWorld::mWorldWidth / 2.f, -PixelWorld::mWorldHeight / 2.f, 0.0f);
+        Matrix position = Matrix::CreateTranslation(pos);
+        Matrix scale = Matrix::CreateScale(Vector3(PixelWorld::mWorldWidth, PixelWorld::mWorldHeight, 1.0f));
+        Matrix world = scale * position;
+
+        renderer::TransformCB trCB = {};
+        trCB.mWorld = world;
+        trCB.mView = Camera::GetGpuViewMatrix();
+        trCB.mProjection = Camera::GetGpuProjectionMatrix();
+        trCB.WorldViewProj = trCB.mWorld * trCB.mView * trCB.mProjection;
+
+        ConstantBuffer* cb = renderer::constantBuffer[(UINT)eCBType::Transform];
+        cb->SetBufferData(&trCB);
+        cb->BindConstantBuffer(eShaderStage::VS);
+        cb->BindConstantBuffer(eShaderStage::PS);
+
+        ResourceManager::Find<Mesh>(L"RectMesh")->BindBuffer();
+        ResourceManager::Find<Shader>(L"AddDarkShader")->BindShaders();
+        
+        ID3D11ShaderResourceView* visibilitySrv = graphics::GetDevice()->GetVisibilityResource();
+        ID3D11ShaderResourceView* null = nullptr;
+        
+        graphics::GetDevice()->BindShaderResource(eShaderStage::PS, 2, &visibilitySrv);
+        graphics::GetDevice()->DrawIndexed(6, 0, 0);
+        graphics::GetDevice()->BindShaderResource(eShaderStage::PS, 2, &null);
     }
 }

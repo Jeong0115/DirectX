@@ -45,6 +45,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)zzOpeningScene.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzOrbBlue.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzOrbPink.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzPlayerView.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzSpeedUp_UI.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzDetectPlayer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzExplosionEffect.cpp" />
@@ -195,6 +196,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzOpeningScene.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzOrbBlue.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzOrbPink.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzPlayerView.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzSpeedUp_UI.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzDetectPlayer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzExplosionEffect.h" />

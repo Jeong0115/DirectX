@@ -10,6 +10,7 @@
 #include "zzElement.h"
 #include "zzTime.h"
 #include "zzParticleSystem.h"
+#include "zzLight.h"
 
 namespace zz
 {
@@ -34,8 +35,8 @@ namespace zz
         float angle = transform->GetRotation().z;
 
         Vector2 offset;
-        offset.x = -2.f * (mIndex - 2) * sin(angle);
-        offset.y = 2.f * (mIndex - 2) * cos(angle);
+        offset.x = -1.f * (mIndex - 2) * sin(angle);
+        offset.y = 1.f * (mIndex - 2) * cos(angle);
 
         transform->ShiftPositionXY(offset);
 
@@ -43,19 +44,24 @@ namespace zz
         mesh->SetMaterial(ResourceManager::Find<Material>(L"m_SpriteAnimation"));
         mesh->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
 
-        std::shared_ptr<Texture> texture = ResourceManager::Find<Texture>(L"plasma_fading_green");
+        std::shared_ptr<Texture> texture = ResourceManager::Find<Texture>(L"laser_green_big");
 
         Animator* ani = AddComponent<Animator>();
-        ani->Create(L"plasma_fading_green_idle", texture, Vector2(0.0f, 0.0f), Vector2(20.0f, 20.0f), 1, Vector2::Zero, 0.2f);
-        ani->PlayAnimation(L"plasma_fading_green_idle", true);
+        ani->Create(L"laser_green_big_idle", texture, Vector2(0.0f, 0.0f), Vector2(8.0f, 5.0f), 2, Vector2::Zero, 0.02f);
+        ani->PlayAnimation(L"laser_green_big_idle", true);
 
-        GetComponent<Transform>()->SetScale(2.f, 2.f, 1.0f);
-        AddComponent<Collider>()->SetScale(2.f, 2.f, 1.0f);
+        GetComponent<Transform>()->SetScale(8.f, 5.f, 1.0f);
+        AddComponent<Collider>()->SetScale(1.f, 1.f, 1.0f);
 
         mRigid = AddComponent<RigidBody>();
         mRigid->SetStartVelocity(mSpeed, mDirection);
         mRigid->SetGravity(0.0f);
         mRigid->SetRotate(true);
+
+        Light* light = AddComponent<Light>();
+        light->SetLightType(5);
+        light->SetLightScale(16.f, 16.f, 1.0f);
+        light->SetLightColor(20.f / 255.f, 120.f / 255.f, 10.f / 255.f, 0.5f);
 
         mParticle = AddComponent<ParticleSystem>();
         mParticle->SetMaterial(ResourceManager::Find<Material>(L"m_plasma_fading_green"));
@@ -67,11 +73,16 @@ namespace zz
         mParticle->CreateStructedBuffer(sizeof(ParticleShared), 1, eViewType::UAV, nullptr, true, 4, 14, 1);
 
         mSharedData.distance.z = 0;
-        mSharedData.randLifeTime = Vector2(0.2f, 0.2f);
+        mSharedData.randLifeTime = Vector2(0.4f, 0.4f);
         mSharedData.angle = GetComponent<Transform>()->GetRotation().z;
-        mSharedData.scale = Vector4(2.0f, 2.0f, 1.0f, 1.0f);
+        mSharedData.scale = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
         mSharedData.color_min = mSharedData.color_max = Vector4(150.f / 255.f, 255.f / 255.f, 70.f / 255.f, 1.0f);
+        mSharedData.lightScale = Vector4(3.0f, 3.0f, 1.0f, 1.0f);
 
+        MeshRenderer* particleLight = new MeshRenderer();
+        particleLight->SetMaterial(ResourceManager::Find<Material>(L"m_particle_glow_particleLight"));
+        particleLight->SetMesh(ResourceManager::Find<Mesh>(L"PointMesh"));
+        mParticle->SetParticleLight(particleLight);
 
         mExplosion = new ExplosionEffect();
         std::shared_ptr<Texture> explosionTexture = ResourceManager::Find<Texture>(L"explosion_016_plasma_green");
@@ -120,7 +131,7 @@ namespace zz
         mSharedData.curPosition = curPos + 0.0f;
         mSharedData.distance = mSharedData.curPosition - mPrevPos;
 
-        UINT count = (UINT)max(fabs(mSharedData.distance.x), fabs(mSharedData.distance.y));
+        UINT count = (UINT)max(fabs(mSharedData.distance.x), fabs(mSharedData.distance.y)) + 1;
         mSharedData.activeCount = count;
         mSharedData.totalActiveCount = count;
         mSharedData.index = (float)mIndex;

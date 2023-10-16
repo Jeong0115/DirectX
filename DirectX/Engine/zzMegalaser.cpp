@@ -23,8 +23,9 @@ namespace zz
         , mParticleBuffer(nullptr)
         , mParticleTime(0.0f)
         , mbCreate(false)
+        , mOffset(Vector3(-33.f,0.0f,0.0f))
     {
-        mSpeed = 100.f;
+        mSpeed = 150.f;
         mCastDelay = 1.5f;
         mDamage = 125.f;
         mManaDrain = 110.f;
@@ -61,14 +62,25 @@ namespace zz
         mParticle->CreateStructedBuffer(sizeof(ParticleImageShared), 1, eViewType::UAV, nullptr, true, 7, 14, 1);
         mParticle->SetGroupCount(2, 2, 1);
 
-        mSharedData.angle = GetComponent<Transform>()->GetRotation().z;
-        mSharedData.color_min = mSharedData.color_max = Vector4(0.2f, 0.8f, 0.0f, 1.0f);
-        mSharedData.curPosition = GetComponent<Transform>()->GetPosition() + 0.0f;
+        MeshRenderer* particleLight = new MeshRenderer();
+        particleLight->SetMaterial(ResourceManager::Find<Material>(L"m_particle_glow_particleLight"));
+        particleLight->SetMesh(ResourceManager::Find<Mesh>(L"PointMesh"));
+        mParticle->SetParticleLight(particleLight);
+
+        float angle = GetComponent<Transform>()->GetRotation().z;
+        Vector3 offsetPos;
+        offsetPos.x = mOffset.x * cos(angle) - mOffset.y * sin(angle);
+        offsetPos.y = mOffset.x * sin(angle) + mOffset.y * cos(angle);
+
+        mSharedData.angle = angle;
+        mSharedData.color_min = mSharedData.color_max = Vector4(0.2f, 0.6f, 0.0f, 0.1f);
+        mSharedData.curPosition = (GetComponent<Transform>()->GetPosition() + offsetPos) + 0.0f;
         mSharedData.imageSize = Vector2(58.f, 58.f);
-        mSharedData.randLifeTime = Vector2(0.5f, 1.5f);
+        mSharedData.randLifeTime = Vector2(0.5f, 2.3f);
         mSharedData.randVelocityMin = Vector2(-2.0f, -2.0f);
         mSharedData.randVelocityMax = Vector2(2.0f, 2.0f);
         mSharedData.scale = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+        mSharedData.lightScale = Vector4(9.0f, 9.0f, 1.0f, 1.0f);
 
         mParticle->SetStructedBufferData(&mSharedData, 1, 1);
 

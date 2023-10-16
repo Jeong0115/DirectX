@@ -499,6 +499,9 @@
     <Filter Include="GameObject\Spell\Projectile\Megalaser\Child">
       <UniqueIdentifier>{ce717d35-e048-4a63-ae4a-c80fec864da2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameObject\Player\PlayerView">
+      <UniqueIdentifier>{47587b28-4b34-4ee2-9977-e01a439c6dbb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzEntity.cpp">
@@ -921,6 +924,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzMegalaserProj.cpp">
       <Filter>GameObject\Spell\Projectile\Megalaser\Child</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzPlayerView.cpp">
+      <Filter>GameObject\Player\PlayerView</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1371,6 +1377,9 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzMegalaserProj.h">
       <Filter>GameObject\Spell\Projectile\Megalaser\Child</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzPlayerView.h">
+      <Filter>GameObject\Player\PlayerView</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
