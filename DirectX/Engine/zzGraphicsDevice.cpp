@@ -72,6 +72,7 @@ namespace zz::graphics
         //CreatePixelGrid();
         CreateLightMap();
         CreateBloomRenderTarget();
+        CreateFinalLightTarget();
 
         BindViewPort(&mViewPort);
         mContext->OMSetRenderTargets(1, mRenderTargetView.GetAddressOf(), mDepthStencilView.Get());
@@ -628,6 +629,52 @@ namespace zz::graphics
         mBloomViewPort = { 0.0f, 0.0f , 400.f , 225.f, 0.0f, 1.0f };
     }
 
+    void GraphicsDevice::CreateFinalLightTarget()
+    {
+        Application& application = Application::GetInst();
+
+        D3D11_TEXTURE2D_DESC texDesc = {};
+        texDesc.Width = application.GetWidth();
+        texDesc.Height = application.GetHeight();
+        texDesc.MipLevels = 1;
+        texDesc.ArraySize = 1;
+        texDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+        texDesc.SampleDesc.Count = 1;
+        texDesc.Usage = D3D11_USAGE_DEFAULT;
+        texDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+        texDesc.CPUAccessFlags = 0;
+        texDesc.MiscFlags = 0;
+
+        HRESULT hr = mDevice->CreateTexture2D(&texDesc, nullptr, &mFinalLightRenderTarget);
+
+        if (FAILED(hr))
+        {
+            return;
+        }
+
+        D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+        srvDesc.Format = texDesc.Format;
+        srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+        srvDesc.Texture2D.MostDetailedMip = 0;
+        srvDesc.Texture2D.MipLevels = 1;
+
+        hr = mDevice->CreateShaderResourceView(mFinalLightRenderTarget.Get(), &srvDesc, &mFinalLightSRV);
+        if (FAILED(hr))
+        {
+            return;
+        }
+
+        D3D11_RENDER_TARGET_VIEW_DESC rtvDesc = {};
+        rtvDesc.Format = texDesc.Format;
+        rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+        rtvDesc.Texture2D.MipSlice = 0;
+
+        hr = mDevice->CreateRenderTargetView(mFinalLightRenderTarget.Get(), &rtvDesc, &mFinalLightRenderTargetView);
+        if (FAILED(hr))
+        {
+            return;
+        }
+    }
     void GraphicsDevice::CreateVisibility(UINT width, UINT height)
     {
         D3D11_TEXTURE2D_DESC texDesc = {};
@@ -702,6 +749,14 @@ namespace zz::graphics
         mContext->ClearRenderTargetView(mBloomRenderTargetView.Get(), bgColor);
         mContext->OMSetRenderTargets(1, mBloomRenderTargetView.GetAddressOf(), nullptr);
         BindViewPort(&mBloomViewPort);
+    }
+
+    void GraphicsDevice::SetFinalLightRenderTarget()
+    {
+        FLOAT bgColor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+        mContext->ClearRenderTargetView(mFinalLightRenderTargetView.Get(), bgColor);
+        mContext->OMSetRenderTargets(1, mFinalLightRenderTargetView.GetAddressOf(), nullptr);
+        BindViewPort(&mViewPort);
     }
 
     void GraphicsDevice::SetVisibilityRenderTarget()

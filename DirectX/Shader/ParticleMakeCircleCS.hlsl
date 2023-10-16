@@ -9,7 +9,6 @@ void main(uint3 DTid : SV_DispatchThreadID)
     
     Particle particle = ParticleBuffer[DTid.x];
     
-    
     if (ParticleCircleSharedBuffer[0].create)
     {
         int count;

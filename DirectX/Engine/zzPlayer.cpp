@@ -24,6 +24,9 @@
 #include "zzGraphicsDevice.h"
 #include "zzPlayerView.h"
 
+#include "zzAudioSource.h"
+#include "zzAudioClip.h"
+
 using namespace zz::graphics;
 namespace zz
 {
@@ -48,7 +51,7 @@ namespace zz
         delete mPlayerView;
         mPlayerView = nullptr;
     }
-
+    AudioSource* audio;
     void Player::Initialize()
     {
         Input::SetPlayer(GetComponent<Transform>());
@@ -59,6 +62,7 @@ namespace zz
         MeshRenderer* mesh = AddComponent<MeshRenderer>();
         mesh->SetMaterial(ResourceManager::Find<Material>(L"m_SpriteAnimation"));
         mesh->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
+
 
         AddComponent<Levitation>()->SetMaxEnergy(3.0f);
         AddComponent<AudioListener>();
@@ -87,8 +91,11 @@ namespace zz
 
         mPlayerArm->Initialize();
 
-        HealthPoint* health = AddComponent<HealthPoint>();
-        health->SetMaxHP(100.f);
+        mHealthPoint = AddComponent<HealthPoint>();
+		mHealthPoint->SetMaxHP(100.f);
+		mHealthPoint->SetHitEvent([this]() { HitEvent(); });
+        mHealthPoint->SetHpZeroEvent([this]() { DeathEvent(); });
+        audio = AddComponent<AudioSource>();
         //mEquipment->Initialize();
         GameObject::Initialize();
     }
@@ -135,9 +142,13 @@ namespace zz
             mAnimator->PlayAnimation(L"Player_Idle", true);
             mRigid->SetVelocityX(0.0f);
         }
-        if (Input::GetKey(eKeyCode::S))
+        if (Input::GetKeyUp(eKeyCode::S))
         {
             mRigid->SetVelocityY(-50.f);
+
+            audio->SetClip(ResourceManager::Find<AudioClip>(L"SparkBolt_Sound"));
+            audio->SetLoop(false);
+            audio->Play();
         }
         
         tr->SetPosition(pos);
@@ -182,6 +193,12 @@ namespace zz
 
     void Player::Render()
     {
+        renderer::ColorCB colorCB = {};
+
+        ConstantBuffer* colorBuff = renderer::constantBuffer[(UINT)eCBType::Color];
+        colorBuff->SetBufferData(&colorCB);
+        colorBuff->BindConstantBuffer(eShaderStage::PS);
+
         renderer::FlipCB flipCB = {};
 
         flipCB.flip.x = Input::IsFlip();
@@ -224,8 +241,26 @@ namespace zz
     {
     }
 
-    void Player::SetPlayerView()
-    {
+	void Player::HitEvent()
+	{
+		EvenetData data;
+		data.eventType = eEvent::Health_Change;
 
+		data.health = mHealthPoint->GetCurHP() / mHealthPoint->GetMaxHP();
+
+		EventManager::RegisterEvent(data);
+	}
+
+    void Player::DeathEvent()
+    {
+        mHealthPoint->ChangeCurHP(mHealthPoint->GetMaxHP());
+
+        EvenetData data;
+        data.eventType = eEvent::Health_Change;
+
+        data.health = 1.0f;
+
+        EventManager::RegisterEvent(data);
     }
+
 }

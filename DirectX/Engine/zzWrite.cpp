@@ -8,6 +8,11 @@
 namespace zz
 {
     std::unordered_map<int, FontData> WriteManager::mFontPixelData = {};
+    std::unordered_map<int, FontData> WriteManager::mFontDamageData = {};
+
+    std::shared_ptr<Texture> WriteManager::mFont_pixel = {};
+    std::shared_ptr<Texture> WriteManager::mFont_damage = {};
+
     WriteManager::WriteManager()
     {
     }
@@ -18,24 +23,17 @@ namespace zz
     void WriteManager::Initialize()
     {
         insertData();
+
+        mFont_pixel = ResourceManager::Load<Texture>(L"font_pixel", L"..\\Resources\\Font\\font_pixel.png");
+        mFont_damage = ResourceManager::Load<Texture>(L"font_damage", L"..\\Resources\\Font\\font_damage.png");
     }
 
     Texture* WriteManager::Wrtie(const std::wstring& writing, math::Vector3 scale)
-    {
-        std::shared_ptr<Texture> font_pixel = ResourceManager::Load<Texture>(L"font_pixel", L"..\\Resources\\Font\\font_pixel.png");
+    {  
         Texture* writingTexture = new Texture();
 
-        ScratchImage& srcImage = font_pixel->GetScratchImage();
+        ScratchImage& srcImage = mFont_pixel->GetScratchImage();
         ScratchImage& dstImage = writingTexture->GetScratchImage();
-
-        //TexMetadata metadata;
-        //metadata.width = 100;
-        //metadata.height = 100;
-        //metadata.depth = 1;
-        //metadata.arraySize = 1;
-        //metadata.mipLevels = 1;
-        //metadata.format = DXGI_FORMAT_B8G8R8A8_UNORM;
-        //metadata.dimension = TEX_DIMENSION_TEXTURE2D;
 
         dstImage.Initialize2D(DXGI_FORMAT_B8G8R8A8_UNORM, scale.x, scale.y, 1, 1);
 
@@ -83,10 +81,9 @@ namespace zz
         std::shared_ptr<Texture> icon_mana_max              = ResourceManager::Find<Texture>(L"icon_mana_max");
         std::shared_ptr<Texture> icon_gun_shuffle           = ResourceManager::Find<Texture>(L"icon_gun_shuffle");
 
-        std::shared_ptr<Texture> font_pixel = ResourceManager::Load<Texture>(L"font_pixel", L"..\\Resources\\Font\\font_pixel.png");
         Texture* writingTexture = new Texture();
 
-        ScratchImage& srcImage = font_pixel->GetScratchImage();
+        ScratchImage& srcImage = mFont_pixel->GetScratchImage();
         ScratchImage& dstImage = writingTexture->GetScratchImage();
 
         dstImage.Initialize2D(DXGI_FORMAT_B8G8R8A8_UNORM, scale.x, scale.y, 1, 1);
@@ -155,7 +152,45 @@ namespace zz
         return writingTexture;
     }
 
+    Texture* WriteManager::WrtieDamage(const std::wstring& writing, math::Vector3 scale)
+    {
+        Texture* writingTexture = new Texture();
+
+        ScratchImage& srcImage = mFont_damage->GetScratchImage();
+        ScratchImage& dstImage = writingTexture->GetScratchImage();
+
+        dstImage.Initialize2D(DXGI_FORMAT_B8G8R8A8_UNORM, scale.x, scale.y, 1, 1);
+
+        int line = 0;
+        int word = 0;
+
+        for (int i = 0; i < writing.size(); i++)
+        {
+            FontData data = mFontDamageData.find(writing[i])->second;
+            Rect rect(data.rect_x, data.rect_y, data.rect_w, data.rect_h);
+
+            HRESULT hr = CopyRectangle(*srcImage.GetImage(0, 0, 0), rect
+                , *dstImage.GetImage(0, 0, 0), TEX_FILTER_DEFAULT, word++ * 5, line);
+
+            //word += data.rect_w;
+
+            if (FAILED(hr))
+            {
+                assert(false);
+            }
+        }
+
+        writingTexture->UpdateImage();
+        return writingTexture;
+    }
+
     void WriteManager::insertData()
+    {
+        insertFontData();
+        insertDamageData();
+    }
+
+    void WriteManager::insertFontData()
     {
         FontData data;
 
@@ -432,6 +467,42 @@ namespace zz
         data.rect_h = 11; data.rect_w = 4; data.rect_x = 545; data.rect_y = 0;
         mFontPixelData.insert({ 122, data });
     }
+    void WriteManager::insertDamageData()
+    {
+        FontData data;
 
+        data.rect_h = 6; data.rect_w = 5; data.rect_x = 0; data.rect_y = 0;
+        mFontDamageData.insert({ 45, data });
+
+        data.rect_h = 6; data.rect_w = 5; data.rect_x = 6; data.rect_y = 0;
+        mFontDamageData.insert({ 48, data });
+
+        data.rect_h = 6; data.rect_w = 4; data.rect_x = 12; data.rect_y = 0;
+        mFontDamageData.insert({ 49, data });
+
+        data.rect_h = 6; data.rect_w = 5; data.rect_x = 17; data.rect_y = 0;
+        mFontDamageData.insert({ 50, data });
+
+        data.rect_h = 6; data.rect_w = 5; data.rect_x = 23; data.rect_y = 0;
+        mFontDamageData.insert({ 51, data });
+
+        data.rect_h = 6; data.rect_w = 5; data.rect_x = 29; data.rect_y = 0;
+        mFontDamageData.insert({ 52, data });
+
+        data.rect_h = 6; data.rect_w = 5; data.rect_x = 35; data.rect_y = 0;
+        mFontDamageData.insert({ 53, data });
+
+        data.rect_h = 6; data.rect_w = 5; data.rect_x = 41; data.rect_y = 0;
+        mFontDamageData.insert({ 54, data });
+
+        data.rect_h = 6; data.rect_w = 5; data.rect_x = 47; data.rect_y = 0;
+        mFontDamageData.insert({ 55, data });
+
+        data.rect_h = 6; data.rect_w = 5; data.rect_x = 53; data.rect_y = 0;
+        mFontDamageData.insert({ 56, data });
+
+        data.rect_h = 6; data.rect_w = 5; data.rect_x = 59; data.rect_y = 0;
+        mFontDamageData.insert({ 57, data });
+    }
     
 }

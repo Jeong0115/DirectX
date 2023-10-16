@@ -3,12 +3,13 @@
 
 namespace zz
 {
-	AudioClip::AudioClip()
+	AudioClip::AudioClip(FMOD_MODE mode, float min, float max)
 		: Resource(eResourceType::AudioClip)
 		, mSound(nullptr)
 		, mChannel(nullptr)
-		, mMinDistance(1.0f)
-		, mMaxDistance(1000.0f)
+        , mMode(mode)
+		, mMinDistance(min)
+		, mMaxDistance(max)
 		, mbLoop(false)
 	{
 
@@ -23,7 +24,7 @@ namespace zz
 	HRESULT AudioClip::Load(const std::wstring& path)
 	{
 		std::string cPath(path.begin(), path.end());
-        if (!Fmod::CreateSound(cPath, &mSound))
+        if (!Fmod::CreateSound(cPath, mMode, &mSound))
         {
             assert(false);
         }

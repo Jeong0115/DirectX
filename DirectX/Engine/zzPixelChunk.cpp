@@ -121,6 +121,7 @@ namespace zz
         case eElementID::SAND:  UpdateSand(worldX, worldY, element);    break;
         case eElementID::WATER: UpdateWater(worldX, worldY, element);   break;
         case eElementID::OIL:   UpdateWater(worldX, worldY, element);   break;
+        case eElementID::BLOOD: UpdateWater(worldX, worldY, element);   break;
         case eElementID::GRASS: UpdateGrass(worldX, worldY, element);   break;
         case eElementID::ROCK:  break;
         default: break;

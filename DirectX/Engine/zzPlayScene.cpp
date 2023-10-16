@@ -39,6 +39,7 @@ namespace zz
     void PlayScene::Initialize()
     {
         CollisionManger::SetCollision(eLayerType::Monster, eLayerType::PlayerAttack, true);
+        CollisionManger::SetCollision(eLayerType::MonsterAttack, eLayerType::Player, true);
         CollisionManger::SetCollision(eLayerType::Object, eLayerType::Player, true);
 
         camera = new GameObject();
@@ -167,8 +168,8 @@ namespace zz
         for(int i=0; i<3; i++)
         {
             Teleport* teleport = new Teleport();
-            //teleport->GetComponent<Transform>()->SetPosition(256.f + 512.f * i, -1747.f - 86.f, 0.00f);
-            teleport->GetComponent<Transform>()->SetPosition(0.f, 0.f + i * - 100.f, 0.0f);
+            teleport->GetComponent<Transform>()->SetPosition(256.f + 512.f * i + 10, -1747.f - 86.f, 0.00f);
+            //teleport->GetComponent<Transform>()->SetPosition(0.f, 0.f + i * - 100.f, 0.0f);
             CreateObject(teleport, eLayerType::Object);
         }
 
@@ -178,9 +179,9 @@ namespace zz
             object->GetComponent<Transform>()->SetPosition(Vector3(1536.f / 2.f, -30.f, 0.2f));
         }
 
-        Centipede* boss = new Centipede();
-        AddGameObject(boss, eLayerType::Monster);
-        boss->GetComponent<Transform>()->SetPosition(100.f, -100.f, 0.2f);
+        //Centipede* boss = new Centipede();
+        //AddGameObject(boss, eLayerType::Monster);
+        //boss->GetComponent<Transform>()->SetPosition(100.f, -100.f, 0.2f);
 
         Scene::Initialize();
         {

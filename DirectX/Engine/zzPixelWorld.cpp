@@ -21,6 +21,7 @@
 #define STB_HERRINGBONE_WANG_TILE_IMPLEMENTATION
 #include "..\External\Herringbone\include\stb_herringbone_wang_tile.h"
 #include "zzGraphicsDevice.h"
+#include "zzShotGunner_Weak.h"
 
 namespace zz
 {
@@ -62,16 +63,7 @@ namespace zz
             }
         }
 
-        for (int i = 0; i < 5; i++)
-        {
-            for (int j = 0; j < 500; j++)
-            {
-                Element a = ROCK;
-                a.Type = eElementType::LIQUID;
 
-                InsertElement(j, i * 100, a);
-            }
-        }
         mElementMap.insert({ 'w', WATER });
         mElementMap.insert({ 'o', OIL });
         mElementMap.insert({ 's', SAND });
@@ -810,6 +802,10 @@ namespace zz
                         }
                     }
                 }
+                else if (color == 0xFF800000 || color == 0xFFFF0000)
+                {
+                    CreateObject(new ShotGunner_Weak(), eLayerType::Monster, j * 10, -i * 10);
+                }
                 else if (color == 0xFFFF0AFF)
                 {
                     LoadRandomScene_01(j * 10, i * 10);
@@ -849,12 +845,78 @@ namespace zz
             }
         }
 
+        cv::Mat visual_image_left = cv::imread("..\\Resources\\Texture\\Material\\rock_hard_left.png", cv::IMREAD_UNCHANGED);
+        for (int i = 0; i < 1747; i++)
+        {
+            for (int j = 0; j < 10; j++)
+            {
+                cv::Vec4b visual_color = visual_image_left.at<cv::Vec4b>(i % 92, j);
+
+                if (visual_color[3] != 0)
+                {
+                    uint32_t converted_color =
+                        (visual_color[3] << 24) |
+                        (visual_color[2] << 16) |
+                        (visual_color[1] << 8) |
+                        (visual_color[0]);
+
+                    Element element = ROCK;
+                    element.Color = converted_color;
+
+                    InsertElement(j, i, element);
+                }
+            }
+        }
+
+        cv::Mat visual_image_right = cv::imread("..\\Resources\\Texture\\Material\\rock_hard_right.png", cv::IMREAD_UNCHANGED);
+        for (int i = 0; i < 1747; i++)
+        {
+            for (int j = 1526; j < 1536; j++)
+            {
+                cv::Vec4b visual_color = visual_image_right.at<cv::Vec4b>(i % 92, j - 1526);
+
+                if (visual_color[3] != 0)
+                {
+                    uint32_t converted_color =
+                        (visual_color[3] << 24) |
+                        (visual_color[2] << 16) |
+                        (visual_color[1] << 8) |
+                        (visual_color[0]);
+
+                    Element element = ROCK;
+                    element.Color = converted_color;
+
+                    InsertElement(j, i, element);
+                }
+            }
+        }
+
+        cv::Mat visual_image_top = cv::imread("..\\Resources\\Texture\\Material\\rock_hard_top.png", cv::IMREAD_UNCHANGED);
+        for (int i = 0; i < 10; i++)
+        {
+            for (int j = 0; j < 1536; j++)
+            {
+                cv::Vec4b visual_color = visual_image_top.at<cv::Vec4b>(i, j % 92);
+
+                if (visual_color[3] != 0)
+                {
+                    uint32_t converted_color =
+                        (visual_color[3] << 24) |
+                        (visual_color[2] << 16) |
+                        (visual_color[1] << 8) |
+                        (visual_color[0]);
+
+                    Element element = ROCK;
+                    element.Color = converted_color;
+
+                    InsertElement(j, i, element);
+                }
+            }
+        }
 
         cv::Mat material_image = cv::imread("..\\Resources\\Texture\\Temple\\altar_top.png", cv::IMREAD_COLOR);
         cv::Mat visual_image = cv::imread("..\\Resources\\Texture\\Temple\\altar_top_visual.png", cv::IMREAD_UNCHANGED);
-
         cv::cvtColor(material_image, material_image, cv::COLOR_BGR2RGB);
-
         for (int i = 1747; i < 2047; i++)
         {
             for (int cnt = 0; cnt < 3; cnt++)

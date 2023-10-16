@@ -15,14 +15,12 @@ namespace zz
         virtual void LateUpdate()   override;
         virtual void Render()       override;
 
-        virtual void OnCollisionEnter(GameObject* other) override;
-        virtual void OnCollisionStay(GameObject* other)  override;
-        virtual void OnCollisionExit(GameObject* other)  override;
-
         void SetDetectPos(Vector3 pos);
         void OnCollision(struct Element& element);
 
     private:
+        virtual void dead() override;;
+
         class RigidBody* mRigid;
     };
 }

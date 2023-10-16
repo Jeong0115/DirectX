@@ -115,7 +115,10 @@ namespace zz
             }
             mbCreate = true;
         }
-
+        else if (mParticleTime >= 5.0f)
+        {
+            DeleteObject(this, eLayerType::PlayerAttack);
+        }
         ConstantBuffer* cb = renderer::constantBuffer[(UINT)eCBType::ColorRange];
         cb->SetBufferData(&colorCB);
         cb->BindConstantBuffer(eShaderStage::CS);

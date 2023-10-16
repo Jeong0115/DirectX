@@ -11,6 +11,8 @@
 #include "zzMuzzleEffect.h"
 #include "zzTime.h"
 #include "zzRenderer.h"
+#include "zzHealthPoint.h"
+#include "zzRenderer.h"
 
 namespace zz
 {
@@ -57,12 +59,20 @@ namespace zz
         mAnimator->Create(L"shotgunner_weak_walk", texture, Vector2(0.0f, 17.f), Vector2(17.0f, 17.0f), 6, Vector2::Zero, 0.11f);
         mAnimator->Create(L"shotgunner_weak_attack", texture, Vector2(0.0f, 68.f), Vector2(17.0f, 17.0f), 6, Vector2::Zero, 0.07f);
         mAnimator->Create(L"shotgunner_weak_attack_ranged", texture, Vector2(0.0f, 85.f), Vector2(17.0f, 17.0f), 7, Vector2::Zero, 0.15f);
+        mAnimator->Create(L"shotgunner_weak_jump", texture, Vector2(0.0f, 34.f), Vector2(17.0f, 17.0f), 3, Vector2::Zero, 0.09f);
+        mAnimator->Create(L"shotgunner_weak_fall", texture, Vector2(0.0f, 51.f), Vector2(17.0f, 17.0f), 3, Vector2::Zero, 0.09f);
+        mAnimator->Create(L"shotgunner_weak_jump_prepare", texture, Vector2(0.0f, 136.f), Vector2(17.0f, 17.0f), 3, Vector2::Zero, 0.07f);
 
         //mAnimator->FindAnimation(L"shotgunner_weak_stand")->SetAnimationEvent(3, std::bind(&ShotGunner_Weak::Test, this));
         mAnimator->PlayAnimation(L"shotgunner_weak_stand", true);
 
         mAnimator->EndEvent(L"shotgunner_weak_attack_ranged") = [this]() { playIdleAnimation(); };
         mAnimator->FindAnimation(L"shotgunner_weak_attack_ranged")->SetAnimationEvent(4, [this]() { shoot(); });
+
+        mHealPoint = AddComponent<HealthPoint>();
+        mHealPoint->SetMaxHP(25.f);
+        mHealPoint->SetHpZeroEvent([this]() { DeadEvent(); });
+        mHealPoint->SetHitEvent([this]() { HitEvent(); });
 
         GameObject::Initialize();
     }
@@ -76,6 +86,7 @@ namespace zz
         case eMonsterState::Battle:         battle();       break;
         default: break;
         }
+
         GameObject::Update();
     }
 
@@ -93,11 +104,29 @@ namespace zz
         cb->SetBufferData(&flipCB);
         cb->BindConstantBuffer(eShaderStage::HS);
 
+        renderer::ColorCB flash = {};
+        ConstantBuffer* color = renderer::constantBuffer[(UINT)eCBType::Color];
+
+        if (mHitFlashTime > 0)
+        {
+            mHitFlashTime -= (float)Time::DeltaTime();
+
+            renderer::ColorCB flash;
+            flash.color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+         
+            color->SetBufferData(&flash);
+            color->BindConstantBuffer(eShaderStage::PS);
+        }
+
         GameObject::Render();
 
         flipCB = {};
         cb->SetBufferData(&flipCB);
         cb->BindConstantBuffer(eShaderStage::PS);
+
+        flash = {};
+        color->SetBufferData(&flash);
+        color->BindConstantBuffer(eShaderStage::PS);
     }
 
     void ShotGunner_Weak::OnCollisionEnter(GameObject* other)
@@ -108,6 +137,19 @@ namespace zz
     }
     void ShotGunner_Weak::OnCollisionExit(GameObject* other)
     {
+    }
+
+    void ShotGunner_Weak::DeadEvent()
+    {
+        if (!IsDead())
+        {
+            DeleteObject(this, eLayerType::Monster);
+        }
+    }
+
+    void ShotGunner_Weak::HitEvent()
+    {
+        mHitFlashTime = 0.15f;
     }
 
     void ShotGunner_Weak::playIdleAnimation()

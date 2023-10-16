@@ -8,13 +8,14 @@
 #include "zzPixelCollider_Lite.h"
 #include "zzTime.h"
 #include "zzTransform.h"
+#include "zzCollider.h"
 
 namespace zz
 {
     FireBall_Small::FireBall_Small()
         : mRigid(nullptr)
     {
-        mDamage = 20.f;
+        mDamage = 12.f;
         mLimitTime = 2.0f;
         mSpeed = 400.f;
         mDirection = (Vector3::Zero);
@@ -40,6 +41,8 @@ namespace zz
         mRigid->SetGround(true);
         mRigid->SetStartVelocity(mSpeed, mDirection);
 
+        mCollider->SetScale(4.0f, 4.0f, 1.0f);
+
         AddComponent<PixelCollider_Lite>()->SetCollisionEvent([this](Element& element) { OnCollision(element); });
 
         MonsterAttack::Initialize();
@@ -60,18 +63,6 @@ namespace zz
         MonsterAttack::Render();
     }
 
-    void FireBall_Small::OnCollisionEnter(GameObject* other)
-    {
-
-        MonsterAttack::OnCollisionEnter(other);
-    }
-    void FireBall_Small::OnCollisionStay(GameObject* other)
-    {
-    }
-    void FireBall_Small::OnCollisionExit(GameObject* other)
-    {
-    }
-
     void FireBall_Small::SetDetectPos(Vector3 pos)
     {
         Vector3 myPos = GetComponent<Transform>()->GetPosition();
@@ -84,11 +75,18 @@ namespace zz
     {
         if (element.Type == eElementType::SOLID)
         {
-            DeleteObject(this, eLayerType::MonsterAttack);
+            dead();
         }
         else if (element.Type == eElementType::LIQUID)
         {
             mRigid->ApplyResistance(pow((0.0001f), (float)Time::DeltaTime()));
+        }
+    }
+    void FireBall_Small::dead()
+    {
+        if(!IsDead())
+        {
+            DeleteObject(this, eLayerType::MonsterAttack);
         }
     }
 }

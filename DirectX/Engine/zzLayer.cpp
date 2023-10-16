@@ -55,7 +55,7 @@ namespace zz
 
         for (; iter != mGameObjects.end(); )
         {
-            if ((*iter)->IsDead())
+            if ((*iter)->IsAllowDelete())
             {
                 iter = mGameObjects.erase(iter);
             }

@@ -48,9 +48,9 @@ namespace zz
 		//mCoreSystem->update();
 	}
 
-	bool Fmod::CreateSound(const std::string& path,  FMOD::Sound** sound)
+	bool Fmod::CreateSound(const std::string& path, FMOD_MODE mode, FMOD::Sound** sound)
 	{
-		if (FMOD_OK != mCoreSystem->createSound(path.c_str(), FMOD_3D, 0, sound))
+		if (FMOD_OK != mCoreSystem->createSound(path.c_str(), mode, 0, sound))
 			return false;
 
 		return true;

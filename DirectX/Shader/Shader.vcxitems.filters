@@ -141,6 +141,18 @@
     <FxCompile Include="$(MSBuildThisFileDirectory)AddDarkVS.hlsl">
       <Filter>Light</Filter>
     </FxCompile>
+    <FxCompile Include="$(MSBuildThisFileDirectory)FinalLightPS.hlsl">
+      <Filter>Light</Filter>
+    </FxCompile>
+    <FxCompile Include="$(MSBuildThisFileDirectory)FinalLightVS.hlsl">
+      <Filter>Light</Filter>
+    </FxCompile>
+    <FxCompile Include="$(MSBuildThisFileDirectory)ViewVS.hlsl">
+      <Filter>Light</Filter>
+    </FxCompile>
+    <FxCompile Include="$(MSBuildThisFileDirectory)ViewPS.hlsl">
+      <Filter>Light</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)Common.hlsli" />

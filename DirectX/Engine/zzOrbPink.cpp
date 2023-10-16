@@ -7,6 +7,7 @@
 #include "zzTransform.h"
 #include "zzRigidBody.h"
 #include "zzLight.h"
+#include "zzCollider.h"
 
 namespace zz
 {
@@ -30,6 +31,8 @@ namespace zz
         mesh->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
 
         std::shared_ptr<Texture> texture = ResourceManager::Find<Texture>(L"orb_pink_glowy");
+
+        mCollider->SetScale(13.f, 13.f, 1.0f);
 
         Animator* animator = AddComponent<Animator>();
         animator->Create(L"orb_pink_glowy_idle", texture, Vector2(0.0f, 0.0f), Vector2(17.0f, 17.0f), 4, Vector2::Zero, 0.06f);
@@ -83,8 +86,13 @@ namespace zz
 
     void OrbPink::dead()
     {
-        Vector3 pos = GetComponent<Transform>()->GetPosition();
-        mEffect->SetPosition(pos.x, pos.y, pos.z - 0.05f);
-        CreateObject(mEffect, eLayerType::Effect);
+        if(!IsDead())
+        {
+            Vector3 pos = GetComponent<Transform>()->GetPosition();
+            mEffect->SetPosition(pos.x, pos.y, pos.z - 0.05f);
+            CreateObject(mEffect, eLayerType::Effect);
+
+            DeleteObject(this, eLayerType::MonsterAttack);
+        }
     }
 }

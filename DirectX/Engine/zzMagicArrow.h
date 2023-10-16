@@ -15,9 +15,10 @@ namespace zz
         virtual void Update()       override;
         virtual void LateUpdate()   override;
         virtual void Render()       override;
+        virtual void Dead()         override;
 
-        ProjectileSpell* Clone() override;
-
+        virtual ProjectileSpell* Clone() override;
+   
         void OnCollision(struct Element& element);
 
     private:

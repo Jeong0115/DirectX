@@ -26,6 +26,8 @@ namespace zz
         virtual void OnCollisionStay(GameObject* other)  override;
         virtual void OnCollisionExit(GameObject* other)  override;
 
+        void DeadEvent();
+        void HitEvent();
 
     private:
         void playIdleAnimation();
@@ -37,6 +39,7 @@ namespace zz
 
         class PixelCollider*    mPxCollider;
         class MuzzleEffect*     mMuzzleEffect;
+        class HealthPoint*      mHealPoint;
         class DetectPlayer*     mDetectPlayer;
         class Animator*         mAnimator;
         class RigidBody*        mRigid;
@@ -47,6 +50,7 @@ namespace zz
 
         float   mChoiceNextAction;
         float   mDirection;
+        float   mHitFlashTime;
 
         int     mActionIndex;
 

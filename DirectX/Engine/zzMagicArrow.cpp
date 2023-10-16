@@ -64,7 +64,7 @@ namespace zz
         Light* light = AddComponent<Light>(); 
 
         light->SetLightType(1);
-        light->SetLightScale(40.f, 40.f, 1.0f);
+        light->SetLightScale(20.f, 20.f, 1.0f);
         light->SetLightColor(40.f / 255.f, 120.f / 255.f, 10.f / 255.f, 1.f);
 
         mRigid = AddComponent<RigidBody>();
@@ -116,7 +116,7 @@ namespace zz
         mTailData.scale = Vector4(1.0f, 1.0f, 1.0f, 0.0f);
         mTailData.color_min = mTailData.color_max = Vector4(150.f / 255.f, 255.f / 255.f, 70.f / 255.f, 1.0f);
 
-        mTailData.lightScale = Vector4(6.0f, 6.0f, 1.0f, 0.0f);
+        mTailData.lightScale = Vector4(3.0f, 3.0f, 1.0f, 0.0f);
         mTailData.randPositionMax = Vector2(2.0f, 2.0f);
         mTailData.randPositionMin = Vector2(-2.0f, -2.0f);
         mTailData.randVelocityMax = Vector2(20.0f, 40.0f);
@@ -164,15 +164,7 @@ namespace zz
 
         if (mTime >= 0.8f && IsActive())
         {
-            SetState(eState::Sleep);
-            mbTimerOn = true;
-
-            Vector3 pos = GetComponent<Transform>()->GetPosition();
-            mExplosion->GetComponent<Transform>()->SetPosition(pos.x, pos.y, BACK_PIXEL_WORLD_Z);
-            mExplosion->GetComponent<Transform>()->SetScale(9.0f, 9.0f, 1.0f);
-            CreateObject(mExplosion, eLayerType::Effect);
-            GetComponent<Light>()->TrunOff();
-
+            Dead();
         }
 
         ProjectileSpell::Update();
@@ -260,6 +252,22 @@ namespace zz
         ProjectileSpell::Render();
     }
 
+    void MagicArrow::Dead()
+    {
+        if (IsActive())
+        {
+            SetState(eState::Sleep);
+
+            Vector3 pos = GetComponent<Transform>()->GetPosition() - (mDirection * 350.f * 0.005f);
+            mExplosion->GetComponent<Transform>()->SetPosition(pos.x, pos.y, BACK_PIXEL_WORLD_Z);
+            mExplosion->GetComponent<Transform>()->SetScale(9.0f, 9.0f, 1.0f);
+            CreateObject(mExplosion, eLayerType::Effect);
+
+            GetComponent<Light>()->TrunOff();
+            mbTimerOn = true;
+        }
+    }
+
     ProjectileSpell* MagicArrow::Clone()
     {
         return new MagicArrow();
@@ -269,18 +277,7 @@ namespace zz
     {
         if (element.Type == eElementType::SOLID)
         {
-            if (IsActive())
-            {
-                SetState(eState::Sleep);
-
-                Vector3 pos = GetComponent<Transform>()->GetPosition() - (mDirection * 350.f * 0.005f);
-                mExplosion->GetComponent<Transform>()->SetPosition(pos.x, pos.y, BACK_PIXEL_WORLD_Z);
-                mExplosion->GetComponent<Transform>()->SetScale(9.0f, 9.0f, 1.0f);
-                CreateObject(mExplosion, eLayerType::Effect);
-
-                GetComponent<Light>()->TrunOff();
-                mbTimerOn = true;
-            }
+            Dead();
         }
         else if (element.Type == eElementType::LIQUID)
         {

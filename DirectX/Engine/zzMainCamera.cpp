@@ -60,6 +60,9 @@ namespace zz
         View = mView;
         Projection = mProjection;
 
+        DisableDepthStencilState();
+        RenderPlayerView();
+
         SortGameObjects();
         RenderOpaque();
 
@@ -71,32 +74,21 @@ namespace zz
         if (Application::LightDisabled) return;
 
         DisableDepthStencilState();
+        ResourceManager::Find<Mesh>(L"LightMesh")->BindBuffer();
+        ResourceManager::Find<Shader>(L"AddDarkShader")->BindShaders();
 
-        RenderPlayerView();
-        //ResourceManager::Find<Mesh>(L"LightMesh")->BindBuffer();
-        //ResourceManager::Find<Shader>(L"BloomShaderT")->BindShaders();
-        //ResourceManager::Find<Texture>(L"light_mask")->BindShader(eShaderStage::PS, 2);
-        //ResourceManager::Find<Mesh>(L"LightMesh")->Render();
+        ID3D11ShaderResourceView* lightSrv = graphics::GetDevice()->GetFinalLightResource();
+        ID3D11ShaderResourceView* null = nullptr;
+
+        graphics::GetDevice()->BindShaderResource(eShaderStage::PS, 2, &lightSrv);
+        graphics::GetDevice()->DrawIndexed(6, 0, 0);
+        graphics::GetDevice()->BindShaderResource(eShaderStage::PS, 2, &null);
 
         ResourceManager::Find<Mesh>(L"LightMesh")->BindBuffer();
         ResourceManager::Find<Shader>(L"BloomShader")->BindShaders();
 
 
-        BloomManager::Render();
-
- 
-        
-        //ResourceManager::Find<Mesh>(L"LightMesh")->BindBuffer();
-        //ResourceManager::Find<Shader>(L"BloomShaderT")->BindShaders();
-        //
-        //ID3D11ShaderResourceView* lightSrv = graphics::GetDevice()->GetLightMapResource();
-        //ID3D11ShaderResourceView* null = nullptr;
-        //
-        //graphics::GetDevice()->BindShaderResource(eShaderStage::PS, 2, &lightSrv);
-        //graphics::GetDevice()->DrawIndexed(6, 0, 0);
-        //graphics::GetDevice()->BindShaderResource(eShaderStage::PS, 2, &null);
-        
-       
+        BloomManager::Render();      
 
     }
 
@@ -124,7 +116,7 @@ namespace zz
 
                 for (; iter != gameObjs.end();)
                 {
-                    if ((*iter)->IsDead())
+                    if ((*iter)->IsAllowDelete())
                     {
                         iter = gameObjs.erase(iter);
                         continue;
@@ -200,16 +192,29 @@ namespace zz
 
     void MainCamera::RenderPlayerView()
     {
+        graphics::GetDevice()->SetFinalLightRenderTarget();
+
+        ResourceManager::Find<Mesh>(L"LightMesh")->BindBuffer();
+        ResourceManager::Find<Shader>(L"FinalLightShader")->BindShaders();
+
+        ID3D11ShaderResourceView* lightSrv = graphics::GetDevice()->GetLightMapResource();
+        ID3D11ShaderResourceView* null = nullptr;
+
+        graphics::GetDevice()->BindShaderResource(eShaderStage::PS, 2, &lightSrv);
+        graphics::GetDevice()->DrawIndexed(6, 0, 0);
+
         Vector3 pos = Vector3(PixelWorld::mWorldWidth / 2.f, -PixelWorld::mWorldHeight / 2.f, 0.0f);
         Matrix position = Matrix::CreateTranslation(pos);
         Matrix scale = Matrix::CreateScale(Vector3(PixelWorld::mWorldWidth, PixelWorld::mWorldHeight, 1.0f));
         Matrix world = scale * position;
-
+        
         renderer::TransformCB trCB = {};
-        trCB.mWorld = world;
+        
         trCB.mView = Camera::GetGpuViewMatrix();
         trCB.mProjection = Camera::GetGpuProjectionMatrix();
-        trCB.WorldViewProj = trCB.mWorld * trCB.mView * trCB.mProjection;
+        trCB.WorldViewProj = world * trCB.mView * trCB.mProjection;
+        world._11 = 84.f;
+        trCB.mWorld = world;
 
         ConstantBuffer* cb = renderer::constantBuffer[(UINT)eCBType::Transform];
         cb->SetBufferData(&trCB);
@@ -217,13 +222,14 @@ namespace zz
         cb->BindConstantBuffer(eShaderStage::PS);
 
         ResourceManager::Find<Mesh>(L"RectMesh")->BindBuffer();
-        ResourceManager::Find<Shader>(L"AddDarkShader")->BindShaders();
+        ResourceManager::Find<Shader>(L"ViewShader")->BindShaders();
         
         ID3D11ShaderResourceView* visibilitySrv = graphics::GetDevice()->GetVisibilityResource();
-        ID3D11ShaderResourceView* null = nullptr;
         
         graphics::GetDevice()->BindShaderResource(eShaderStage::PS, 2, &visibilitySrv);
         graphics::GetDevice()->DrawIndexed(6, 0, 0);
         graphics::GetDevice()->BindShaderResource(eShaderStage::PS, 2, &null);
+
+        graphics::GetDevice()->ClearRenderTarget();
     }
 }

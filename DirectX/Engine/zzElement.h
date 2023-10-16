@@ -28,6 +28,7 @@ namespace zz
         SAND  ,
         WATER ,
         OIL   ,
+        BLOOD ,
         ROCK  ,
         WOOD  ,
         FIRE  ,
@@ -48,6 +49,7 @@ namespace zz
         SAND    = 0xFFFFFF00,
         WATER   = 0xA0376259,
         OIL     = 0xE63D3728,
+        BLOOD   = 0xAA830000,
         ROCK    = 0xFF808080,
         WOOD    = 0xFF413F24,
         FIRE    = 0x00000000,//= 0x7FFF6060,
@@ -89,7 +91,7 @@ namespace zz
         bool* destoryBody = nullptr;
     };
 
-    Element EMPTY, SAND, WATER, OIL, ROCK, WOOD, FIRE, SMOKE, GRASS;
+    Element EMPTY, SAND, WATER, OIL, BLOOD, ROCK, WOOD, FIRE, SMOKE, GRASS;
 
     inline bool operator&(eElementUpdate a, eElementUpdate b)
     {
@@ -151,6 +153,19 @@ namespace zz
         OIL.IgnitionPoint   = 260.f;
         OIL.Temperature     = 0.f;
         OIL.FlashPoint      = 5.f;
+
+        BLOOD.Type          = eElementType::LIQUID;
+        BLOOD.Id            = eElementID::BLOOD;
+        BLOOD.Color         = (uint32_t)eElementColor::BLOOD;
+        BLOOD.Name          = L"Blood";
+        BLOOD.Velocity      = math::Vector2(0.f, 2.f);
+        BLOOD.StopThreshold = 15;
+        BLOOD.StopCount     = 15;
+        BLOOD.isIgnite      = false;
+        BLOOD.onFire        = false;
+        BLOOD.FireHP        = 10000.f;
+        BLOOD.Density       = 1.21f;
+        BLOOD.Temperature   = 0.f;
 
         GRASS.Type          = eElementType::LIQUID;
         GRASS.Id            = eElementID::GRASS;

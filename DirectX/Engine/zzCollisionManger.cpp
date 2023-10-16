@@ -161,7 +161,7 @@ namespace zz
             }
             else
             {
-                if (!leftObj->IsDead() && !rightObj->IsDead())
+                if (leftObj->IsActive() && rightObj->IsActive())
                 {
                     left->OnCollisionEnter(right);
                     right->OnCollisionEnter(left);

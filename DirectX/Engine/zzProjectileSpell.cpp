@@ -4,6 +4,7 @@
 #include "zzTime.h"
 #include "zzTransform.h"
 #include "zzRigidBody.h"
+#include "zzHealthPoint.h"
 
 namespace zz
 {
@@ -83,6 +84,27 @@ namespace zz
     void ProjectileSpell::Render()
     {
         GameObject::Render();
+    }
+
+    void ProjectileSpell::OnCollisionEnter(GameObject* other)
+    {
+        if (other->GetLayerType() == eLayerType::Monster)
+        {
+            HealthPoint* hp = other->GetComponent<HealthPoint>();
+            hp->Hit(mDamage);
+            Dead();
+        }
+    }
+
+    void ProjectileSpell::OnCollisionStay(GameObject* other)
+    {
+    }
+    void ProjectileSpell::OnCollisionExit(GameObject* other)
+    {
+    }
+
+    void ProjectileSpell::Dead()
+    {
     }
 
     ProjectileSpell* ProjectileSpell::Clone()

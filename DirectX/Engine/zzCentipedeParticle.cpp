@@ -28,7 +28,7 @@ namespace zz
 
         Particle particles[32400] = {};
         mParticle->CreateStructedBuffer(sizeof(Particle), 32400, eViewType::UAV, particles, true, 0, 14, 0);
-        mParticle->CreateStructedBuffer(sizeof(ParticleCircleShared), 1, eViewType::UAV, nullptr, true, 7, 14, 1);
+        mParticle->CreateStructedBuffer(sizeof(ParticleCircleShared), 1, eViewType::UAV, nullptr, true, 6, 14, 1);
 
         mShareData.scale = Vector4(1.0f, 1.0f, 1.0f, 0.0f);
         mShareData.color_min = mShareData.color_max = Vector4(47.f / 255.f, 93.0f / 255.f, 100.f / 255.f, 1.0f);

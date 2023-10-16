@@ -19,10 +19,6 @@ float4 main(VSOut In) : SV_TARGET
     float4 color = (float) 0.0f;
     color = lightTexture.Sample(anisotropicSampler, In.UV);
 
-    //if (all(color.rgb == float3(0, 0, 0)))
-    //{
-    //    color.a = 0;
 
-    //}
     return color;
 }

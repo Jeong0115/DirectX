@@ -2,6 +2,7 @@
 #include "zzTime.h"
 #include "zzHealthPoint.h"
 #include "zzTransform.h"
+#include "zzCollider.h"
 
 namespace zz
 {
@@ -10,6 +11,7 @@ namespace zz
         , mTime(0.0f)
         , mLimitTime(10.f)
     {
+        mCollider = AddComponent<Collider>();
     }
     MonsterAttack::~MonsterAttack()
     {
@@ -26,11 +28,7 @@ namespace zz
 
         if (mTime >= mLimitTime)
         {
-            if(!IsDead())
-            {
-                dead();
-                DeleteObject(this, eLayerType::MonsterAttack);
-            }
+            dead();
         }
 
         GameObject::Update();
@@ -50,12 +48,8 @@ namespace zz
     {
         if (other->GetLayerType() == eLayerType::Player)
         {
-            if (!IsDead())
-            {
-                other->GetComponent<HealthPoint>()->ChangeCurHP(-mDamage);
-                dead();
-                DeleteObject(this, eLayerType::MonsterAttack);
-            }
+            other->GetComponent<HealthPoint>()->Hit(mDamage);
+            dead();
         }
     }
 

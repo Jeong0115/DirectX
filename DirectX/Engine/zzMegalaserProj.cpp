@@ -109,17 +109,7 @@ namespace zz
 
         if (mTime >= 0.8f && IsActive())
         {
-            if (IsActive())
-            {
-                SetState(eState::Sleep);
-
-                Vector3 pos = GetComponent<Transform>()->GetPosition() - (mDirection * 500.f * 0.005f);
-                mExplosion->GetComponent<Transform>()->SetPosition(pos.x, pos.y, BACK_PIXEL_WORLD_Z);
-                mExplosion->GetComponent<Transform>()->SetScale(17.0f, 17.0f, 1.0f);
-                CreateObject(mExplosion, eLayerType::Effect);
-
-                mbTimerOn = true;
-            }
+            Dead();
         }
 
         ProjectileSpell::Update();
@@ -145,6 +135,21 @@ namespace zz
         ProjectileSpell::Render();
     }
 
+    void MegalaserProj::Dead()
+    {
+        if (IsActive())
+        {
+            SetState(eState::Sleep);
+
+            Vector3 pos = GetComponent<Transform>()->GetPosition() - (mDirection * 500.f * 0.005f);
+            mExplosion->GetComponent<Transform>()->SetPosition(pos.x, pos.y, BACK_PIXEL_WORLD_Z);
+            mExplosion->GetComponent<Transform>()->SetScale(17.0f, 17.0f, 1.0f);
+            CreateObject(mExplosion, eLayerType::Effect);
+
+            mbTimerOn = true;
+        }
+    }
+
     ProjectileSpell* MegalaserProj::Clone()
     {
         return nullptr;
@@ -154,17 +159,7 @@ namespace zz
     {
         if (element.Type == eElementType::SOLID)
         {
-            if (IsActive())
-            {
-                SetState(eState::Sleep);
-
-                Vector3 pos = GetComponent<Transform>()->GetPosition() - (mDirection * 500.f * 0.005f);
-                mExplosion->GetComponent<Transform>()->SetPosition(pos.x, pos.y, BACK_PIXEL_WORLD_Z);
-                mExplosion->GetComponent<Transform>()->SetScale(17.0f, 17.0f, 1.0f);
-                CreateObject(mExplosion, eLayerType::Effect);
-
-                mbTimerOn = true;
-            }
+            Dead();
         }
     }
 }

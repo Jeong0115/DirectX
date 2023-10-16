@@ -17,6 +17,11 @@ namespace zz
         virtual void LateUpdate();
         virtual void Render();
 
+        virtual void OnCollisionEnter(GameObject* other) override;
+        virtual void OnCollisionStay(GameObject* other)  override;
+        virtual void OnCollisionExit(GameObject* other)  override;
+
+        virtual void Dead();
         virtual ProjectileSpell* Clone();
 
         GameObject* GetMuzzleEffect() { return mMuzzleEffect; }

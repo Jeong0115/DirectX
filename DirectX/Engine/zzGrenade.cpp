@@ -9,6 +9,7 @@
 #include "zzPixelCollider_Lite.h"
 #include "zzLight.h"
 #include "zzParticleSystem.h"
+#include "zzCollider.h"
 
 namespace zz
 {
@@ -53,11 +54,13 @@ namespace zz
         mRigid->SetStartVelocity(mSpeed, mAngle);
         mRigid->SetGravity(200.f);
 
+        mCollider->SetScale(12.f, 12.f, 1.0f);
+
         AddComponent<PixelCollider_Lite>()->SetCollisionEvent([this](Element& element) { OnCollision(element); });
         
         mLight = AddComponent<Light>();
         mLight->SetLightType(5);
-        mLight->SetLightScale(40.f, 40.f, 1.0f);
+        mLight->SetLightScale(12.f, 12.f, 1.0f);
         mLight->SetLightColor(255.f / 255.f, 120.f / 255.f, 10.f / 255.f, 1.0f);
 
         mParticle = AddComponent<ParticleSystem>();
@@ -158,11 +161,8 @@ namespace zz
                 if(mSpareTime > 0.1f)
                 {
                     mStep++;
-                    if (!IsDead())
-                    {
-                        DeleteObject(this, eLayerType::MonsterAttack);
-                        dead();
-                    }
+                    dead();
+                   
                 }
             }
         }
@@ -170,8 +170,13 @@ namespace zz
 
     void Grenade::dead()
     {
-        Vector3 pos = GetComponent<Transform>()->GetPosition();
-        mEffect->SetPosition(pos.x, pos.y, pos.z - 0.05f);
-        CreateObject(mEffect, eLayerType::Effect);
+        if (!IsDead())
+        {
+            DeleteObject(this, eLayerType::MonsterAttack);
+
+            Vector3 pos = GetComponent<Transform>()->GetPosition();
+            mEffect->SetPosition(pos.x, pos.y, pos.z - 0.05f);
+            CreateObject(mEffect, eLayerType::Effect);
+        }
     }
 }

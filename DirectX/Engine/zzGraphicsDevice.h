@@ -69,12 +69,14 @@ namespace zz::graphics
 
         void CreateLightMap();
         void CreateBloomRenderTarget();
+        void CreateFinalLightTarget();
         void CreateVisibility(UINT width, UINT height);
 
         void DrawIndexed(UINT IndexCount, UINT StartIndexLocation, INT BaseVertexLocation);
         void DrawIndexedInstanced(UINT IndexCountPerInstance, UINT InstanceCount, UINT StartIndexLocation, INT BaseVertexLocation, UINT StartInstanceLocation);
         void SetLightMapRenderTarget(bool bClear = true);
         void SetBloomRenderTarget();
+        void SetFinalLightRenderTarget();
         void SetVisibilityRenderTarget();
         void ClearRenderTarget();
         void UpdateViewPort();
@@ -86,6 +88,7 @@ namespace zz::graphics
         ID3D11Device* GetID3D11Device() { return mDevice.Get(); }
         ID3D11DeviceContext* GetID3D11DeviceContext() { return mContext.Get(); }
         ID3D11ShaderResourceView* GetLightMapResource() { return mLightSRV.Get(); }
+        ID3D11ShaderResourceView* GetFinalLightResource() { return mFinalLightSRV.Get(); }
 
         ID3D11ShaderResourceView* GetBloomResource() { return mBloomSRV.Get(); }
         ID3D11Texture2D* GetBloomTexture() { return mBloomRenderTarget.Get(); }
@@ -111,6 +114,10 @@ namespace zz::graphics
         Microsoft::WRL::ComPtr<ID3D11Texture2D> mVisibilityRenderTarget;
         Microsoft::WRL::ComPtr<ID3D11RenderTargetView> mVisibilityRenderTargetView;
         Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mVisibilitySRV;
+
+        Microsoft::WRL::ComPtr<ID3D11Texture2D> mFinalLightRenderTarget;
+        Microsoft::WRL::ComPtr<ID3D11RenderTargetView> mFinalLightRenderTargetView;
+        Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mFinalLightSRV;
 
         D3D11_VIEWPORT mViewPort;
         D3D11_VIEWPORT mBloomViewPort;

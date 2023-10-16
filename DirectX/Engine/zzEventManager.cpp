@@ -36,7 +36,7 @@ namespace zz
 
         for (UINT i = 0; i < mDeactivateList.size(); i++)
         {
-            delete mDeactivateList[i];
+                delete mDeactivateList[i];
         }
         mDeactivateList.clear();
         for (UINT i = 0; i < mEventsInfo.size(); i++)

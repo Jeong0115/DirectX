@@ -105,7 +105,11 @@ namespace zz
             }
         }
 
-        mMaterial->Clear(); // 이거 좀 들여다 보자
+        colorCB = {};
+        colorBuff->SetBufferData(&colorCB);
+        colorBuff->BindConstantBuffer(eShaderStage::PS);
+
+        mMaterial->Clear(); 
     }
 
     void Light::Render()

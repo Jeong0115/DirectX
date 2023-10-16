@@ -30,6 +30,8 @@ namespace zz
     protected:
         virtual void dead();
 
+        class Collider* mCollider;
+
         float mDamage;
         float mTime;
         float mLimitTime;

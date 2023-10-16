@@ -106,6 +106,7 @@ namespace zz
                 text->WriteText(L"RECHARGING..", Vector3(100.f, 20.f, 1.0f));
                 text->GetComponent<Transform>()->SetPosition(GetComponent<Transform>()->GetWorldPosition());
                 text->GetComponent<Transform>()->SetScale(Vector3(100.f, 20.f, 1.0f));
+                text->SetColor(Vector3(1.0f, 1.0f, 0.0f));
 
                 CreateObject(text, eLayerType::UI);
             }
@@ -114,6 +115,7 @@ namespace zz
                 TextObject* text = new TextObject();
                 text->WriteText(L"CAST DELAY..", Vector3(100.f, 20.f, 1.0f));
                 text->GetComponent<Transform>()->SetPosition(GetComponent<Transform>()->GetWorldPosition());
+                text->SetColor(Vector3(1.0f, 1.0f, 0.0f));
                 text->GetComponent<Transform>()->SetScale(Vector3(100.f, 20.f, 1.0f));
 
                 CreateObject(text, eLayerType::UI);

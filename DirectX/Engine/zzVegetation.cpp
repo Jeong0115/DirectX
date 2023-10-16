@@ -75,6 +75,10 @@ namespace zz
         cb->BindConstantBuffer(eShaderStage::PS);
 
         GameObject::Render();
+
+        colorCB = {};
+        cb->SetBufferData(&colorCB);
+        cb->BindConstantBuffer(eShaderStage::PS);
     }
 
     void Vegetation::OnCollision(Element& element)

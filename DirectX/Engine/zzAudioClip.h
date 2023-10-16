@@ -17,7 +17,7 @@ namespace zz
 	class AudioClip : public Resource
 	{
 	public:
-		AudioClip();
+		AudioClip(FMOD_MODE mode = FMOD_3D, float min = 1.0f, float max = 1000.0f);
 		~AudioClip();
 
 		virtual HRESULT Load(const std::wstring& path) override;
@@ -26,10 +26,14 @@ namespace zz
 		void Stop();
 		void Set3DAttributes(const Vector3 pos, const Vector3 vel);
 		void SetLoop(bool loop) { mbLoop = loop; }
+        void SetVolume(float volume) { mChannel->setVolume(volume); }
 
 	private:
 		FMOD::Sound* mSound;
 		FMOD::Channel* mChannel;
+
+        FMOD_MODE mMode;
+
 		float mMinDistance;
 		float mMaxDistance;
 		bool mbLoop;

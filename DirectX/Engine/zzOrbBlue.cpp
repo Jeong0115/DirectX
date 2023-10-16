@@ -7,6 +7,7 @@
 #include "zzTransform.h"
 #include "zzRigidBody.h"
 #include "zzLight.h"
+#include "zzCollider.h"
 
 namespace zz
 {
@@ -31,6 +32,7 @@ namespace zz
         if (mType != 2)
         {
             GetComponent<Transform>()->SetScale(16.f, 16.f, 1.0f);
+            mCollider->SetScale(12.f, 12.f, 1.0f);
         }
 
 
@@ -112,28 +114,34 @@ namespace zz
 
     void OrbBlue::dead()
     {
-        Vector3 pos = GetComponent<Transform>()->GetPosition();
-        mEffect->SetPosition(pos.x, pos.y, pos.z - 0.05f);
-        CreateObject(mEffect, eLayerType::Effect);
-
-        if (mType == 1)
+        if(!IsDead())
         {
-            for (int i = 0; i < 4; i++)
+            Vector3 pos = GetComponent<Transform>()->GetPosition();
+            mEffect->SetPosition(pos.x, pos.y, pos.z - 0.05f);
+            CreateObject(mEffect, eLayerType::Effect);
+
+            if (mType == 1)
             {
-                OrbBlue* blue = new OrbBlue(2);
-                blue->SetAngle(PI * 2. * i / 4.);
-                blue->SetSpeed(mSpeed * 1.7f);
-                blue->SetPosition(pos);
-                if (i % 2 == 0)
+                for (int i = 0; i < 4; i++)
                 {
-                    blue->GetComponent<Transform>()->SetScale(24.f, 8.f, 1.0f);
+                    OrbBlue* blue = new OrbBlue(2);
+                    blue->SetAngle(PI * 2. * i / 4.);
+                    blue->SetSpeed(mSpeed * 1.7f);
+                    blue->SetPosition(pos);
+                    if (i % 2 == 0)
+                    {
+                        blue->GetComponent<Transform>()->SetScale(24.f, 8.f, 1.0f);
+                        blue->GetComponent<Collider>()->SetScale(20.f, 6.f, 1.0f);
+                    }
+                    else
+                    {
+                        blue->GetComponent<Transform>()->SetScale(8.f, 24.f, 1.0f);
+                        blue->GetComponent<Collider>()->SetScale(6.f, 20.f, 1.0f);
+                    }
+                    CreateObject(blue, eLayerType::MonsterAttack);
                 }
-                else
-                {
-                    blue->GetComponent<Transform>()->SetScale(8.f, 24.f, 1.0f);
-                }
-                CreateObject(blue, eLayerType::MonsterAttack);
             }
+            DeleteObject(this, eLayerType::MonsterAttack);
         }
     }
 }

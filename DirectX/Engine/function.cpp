@@ -26,6 +26,8 @@ namespace zz
     {
         if (obj->IsDead())
             return;
+        
+        obj->SetLastUpdate();
 
         EventInfo event = {};
 

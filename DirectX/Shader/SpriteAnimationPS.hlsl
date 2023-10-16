@@ -16,7 +16,7 @@ struct VSOut
 
 float4 main(VSOut In) : SV_TARGET
 {
-    float4 color = (float4) 0.0f;  
+    float4 outClor = (float4) 0.0f;  
     float2 UV;
     
     if (flip.x == 1)
@@ -34,10 +34,14 @@ float4 main(VSOut In) : SV_TARGET
     {
         UV = (SpriteLeftTop / AtlasSize + SpriteOffset / AtlasSize) + (SpriteSize / AtlasSize * UV);
    
-        color = atlasTexture.Sample(pointSampler, UV);
+        outClor = atlasTexture.Sample(pointSampler, UV);
     }
     
-    return color;
+    if(color.w != 0)
+    {
+        outClor.rgb = color.rgb;
+    }
+    return outClor;
     
     
     //float4 color = float4(0.0f, 0.0f, 0.0f, 0.0f); // √ ±‚»≠

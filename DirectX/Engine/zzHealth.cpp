@@ -5,14 +5,15 @@
 #include "zzBarBackGround.h"
 #include "zzHUD_Icon.h"
 #include "zzUIManager.h"
-
+#include "zzEventManager.h"
 #include "zzRenderer.h"
-#include "zzInput.h"
+
 namespace zz
 {
     Health::Health()
         : UI(eUIType::HUD)
         , mBar(nullptr)
+        , mHealthRate(1.0f)
     {
         createIcon();
     }
@@ -32,6 +33,7 @@ namespace zz
         tr->SetScale(Vector3(40.f, 4.5f, 1.0f));
         tr->SetPosition(Vector3(585.f, 340.f, 1.0f));
 
+        EventManager::RegisterListener(eEvent::Health_Change, [this](const EvenetData& data) {OnEvent(data); });
         GameObject::Initialize();
      
         createBar();
@@ -51,12 +53,8 @@ namespace zz
     void Health::Render()
     {
         renderer::SliderCB sliderCB;
-        sliderCB.rate = 0.5f;
+        sliderCB.rate = mHealthRate;
 
-        if (Input::GetKey(eKeyCode::T))
-        {
-            sliderCB.rate = 0.2f;
-        }
         
         ConstantBuffer* cb = renderer::constantBuffer[(UINT)eCBType::Slider];
         cb->SetBufferData(&sliderCB);
@@ -76,6 +74,11 @@ namespace zz
     {
     }
 
+    void Health::OnEvent(const EvenetData& data)
+    {
+        mHealthRate = data.health;
+    }
+
     void Health::createIcon()
     {
         HUD_Icon* icon = new HUD_Icon();
@@ -90,7 +93,6 @@ namespace zz
 
         UIManager::AddUIObject(icon, eUIType::HUD);
     }
-
     void Health::createBar()
     {
         mBar = new BarBackGround();

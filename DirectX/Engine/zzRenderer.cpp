@@ -217,7 +217,7 @@ namespace zz::renderer
         ViewShader->SetBSState(eBSType::View);
         ViewShader->SetDSState(eDSType::None);
         ViewShader->SetRSState(eRSType::SolidNone);
-        ResourceManager::Insert(L"ViewShader", ViewShader);
+        ResourceManager::Insert(L"AddViewShader", ViewShader);
 
         std::shared_ptr<Shader> sliderShader = std::make_shared<Shader>();
         sliderShader->CreateShader(eShaderStage::VS, L"SpriteVS.hlsl", "main");
@@ -251,6 +251,18 @@ namespace zz::renderer
         lightMapShader2->CreateShader(eShaderStage::PS, L"BloomPS.hlsl", "main");
         lightMapShader2->SetBSState(eBSType::AddLIght);
         ResourceManager::Insert(L"BloomShader", lightMapShader2);
+
+        std::shared_ptr<Shader> lightMapShader3 = std::make_shared<Shader>();
+        lightMapShader3->CreateShader(eShaderStage::VS, L"ViewVS.hlsl", "main");
+        lightMapShader3->CreateShader(eShaderStage::PS, L"ViewPS.hlsl", "main");
+        lightMapShader3->SetBSState(eBSType::View);
+        ResourceManager::Insert(L"ViewShader", lightMapShader3);
+
+        std::shared_ptr<Shader> finalLightShader = std::make_shared<Shader>();
+        finalLightShader->CreateShader(eShaderStage::VS, L"FinalLightVS.hlsl", "main");
+        finalLightShader->CreateShader(eShaderStage::PS, L"FinalLightPS.hlsl", "main");
+        finalLightShader->SetBSState(eBSType::AddLIght);
+        ResourceManager::Insert(L"FinalLightShader", finalLightShader);
 
         std::shared_ptr<Shader> lightMapShadert = std::make_shared<Shader>();
         lightMapShadert->CreateShader(eShaderStage::VS, L"AddDarkVS.hlsl", "main");
@@ -460,6 +472,9 @@ namespace zz::renderer
         shader = ResourceManager::Find<Shader>(L"SpriteShader");
         GetDevice()->CreateInputLayout(arrLayout, 3, shader->GetVSCode(), shader->GetInputLayoutAddressOf());
 
+        shader = ResourceManager::Find<Shader>(L"AddViewShader");
+        GetDevice()->CreateInputLayout(arrLayout, 3, shader->GetVSCode(), shader->GetInputLayoutAddressOf());
+
         shader = ResourceManager::Find<Shader>(L"ViewShader");
         GetDevice()->CreateInputLayout(arrLayout, 3, shader->GetVSCode(), shader->GetInputLayoutAddressOf());
 
@@ -490,6 +505,8 @@ namespace zz::renderer
         shader = ResourceManager::Find<Shader>(L"FadeAnimationShader");
         GetDevice()->CreateInputLayout(arrLayout, 3, shader->GetVSCode(), shader->GetInputLayoutAddressOf());
 
+        shader = ResourceManager::Find<Shader>(L"FinalLightShader");
+        GetDevice()->CreateInputLayout(arrLayout, 3, shader->GetVSCode(), shader->GetInputLayoutAddressOf());
         
         D3D11_INPUT_ELEMENT_DESC particleLayout[1] = {};
 
@@ -949,7 +966,7 @@ namespace zz::renderer
 
     void LoadMonsterResource()
     {
-        ResourceManager::Load<Texture>(L"shotgunner_weak", L"..\\Resources\\Texture\\Monster\\shotgunner_weak.png");
+        ResourceManager::Load<Texture>(L"shotgunner_weak", L"..\\Resources\\Texture\\Monster\\shotgunner_weak\\shotgunner_weak.png");
 
         ResourceManager::Load<Texture>(L"body", L"..\\Resources\\Texture\\Centipede\\body.png");
         ResourceManager::Load<Texture>(L"limb_long_a", L"..\\Resources\\Texture\\Centipede\\limb_long_a.png");
@@ -992,7 +1009,7 @@ namespace zz::renderer
         ResourceManager::Insert(L"m_Particle", material);
 
         ResourceManager::Load<Texture>(L"SparkBolt", L"..\\Resources\\Texture\\Spell\\SparkBolt\\spark.png");
-        ResourceManager::Load<AudioClip>(L"SparkBolt_Sound", L"..\\Resources\\Audio\\Projectiles\\spell_shoot_ver1_1.wav");
+        
 
         ResourceManager::Load<Texture>(L"Explosion_SparkBolt", L"..\\Resources\\Texture\\Spell\\SparkBolt\\explosion_008_pink.png");
         ResourceManager::Load<Texture>(L"Muzzle_SparkBolt", L"..\\Resources\\Texture\\Spell\\SparkBolt\\muzzle_large_pink.png");
@@ -1208,7 +1225,7 @@ namespace zz::renderer
 
         std::shared_ptr<Texture> light_mask = ResourceManager::Load<Texture>(L"light_mask", L"..\\Resources\\Texture\\Light\\light_mask.png");
         material = std::make_shared<Material>();
-        material->SetShader(ResourceManager::Find<Shader>(L"ViewShader"));
+        material->SetShader(ResourceManager::Find<Shader>(L"AddViewShader"));
         material->SetTexture(light_mask);
         ResourceManager::Insert(L"m_view", material);
     }

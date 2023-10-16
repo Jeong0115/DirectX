@@ -56,8 +56,12 @@ namespace zz
         GetComponent<Transform>()->SetScale(10.f, 10.f, 1.0f);
         AddComponent<Collider>()->SetScale(10.f, 4.f, 1.0f);
 
-        mSound = ResourceManager::Find<AudioClip>(L"SparkBolt_Sound");
-
+        AudioSource* a = AddComponent<AudioSource>();
+        a->SetClip(ResourceManager::LoadAudioClip(L"SparkBolt_Sound", L"..\\Resources\\Audio\\Projectiles\\spell_shoot_ver1_1.wav"));
+        a->SetLoop(false);
+        a->Play();
+        //mSound = ResourceManager::Find<AudioClip>(L"SparkBolt_Sound");
+        //mSound = ResourceManager::Load<AudioClip>(L"crypt_s06_action_91", L"..\\Resources\\Audio\\Projectiles\\crypt_s06_action_91.wav");
 
         mRigid = AddComponent<RigidBody>();
         mRigid->SetStartVelocity(mSpeed, mDirection);
@@ -150,13 +154,7 @@ namespace zz
 
         if (mTime >= 0.8f && IsActive())
         {
-            SetState(eState::Sleep);
-            mbTimerOn = true;
-
-            Vector3 pos = GetComponent<Transform>()->GetPosition();
-            mExplosion->GetComponent<Transform>()->SetPosition(pos.x, pos.y, BACK_PIXEL_WORLD_Z);
-            mExplosion->GetComponent<Transform>()->SetScale(9.0f, 9.0f, 1.0f);
-            CreateObject(mExplosion, eLayerType::Effect);
+            Dead();
         }
 
         ProjectileSpell::Update();
@@ -241,6 +239,21 @@ namespace zz
         ProjectileSpell::Render();
     }
 
+    void SparkBolt::Dead()
+    {
+        if (IsActive())
+        {
+            SetState(eState::Sleep);
+
+            Vector3 pos = GetComponent<Transform>()->GetPosition() - (mDirection * 500.f * 0.005f);
+            mExplosion->GetComponent<Transform>()->SetPosition(pos.x, pos.y, BACK_PIXEL_WORLD_Z);
+            mExplosion->GetComponent<Transform>()->SetScale(9.0f, 9.0f, 1.0f);
+            CreateObject(mExplosion, eLayerType::Effect);
+
+            mbTimerOn = true;
+        }
+    }
+
     ProjectileSpell* SparkBolt::Clone()
     {
         return new SparkBolt();
@@ -250,17 +263,7 @@ namespace zz
     {
         if (element.Type == eElementType::SOLID)
         {
-            if (IsActive())
-            {
-                SetState(eState::Sleep);
-
-                Vector3 pos = GetComponent<Transform>()->GetPosition() - (mDirection * 500.f * 0.005f);
-                mExplosion->GetComponent<Transform>()->SetPosition(pos.x, pos.y, BACK_PIXEL_WORLD_Z);
-                mExplosion->GetComponent<Transform>()->SetScale(9.0f, 9.0f, 1.0f);
-                CreateObject(mExplosion, eLayerType::Effect);
-
-                mbTimerOn = true;
-            }
+            Dead();
         }
         else if (element.Type == eElementType::LIQUID)
         {

@@ -20,8 +20,9 @@ namespace zz
         virtual void OnCollisionStay(GameObject* other)  override;
         virtual void OnCollisionExit(GameObject* other)  override;
 
-        void SetPlayerView();
-
+        void HitEvent();
+        void DeathEvent();
+        
         GameObject* GetPlayerArm() { return mPlayerArm; }
 
         void SetEquipment(Equipment* equipment)  { mEquipment = equipment; mEquipmentInitialPos = mEquipment->GetInitialPos(); }
@@ -36,6 +37,7 @@ namespace zz
         class PlayerView*   mPlayerView;
         class Animator*     mAnimator;
         class RigidBody*    mRigid;
+        class HealthPoint*  mHealthPoint;
 
         Vector3 mEquipmentInitialPos;
         float vel;
