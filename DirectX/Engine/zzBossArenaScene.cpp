@@ -4,7 +4,7 @@
 #include "zzMeshRenderer.h"
 #include "zzResourceManager.h"
 #include "zzTexture.h"
-
+#include "zzRedTeleport.h"
 namespace zz
 {
     BossArenaScene::BossArenaScene()
@@ -36,6 +36,11 @@ namespace zz
         MeshRenderer* bgmesh = bg->AddComponent<MeshRenderer>();
         bgmesh->SetMaterial(ResourceManager::Find<Material>(L"m_boss_arena_background"));
         bgmesh->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
+
+
+        RedTeleport* teleport = new RedTeleport();
+        teleport->GetComponent<Transform>()->SetPosition(380.f, -889.f, 0.200f);
+        AddGameObject(teleport, eLayerType::Object);
 
         Scene::Initialize();
     }

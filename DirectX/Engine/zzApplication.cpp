@@ -217,23 +217,32 @@ namespace zz
         {
             EventManager::AddOtherEvent([]() { LoadExcavationsite(); });
         }
+        else if (name == L"RewardRoom")
+        {
+            EventManager::AddOtherEvent([]() { LoadRewardRoom(); });
+        }
     }
 
     void Application::LoadExcavationsite()
     {
-        //BossArenaScene* scene = new BossArenaScene();   
-        //PixelWorld::CreateBossArena();
-        //scene->Initialize();
-        //SceneManager::LoadScene(L"Excavationsite", scene);
-        //
-        //scene->MovePlayer();
+        ObjectPoolManager::Release();
+        BossArenaScene* scene = new BossArenaScene();   
+        PixelWorld::CreateBossArena();
+        scene->Initialize();
+        SceneManager::LoadScene(L"Excavationsite", scene);
         
-
+        scene->MovePlayer();
+        ObjectPoolManager::Initialize();
+    }
+    void Application::LoadRewardRoom()
+    {
+        ObjectPoolManager::Release();
         EndScene* scene = new EndScene();
         PixelWorld::CreateEndWorld();
         scene->Initialize();
         SceneManager::LoadScene(L"Excavationsite", scene);;
-        
+
         scene->MovePlayer();
+        ObjectPoolManager::Initialize();
     }
 }

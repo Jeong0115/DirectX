@@ -1243,6 +1243,9 @@ namespace zz::renderer
         material->SetTexture(teleport_center);
         ResourceManager::Insert(L"m_teleport_center", material);
 
+        ResourceManager::Load<Texture>(L"red_portal", L"..\\Resources\\Texture\\Ending\\red_portal.png");
+
+
         std::shared_ptr<Texture> explosion_hole = ResourceManager::Load<Texture>(L"explosion_hole", L"..\\Resources\\Texture\\Light\\explosion_hole.png");
         material = std::make_shared<Material>();
         material->SetShader(ResourceManager::Find<Shader>(L"AddViewShader"));

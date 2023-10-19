@@ -29,7 +29,6 @@ namespace zz
         mesh->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
 
         GetComponent<Transform>()->SetScale(96.f, 96.f, 1.0f);
-
         AddComponent<Collider>()->SetScale(30.f, 30.f, 1.0f);
 
        //Light* light = AddComponent<Light>();

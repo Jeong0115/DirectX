@@ -52,6 +52,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)zzOrbBlue.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzOrbPink.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzPlayerView.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzRedTeleport.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzRubber_ball.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzSpeedUp_UI.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzDetectPlayer.cpp" />
@@ -211,6 +212,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzOrbBlue.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzOrbPink.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzPlayerView.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzRedTeleport.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzRubber_ball.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzSpeedUp_UI.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzDetectPlayer.h" />

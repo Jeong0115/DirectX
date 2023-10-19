@@ -523,6 +523,9 @@
     <Filter Include="GameObject\Effect\EndingEffect">
       <UniqueIdentifier>{d0845b20-a951-4cb2-b310-c78fc4e57fd9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GameObject\Teleport\RedTeleport">
+      <UniqueIdentifier>{8e91e46e-bf5c-41ae-8a3e-6e54aecaf7b3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzEntity.cpp">
@@ -972,6 +975,9 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzEndingView.cpp">
       <Filter>GameObject\Effect\EndingEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzRedTeleport.cpp">
+      <Filter>GameObject\Teleport\RedTeleport</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1449,6 +1455,9 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzEndingView.h">
       <Filter>GameObject\Effect\EndingEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzRedTeleport.h">
+      <Filter>GameObject\Teleport\RedTeleport</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -36,6 +36,7 @@ namespace zz
 
         static void LoadNextScene(const std::wstring& name);
         static void LoadExcavationsite();
+        static void LoadRewardRoom();
 
 		UINT GetWidth() { return mWidth; }
 		UINT GetHeight() { return mHeight; }
