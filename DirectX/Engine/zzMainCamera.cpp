@@ -185,7 +185,7 @@ namespace zz
         {
             if (gameObj == nullptr)
                 continue;
-
+                
             gameObj->Render();
         }
     }

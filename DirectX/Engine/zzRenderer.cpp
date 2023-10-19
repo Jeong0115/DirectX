@@ -1243,10 +1243,24 @@ namespace zz::renderer
         material->SetTexture(teleport_center);
         ResourceManager::Insert(L"m_teleport_center", material);
 
+        std::shared_ptr<Texture> explosion_hole = ResourceManager::Load<Texture>(L"explosion_hole", L"..\\Resources\\Texture\\Light\\explosion_hole.png");
+        material = std::make_shared<Material>();
+        material->SetShader(ResourceManager::Find<Shader>(L"AddViewShader"));
+        material->SetTexture(explosion_hole);
+        ResourceManager::Insert(L"l_explosion_hole", material);
+
         std::shared_ptr<Texture> light_mask = ResourceManager::Load<Texture>(L"light_mask", L"..\\Resources\\Texture\\Light\\light_mask.png");
         material = std::make_shared<Material>();
         material->SetShader(ResourceManager::Find<Shader>(L"AddViewShader"));
         material->SetTexture(light_mask);
         ResourceManager::Insert(L"m_view", material);
+
+        std::shared_ptr<Texture> boss_victoryroom_background = ResourceManager::Load<Texture>(L"boss_victoryroom_background", L"..\\Resources\\Texture\\Ending\\boss_victoryroom_background.png");
+        material = std::make_shared<Material>();
+        material->SetShader(spriteShader);
+        material->SetTexture(boss_victoryroom_background);
+        ResourceManager::Insert(L"m_boss_victoryroom_background", material);
+
+        ResourceManager::Load<Texture>(L"animated_emitter_large", L"..\\Resources\\Texture\\Ending\\animated_emitter_large.png");
     }
 }

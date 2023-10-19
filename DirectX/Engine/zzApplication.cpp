@@ -17,6 +17,7 @@
 
 #include "zzOpeningScene.h"
 #include "zzBossArenaScene.h"
+#include "zzEndScene.h"
 
 #include "zzResourceManager.h"
 #include "zzTexture.h"
@@ -220,15 +221,19 @@ namespace zz
 
     void Application::LoadExcavationsite()
     {
-        BossArenaScene* scene = new BossArenaScene();
-        scene->Initialize();
-
-        SceneManager::LoadScene(L"Excavationsite", scene);
+        //BossArenaScene* scene = new BossArenaScene();   
         //PixelWorld::CreateBossArena();
+        //scene->Initialize();
+        //SceneManager::LoadScene(L"Excavationsite", scene);
+        //
+        //scene->MovePlayer();
+        
+
+        EndScene* scene = new EndScene();
         PixelWorld::CreateEndWorld();
+        scene->Initialize();
+        SceneManager::LoadScene(L"Excavationsite", scene);;
+        
         scene->MovePlayer();
-        
-        //PixelWorld::CreateNextWorld();
-        
     }
 }

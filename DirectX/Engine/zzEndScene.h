@@ -4,11 +4,11 @@
 
 namespace zz
 {
-    class BossArenaScene : public Scene
+    class EndScene : public Scene
     {
     public:
-        BossArenaScene();
-        virtual ~BossArenaScene();
+        EndScene();
+        virtual ~EndScene();
 
         virtual void Initialize()   override;
         virtual void Update()       override;
@@ -18,3 +18,4 @@ namespace zz
         virtual void MovePlayer()   override;
     };
 }
+

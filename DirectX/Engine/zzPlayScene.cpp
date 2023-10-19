@@ -20,9 +20,9 @@
 #include "zzTeleport.h"
 #include "zzPixelWorld.h"
 
-#include "zzCentipede.h"
 #include "zzAudioSource.h"
 #include "zzAudioListener.h"
+#include "zzEndingEffect.h"
 
 namespace zz
 {
@@ -206,6 +206,13 @@ namespace zz
 
     void PlayScene::Update()
     {
+        if (Input::GetKeyDown(eKeyCode::E))
+        {
+            EndingEffect* effect = new EndingEffect();
+            effect->GetComponent<Transform>()->SetPosition(Vector3(0.0f, 0.0f, 0.0f));
+            AddGameObject(effect, eLayerType::Effect);
+            effect->Initialize();
+        }
         Scene::Update();
     }
 

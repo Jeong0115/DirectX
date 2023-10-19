@@ -16,6 +16,9 @@
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzBouncingBurst.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzDrill.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzEndingView.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzEndingEffect.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzEndScene.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzLuminous_drill.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzMegalaserProj.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzAudioClip.cpp" />
@@ -172,6 +175,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)define.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzBouncingBurst.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzDrill.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzEndingView.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzEndingEffect.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzEndScene.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzLuminous_drill.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzMegalaserProj.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzAudioClip.h" />

@@ -517,6 +517,12 @@
     <Filter Include="GameObject\Monster\Zombie_weak">
       <UniqueIdentifier>{625f2cd3-fc51-46a1-8cde-e3e965e8a2f3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scene\Scene\EndScene">
+      <UniqueIdentifier>{0fb0a69f-6a05-4559-b155-60684fd0b721}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Effect\EndingEffect">
+      <UniqueIdentifier>{d0845b20-a951-4cb2-b310-c78fc4e57fd9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzEntity.cpp">
@@ -957,6 +963,15 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzZombie_weak.cpp">
       <Filter>GameObject\Monster\Zombie_weak</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzEndScene.cpp">
+      <Filter>Scene\Scene\EndScene</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzEndingEffect.cpp">
+      <Filter>GameObject\Effect\EndingEffect</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzEndingView.cpp">
+      <Filter>GameObject\Effect\EndingEffect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1425,6 +1440,15 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzThreadPool.h">
       <Filter>Etc</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzEndScene.h">
+      <Filter>Scene\Scene\EndScene</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzEndingEffect.h">
+      <Filter>GameObject\Effect\EndingEffect</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzEndingView.h">
+      <Filter>GameObject\Effect\EndingEffect</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

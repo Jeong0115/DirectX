@@ -32,7 +32,6 @@ namespace zz
         mParticle = AddComponent<ParticleSystem>();
         mParticle->SetMaterial(ResourceManager::Find<Material>(L"m_Particle"));
         mParticle->SetMesh(ResourceManager::Find<Mesh>(L"PointMesh"));
-        std::shared_ptr< ParticleShader> a = ResourceManager::Find<ParticleShader>(L"ParticleImageCS");
         mParticle->SetParticleShader(ResourceManager::Find<ParticleShader>(L"ParticleImageCS"));
 
         auto mParticleBuffer = std::make_shared<Particle[]>(3364);
@@ -91,6 +90,8 @@ namespace zz
         colorCB.colorRange.x = mParticleTime;
         mParticleTime += (float)Time::DeltaTime() * 2.0f;
         colorCB.colorRange.y = mParticleTime;
+        
+        mParticle->SetStructedBufferData(&mSharedData, 1, 1);
 
         if (mParticleTime >= 1.2f && !mbCreate)
         {
@@ -144,7 +145,6 @@ namespace zz
         mSharedData.angle = angle;
         mSharedData.color_min = mSharedData.color_max = Vector4(0.2f, 0.6f, 0.0f, 0.1f);
         mSharedData.curPosition = (GetComponent<Transform>()->GetPosition() + offsetPos) + 0.0f;
-        mParticle->SetStructedBufferData(&mSharedData, 1, 1);
     }
 
     void Megalaser::OnCollision(Element& element)

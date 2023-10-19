@@ -237,6 +237,19 @@ namespace zz
         }
     }
 
+    void PixelWorld::InsertEndingMat(int x, int y)
+    {
+        if (PixelChunk* chunk = GetChunk(x, y))
+        {
+            if (chunk->GetElement(x, y).Type != eElementType::EMPTY)
+            {
+                Element gold = SAND;
+                gold.Color = getMaterialColor(L"gold", x, y);
+                chunk->InsertElement(x, y, gold);
+            }
+        }
+    }
+
     void PixelWorld::DeleteElement(int x, int y)
     {
         if (PixelChunk* chunk = GetChunk(x, y))
@@ -2499,6 +2512,16 @@ namespace zz
             image->imageBits = 24;
 
             mMaterialImages.insert({ L"templebrick", image });
+        }
+        {
+            MaterialImage* image = new MaterialImage();
+
+            image->image = cv::imread("..\\Resources\\Texture\\Material\\gold.png", cv::IMREAD_UNCHANGED);
+            image->width = image->image.cols;
+            image->height = image->image.rows;
+            image->imageBits = 32;
+
+            mMaterialImages.insert({ L"gold", image });
         }
     }
 

@@ -1,21 +1,21 @@
-#include "zzBossArenaScene.h"
+#include "zzEndScene.h"
 #include "zzTransform.h"
 #include "zzPixelWorld.h"
 #include "zzMeshRenderer.h"
 #include "zzResourceManager.h"
 #include "zzTexture.h"
+#include "zzEndingEffect.h"
+#include "zzInput.h"
 
 namespace zz
 {
-    BossArenaScene::BossArenaScene()
+    EndScene::EndScene()
     {
     }
-
-    BossArenaScene::~BossArenaScene()
+    EndScene::~EndScene()
     {
     }
-
-    void BossArenaScene::Initialize()
+    void EndScene::Initialize()
     {
         GameObject* object = new GameObject();
         AddGameObject(object, eLayerType::PixelWorld);
@@ -31,34 +31,37 @@ namespace zz
 
         GameObject* bg = new GameObject();
         AddGameObject(bg, eLayerType::BG);
-        bg->GetComponent<Transform>()->SetPosition(Vector3(1300.f, -800.f, 1.0f));
-        bg->GetComponent<Transform>()->SetScale(Vector3(2600.f, 1600.f, 1.0f));
+        bg->GetComponent<Transform>()->SetPosition(Vector3(768.f, -768.f, 1.0f));
+        bg->GetComponent<Transform>()->SetScale(Vector3(512.f, 512.f, 1.0f));
         MeshRenderer* bgmesh = bg->AddComponent<MeshRenderer>();
-        bgmesh->SetMaterial(ResourceManager::Find<Material>(L"m_boss_arena_background"));
+        bgmesh->SetMaterial(ResourceManager::Find<Material>(L"m_boss_victoryroom_background"));
         bgmesh->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
+
 
         Scene::Initialize();
     }
-
-    void BossArenaScene::Update()
+    void EndScene::Update()
     {
+        if (Input::GetKeyDown(eKeyCode::E))
+        {
+            EndingEffect* effect = new EndingEffect();
+            effect->GetComponent<Transform>()->SetPosition(Vector3(768.f, -744.f, 0.0f));
+            AddGameObject(effect, eLayerType::Effect);
+            effect->Initialize();
+        }
+
         Scene::Update();
     }
-
-    void BossArenaScene::LateUpdate()
+    void EndScene::LateUpdate()
     {
         Scene::LateUpdate();
     }
-
-    void BossArenaScene::Render()
+    void EndScene::Render()
     {
         Scene::Render();
     }
-
-    void BossArenaScene::MovePlayer()
+    void EndScene::MovePlayer()
     {
-   
-
-        GetLayer(eLayerType::Player).GetGameObjects()[0]->GetComponent<Transform>()->SetPosition(356.f, -889.f, 0.200f);
+        GetLayer(eLayerType::Player).GetGameObjects()[0]->GetComponent<Transform>()->SetPosition(768.f, -700.f, 0.200f);
     }
 }

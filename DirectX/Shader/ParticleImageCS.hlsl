@@ -10,7 +10,7 @@ void main( uint3 DTid : SV_DispatchThreadID )
     
     if (DTid.x < sharedBuffer.imageSize.x || DTid.y < sharedBuffer.imageSize.y)
     {
-        int index = 64 * DTid.y + DTid.x;
+        int index = ((int)(sharedBuffer.imageSize.x / 32.f) + 1) * 32 * DTid.y + DTid.x;
         Particle particle = ParticleBuffer[index];
 
         if (particle.active == 1)
@@ -64,7 +64,7 @@ void CreateParticle(int2 id)
             );
     
     ParticleImageShared sharedBuffer = ParticleImageSharedBuffer[0];
-    Particle particle = ParticleBuffer[64 * id.y + id.x];
+    Particle particle = ParticleBuffer[((int)(sharedBuffer.imageSize.x / 32.f) + 1) * 32 * id.y + id.x];
     
     float angle = sharedBuffer.angle;
     float2 offset;
@@ -85,7 +85,7 @@ void CreateParticle(int2 id)
     particle.velocity = randomVelocity;
     particle.active = 1;
     
-    ParticleBuffer[64 * id.y + id.x] = particle;
+    ParticleBuffer[((int)(sharedBuffer.imageSize.x / 32.f) + 1) * 32 * id.y + id.x] = particle;
 }
 
 

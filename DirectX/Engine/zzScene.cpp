@@ -43,6 +43,10 @@ namespace zz
         }
     }
 
+    void Scene::MovePlayer()
+    {
+    }
+
     void Scene::AddGameObject(GameObject* gameObject, eLayerType type)
     {
         gameObject->SetLayerType(type);

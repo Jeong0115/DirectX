@@ -1,20 +1,23 @@
 #pragma once
 
-#include "zzScene.h"
+#include "zzGameObject.h"
 
 namespace zz
 {
-    class BossArenaScene : public Scene
+    class EndingView : public GameObject
     {
     public:
-        BossArenaScene();
-        virtual ~BossArenaScene();
+        EndingView();
+        ~EndingView();
 
         virtual void Initialize()   override;
         virtual void Update()       override;
         virtual void LateUpdate()   override;
         virtual void Render()       override;
 
-        virtual void MovePlayer()   override;
+
+    private:
+        class MeshRenderer* renderer;
     };
 }
+

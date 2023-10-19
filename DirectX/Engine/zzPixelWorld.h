@@ -68,6 +68,8 @@ namespace zz
 
         static void InsertElement(int x, int y, const Element& element);
         static void InsertElementIfEmpty(int x, int y, const Element& element);
+        static void InsertEndingMat(int x, int y);
+
         static void DeleteElement(int x, int y);
         static void MoveStaticElement(std::vector<Box2dWorld::StaticElementInfo>& elements);
         static void DeleteStaticElement(std::vector<Box2dWorld::StaticElementInfo>& elements);
