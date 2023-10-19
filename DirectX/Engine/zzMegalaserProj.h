@@ -17,6 +17,7 @@ namespace zz
 
         virtual void Dead();
         virtual ProjectileSpell* Clone() override;
+        virtual void InitialSetting() override;
 
         void OnCollision(struct Element& element);
 

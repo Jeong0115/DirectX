@@ -44,7 +44,6 @@ namespace zz
     {
         mScenes.insert(std::make_pair(name, scene));
         
-
         Layer& cameraLayer = mActiveScene->GetLayer(eLayerType::Camera);
 
         for (GameObject* obj : cameraLayer.GetGameObjects())

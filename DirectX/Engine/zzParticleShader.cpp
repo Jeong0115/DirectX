@@ -32,7 +32,7 @@ namespace zz
     {
         mParticleBuffer->BindUAV();
         mSharedBuffer->BindUAV();
-    }
+    }   
 
     void ParticleShader::Clear()
     {

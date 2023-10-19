@@ -43,10 +43,12 @@ namespace zz
         Matrix scale = Matrix::CreateScale(mLightScale);
         Matrix position = Matrix::CreateTranslation(mTransform->GetPosition());
 
+        float angle = mTransform->GetWorldRotation().z;
+
         Matrix rotation;
         rotation = Matrix::CreateRotationX(0.f);
         rotation *= Matrix::CreateRotationY(0.f);
-        rotation *= Matrix::CreateRotationZ(0.f);
+        rotation *= Matrix::CreateRotationZ(angle);
 
         world = scale * rotation * position;
 

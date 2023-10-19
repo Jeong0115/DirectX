@@ -15,13 +15,25 @@ namespace zz
         virtual void LateUpdate()   override;
         virtual void Render()       override;
 
-        void SetDetectRange(float range) { mDetectRange = range; }
+        void SetDetectRange(float rangeX, float rangeYUp, float rangeYDown) 
+        { mDetectRangeX = rangeX; mDetectRangeYUp = rangeYUp; mDetectRangeYDown = rangeYDown; }
         Vector3 GetPlayerPos() { return PlayerPos; }
+
+        bool IsPlayerInRange(); 
+
+        int GetDirection() { return mDirection; }
         //юс╫ц
         static Vector3 PlayerPos;
     private:
-        void rayCast();   
+        void rayCast(Vector3 pos);   
 
-        float mDetectRange;
+        float mDetectRangeYUp;
+        float mDetectRangeYDown;
+        float mDetectRangeX;
+
+        bool mbPlayerInRange;
+        bool mbBlock;
+
+        int mDirection;
     };
 }

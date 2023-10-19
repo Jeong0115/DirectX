@@ -1,6 +1,7 @@
 #include "zzDetectPlayer.h"
 #include "zzGameObject.h"
 #include "zzTransform.h"
+#include "zzPixelWorld.h"
 
 namespace zz
 {
@@ -8,7 +9,11 @@ namespace zz
 
     DetectPlayer::DetectPlayer()
         : Component(eComponentType::DetectPlayer)
-        , mDetectRange(100.0f)
+        , mDetectRangeX(100.0f)
+        , mDetectRangeYUp(20.f)
+        , mDetectRangeYDown(-50.f)
+        , mbPlayerInRange(false)
+        , mDirection(1)
     {
     }
 
@@ -23,13 +28,7 @@ namespace zz
     void DetectPlayer::Update()
     {
         Vector3 myPos = GetOwner() -> GetComponent<Transform>()->GetPosition();
-
-        float distance = sqrt((myPos.x - PlayerPos.x) * (myPos.x - PlayerPos.x) + (myPos.y - PlayerPos.y) * (myPos.y - PlayerPos.y));
-        
-        if (distance <= mDetectRange)
-        {
-            rayCast();
-        }
+        mDirection = myPos.x > PlayerPos.x ? -1 : 1;
     }
 
     void DetectPlayer::LateUpdate()
@@ -40,8 +39,27 @@ namespace zz
     {
     }
 
-    void DetectPlayer::rayCast()
-    {
 
+    bool DetectPlayer::IsPlayerInRange()
+    {
+        Vector3 myPos = GetOwner()->GetComponent<Transform>()->GetPosition();
+        float distanceX = fabs(myPos.x - PlayerPos.x);
+        float distanceY = PlayerPos.y - myPos.y;
+
+        if (distanceX <= mDetectRangeX && distanceY >= mDetectRangeYDown && distanceY <= mDetectRangeYUp)
+        {
+            mbPlayerInRange = true;
+        }
+        else
+        {
+            mbPlayerInRange = false;
+        }
+
+        return mbPlayerInRange;
+    }
+
+    void DetectPlayer::rayCast(Vector3 pos)
+    {
+       
     }
 }

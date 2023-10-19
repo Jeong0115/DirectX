@@ -177,10 +177,10 @@ namespace zz
 		math::Vector4 lightScale;
         math::Vector4 distance;
 
-        math::Vector2 randPositionMin;
-        math::Vector2 randPositionMax;
-        math::Vector2 randVelocityMin;
-        math::Vector2 randVelocityMax;
+        math::Vector2 randPositionMin = math::Vector2::Zero;
+        math::Vector2 randPositionMax = math::Vector2::Zero;
+        math::Vector2 randVelocityMin = math::Vector2::Zero;
+        math::Vector2 randVelocityMax = math::Vector2::Zero;
         math::Vector2 randLifeTime;
 
         float angle;

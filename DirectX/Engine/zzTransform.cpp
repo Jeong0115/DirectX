@@ -95,6 +95,22 @@ namespace zz
         cb->BindConstantBuffer(eShaderStage::PS);
     }
 
+    Vector3 Transform::GetWorldPositionApplyRotation()
+    {
+        Vector3 parentPos = GetParentPosition();
+        Vector3 worldOffset = GetOffsetPostion();
+        
+        float angle = GetWorldRotation().z;
+
+        Vector3 realPos;
+
+        realPos.x = worldOffset.x * cos(angle) - worldOffset.y * sin(angle);
+        realPos.y = worldOffset.x * sin(angle) + worldOffset.y * cos(angle);
+        realPos.z = worldOffset.z;
+
+        return realPos + parentPos;
+    }
+
     Vector3 Transform::GetWorldPosition()
     {
         if (mParent == nullptr)
@@ -103,6 +119,7 @@ namespace zz
         }
 
         return mPosition + mParent->GetWorldPosition();
+
     }
 
     Vector3 Transform::GetWorldRotation()
@@ -113,5 +130,24 @@ namespace zz
         }
 
         return mRotation + mParent->GetWorldRotation();
+    }
+
+    Vector3 Transform::GetOffsetPostion()
+    {
+        if (mParent == nullptr)
+        {
+            return Vector3::Zero;
+        }
+
+        return mPosition + mParent->GetOffsetPostion();
+    }
+    Vector3 Transform::GetParentPosition()
+    {
+        if (mParent == nullptr)
+        {
+            return mPosition;
+        }
+
+        return mParent->GetParentPosition();
     }
 }

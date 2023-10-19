@@ -31,11 +31,14 @@ namespace zz
 
     private:
         void playIdleAnimation();
+        void shootAnimationEnd();
         void shoot();
 
         void freedom();
         void followPlayer();
         void battle();
+
+        bool shootRay();
 
         class PixelCollider*    mPxCollider;
         class MuzzleEffect*     mMuzzleEffect;
@@ -46,15 +49,19 @@ namespace zz
 
         eMonsterState mState;
 
+        Vector3 mPxColliderScale;
         Vector3 mTip;
 
         float   mChoiceNextAction;
         float   mDirection;
         float   mHitFlashTime;
+        float   mDetectPlayerTime;
+        float   mReloadTime;
 
         int     mActionIndex;
 
         bool    mbEnterAction;
+        bool    mbJump;
     };
 }
 

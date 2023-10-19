@@ -19,6 +19,7 @@ namespace zz
         virtual void Clear();
 
 		void SetGroupCount(UINT x, UINT y, UINT z) { mGroupX = x; mGroupY = y; mGroupZ = z; }
+        std::tuple<UINT, UINT, UINT> GetGroupCount() { return { mGroupX, mGroupY, mGroupZ }; }
 
     protected:
         Microsoft::WRL::ComPtr<ID3DBlob> mCSBlob;

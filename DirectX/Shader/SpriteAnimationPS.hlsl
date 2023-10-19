@@ -19,11 +19,15 @@ float4 main(VSOut In) : SV_TARGET
     float4 outClor = (float4) 0.0f;  
     float2 UV;
     
-    if (flip.x == 1)
+    if(flip.y == 1)
     {
-    
+        UV = float2(In.UV.x, 1.0 - In.UV.y);
+        //UV.y = UV.y - (SpriteSize.y / AtlasSize.y);
+    }
+    else if (flip.x == 1)
+    {  
         UV = float2(1.0 - In.UV.x, In.UV.y);
-        UV.x = UV.x - (SpriteSize.x / AtlasSize.x);
+        //UV.x = UV.x - (SpriteSize.x / AtlasSize.x);
     }
     else
     {

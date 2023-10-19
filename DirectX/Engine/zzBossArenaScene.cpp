@@ -54,4 +54,11 @@ namespace zz
     {
         Scene::Render();
     }
+
+    void BossArenaScene::MovePlayer()
+    {
+        GetLayer(eLayerType::Player).GetGameObjects()[0]->GetComponent<Transform>()->SetPosition(512.f, -700.f, 0.200f);
+
+        //GetLayer(eLayerType::Player).GetGameObjects()[0]->GetComponent<Transform>()->SetPosition(356.f, -889.f, 0.200f);
+    }
 }

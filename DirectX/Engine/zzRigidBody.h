@@ -20,9 +20,12 @@ namespace zz
 
         void SetAirFirction(float friction) { mAirFriction = friction; }
         void SetGravity(float gravity)      { mGravity = gravity; }
-        void SetVelocityX(float speedX)     { mVelocity.x = speedX; }
-        void SetVelocityY(float speedY)     { mVelocity.y = speedY; }
+        void SetVelocity(Vector3 vel)       { mVelocity = vel; }
+        void SetVelocityX(float speedX)     { if (!mbImpulse) mVelocity.x = speedX; }
+        void SetVelocityY(float speedY)     { if (!mbImpulse) mVelocity.y = speedY; }
         void ApplyResistance(float resistance) { mVelocity *= resistance; }
+
+        void Impulse(Vector3 vel, float time) { mVelocity = vel; mImpulseTime = time; mbImpulse = true; }
         void OrbitalMotion();
 
         void SetOrbitalMotion(bool isOrbitalMotion, Vector3 center = Vector3::Zero) { mbOrbitalMotion = isOrbitalMotion; mOrbitalCenter = center; }
@@ -35,14 +38,19 @@ namespace zz
         Vector3 GetPredictedPosition();
         Vector3 GetVelocity() { return mVelocity; }
 
+        float GetVelocityY() { return mVelocity.y; }
+
     private:
         class Transform* mTransform;
 
         Vector3 mVelocity;
         Vector3 mOrbitalCenter;
+
         float   mAirFriction;
         float   mGravity;
-
+        float   mImpulseTime;
+            
+        bool    mbImpulse;
         bool    mbGround;
         bool    mbRotate;
         bool    mbOrbitalMotion;

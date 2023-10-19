@@ -300,6 +300,10 @@ namespace zz::renderer
         psSystemShader4->Create(L"ParticleMakeCircleCS.hlsl", "main");
         ResourceManager::Insert(L"ParticleMakeCircleCS", psSystemShader4);
 
+        std::shared_ptr<ParticleShader> ParticleOffCS = std::make_shared<ParticleShader>();
+        ParticleOffCS->Create(L"ParticleOffCS.hlsl", "main");
+        ResourceManager::Insert(L"ParticleOffCS", ParticleOffCS);
+
         std::shared_ptr<ComputeShader> bloom1 = std::make_shared<ComputeShader>();
         bloom1->Create(L"BloomExtractionCS.hlsl", "main");
         ResourceManager::Insert(L"BloomExtractionCS", bloom1);
@@ -967,6 +971,7 @@ namespace zz::renderer
     void LoadMonsterResource()
     {
         ResourceManager::Load<Texture>(L"shotgunner_weak", L"..\\Resources\\Texture\\Monster\\shotgunner_weak\\shotgunner_weak.png");
+        ResourceManager::Load<Texture>(L"zombie_weak", L"..\\Resources\\Texture\\Monster\\zombie_weak\\zombie_weak.png");
 
         ResourceManager::Load<Texture>(L"body", L"..\\Resources\\Texture\\Centipede\\body.png");
         ResourceManager::Load<Texture>(L"limb_long_a", L"..\\Resources\\Texture\\Centipede\\limb_long_a.png");
@@ -1043,10 +1048,25 @@ namespace zz::renderer
         material->SetTexture(ResourceManager::Find<Texture>(L"plasma_fading_green"));
         ResourceManager::Insert(L"m_plasma_fading_green", material);
 
+       
+        std::shared_ptr<Texture> luminous_drill = ResourceManager::Load<Texture>(L"luminous_drill", L"..\\Resources\\Texture\\Spell\\Luminous_drill\\luminous_drill.png");
+        material = std::make_shared<Material>();
+        material->SetShader(spriteShader);
+        material->SetTexture(luminous_drill);
+        ResourceManager::Insert(L"m_luminous_drill", material);
+
         ResourceManager::Load<Texture>(L"light_arrow", L"..\\Resources\\Texture\\Spell\\MagicArrow\\light_arrow.png");
         ResourceManager::Load<AudioClip>(L"MagicArrow_Sound", L"..\\Resources\\Audio\\Projectiles\\spell_shoot_ver2_1.wav");
         ResourceManager::Load<Texture>(L"explosion_016_slime", L"..\\Resources\\Texture\\Spell\\MagicArrow\\explosion_016_slime.png");
         ResourceManager::Load<Texture>(L"muzzle_laser_green_01", L"..\\Resources\\Texture\\Spell\\MagicArrow\\muzzle_laser_green_01.png");
+
+        ResourceManager::Load<Texture>(L"rubber_ball", L"..\\Resources\\Texture\\Spell\\Rubber_ball\\rubber_ball.png");
+        ResourceManager::Load<Texture>(L"muzzle_medium_05", L"..\\Resources\\Texture\\Spell\\Rubber_ball\\muzzle_medium_05.png");
+        std::shared_ptr<Texture> rubber_ball_ui = ResourceManager::Load<Texture>(L"rubber_ball_ui", L"..\\Resources\\Texture\\Spell\\Rubber_ball\\rubber_ball_ui.png");
+        material = std::make_shared<Material>();
+        material->SetShader(spriteShader);
+        material->SetTexture(rubber_ball_ui);
+        ResourceManager::Insert(L"m_rubber_ball_ui", material);
 
         std::shared_ptr<Texture> spark_green = ResourceManager::Load<Texture>(L"spark_green", L"..\\Resources\\Texture\\Spell\\MagicArrow\\spark_green.png");
         material = std::make_shared<Material>();

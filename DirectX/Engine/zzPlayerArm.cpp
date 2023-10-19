@@ -42,17 +42,18 @@ namespace zz
         Vector3 playerPos = mPlayer->GetComponent<Transform>()->GetPosition();
         Vector3 cursorPos = Input::GetMouseWorldPos();
 
-        double dx = cursorPos.x - playerPos.x;
-        double dy = cursorPos.y - playerPos.y;
+        float dx = cursorPos.x - playerPos.x;
+        float dy = cursorPos.y - playerPos.y;
 
-        double radian = atan2(dy, dx);
+        float angle = atan2(dy, dx);
+        if (angle < 0)
+            angle += 2 * PI;
+        //if (fabs(radian) > PI / 2)
+        //{
+        //    radian -= PI;
+        //}
 
-        if (fabs(radian) > PI / 2)
-        {
-            radian -= PI;
-        }
-
-        GetComponent<Transform>()->SetRotationZ((float)radian);
+        GetComponent<Transform>()->SetRotationZ(angle);
 
         GameObject::Update();
     }

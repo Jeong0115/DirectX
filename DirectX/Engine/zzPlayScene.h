@@ -16,6 +16,11 @@ namespace zz
         virtual void Render()       override;
 
     private:
+        void loadBGM();
+        void playNextBGM();
 
+        std::vector<std::shared_ptr<class AudioClip>> mBGM;
+
+        int mBGM_Index;
     };
 }

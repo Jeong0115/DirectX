@@ -20,6 +20,8 @@ namespace zz
         void SetCollision(Vector3 offset, Vector3 scale) { mCollisionOffset = offset; mCollisionScale = scale; }
         void SetClimbY(int y) { mClimbOverY = y; }
 
+        bool IsSideBlock() { return mbBlock; }
+
     private:
         void checkSidePixel(Vector3 collisionPos, Vector3 velocity);
         bool checkFloorPixel(Vector3 predictedPos);
@@ -32,6 +34,7 @@ namespace zz
         Vector3     mCollisionOffset;
         Vector3     mCollisionScale;
 
+        bool        mbBlock;
         int         mClimbOverY;
     };
 }

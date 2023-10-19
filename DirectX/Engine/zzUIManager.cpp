@@ -24,6 +24,8 @@
 #include "zzSpeedUp_UI.h"
 #include "zzBomb_UI.h"
 #include "zzMegalaserUI.h"
+#include "zzDrill.h"
+#include "zzRubber_ball.h"
 
 #include "zzHealth.h"
 #include "zzLevitationEnerge.h"
@@ -77,7 +79,16 @@ namespace zz
             spell->Initialize();
             AcquireSpell(spell);
         }
-
+        {
+            Drill* spell = new Drill();
+            spell->Initialize();
+            AcquireSpell(spell);
+        }
+        {
+            Rubber_ball* spell = new Rubber_ball();
+            spell->Initialize();
+            AcquireSpell(spell);
+        }
         SpeedUp_UI* spd = new SpeedUp_UI();
         spd->Initialize();
         AcquireSpell(spd);
@@ -207,6 +218,11 @@ namespace zz
 
     void UIManager::LateUpdate()
     {
+        if (Input::GetKeyDown(eKeyCode::TAB))
+        {
+            UIManager::SetOpenOrCloseInventory();
+        }
+
         for (UINT i = 0; i < (UINT)eUIType::End; i++)
         {
             for (auto object : mUIObjects[i])

@@ -9,8 +9,6 @@
 #include "zzEventManager.h"
 #include "zzAudioSource.h"
 
-#include "zzUIManager.h"
-#include "zzPlayer.h"
 
 namespace zz
 {
@@ -100,31 +98,34 @@ namespace zz
     {
         if (mbCastDelay || mbReCharge)
         {
-            if (mbReCharge)
+            if (Input::GetKeyDown(eKeyCode::LBUTTON))
             {
-                TextObject* text = new TextObject();
-                text->WriteText(L"RECHARGING..", Vector3(100.f, 20.f, 1.0f));
-                text->GetComponent<Transform>()->SetPosition(GetComponent<Transform>()->GetWorldPosition());
-                text->GetComponent<Transform>()->SetScale(Vector3(100.f, 20.f, 1.0f));
-                text->SetColor(Vector3(1.0f, 1.0f, 0.0f));
+                if (mbReCharge)
+                {
+                    TextObject* text = new TextObject();
+                    text->WriteText(L"RECHARGING..", Vector3(100.f, 20.f, 1.0f));
+                    text->GetComponent<Transform>()->SetPosition(GetComponent<Transform>()->GetWorldPosition());
+                    text->GetComponent<Transform>()->SetScale(Vector3(100.f, 20.f, 1.0f));
+                    text->SetColor(Vector3(1.0f, 1.0f, 0.0f));
 
-                CreateObject(text, eLayerType::UI);
-            }
-            else if (mbCastDelay)
-            {
-                TextObject* text = new TextObject();
-                text->WriteText(L"CAST DELAY..", Vector3(100.f, 20.f, 1.0f));
-                text->GetComponent<Transform>()->SetPosition(GetComponent<Transform>()->GetWorldPosition());
-                text->SetColor(Vector3(1.0f, 1.0f, 0.0f));
-                text->GetComponent<Transform>()->SetScale(Vector3(100.f, 20.f, 1.0f));
+                    CreateObject(text, eLayerType::UI);
+                }
+                else if (mbCastDelay)
+                {
+                    TextObject* text = new TextObject();
+                    text->WriteText(L"CAST DELAY..", Vector3(100.f, 20.f, 1.0f));
+                    text->GetComponent<Transform>()->SetPosition(GetComponent<Transform>()->GetWorldPosition());
+                    text->SetColor(Vector3(1.0f, 1.0f, 0.0f));
+                    text->GetComponent<Transform>()->SetScale(Vector3(100.f, 20.f, 1.0f));
 
-                CreateObject(text, eLayerType::UI);
+                    CreateObject(text, eLayerType::UI);
+                }
             }
 
             return;
         }
 
-        Vector3 pos = GetComponent<Transform>()->GetWorldPosition();
+        Vector3 pos = GetComponent<Transform>()->GetWorldPositionApplyRotation();
         Vector3 mousePos = Input::GetMouseWorldPos();
 
         Vector3 direction = mousePos - pos;
@@ -154,27 +155,19 @@ namespace zz
                     {
                         mCurMana -= manaDrain;
                         mCurCastDelay += spell->GetCastDelay();
+                        mCurReChargeTime += spell->GetRechargeTime();
                         mbCastDelay = true;
 
                         ProjectileSpell* transClass = dynamic_cast<ProjectileSpell*>(spell);
                         ProjectileSpell* attackSpell = transClass->Clone();
 
-                        //이쪽 코드 수정해야됨 수정하면 위에 헤더파일도 제거
-                        Vector3 playerPos = UIManager::mPlayer->GetComponent<Transform>()->GetPosition();
-                        Vector3 cursorPos = Input::GetMouseWorldPos();
-
-                        double dx = cursorPos.x - playerPos.x;
-                        double dy = cursorPos.y - playerPos.y;
-
-                        double radian = atan2(dy, dx);
-
-                        Vector3 rotaition = GetComponent<Transform>()->GetWorldRotation();
-                        float angle = radian;
+                        float angle = GetComponent<Transform>()->GetWorldRotation().z;
 
                         Vector3 worldOffset;
 
                         worldOffset.x = mTip.x * cos(angle);
                         worldOffset.y = mTip.x * sin(angle);
+
 
                         attackSpell->SetDirection(direction);
                         attackSpell->GetComponent<Transform>()->SetPosition(pos.x + worldOffset.x, pos.y + worldOffset.y, pos.z);
@@ -189,20 +182,16 @@ namespace zz
                             mModifiers.clear();
                         }
 
-                        attackSpell->Initialize();
+                        attackSpell->InitialSetting();
 
                         GameObject* muzzle = attackSpell->GetMuzzleEffect();
-                        muzzle->GetComponent<Transform>()->SetPosition(mTip.x, 0.0f, BACK_PIXEL_WORLD_Z);
-                        muzzle->GetComponent<Transform>()->SetParent(GetComponent<Transform>());
-
-                        SceneManager::GetActiveScene()->AddGameObject(attackSpell, eLayerType::PlayerAttack);
-                        mSpellSound->SetClip(attackSpell->GetAudioClip());
-                        
-                        if (mSpellSound->GetClip() != nullptr)
+                        if (muzzle != nullptr)
                         {
-                            mSpellSound->SetLoop(false);
-                            mSpellSound->Play();
+                            muzzle->GetComponent<Transform>()->SetPosition(mTip.x, 0.0f, BACK_PIXEL_WORLD_Z);
+                            muzzle->GetComponent<Transform>()->SetParent(GetComponent<Transform>());
                         }
+  
+                        //SceneManager::GetActiveScene()->AddGameObject(attackSpell, eLayerType::PlayerAttack);
                         mCurSpellIndex++;
 
 
@@ -210,7 +199,7 @@ namespace zz
                         {
                             mCurSpellIndex = 0;
                             mbReCharge = true;
-                            mCurReChargeTime = mReChargeTime;
+                            mCurReChargeTime += mReChargeTime;
                         }
                         else if(!mbReCharge)
                         {
@@ -232,7 +221,7 @@ namespace zz
                             if (isEmpty)
                             {
                                 mbReCharge = true;
-                                mCurReChargeTime = mReChargeTime;
+                                mCurReChargeTime += mReChargeTime;
                             }
                         }
 
@@ -264,7 +253,7 @@ namespace zz
             {
                 mCurSpellIndex = 0;
                 mbReCharge = true;
-                mCurReChargeTime = mReChargeTime;
+                mCurReChargeTime += mReChargeTime;
 
                 if (!isModifier)
                 {

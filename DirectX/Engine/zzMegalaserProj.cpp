@@ -11,6 +11,8 @@
 #include "zzTime.h"
 #include "zzParticleSystem.h"
 #include "zzLight.h"
+#include "zzAudioSource.h"
+#include "zzObjectPoolManager.h"
 
 namespace zz
 {
@@ -58,6 +60,11 @@ namespace zz
         mRigid->SetGravity(0.0f);
         mRigid->SetRotate(true);
 
+        AudioSource* a = AddComponent<AudioSource>();
+        a->SetClip(ResourceManager::LoadAudioClip(L"megalaser_launch", L"..\\Resources\\Audio\\Projectiles\\megalaser_launch.wav"));
+        a->SetLoop(false);
+        a->Play();
+
         Light* light = AddComponent<Light>();
         light->SetLightType(5);
         light->SetLightScale(16.f, 16.f, 1.0f);
@@ -68,8 +75,8 @@ namespace zz
         mParticle->SetMesh(ResourceManager::Find<Mesh>(L"PointMesh"));
         mParticle->SetParticleShader(ResourceManager::Find<ParticleShader>(L"ProjectileParticleCS"));
 
-        Particle particles[400] = {};
-        mParticle->CreateStructedBuffer(sizeof(Particle), 400, eViewType::UAV, particles, true, 0, 14, 0);
+        auto particles = std::make_shared<Particle[]>(400);
+        mParticle->CreateStructedBuffer(sizeof(Particle), 400, eViewType::UAV, particles.get(), true, 0, 14, 0);
         mParticle->CreateStructedBuffer(sizeof(ParticleShared), 1, eViewType::UAV, nullptr, true, 4, 14, 1);
 
         mSharedData.distance.z = 0;
@@ -121,7 +128,7 @@ namespace zz
         mSharedData.curPosition = curPos + 0.0f;
         mSharedData.distance = mSharedData.curPosition - mPrevPos;
 
-        UINT count = (UINT)max(fabs(mSharedData.distance.x), fabs(mSharedData.distance.y)) + 1;
+        UINT count = (UINT)std::max(fabs(mSharedData.distance.x), fabs(mSharedData.distance.y)) + 1;
         mSharedData.activeCount = count;
         mSharedData.totalActiveCount = count;
         mSharedData.index = (float)mIndex;
@@ -155,10 +162,15 @@ namespace zz
         return nullptr;
     }
 
+    void MegalaserProj::InitialSetting()
+    {
+    }
+
     void MegalaserProj::OnCollision(Element& element)
     {
         if (element.Type == eElementType::SOLID)
         {
+            //GetComponent<PixelCollider_Lite>()->SetPositionPrevCollision();
             Dead();
         }
     }

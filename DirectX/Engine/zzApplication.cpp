@@ -78,7 +78,7 @@ namespace zz
         thread.enqueue([=]() { ObjectPoolManager::Initialize(); });
         thread.enqueue([=]() { Editor::Initialize(); });
         thread.enqueue([=]() { BloomManager::Initialize(); });
-
+        
         bool isBreak = true;
 
         while (isBreak)
@@ -119,6 +119,8 @@ namespace zz
         }
 
         UIManager::Update();
+
+        if (UIManager::GetIsOpenInventory()) return;
         PixelWorld::Update();
         SceneManager::Update();
         CollisionManger::Update();
@@ -131,11 +133,6 @@ namespace zz
         {
             graphicDevice->SetLightMapRenderTarget();
         }
-
-       //ResourceManager::Find<Mesh>(L"LightMesh")->BindBuffer();
-       //ResourceManager::Find<Shader>(L"LightMapShader")->BindShaders();
-       //ResourceManager::Find<Texture>(L"light_mask")->BindShader(eShaderStage::PS, 0);
-       //ResourceManager::Find<Mesh>(L"LightMesh")->Render();
 
         UIManager::LateUpdate();
         SceneManager::LateUpdate();
@@ -169,6 +166,7 @@ namespace zz
         {
             Editor::Run();
         }
+
        
         Present();
         
@@ -223,10 +221,13 @@ namespace zz
     void Application::LoadExcavationsite()
     {
         BossArenaScene* scene = new BossArenaScene();
+        scene->Initialize();
 
         SceneManager::LoadScene(L"Excavationsite", scene);
-        PixelWorld::CreateBossArena();
-        scene->Initialize();
+        //PixelWorld::CreateBossArena();
+        PixelWorld::CreateEndWorld();
+        scene->MovePlayer();
+        
         //PixelWorld::CreateNextWorld();
         
     }

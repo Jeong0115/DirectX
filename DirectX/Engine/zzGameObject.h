@@ -86,9 +86,9 @@ namespace zz
         void SetActive(bool active) { mbActive = active; }
         void SetLastUpdate() { mState = eState::LastUpdate; }
 
-
-    protected:
         void SetState(eState state) { mState = state; }
+    protected:
+        
         friend class EventManager;
 
     private:

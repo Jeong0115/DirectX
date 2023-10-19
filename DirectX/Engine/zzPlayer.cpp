@@ -51,7 +51,7 @@ namespace zz
         delete mPlayerView;
         mPlayerView = nullptr;
     }
-    AudioSource* audio;
+
     void Player::Initialize()
     {
         Input::SetPlayer(GetComponent<Transform>());
@@ -95,24 +95,12 @@ namespace zz
 		mHealthPoint->SetMaxHP(100.f);
 		mHealthPoint->SetHitEvent([this]() { HitEvent(); });
         mHealthPoint->SetHpZeroEvent([this]() { DeathEvent(); });
-        audio = AddComponent<AudioSource>();
         //mEquipment->Initialize();
         GameObject::Initialize();
     }
 
     void Player::Update()
     {
-        //if (Input::GetKeyDown(eKeyCode::B))
-        //{
-        //    Explosion_128* bomb = new Explosion_128();
-        //    bomb->GetComponent<Transform>()->SetPosition(Input::GetMouseWorldPos().x, Input::GetMouseWorldPos().y, 0.02f);
-        //    CreateObject(bomb, eLayerType::Effect);
-        //}
-        if (Input::GetKeyDown(eKeyCode::TAB))
-        {
-            UIManager::SetOpenOrCloseInventory();
-        }
-
         Transform* tr = GetComponent<Transform>();
         Vector3 pos = tr->GetPosition();
 
@@ -144,11 +132,11 @@ namespace zz
         }
         if (Input::GetKeyUp(eKeyCode::S))
         {
-            mRigid->SetVelocityY(-50.f);
-
-            audio->SetClip(ResourceManager::Find<AudioClip>(L"SparkBolt_Sound"));
-            audio->SetLoop(false);
-            audio->Play();
+            mRigid->Impulse(Vector3(-100.f, 0.0f, 0.0f), 0.2f);
+        }
+        if (Input::GetKeyUp(eKeyCode::F))
+        {
+            mRigid->Impulse(Vector3(-100.f, 100.f, 0.0f), 0.2f);
         }
         
         tr->SetPosition(pos);
@@ -162,7 +150,7 @@ namespace zz
         if(mEquipment != nullptr)
         {
             mEquipment->Update();
-            if (Input::GetKeyDown(eKeyCode::LBUTTON))
+            if (Input::GetKey(eKeyCode::LBUTTON) || Input::GetKeyDown(eKeyCode::LBUTTON))
             {
                 mEquipment->UseEquipment();
             }
@@ -193,42 +181,44 @@ namespace zz
 
     void Player::Render()
     {
-        renderer::ColorCB colorCB = {};
-
-        ConstantBuffer* colorBuff = renderer::constantBuffer[(UINT)eCBType::Color];
-        colorBuff->SetBufferData(&colorCB);
-        colorBuff->BindConstantBuffer(eShaderStage::PS);
 
         renderer::FlipCB flipCB = {};
 
         flipCB.flip.x = Input::IsFlip();
-
+        
         ConstantBuffer* cb = renderer::constantBuffer[(UINT)eCBType::Flip];
         cb->SetBufferData(&flipCB);
         cb->BindConstantBuffer(eShaderStage::PS);
 
         GameObject::Render();
 
-        mPlayerArm->Render();
-        if (mEquipment != nullptr)
-        {
-            Transform* equipmentTr = mEquipment->GetComponent<Transform>();
+        flipCB.flip.y = flipCB.flip.x;
 
-            if(flipCB.flip.x == 1)
-            {          
-                equipmentTr->SetPosition(-mEquipmentInitialPos.x, mEquipmentInitialPos.y, mEquipmentInitialPos.z);
-            }
-            else
-            {
-                equipmentTr->SetPosition(mEquipmentInitialPos.x, mEquipmentInitialPos.y, mEquipmentInitialPos.z);
-            }
-            
-            mEquipment->Render();
-        }
+        cb->SetBufferData(&flipCB);
+        cb->BindConstantBuffer(eShaderStage::PS);
+
+        mPlayerArm->Render();
 
         flipCB = {};
         cb->SetBufferData(&flipCB);
         cb->BindConstantBuffer(eShaderStage::PS);
+
+        
+        if (mEquipment != nullptr)
+        {
+            Transform* equipmentTr = mEquipment->GetComponent<Transform>();
+
+            if (Input::IsFlip() == 1)
+            {
+                equipmentTr->SetPosition(mEquipmentInitialPos.x, mEquipmentInitialPos.y, mEquipmentInitialPos.z);
+            }
+            else
+            {
+                equipmentTr->SetPosition(mEquipmentInitialPos.x, -mEquipmentInitialPos.y, mEquipmentInitialPos.z);
+            }
+
+            mEquipment->Render();
+        }
     }
      
     void Player::OnCollisionEnter(GameObject* other)

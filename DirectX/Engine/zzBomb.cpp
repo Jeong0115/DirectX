@@ -8,6 +8,8 @@
 #include "zzBox2dCollider.h"
 #include "zzExplosion_128.h"
 #include "zzInput.h"
+#include "zzAudioSource.h"
+#include "zzObjectPoolManager.h"
 
 namespace zz
 {
@@ -17,13 +19,7 @@ namespace zz
         mCastDelay = 1.67f;
         mDamage = 3.0f;
         mManaDrain = 25.0f;
-    }
-    Bomb::~Bomb()
-    {
-    }
 
-    void Bomb::Initialize()
-    {
         MeshRenderer* mesh = AddComponent<MeshRenderer>();
         mesh->SetMaterial(ResourceManager::Find<Material>(L"m_SpriteAnimation"));
         mesh->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
@@ -39,19 +35,16 @@ namespace zz
         GetComponent<Transform>()->SetScale(12.f, 12.f, 1.0f);
         AddComponent<Collider>()->SetScale(10.f, 4.f, 1.0f);
 
-        ProjectileSpell::Initialize();
+        mAudio = AddComponent<AudioSource>();
+        mAudio->SetClip(ResourceManager::LoadAudioClip(L"bomb_03", L"..\\Resources\\Audio\\Projectiles\\bomb_03.wav"));
+        mAudio->SetLoop(false);
+    }
+    Bomb::~Bomb()
+    {
+    }
 
-        Vector3 mousePos = Input::GetMouseWorldPos();
-        Vector3 pos = GetComponent<Transform>()->GetPosition();
-
-        float angle = std::atan2(mousePos.y - pos.y, mousePos.x - pos.x);
-
-        Vector2 force = { 400.f, 0.f };
-        force.x = 600.f * cos(angle);
-        force.y = -600.f * sin(angle);
-
-        GetComponent<Box2dCollider>()->ApplyLinearImpulse(force, Vector2(-1,-1));
-
+    void Bomb::Initialize()
+    {
         mMuzzleEffect = new MuzzleEffect();
         std::shared_ptr<Texture> muzzleTexture = ResourceManager::Find<Texture>(L"muzzle_launcher_large_01");
         Animator* manimator = new Animator();
@@ -61,13 +54,15 @@ namespace zz
         mMuzzleEffect->SetAnimator(manimator, L"muzzle_launcher_large_01_play");
         mMuzzleEffect->GetComponent<Transform>()->SetScale(16.0f, 16.0f, 1.0f);
         CreateObject(mMuzzleEffect, eLayerType::Effect);
+
+        ProjectileSpell::Initialize();
     }
 
     void Bomb::Update()
     {
         if (mTime >= 1.0f && IsActive())
         {
-            DeleteObject(this, eLayerType::PlayerAttack);
+            ObjectPoolManager::ReturnObjectToPool(this);
 
             Vector3 pos = GetComponent<Transform>()->GetPosition();
 
@@ -89,8 +84,29 @@ namespace zz
         ProjectileSpell::Render();
     }
 
+    void Bomb::InitialSetting()
+    {
+        mSpeed = 60.f;
+        mCastDelay = 1.67f;
+        mDamage = 3.0f;
+        mManaDrain = 25.0f;
+
+        Vector3 mousePos = Input::GetMouseWorldPos();
+        Vector3 pos = GetComponent<Transform>()->GetPosition();
+
+        float angle = std::atan2(mousePos.y - pos.y, mousePos.x - pos.x);
+
+        Vector2 force = { 400.f, 0.f };
+        force.x = 600.f * cos(angle);
+        force.y = -600.f * sin(angle);
+
+        GetComponent<Box2dCollider>()->ApplyLinearImpulse(force, Vector2(-1, -1));
+
+        mAudio->Play();
+    }
+
     Bomb* Bomb::Clone()
     {
-        return new Bomb();
+        return ObjectPoolManager::GetObjectInPool<Bomb>();
     }
 }

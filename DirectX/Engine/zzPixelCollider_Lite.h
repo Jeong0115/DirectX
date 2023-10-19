@@ -19,6 +19,8 @@ namespace zz
         void SetOffest(Vector3 offset) { mOffset = offset; }
         void SetCollisionEvent(const std::function<void(Element& element)>& callback) { mEvent = callback; }
 
+        void SetPositionPrevCollision();
+
     private:
         std::function<void(Element& element)> mEvent;
         Vector3 mOffset;

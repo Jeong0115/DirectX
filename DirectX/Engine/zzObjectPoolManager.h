@@ -25,15 +25,18 @@ namespace zz
                 if (iter->second.empty())
                 {
                     T* object = new T();
-                    SceneManager::GetActiveScene()->AddGameObject(object, eLayerType::Object);
+                    SceneManager::GetActiveScene()->AddGameObject(object, eLayerType::PlayerAttack);
                     object->Initialize();
                     object->SetActive(true);
+                    object->SetState(GameObject::eState::Active);
                     return object;
                 }
 
                 T* object = static_cast<T*>(iter->second.top());
+                SceneManager::GetActiveScene()->AddGameObject(object, eLayerType::PlayerAttack);
                 object->Initialize();
                 object->SetActive(true);
+                object->SetState(GameObject::eState::Active);
                 iter->second.pop();
                 return object;
             }
@@ -58,6 +61,7 @@ namespace zz
                 mObjectPool.insert(std::make_pair(typeid(T).name(), stack));
             }
             object->SetActive(false);
+            object->SetState(GameObject::eState::Dead);
         }   
 
     private:

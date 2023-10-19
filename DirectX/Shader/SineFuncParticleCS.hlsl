@@ -49,31 +49,24 @@ void main(uint3 DTid : SV_DispatchThreadID)
             int index = sharedBuffer.index - count;
             float angle = sharedBuffer.angle;
             
+            float offsetY = sin(index / 2.f) * 2.0f;
+            
             float2 randomPosition;
             randomPosition.x = (sharedBuffer.randPositionMax.x - sharedBuffer.randPositionMin.x) * random.x + sharedBuffer.randPositionMin.x;
             randomPosition.y = (sharedBuffer.randPositionMax.y - sharedBuffer.randPositionMin.y) * random.y + sharedBuffer.randPositionMin.y;
-
-            float2 randomVelocity;
-            randomVelocity.x = (sharedBuffer.randVelocityMax.x - sharedBuffer.randVelocityMin.x) * random.z + sharedBuffer.randVelocityMin.x;
-            randomVelocity.y = (sharedBuffer.randVelocityMax.y - sharedBuffer.randVelocityMin.y) * random.w + sharedBuffer.randVelocityMin.y;
+    
             
-            //randomVelocity.y = sin(index / 2.f) * randomVelocity.y;
+            float4 offsetPosition = float4(0, 0, 0, 0);
+            offsetPosition.x = randomPosition.x * cos(angle) - randomPosition.y * sin(angle);
+            offsetPosition.y = randomPosition.x * sin(angle) + randomPosition.y * cos(angle);
             
-            float2 offsetPosition;
-            float offsetY = sin(index / 2.f) * 2.0f;
-            offsetPosition.x = -count * cos(angle) - offsetY * sin(angle);
-            offsetPosition.y = -count * sin(angle) + offsetY * cos(angle);
+            particle.velocity.x = -offsetY * sin(angle) * sharedBuffer.randVelocityMax.x;
+            particle.velocity.y = offsetY * cos(angle) * sharedBuffer.randVelocityMax.x;
             
-            particle.velocity.x = randomVelocity.x * cos(angle) - randomVelocity.y * sin(angle);
-            particle.velocity.y = randomVelocity.x * sin(angle) + randomVelocity.y * cos(angle);
             
-            random.x = GaussianBlur(uv + float2(0.4f, 0.f)).x;
-            
-            particle.lifeTime = (sharedBuffer.randLifeTime.x - sharedBuffer.randLifeTime.y) * random.x + sharedBuffer.randLifeTime.y;
-            
-            particle.position = sharedBuffer.curPosition + float4(randomPosition.xy, 0.0f, 0.0f);
-            particle.position.xy += offsetPosition;
-            particle.color = sharedBuffer.color;
+            particle.lifeTime = (sharedBuffer.randLifeTime.y - sharedBuffer.randLifeTime.x) * random.w + sharedBuffer.randLifeTime.x;      
+            particle.position = sharedBuffer.curPosition - (sharedBuffer.distance * ((float) count / sharedBuffer.totalActiveCount)) + offsetPosition;
+            particle.color = lerp(sharedBuffer.color, sharedBuffer.color_max, random.y);
             particle.scale = sharedBuffer.scale;
             particle.lightScale = sharedBuffer.lightScale;
             particle.active = 1;

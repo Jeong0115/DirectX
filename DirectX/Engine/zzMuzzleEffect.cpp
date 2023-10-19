@@ -26,20 +26,20 @@ namespace zz
         meshRender->SetMaterial(ResourceManager::Find<Material>(L"m_SpriteAnimation"));
         meshRender->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
 
-        if(mDir == 0)
-        {
-            if (Input::IsFlip() == 1.f)
-            {
-                GetComponent<Transform>()->SetPositionXFlip();
-            }
-        }
-        else
-        {
-            if (mDir == 1)
-            {
-                GetComponent<Transform>()->SetPositionXFlip();
-            }
-        }
+        //if(mDir == 0)
+        //{
+        //    if (Input::IsFlip() == 1.f)
+        //    {
+        //        GetComponent<Transform>()->SetPositionXFlip();
+        //    }
+        //}
+        //else
+        //{
+        //    if (mDir == 1)
+        //    {
+        //        GetComponent<Transform>()->SetPositionXFlip();
+        //    }
+        //}
 
         GameObject::Initialize();
     }
@@ -58,14 +58,14 @@ namespace zz
     {
         renderer::FlipCB flipCB = {};
 
-        if(mDir == 0)
+   /*     if(mDir == 0)
         {
             flipCB.flip.x = Input::IsFlip();
         }
         else
         {
             flipCB.flip.x = mDir;
-        }
+        }*/
 
         ConstantBuffer* cb = renderer::constantBuffer[(UINT)eCBType::Flip];
         cb->SetBufferData(&flipCB);

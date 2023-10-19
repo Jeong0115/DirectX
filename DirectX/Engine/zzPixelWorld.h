@@ -75,6 +75,7 @@ namespace zz
         static void CreateNewWorld();
         static void CreateNextWorld();
         static void CreateBossArena();
+        static void CreateEndWorld();
         static void DeletePrevWorld();
 
         static void InsertElementFromImage(int y, int x, const cv::Mat& image, Element& element);

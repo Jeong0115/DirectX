@@ -29,6 +29,7 @@ namespace zz
     GameObject* camera;
 
     PlayScene::PlayScene()
+        : mBGM_Index(0)
     {
     }
 
@@ -165,23 +166,19 @@ namespace zz
             bgmesh->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
         }
 
-        for(int i=0; i<3; i++)
+        for (int i = 0; i < 3; i++)
         {
             Teleport* teleport = new Teleport();
-            teleport->GetComponent<Transform>()->SetPosition(256.f + 512.f * i + 10, -1747.f - 86.f, 0.00f);
-            //teleport->GetComponent<Transform>()->SetPosition(0.f, 0.f + i * - 100.f, 0.0f);
+            //teleport->GetComponent<Transform>()->SetPosition(256.f + 512.f * i + 10, -1747.f - 86.f, 0.00f);
+            teleport->GetComponent<Transform>()->SetPosition(0.f, 0.f + i * - 100.f, 0.0f);
             CreateObject(teleport, eLayerType::Object);
-        }
-
-        {
-            ShotGunner_Weak* object = new ShotGunner_Weak();
-            AddGameObject(object, eLayerType::Monster);
-            object->GetComponent<Transform>()->SetPosition(Vector3(1536.f / 2.f, -30.f, 0.2f));
         }
 
         //Centipede* boss = new Centipede();
         //AddGameObject(boss, eLayerType::Monster);
         //boss->GetComponent<Transform>()->SetPosition(100.f, -100.f, 0.2f);
+
+
 
         Scene::Initialize();
         {
@@ -204,7 +201,7 @@ namespace zz
             UIManager::Test();
         }
 
-
+        loadBGM();
     }
 
     void PlayScene::Update()
@@ -233,5 +230,39 @@ namespace zz
     void PlayScene::Render()
     {
         Scene::Render();
+    }
+
+    void PlayScene::loadBGM()
+    {
+        std::shared_ptr<AudioClip> bgm1 = ResourceManager::LoadAudioClip(L"enter_caves_01", L"..\\Resources\\Audio\\BGM\\enter_caves_01.wav");
+        std::shared_ptr<AudioClip> bgm2 = ResourceManager::LoadAudioClip(L"enter_caves_02", L"..\\Resources\\Audio\\BGM\\enter_caves_02.wav");
+        std::shared_ptr<AudioClip> bgm3 = ResourceManager::LoadAudioClip(L"enter_caves_03", L"..\\Resources\\Audio\\BGM\\enter_caves_03.wav");
+        std::shared_ptr<AudioClip> bgm4 = ResourceManager::LoadAudioClip(L"enter_caves_04", L"..\\Resources\\Audio\\BGM\\enter_caves_04.wav");
+        std::shared_ptr<AudioClip> bgm5 = ResourceManager::LoadAudioClip(L"enter_caves_05", L"..\\Resources\\Audio\\BGM\\enter_caves_05.wav");
+        std::shared_ptr<AudioClip> bgm6 = ResourceManager::LoadAudioClip(L"enter_caves_06", L"..\\Resources\\Audio\\BGM\\enter_caves_06.wav");
+        std::shared_ptr<AudioClip> bgm7 = ResourceManager::LoadAudioClip(L"enter_caves_07", L"..\\Resources\\Audio\\BGM\\enter_caves_07.wav");
+
+        mBGM.push_back(bgm1);
+        mBGM.push_back(bgm2);
+        mBGM.push_back(bgm3);
+        mBGM.push_back(bgm4);
+        mBGM.push_back(bgm5);
+        mBGM.push_back(bgm6);
+        mBGM.push_back(bgm7);
+
+        for (auto bgm : mBGM)
+        {
+            bgm->SetSoundEndCallback([this]() { playNextBGM(); });
+        }
+
+        mBGM[mBGM_Index++]->Play();
+    }
+
+    void PlayScene::playNextBGM()
+    {
+        if (mBGM_Index >= mBGM.size())
+            mBGM_Index = 0;
+
+        mBGM[mBGM_Index++]->Play();       
     }
 }

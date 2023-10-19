@@ -26,8 +26,8 @@ namespace zz
         mParticle->SetParticleShader(ResourceManager::Find<ParticleShader>(L"ParticleMakeCircleCS"));
         mParticle->SetActive(false);
 
-        Particle particles[32400] = {};
-        mParticle->CreateStructedBuffer(sizeof(Particle), 32400, eViewType::UAV, particles, true, 0, 14, 0);
+        auto particles = std::make_shared<Particle[]>(32400);
+        mParticle->CreateStructedBuffer(sizeof(Particle), 32400, eViewType::UAV, particles.get(), true, 0, 14, 0);
         mParticle->CreateStructedBuffer(sizeof(ParticleCircleShared), 1, eViewType::UAV, nullptr, true, 6, 14, 1);
 
         mShareData.scale = Vector4(1.0f, 1.0f, 1.0f, 0.0f);

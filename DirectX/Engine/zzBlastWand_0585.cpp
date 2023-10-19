@@ -13,7 +13,7 @@ namespace zz
     {
         mCapacity = 3;
         mManaMax = 113;
-        mManaChargeSpeed = 30;
+        mManaChargeSpeed = 1000;
         mCurMana = 10;
         mCastDelay = 0.f;
         mReChargeTime = 0.2f;
@@ -29,10 +29,10 @@ namespace zz
     }
     void BlastWand_0585::Initialize()
     {
-        GetComponent<Transform>()->SetPosition(6.f, -2.f, 0.0f);
+        GetComponent<Transform>()->SetPosition(6.f, 2.f, 0.0f);
         GetComponent<Transform>()->SetScale(15.f, 7.f, 1.0f);
             
-        mInitialPosition = Vector3(6.f, -2.f, 0.0f);
+        mInitialPosition = Vector3(6.f, 2.f, 0.0f);
 
         std::shared_ptr<Texture> texture
             = ResourceManager::Load<Texture>(L"BlastWand_0585", L"..\\Resources\\Texture\\Wand\\BlastWand_0585.png");

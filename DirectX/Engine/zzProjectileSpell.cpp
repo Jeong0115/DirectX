@@ -18,7 +18,7 @@ namespace zz
         , mTime(0.0f)
         , mRigid(nullptr)
         , mPrevPos(Vector4::Zero)
-        , mSound(nullptr)
+        , mAudio(nullptr)
     {
         mType = eSpellType::Projectile;
     }
@@ -29,7 +29,12 @@ namespace zz
 
     void ProjectileSpell::Initialize()
     {
+        mTime = 0.f;
         GameObject::Initialize();
+    }
+
+    void ProjectileSpell::InitialSetting()
+    {
     }
 
     void ProjectileSpell::Update()

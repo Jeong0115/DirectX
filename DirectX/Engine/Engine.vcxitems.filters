@@ -502,6 +502,21 @@
     <Filter Include="GameObject\Player\PlayerView">
       <UniqueIdentifier>{47587b28-4b34-4ee2-9977-e01a439c6dbb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UI\SpellUI\Luminous_drill">
+      <UniqueIdentifier>{007615d6-8c57-4498-8220-6582c2e82719}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Spell\Projectile\Luminous_drill">
+      <UniqueIdentifier>{1ac88331-11a8-4991-8432-7b85535398ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\SpellUI\Rubber_ball">
+      <UniqueIdentifier>{12252b4d-f050-4b11-9457-3a78040a91b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Spell\Projectile\BouncingBurst">
+      <UniqueIdentifier>{ff97e6bd-f9f1-48f5-b1b6-13cc73fd4555}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Monster\Zombie_weak">
+      <UniqueIdentifier>{625f2cd3-fc51-46a1-8cde-e3e965e8a2f3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzEntity.cpp">
@@ -928,6 +943,21 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)zzPlayerView.cpp">
       <Filter>GameObject\Player\PlayerView</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzDrill.cpp">
+      <Filter>UI\SpellUI\Luminous_drill</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzLuminous_drill.cpp">
+      <Filter>GameObject\Spell\Projectile\Luminous_drill</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzRubber_ball.cpp">
+      <Filter>UI\SpellUI\Rubber_ball</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzBouncingBurst.cpp">
+      <Filter>GameObject\Spell\Projectile\BouncingBurst</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzZombie_weak.cpp">
+      <Filter>GameObject\Monster\Zombie_weak</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzEntity.h">
@@ -1254,9 +1284,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzPixelGrid.h">
       <Filter>Etc</Filter>
     </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)zzThreadPool.h">
-      <Filter>Etc</Filter>
-    </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzWrite.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzTextBox.h">
       <Filter>UI\Inventory\TextBox</Filter>
@@ -1380,6 +1407,24 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzPlayerView.h">
       <Filter>GameObject\Player\PlayerView</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzDrill.h">
+      <Filter>UI\SpellUI\Luminous_drill</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzLuminous_drill.h">
+      <Filter>GameObject\Spell\Projectile\Luminous_drill</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzRubber_ball.h">
+      <Filter>UI\SpellUI\Rubber_ball</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzBouncingBurst.h">
+      <Filter>GameObject\Spell\Projectile\BouncingBurst</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzZombie_weak.h">
+      <Filter>GameObject\Monster\Zombie_weak</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzThreadPool.h">
+      <Filter>Etc</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

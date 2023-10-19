@@ -22,6 +22,7 @@
 #include "..\External\Herringbone\include\stb_herringbone_wang_tile.h"
 #include "zzGraphicsDevice.h"
 #include "zzShotGunner_Weak.h"
+#include "zzZombie_weak.h"
 
 namespace zz
 {
@@ -804,7 +805,15 @@ namespace zz
                 }
                 else if (color == 0xFF800000 || color == 0xFFFF0000)
                 {
-                    CreateObject(new ShotGunner_Weak(), eLayerType::Monster, j * 10, -i * 10);
+                    int rand = randi(1);
+
+                    switch (rand)
+                    {
+                    case 0: CreateObject(new ShotGunner_Weak(), eLayerType::Monster, j * 10, -i * 10);  break;
+                    case 1: CreateObject(new Zombie_weak(), eLayerType::Monster, j * 10, -i * 10);      break;
+                    default: break;
+                    }
+                    
                 }
                 else if (color == 0xFFFF0AFF)
                 {
@@ -1563,6 +1572,8 @@ namespace zz
         mWorldWidth = 2560;
         mWorldHeight = 1536;
 
+        graphics::GetDevice()->CreateVisibility((UINT)mWorldWidth, (UINT)mWorldHeight);
+
         mImage = new PixelGridColor(mWorldWidth, mWorldHeight);
         mPixelColor.resize(mWorldWidth * mWorldHeight);
 
@@ -1583,7 +1594,6 @@ namespace zz
         {
             for (int j = 0; j < 2560; j++)
             {
-
                 uint32_t color = Vec3bToColor(material_image.at<cv::Vec3b>(i, j));
                 if (color == 0xFF786C42 || color == 0xFFAAF06E || color == 0xFF606C5A 
                     || color == 0xFF786C44 || color == 0xFFC931 || color == 0xFF003345)
@@ -1646,6 +1656,67 @@ namespace zz
                 {
                     CreateObject(new Centipede(), eLayerType::Monster, j, -i , 0.19f);
                 }
+            }
+        }
+    }
+
+    void PixelWorld::CreateEndWorld()
+    {
+        DeletePrevWorld();
+
+        mWorldWidth = 1536;
+        mWorldHeight = 1536;
+
+        graphics::GetDevice()->CreateVisibility((UINT)mWorldWidth, (UINT)mWorldHeight);
+
+        mImage = new PixelGridColor(mWorldWidth, mWorldHeight);
+        mPixelColor.resize(mWorldWidth * mWorldHeight);
+
+        for (int i = 0; i <= 2; i++)
+        {
+            for (int j = 0; j <= 2; j++)
+            {
+                CreateChunkMap({ j, i });
+            }
+        }
+
+        cv::Mat material_image = cv::imread("..\\Resources\\Texture\\Ending\\boss_victoryroom.png", cv::IMREAD_COLOR);
+        cv::Mat visual_image = cv::imread("..\\Resources\\Texture\\Ending\\boss_victoryroom_visual.png", cv::IMREAD_UNCHANGED);
+
+        cv::cvtColor(material_image, material_image, cv::COLOR_BGR2RGB);
+
+        for (int i = 512; i < 1024; i++)
+        {
+            for (int j = 512; j < 1024; j++)
+            {
+                uint32_t color = Vec3bToColor(material_image.at<cv::Vec3b>(i - 512, j - 512));
+
+                if (color == 0xFF786C42)
+                {
+                    cv::Vec4b visual_color = visual_image.at<cv::Vec4b>(i - 512, j - 512);
+
+                    if (visual_color[3] == 0)
+                    {
+                        Element element = ROCK;
+                        element.Color = getMaterialColor(L"templebrick", j, i);
+
+                        InsertElement(j, i, element);
+                    }
+                    else
+                    {
+                        uint32_t converted_color =
+                            (visual_color[3] << 24) |
+                            (visual_color[2] << 16) |
+                            (visual_color[1] << 8) |
+                            (visual_color[0]);
+
+                        Element element = ROCK;
+                        element.Color = converted_color;
+
+                        InsertElement(j, i, element);
+                    }
+                }
+                
             }
         }
     }

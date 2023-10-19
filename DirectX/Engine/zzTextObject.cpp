@@ -65,6 +65,7 @@ namespace zz
         GameObject::Render();
 
         color.color = {};
+        cb->SetBufferData(&color);
         cb->BindConstantBuffer(eShaderStage::PS);
     }
 

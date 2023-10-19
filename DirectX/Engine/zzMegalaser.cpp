@@ -14,30 +14,60 @@
 #include "zzMegalaserProj.h"
 #include "zzRenderer.h"
 #include "zzTime.h"
+#include "zzObjectPoolManager.h"
 
 namespace zz
 {
     Megalaser::Megalaser()
         : mSharedData{}
         , mParticle(nullptr)
-        , mParticleBuffer(nullptr)
         , mParticleTime(0.0f)
-        , mbCreate(false)
+        , mbCreate(true)
         , mOffset(Vector3(-33.f,0.0f,0.0f))
+    {
+        mAudio = AddComponent<AudioSource>();
+        mAudio->SetClip(ResourceManager::LoadAudioClip(L"megalaser_create", L"..\\Resources\\Audio\\Projectiles\\megalaser_create.wav"));
+        mAudio->SetLoop(false);
+
+        mParticle = AddComponent<ParticleSystem>();
+        mParticle->SetMaterial(ResourceManager::Find<Material>(L"m_Particle"));
+        mParticle->SetMesh(ResourceManager::Find<Mesh>(L"PointMesh"));
+        std::shared_ptr< ParticleShader> a = ResourceManager::Find<ParticleShader>(L"ParticleImageCS");
+        mParticle->SetParticleShader(ResourceManager::Find<ParticleShader>(L"ParticleImageCS"));
+
+        auto mParticleBuffer = std::make_shared<Particle[]>(3364);
+
+        mParticle->CreateStructedBuffer(sizeof(Particle), 3364, eViewType::UAV, mParticleBuffer.get(), true, 0, 14, 0);
+        mParticle->CreateStructedBuffer(sizeof(ParticleImageShared), 1, eViewType::UAV, nullptr, true, 7, 14, 1);
+        mParticle->SetGroupCount(2, 2, 1);
+
+        MeshRenderer* particleLight = new MeshRenderer();
+        particleLight->SetMaterial(ResourceManager::Find<Material>(L"m_particle_glow_particleLight"));
+        particleLight->SetMesh(ResourceManager::Find<Mesh>(L"PointMesh"));
+        mParticle->SetParticleLight(particleLight);
+
+        mSharedData.imageSize = Vector2(58.f, 58.f);
+        mSharedData.randLifeTime = Vector2(0.5f, 2.3f);
+        mSharedData.randVelocityMin = Vector2(-2.0f, -2.0f);
+        mSharedData.randVelocityMax = Vector2(2.0f, 2.0f);
+        mSharedData.scale = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+        mSharedData.lightScale = Vector4(9.0f, 9.0f, 1.0f, 1.0f);
+
+    }
+    Megalaser::~Megalaser()
+    {
+    }
+
+    void Megalaser::Initialize()
     {
         mSpeed = 150.f;
         mCastDelay = 1.5f;
         mDamage = 125.f;
         mManaDrain = 110.f;
-    }
-    Megalaser::~Megalaser()
-    {
-        delete mParticleBuffer;
-        mParticleBuffer = nullptr;
-    }
 
-    void Megalaser::Initialize()
-    {
+        mParticleTime = 0.0f;
+        mbCreate = false;
+
         mMuzzleEffect = new MuzzleEffect();
         std::shared_ptr<Texture> muzzleTexture = ResourceManager::Find<Texture>(L"muzzle_launcher_01");
         Animator* manimator = new Animator();
@@ -47,42 +77,6 @@ namespace zz
         mMuzzleEffect->SetAnimator(manimator, L"muzzle_launcher_01_play");
         mMuzzleEffect->GetComponent<Transform>()->SetScale(16.0f, 16.0f, 1.0f);
         CreateObject(mMuzzleEffect, eLayerType::Effect);
-
-        mSound = ResourceManager::Find<AudioClip>(L"SparkBolt_Sound");
-
-        mParticle = AddComponent<ParticleSystem>();
-        mParticle->SetMaterial(ResourceManager::Find<Material>(L"m_Particle"));
-        mParticle->SetMesh(ResourceManager::Find<Mesh>(L"PointMesh"));
-        std::shared_ptr< ParticleShader> a = ResourceManager::Find<ParticleShader>(L"ParticleImageCS");
-        mParticle->SetParticleShader(ResourceManager::Find<ParticleShader>(L"ParticleImageCS"));
-
-        mParticleBuffer = new Particle[3364];
-
-        mParticle->CreateStructedBuffer(sizeof(Particle), 3364, eViewType::UAV, mParticleBuffer, true, 0, 14, 0);
-        mParticle->CreateStructedBuffer(sizeof(ParticleImageShared), 1, eViewType::UAV, nullptr, true, 7, 14, 1);
-        mParticle->SetGroupCount(2, 2, 1);
-
-        MeshRenderer* particleLight = new MeshRenderer();
-        particleLight->SetMaterial(ResourceManager::Find<Material>(L"m_particle_glow_particleLight"));
-        particleLight->SetMesh(ResourceManager::Find<Mesh>(L"PointMesh"));
-        mParticle->SetParticleLight(particleLight);
-
-        float angle = GetComponent<Transform>()->GetRotation().z;
-        Vector3 offsetPos;
-        offsetPos.x = mOffset.x * cos(angle) - mOffset.y * sin(angle);
-        offsetPos.y = mOffset.x * sin(angle) + mOffset.y * cos(angle);
-
-        mSharedData.angle = angle;
-        mSharedData.color_min = mSharedData.color_max = Vector4(0.2f, 0.6f, 0.0f, 0.1f);
-        mSharedData.curPosition = (GetComponent<Transform>()->GetPosition() + offsetPos) + 0.0f;
-        mSharedData.imageSize = Vector2(58.f, 58.f);
-        mSharedData.randLifeTime = Vector2(0.5f, 2.3f);
-        mSharedData.randVelocityMin = Vector2(-2.0f, -2.0f);
-        mSharedData.randVelocityMax = Vector2(2.0f, 2.0f);
-        mSharedData.scale = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-        mSharedData.lightScale = Vector4(9.0f, 9.0f, 1.0f, 1.0f);
-
-        mParticle->SetStructedBufferData(&mSharedData, 1, 1);
 
         ProjectileSpell::Initialize();
     }
@@ -117,7 +111,8 @@ namespace zz
         }
         else if (mParticleTime >= 5.0f)
         {
-            DeleteObject(this, eLayerType::PlayerAttack);
+            mParticle->OffParticle();
+            ObjectPoolManager::ReturnObjectToPool(this);
         }
         ConstantBuffer* cb = renderer::constantBuffer[(UINT)eCBType::ColorRange];
         cb->SetBufferData(&colorCB);
@@ -130,12 +125,26 @@ namespace zz
     void Megalaser::Render()
     {
         ProjectileSpell::Render();
-        //DeleteObject(this, eLayerType::PlayerAttack);
     }
 
     ProjectileSpell* Megalaser::Clone()
     {
-        return new Megalaser();
+        return ObjectPoolManager::GetObjectInPool<Megalaser>();
+    }
+
+    void Megalaser::InitialSetting()
+    {
+        mAudio->Play();
+
+        float angle = GetComponent<Transform>()->GetRotation().z;
+        Vector3 offsetPos;
+        offsetPos.x = mOffset.x * cos(angle) - mOffset.y * sin(angle);
+        offsetPos.y = mOffset.x * sin(angle) + mOffset.y * cos(angle);
+
+        mSharedData.angle = angle;
+        mSharedData.color_min = mSharedData.color_max = Vector4(0.2f, 0.6f, 0.0f, 0.1f);
+        mSharedData.curPosition = (GetComponent<Transform>()->GetPosition() + offsetPos) + 0.0f;
+        mParticle->SetStructedBufferData(&mSharedData, 1, 1);
     }
 
     void Megalaser::OnCollision(Element& element)

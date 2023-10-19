@@ -6,6 +6,7 @@ namespace zz
         : mType(eSpellType::End)
         , mManaDrain(0.0f)
         , mCastDelay(0.0f)
+        , mRechargeTime(0.0f)
     {
     }
     Spell::~Spell()

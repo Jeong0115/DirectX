@@ -28,15 +28,21 @@ namespace zz
 		void SetLoop(bool loop) { mbLoop = loop; }
         void SetVolume(float volume) { mChannel->setVolume(volume); }
 
+        void SetSoundEndCallback(std::function<void()> callback);
+
+        static FMOD_RESULT F_CALLBACK soundEndCallback(FMOD_CHANNELCONTROL* channelControl, FMOD_CHANNELCONTROL_TYPE controlType, FMOD_CHANNELCONTROL_CALLBACK_TYPE callbackType, void* commandData1, void* commandData2);
+
 	private:
 		FMOD::Sound* mSound;
 		FMOD::Channel* mChannel;
 
         FMOD_MODE mMode;
 
-		float mMinDistance;
-		float mMaxDistance;
-		bool mbLoop;
+		float   mMinDistance;
+		float   mMaxDistance;
+		bool    mbLoop;
+
+        std::function<void()> mSoundEndCallbackFunction;
 	};
 }
 

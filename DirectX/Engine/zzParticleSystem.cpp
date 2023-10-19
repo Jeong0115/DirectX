@@ -75,7 +75,7 @@ namespace zz
         GetMesh()->BindBuffer();
         GetMaterial()->Binds();
         GetMesh()->RenderInstanced(mBuffer->GetStride());
-
+        
         mBuffer->Clear();
     }
 
@@ -105,5 +105,17 @@ namespace zz
         {
             mSharedBuffer->SetData(data, mSharedBuffer->GetStride());
         }
+    }
+
+    void ParticleSystem::OffParticle()
+    {
+        auto cs = ResourceManager::Find<ParticleShader>(L"ParticleOffCS");
+
+        auto [x, y, z] = mCS->GetGroupCount();
+
+        cs->SetGroupCount(x, y, z);
+        cs->SetParticleBuffer(mBuffer);
+        cs->SetSharedBuffer(mSharedBuffer);
+        cs->OnExcute();
     }
 }

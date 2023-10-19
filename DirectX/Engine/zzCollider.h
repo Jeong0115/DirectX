@@ -24,6 +24,7 @@ namespace zz
         void OnCollisionStay    (Collider* other);
         void OnCollisionExit    (Collider* other);
 
+        bool GetActive() { GetOwner()->GetActive(); }
         Transform* GetTransform()   { return mTransform; }
         UINT GetColliderID()        { return mColliderID; }
 

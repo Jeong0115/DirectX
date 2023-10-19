@@ -14,6 +14,9 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzBouncingBurst.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzDrill.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzLuminous_drill.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzMegalaserProj.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzAudioClip.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzAudioListener.cpp" />
@@ -46,6 +49,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)zzOrbBlue.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzOrbPink.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzPlayerView.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzRubber_ball.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzSpeedUp_UI.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzDetectPlayer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzExplosionEffect.cpp" />
@@ -161,10 +165,14 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)zzWaterTrail.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzWaterTrail_UI.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)zzWrite.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzZombie_weak.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)CommonInclude.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)define.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzBouncingBurst.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzDrill.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzLuminous_drill.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzMegalaserProj.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzAudioClip.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzAudioListener.h" />
@@ -197,6 +205,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzOrbBlue.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzOrbPink.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzPlayerView.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzRubber_ball.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzSpeedUp_UI.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzDetectPlayer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzExplosionEffect.h" />
@@ -236,6 +245,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzTextBox.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzTextObject.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzTexture2D.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzThreadPool.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zztScene.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzUI.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzUICamera.h" />
@@ -299,7 +309,6 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzSolid.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzSpark.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzTexture.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)zzThreadPool.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzTime.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzTransform.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzUtilitySpell.h" />
@@ -313,6 +322,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)zzWaterTrail.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzWaterTrail_UI.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)zzWrite.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzZombie_weak.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzMath.inl" />

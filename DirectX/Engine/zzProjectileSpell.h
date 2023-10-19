@@ -13,6 +13,7 @@ namespace zz
         virtual ~ProjectileSpell();
 
         virtual void Initialize();
+        virtual void InitialSetting();
         virtual void Update();
         virtual void LateUpdate();
         virtual void Render();
@@ -35,13 +36,11 @@ namespace zz
         float GetDamage() { return mDamage; }
         std::vector<struct Element>& AddTrailElement() { return mTrailElement; }
 
-        std::shared_ptr<AudioClip> GetAudioClip() { return mSound; }
-
     protected:
         std::vector<struct Element> mTrailElement;
-        std::shared_ptr<AudioClip> mSound;
 
-        class RigidBody* mRigid;
+        class RigidBody*    mRigid;
+        class AudioSource*  mAudio;
 
         MuzzleEffect*   mMuzzleEffect;
         Vector4         mPrevPos;

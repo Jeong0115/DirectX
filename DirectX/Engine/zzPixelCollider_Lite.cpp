@@ -2,6 +2,7 @@
 #include "zzPixelWorld.h"
 #include "zzTransform.h"
 #include "zzGameObject.h"
+#include "zzRigidBody.h"
 
 namespace zz
 {
@@ -37,5 +38,36 @@ namespace zz
 
     void PixelCollider_Lite::Render()
     {
+    }
+
+    void PixelCollider_Lite::SetPositionPrevCollision()
+    {
+        Vector3 vel = GetOwner()->GetComponent<RigidBody>()->GetVelocity();
+        vel *= -1;
+        
+        Vector3 pos = mTransform->GetPosition();
+        
+        int dx = vel.x;
+        int dy = vel.y;
+        
+        int steps = std::max(std::abs(dx), std::abs(dy));
+        
+        float xIncrement = dx / (float)steps;
+        float yIncrement = dy / (float)steps;
+        
+        float x = pos.x;
+        float y = pos.y;
+        
+        for (int i = 0; i < steps + 1; i++)
+        {
+            if (PixelWorld::GetElement(x, -y).Type != eElementType::SOLID)
+            {
+                mTransform->SetPosition(x, y, pos.z);
+                return;
+            }
+            x += xIncrement;
+            y += yIncrement;
+        }
+        mTransform->SetPosition(x, y, pos.z);
     }
 }

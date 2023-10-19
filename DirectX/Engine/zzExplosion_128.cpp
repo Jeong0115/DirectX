@@ -11,6 +11,7 @@
 #include "zzSmoke_Orange.h"
 #include "zzObjectPoolManager.h"
 #include "zzLight.h"
+#include "zzAudioSource.h"
 
 namespace zz
 {
@@ -39,6 +40,10 @@ namespace zz
 
         GetComponent<Transform>()->SetScale(129.f, 129.f, 1.0f);
         AddComponent<Light>()->SetLightScale(200.f, 200.f, 1.0f);
+
+        AudioSource* audio = AddComponent<AudioSource>();
+        audio->SetClip(ResourceManager::LoadAudioClip(L"tnt_explode", L"..\\Resources\\Audio\\Projectiles\\tnt_explode.wav"));
+        audio->SetLoop(false);
 
         mParticle = AddComponent<ParticleSystem>();
         mParticle->SetMaterial(ResourceManager::Find<Material>(L"m_fire_falling"));
@@ -80,6 +85,7 @@ namespace zz
                     PixelWorld::InsertElement(x, -j, FIRE);
                 }
             }
+            GetComponent<AudioSource>()->Play();
             mbFirstFrame = false;
         }
         GameObject::Update();

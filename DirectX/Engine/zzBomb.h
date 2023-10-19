@@ -15,6 +15,7 @@ namespace zz
         virtual void LateUpdate()   override;
         virtual void Render()       override;
 
+        virtual void InitialSetting() override;
         Bomb* Clone() override;
 
 

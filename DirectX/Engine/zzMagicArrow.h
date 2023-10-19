@@ -18,13 +18,13 @@ namespace zz
         virtual void Dead()         override;
 
         virtual ProjectileSpell* Clone() override;
-   
+        virtual void InitialSetting() override;
+
         void OnCollision(struct Element& element);
 
     private:
         class ParticleSystem* mParticle;
         class ParticleSystem* mSubParticle;
-        class ParticleSystem* mTailParticle;
         class ExplosionEffect* mExplosion;
 
         float   mSubParticleTime;
@@ -34,7 +34,7 @@ namespace zz
         bool    mbTimerOn;
 
         ParticleShared          mShareData;
-        ParticleShared          mTailData;
+        ParticleShared          mParticleData;
         UINT                    mIndex;
     };
 }

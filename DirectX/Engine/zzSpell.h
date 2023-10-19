@@ -22,14 +22,16 @@ namespace zz
         virtual void LateUpdate();
         virtual void Render();
 
-        eSpellType GetSpellType() { return mType; }
-        float GetManaDrain() { return mManaDrain; }
-        float GetCastDelay() { return mCastDelay; }
+        eSpellType GetSpellType()   { return mType; }
+        float GetManaDrain()        { return mManaDrain; }
+        float GetCastDelay()        { return mCastDelay; }
+        float GetRechargeTime()     { return mRechargeTime; }
             
     protected:
         eSpellType  mType;
 
         float       mManaDrain;
         float       mCastDelay;
+        float       mRechargeTime;
     };
 }

@@ -17,6 +17,7 @@ namespace zz
         virtual void Render()       override;
 
         ProjectileSpell* Clone() override;
+        virtual void InitialSetting() override;
 
         void OnCollision(struct Element& element);
 
@@ -25,7 +26,6 @@ namespace zz
         struct ParticleImageShared  mSharedData;
 
         Vector3     mOffset;
-        Particle*   mParticleBuffer;
         float       mParticleTime;
 
         bool        mbCreate;

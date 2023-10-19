@@ -13,6 +13,7 @@ namespace zz
         , mTransform(nullptr)
         , mbGround(false)
         , mbRotate(false)
+        , mbImpulse(false)
     {
     }
 
@@ -28,6 +29,13 @@ namespace zz
     void RigidBody::Update()
     {
         Vector3 pos = mTransform->GetPosition();
+
+        if (mbImpulse)
+        {
+            mImpulseTime -= (float)Time::DeltaTime();
+
+            if (mImpulseTime <= 0) mbImpulse = false;
+        }
 
         if (mbOrbitalMotion)
         {
@@ -84,14 +92,13 @@ namespace zz
     {
         Vector3 pos = mTransform->GetPosition();
         Vector3 toCenter = mOrbitalCenter - pos;
-        
+
         float speed = sqrt(mVelocity.x * mVelocity.x + mVelocity.y * mVelocity.y);
 
         Vector3 perpendicular = Vector3(-toCenter.y, toCenter.x, 0.0f);
         perpendicular.Normalize();
 
         mVelocity = perpendicular * speed;
-
     }
 
     void RigidBody::SetGround(bool isGround)

@@ -68,8 +68,8 @@ namespace zz
         mParticle->SetMesh(ResourceManager::Find<Mesh>(L"PointMesh"));
         mParticle->SetParticleShader(ResourceManager::Find<ParticleShader>(L"ParticleCS"));
 
-        Particle particles[450] = {};
-        mParticle->CreateStructedBuffer(sizeof(Particle), 450, eViewType::UAV, particles, true, 0, 14, 0);
+        auto particles = std::make_shared<Particle[]>(450);
+        mParticle->CreateStructedBuffer(sizeof(Particle), 450, eViewType::UAV, particles.get(), true, 0, 14, 0);
         mParticle->CreateStructedBuffer(sizeof(ParticleShared), 1, eViewType::UAV, nullptr, true, 4, 14, 1);
 
         mShared.scale = Vector4(1.0f, 1.0f, 1.0f, 0.0f);

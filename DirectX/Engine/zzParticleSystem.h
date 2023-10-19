@@ -24,6 +24,8 @@ namespace zz
         void SetParticleShader(std::shared_ptr<ParticleShader> shader) { mCS = shader; }
 
         void SetActive(bool b) { mbAcitve = b; }
+        void OffParticle();
+
         void SetParticleLight(MeshRenderer* render) { lightRenderer = render; mbLight = true; }
 
     private:
@@ -31,6 +33,7 @@ namespace zz
         StructedBuffer* mSharedBuffer;
 
         std::shared_ptr<ParticleShader> mCS;
+        
 
         UINT    mBufferSlot;
 

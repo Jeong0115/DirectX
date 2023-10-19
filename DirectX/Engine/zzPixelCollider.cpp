@@ -16,6 +16,7 @@ namespace zz
         , mCollisionOffset(Vector3::Zero)
         , mCollisionScale(Vector3::One)
         , mClimbOverY(0)
+        , mbBlock(false)
     {
     }
 
@@ -104,6 +105,7 @@ namespace zz
                     if (PixelWorld::GetElement(x, -y).Type == eElementType::SOLID)
                     {
                         velocity.x = 0.0f;
+                        mbBlock = true;
                         break;
                     }
                 }
@@ -129,6 +131,7 @@ namespace zz
                     if (PixelWorld::GetElement(x, -y).Type == eElementType::SOLID)
                     {
                         velocity.x = 0.0f;
+                        mbBlock = true;
                         break;
                     }
                 }
@@ -143,6 +146,7 @@ namespace zz
         checkPos = collisionPos;
         if (velocity.x != 0.0f)
         {
+            mbBlock = false;
             for (int i = halfScaleY - mClimbOverY + 1; i <= halfScaleY; i++)
             {
                 for (int j = -halfScaleX / 2; j <= halfScaleX / 2; j++)
@@ -152,7 +156,7 @@ namespace zz
 
                     if (PixelWorld::GetElement(x, -y).Type == eElementType::SOLID)
                     {
-                        mTransform->ShiftPositionY(halfScaleY - i + 1);
+                        mTransform->ShiftPositionY(halfScaleY - i + 1);                    
                         break;
                     }
                 }

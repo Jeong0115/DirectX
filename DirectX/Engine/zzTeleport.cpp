@@ -87,6 +87,7 @@ namespace zz
         {
             mShareData.create = false;
         }
+
         mParticle->SetStructedBufferData(&mShareData, 1, 1);
         GameObject::LateUpdate();
     }

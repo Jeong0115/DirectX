@@ -79,7 +79,7 @@ namespace zz
         }
         else if (element.Type == eElementType::LIQUID)
         {
-            mRigid->ApplyResistance(pow((0.0001f), (float)Time::DeltaTime()));
+            mRigid->ApplyResistance(pow((0.01f), (float)Time::DeltaTime()));
         }
     }
     void FireBall_Small::dead()
