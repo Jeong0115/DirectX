@@ -47,6 +47,10 @@ namespace zz
     {
     }
 
+    void Scene::Exit()
+    {
+    }
+
     void Scene::AddGameObject(GameObject* gameObject, eLayerType type)
     {
         gameObject->SetLayerType(type);

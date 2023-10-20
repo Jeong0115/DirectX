@@ -32,6 +32,7 @@ namespace zz
         bool        mbTimerOn;
 
         int         mIndex;
+        int         mProjNum;
     };
 }
 

@@ -92,7 +92,7 @@ namespace zz
         static void LoadRandomScene_01(int x, int y);
         static void LoadRandomScene_02(int x, int y);
         static void LoadRandomScene_03(int x, int y);
-
+        static void LoadStartTile(int x, int y);
         static void KeepAlive(int x, int y) { if (PixelChunk* chunk = GetChunk(x, y)) { chunk->KeepAlive(x, y); }}
 
         static bool InBounds(int x, int y);

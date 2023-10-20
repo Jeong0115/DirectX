@@ -15,6 +15,10 @@ namespace zz
         virtual void LateUpdate()   override;
         virtual void Render()       override;
 
+        virtual void Exit()         override;
         virtual void MovePlayer()   override;
+
+    private:
+        std::shared_ptr<class AudioClip> mAudio;
     };
 }

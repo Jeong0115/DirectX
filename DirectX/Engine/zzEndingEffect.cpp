@@ -7,6 +7,7 @@
 #include "zzPixelWorld.h"
 #include "zzLight.h"
 #include "zzEndingView.h"
+#include "zzAudioSource.h"
 
 namespace zz
 {
@@ -16,6 +17,7 @@ namespace zz
         , mMax(0.f)
         , mLight(nullptr)
         , mbChange(true)
+        , mAudio(nullptr)
     {
     }
     EndingEffect::~EndingEffect()
@@ -56,6 +58,11 @@ namespace zz
         mView = new EndingView();
         mView->GetComponent<Transform>()->SetPosition(GetComponent<Transform>()->GetPosition());
         CreateObject(mView, eLayerType::Effect);
+
+        mAudio = AddComponent<AudioSource>();
+        mAudio->SetClip(ResourceManager::LoadAudioClip(L"new_unlock", L"..\\Resources\\Audio\\Projectiles\\new_unlock.wav"));
+        mAudio->SetLoop(false);
+        mAudio->Play();
         GameObject::Initialize();
     }
 

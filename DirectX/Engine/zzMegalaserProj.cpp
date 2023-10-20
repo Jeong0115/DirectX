@@ -13,12 +13,13 @@
 #include "zzLight.h"
 #include "zzAudioSource.h"
 #include "zzObjectPoolManager.h"
+#include "zzPixelCollider_Lite.h"
 
 namespace zz
 {
     MegalaserProj::MegalaserProj(Megalaser* parent, int index)
         : mParent(parent)
-        , mIndex(index)
+        , mProjNum(index)
         , mExplosion(nullptr)
         , mSleepTime(0.0f)
         , mbTimerOn(false)
@@ -37,8 +38,8 @@ namespace zz
         float angle = transform->GetRotation().z;
 
         Vector2 offset;
-        offset.x = -1.f * (mIndex - 2) * sin(angle);
-        offset.y = 1.f * (mIndex - 2) * cos(angle);
+        offset.x = -1.f * (mProjNum - 2) * sin(angle);
+        offset.y = 1.f * (mProjNum - 2) * cos(angle);
 
         transform->ShiftPositionXY(offset);
 
@@ -86,6 +87,7 @@ namespace zz
         mSharedData.color_min = mSharedData.color_max = Vector4(150.f / 255.f, 255.f / 255.f, 70.f / 255.f, 1.0f);
         mSharedData.lightScale = Vector4(3.0f, 3.0f, 1.0f, 1.0f);
 
+        AddComponent<PixelCollider_Lite>()->SetCollisionEvent([this](Element& element) { OnCollision(element); });
         MeshRenderer* particleLight = new MeshRenderer();
         particleLight->SetMaterial(ResourceManager::Find<Material>(L"m_particle_glow_particleLight"));
         particleLight->SetMesh(ResourceManager::Find<Mesh>(L"PointMesh"));
@@ -170,8 +172,27 @@ namespace zz
     {
         if (element.Type == eElementType::SOLID)
         {
-            //GetComponent<PixelCollider_Lite>()->SetPositionPrevCollision();
-            Dead();
+            GetComponent<PixelCollider_Lite>()->SetPositionPrevCollision();
+
+            Vector3 vel = GetComponent<RigidBody>()->GetVelocity();
+            float angle = 0.0f;
+            switch (mProjNum)
+            {
+            case 0: angle =  PI * 0.6f; break;
+            case 1: angle =  PI * 0.8f; break;
+            case 2: angle =  PI;        break;
+            case 3: angle = -PI * 0.8f; break;
+            case 4: angle = -PI * 0.6f; break;
+            case 5: Dead(); return;     break;
+            default: break;
+            }
+            
+            Vector3 transVel;
+            transVel.x = vel.x * cos(angle) - vel.y * sin(angle);
+            transVel.y = vel.x * sin(angle) + vel.y * cos(angle);
+
+            GetComponent<RigidBody>()->SetVelocity(transVel);
+            mProjNum = 5;
         }
     }
 }

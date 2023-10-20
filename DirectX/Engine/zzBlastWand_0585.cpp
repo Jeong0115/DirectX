@@ -13,9 +13,9 @@ namespace zz
     {
         mCapacity = 3;
         mManaMax = 113;
-        mManaChargeSpeed = 1000;
-        mCurMana = 10;
-        mCastDelay = 0.f;
+        mManaChargeSpeed = 30;
+        mCurMana = 113;
+        mCastDelay = 0.2f;
         mReChargeTime = 0.2f;
         mSpread = 2.f;
         mSpells.resize(mCapacity);
@@ -58,7 +58,7 @@ namespace zz
             L"\n"
             L"  \x0D Shuffle        No\n"
             L"  \x08 Spells/Cast    1\n"
-            L"  \x03 Cast delay     0.0 s\n"
+            L"  \x03 Cast delay     0.2 s\n"
             L"  \x05 Rechrg.Time    0.2 s\n"
             L"  \x0C Mana max       113\n"
             L"  \x0B Mana chg. Spd  30\n"

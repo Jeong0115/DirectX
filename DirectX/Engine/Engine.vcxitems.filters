@@ -394,9 +394,6 @@
     <Filter Include="GameObject\Spell\Utility\Other">
       <UniqueIdentifier>{0d0e078c-4384-4799-bf4e-7b314a42652d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GameObject\Spell\Utility\Other\Base">
-      <UniqueIdentifier>{a23b5107-4c72-4157-bfb0-82501b964c6c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="GameObject\Spell\Utility\Modifier">
       <UniqueIdentifier>{12e2a015-2139-44af-822b-ffb3eb175a72}</UniqueIdentifier>
     </Filter>
@@ -525,6 +522,48 @@
     </Filter>
     <Filter Include="GameObject\Teleport\RedTeleport">
       <UniqueIdentifier>{8e91e46e-bf5c-41ae-8a3e-6e54aecaf7b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Monster\Body">
+      <UniqueIdentifier>{cd65220a-e2b2-40ad-a0c3-d5235eb9ad9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Player\Damaged">
+      <UniqueIdentifier>{af6b8c2c-7fa0-4ac3-a650-f0e1ad43327c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Centipede\HP">
+      <UniqueIdentifier>{7387d556-b1ba-41f5-8b03-ac7e633220c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Centipede\HP\Slider">
+      <UniqueIdentifier>{0f99779d-6459-4c64-92c0-ec299b6b9392}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Spell\Utility\MultiCast\Base">
+      <UniqueIdentifier>{a23b5107-4c72-4157-bfb0-82501b964c6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Spell\Utility\MultiCast\TripleCast">
+      <UniqueIdentifier>{a1e3698c-45b7-40f1-8c61-2e524d2e0d8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\SpellUI\Scatter3">
+      <UniqueIdentifier>{95732edc-29a7-47ab-926d-49b5c206ab86}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Equipment\Wand\Wand0765">
+      <UniqueIdentifier>{5a5693c1-4656-4e02-a220-f3a99a42872f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\SpellUI\BloodTrail">
+      <UniqueIdentifier>{e49ae457-12fb-444d-a589-c179b3a09d7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\SpellUI\OilTrail">
+      <UniqueIdentifier>{1fb29ac9-a6be-4f7e-b417-dc3b32e101e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Spell\Utility\Modifier\OilTrail">
+      <UniqueIdentifier>{d60436bf-b6ee-4046-8a30-98b3cdb000fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Spell\Utility\Modifier\BloodTrail">
+      <UniqueIdentifier>{20e729f6-bcaf-4946-a4cf-0b172469f1dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Centipede\Attack\Bug">
+      <UniqueIdentifier>{f65d567e-b016-4385-b898-7703da40798e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Centipede\Attack\BugExplosion">
+      <UniqueIdentifier>{51f7dfd7-cffa-4718-a6ee-08e7a9227141}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -978,6 +1017,57 @@
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)zzRedTeleport.cpp">
       <Filter>GameObject\Teleport\RedTeleport</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzMonsterBody.cpp">
+      <Filter>GameObject\Monster\Body</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzDamaged.cpp">
+      <Filter>GameObject\Player\Damaged</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzZombieAttack.cpp">
+      <Filter>GameObject\MonsterAttack</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzBossHP.cpp">
+      <Filter>GameObject\Centipede\HP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzBossHPSlider.cpp">
+      <Filter>GameObject\Centipede\HP\Slider</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzBossHPIcon.cpp">
+      <Filter>GameObject\Centipede\HP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzBossHPBar.cpp">
+      <Filter>GameObject\Centipede\HP</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzMultiCastSpell.cpp">
+      <Filter>GameObject\Spell\Utility\MultiCast\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzScatter3.cpp">
+      <Filter>UI\SpellUI\Scatter3</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzTripleCast.cpp">
+      <Filter>GameObject\Spell\Utility\MultiCast\TripleCast</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzWand0765.cpp">
+      <Filter>GameObject\Equipment\Wand\Wand0765</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzBloodTrail_UI.cpp">
+      <Filter>UI\SpellUI\BloodTrail</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzOilTrail_UI.cpp">
+      <Filter>UI\SpellUI\OilTrail</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzOilTrail.cpp">
+      <Filter>GameObject\Spell\Utility\Modifier\OilTrail</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzBloodTrail.cpp">
+      <Filter>GameObject\Spell\Utility\Modifier\BloodTrail</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzBug.cpp">
+      <Filter>GameObject\Centipede\Attack\Bug</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)zzBugExplosion.cpp">
+      <Filter>GameObject\Centipede\Attack\BugExplosion</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1458,6 +1548,57 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)zzRedTeleport.h">
       <Filter>GameObject\Teleport\RedTeleport</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzMonsterBody.h">
+      <Filter>GameObject\Monster\Body</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzDamaged.h">
+      <Filter>GameObject\Player\Damaged</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzZombieAttack.h">
+      <Filter>GameObject\MonsterAttack</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzBossHP.h">
+      <Filter>GameObject\Centipede\HP</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzBossHPSlider.h">
+      <Filter>GameObject\Centipede\HP\Slider</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzBossHPIcon.h">
+      <Filter>GameObject\Centipede\HP</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzBossHPBar.h">
+      <Filter>GameObject\Centipede\HP</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzMultiCastSpell.h">
+      <Filter>GameObject\Spell\Utility\MultiCast\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzScatter3.h">
+      <Filter>UI\SpellUI\Scatter3</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzTripleCast.h">
+      <Filter>GameObject\Spell\Utility\MultiCast\TripleCast</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzWand0765.h">
+      <Filter>GameObject\Equipment\Wand\Wand0765</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzBloodTrail_UI.h">
+      <Filter>UI\SpellUI\BloodTrail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzOilTrail_UI.h">
+      <Filter>UI\SpellUI\OilTrail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzOilTrail.h">
+      <Filter>GameObject\Spell\Utility\Modifier\OilTrail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzBloodTrail.h">
+      <Filter>GameObject\Spell\Utility\Modifier\BloodTrail</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzBug.h">
+      <Filter>GameObject\Centipede\Attack\Bug</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)zzBugExplosion.h">
+      <Filter>GameObject\Centipede\Attack\BugExplosion</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -96,7 +96,10 @@ namespace zz
         if (other->GetLayerType() == eLayerType::Monster)
         {
             HealthPoint* hp = other->GetComponent<HealthPoint>();
-            hp->Hit(mDamage);
+            if (hp)
+            {
+                hp->Hit(mDamage);
+            }
             Dead();
         }
     }

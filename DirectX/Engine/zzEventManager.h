@@ -18,6 +18,7 @@ namespace zz
         Mana_Change,
         Enenerge_Change,
         ReCharge_Change,
+        Boss_Health,
         End,
     };
 

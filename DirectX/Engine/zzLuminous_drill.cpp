@@ -19,7 +19,7 @@ namespace zz
         mCastDelay = -0.58f;
         mDamage = 10.0f;
         mManaDrain = 1.f;
-        mRechargeTime = -2.17f;
+        mRechargeTime = -0.17f;
 
         MeshRenderer* mesh = AddComponent<MeshRenderer>();
         mesh->SetMaterial(ResourceManager::Find<Material>(L"m_SpriteAnimation"));
@@ -107,8 +107,8 @@ namespace zz
         float angle = tr->GetRotation().z;
 
         Vector3 offset = Vector3::Zero;
-        offset.x = 18.f * cos(angle);
-        offset.y = 18.f * sin(angle);
+        offset.x = 12.f * cos(angle);
+        offset.y = 12.f * sin(angle);
 
         tr->SetPosition(pos + offset);
     }

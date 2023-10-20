@@ -36,6 +36,7 @@ namespace zz
         float GetDamage() { return mDamage; }
         std::vector<struct Element>& AddTrailElement() { return mTrailElement; }
 
+        void ClearTrail() { mTrailElement.clear(); }
     protected:
         std::vector<struct Element> mTrailElement;
 

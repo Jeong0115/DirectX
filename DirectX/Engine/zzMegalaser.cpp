@@ -25,6 +25,11 @@ namespace zz
         , mbCreate(true)
         , mOffset(Vector3(-33.f,0.0f,0.0f))
     {
+        mSpeed = 150.f;
+        mCastDelay = 1.5f;
+        mDamage = 125.f;
+        mManaDrain = 110.f;
+
         mAudio = AddComponent<AudioSource>();
         mAudio->SetClip(ResourceManager::LoadAudioClip(L"megalaser_create", L"..\\Resources\\Audio\\Projectiles\\megalaser_create.wav"));
         mAudio->SetLoop(false);

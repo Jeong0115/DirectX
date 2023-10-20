@@ -32,6 +32,11 @@ namespace zz
         , mIndex(0)
         , mTrailDuration(0.05f)
     {
+        mSpeed = 500.f;
+        mCastDelay = 0.05f;
+        mDamage = 3.0f;
+        mManaDrain = 5.0f;
+
         MeshRenderer* mesh = AddComponent<MeshRenderer>();
         mesh->SetMaterial(ResourceManager::Find<Material>(L"m_SpriteAnimation"));
         mesh->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));

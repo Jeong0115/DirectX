@@ -10,6 +10,7 @@
 #include "zzLight.h"
 #include "zzParticleSystem.h"
 #include "zzCollider.h"
+#include "zzAudioSource.h"
 
 namespace zz
 {
@@ -155,6 +156,13 @@ namespace zz
                 mRigid->SetVelocityX(0.f);
                 mRigid->SetVelocityY(250.f);
                 mRigid->SetGravity(0.f);
+
+                AudioSource* audio = AddComponent<AudioSource>();
+                audio->SetClip(ResourceManager::LoadAudioClip(L"centipede_shoot_clean_01", L"..\\Resources\\Audio\\Enemy\\centipede_shoot_clean_01.wav"));
+                audio->SetLoop(false);
+                audio->SetVolume(50.f);
+                audio->Play();
+                
             }
             else
             {

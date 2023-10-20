@@ -22,7 +22,7 @@ namespace zz
         , mCurAngle(0.0f)
         , mRotationAngle(0.f)
         , mbBend(false)
-        , mMoveState(eMoveState::Stay)
+        , mMoveState(eMoveState::Sleep)
     {
         mBody = body;
     }
@@ -104,6 +104,12 @@ namespace zz
     void LimbA::Render()
     {
         GameObject::Render();
+    }
+
+    void LimbA::Awake()
+    {
+        SetMoveState(eMoveState::Bend);
+        limbB->Awake();
     }
 
     void LimbA::SetMoveState(eMoveState state)

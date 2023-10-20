@@ -116,13 +116,15 @@ namespace zz
         {
         case eElementID::EMPTY: break;
         case eElementID::WOOD:  break;
-        case eElementID::SMOKE: UpdateSmoke(worldX, worldY, element);   break;
-        case eElementID::FIRE:  UpdateFire(worldX, worldY, element);    break;
-        case eElementID::SAND:  UpdateSand(worldX, worldY, element);    break;
-        case eElementID::WATER: UpdateWater(worldX, worldY, element);   break;
-        case eElementID::OIL:   UpdateWater(worldX, worldY, element);   break;
-        case eElementID::BLOOD: UpdateWater(worldX, worldY, element);   break;
-        case eElementID::GRASS: UpdateGrass(worldX, worldY, element);   break;
+        case eElementID::SMOKE:     UpdateSmoke(worldX, worldY, element);   break;
+        case eElementID::FIRE:      UpdateFire(worldX, worldY, element);    break;
+        case eElementID::SAND:      UpdateSand(worldX, worldY, element);    break;
+        case eElementID::WATER:     UpdateWater(worldX, worldY, element);   break;
+        case eElementID::OIL:       UpdateWater(worldX, worldY, element);   break;
+        case eElementID::BLOOD:     UpdateBlood(worldX, worldY, element);   break;
+        case eElementID::LAVA:      UpdateLava(worldX, worldY, element);    break;
+        case eElementID::PARTICLE:  UpdateParticle(worldX, worldY, element);break;
+        case eElementID::GRASS:     UpdateGrass(worldX, worldY, element);   break;
         case eElementID::ROCK:  break;
         default: break;
         }        
@@ -488,6 +490,235 @@ namespace zz
         }
     }
 
+    void PixelChunk::UpdateBlood(int x, int y, Element& element)
+    {
+        Element& target = GetElementInOrOut(x, y + 1);
+
+        if (target.Type == eElementType::EMPTY || target.Type == eElementType::GAS
+            || (target.Type == eElementType::LIQUID && target.Density < element.Density))
+        {
+            element.Velocity.x *= 0.8f;
+            element.Velocity.y += 0.1f;
+
+            int floorVelX = (int)fabs(floor(element.Velocity.x));
+            int floorVelY = (int)floor(element.Velocity.y);
+
+            int dirX = element.Velocity.x >= 0 ? 1 : -1;
+
+            int largeVel;
+            int smallVel;
+
+            bool isVelXLarger;
+
+            floorVelX > floorVelY ? (largeVel = floorVelX, smallVel = floorVelY, isVelXLarger = true)
+                : (largeVel = floorVelY, smallVel = floorVelX, isVelXLarger = false);
+
+            float slope = (smallVel == 0 || largeVel == 0) ? 0 : ((float)(smallVel + 1) / (largeVel + 1));
+
+            int lastX = x;
+            int lastY = y + 1;
+
+            for (int i = 1; i < largeVel; i++)
+            {
+                int smallerCount = (int)floor(i * slope);
+
+                int yIncrease, xIncrease;
+                if (isVelXLarger)
+                {
+                    xIncrease = i;
+                    yIncrease = smallerCount;
+                }
+                else
+                {
+                    yIncrease = i;
+                    xIncrease = smallerCount;
+                }
+
+                Element& nextTarget = GetElementInOrOut(x + (xIncrease * dirX), y + yIncrease);
+
+                if (nextTarget.Type == eElementType::EMPTY || nextTarget.Type == eElementType::GAS
+                    || (nextTarget.Type == eElementType::LIQUID && nextTarget.Density < element.Density))
+                {
+                    lastX = x + (xIncrease * dirX);
+                    lastY = y + yIncrease;
+                }
+                else if (nextTarget.Type == eElementType::LIQUID || nextTarget.Type == eElementType::SOLID)
+                {
+                    Element& sideElement = GetElementInOrOut(x + (xIncrease * dirX) + dirX, y + yIncrease);
+
+                    if (sideElement.Type == eElementType::SOLID
+                        || (sideElement.Type == eElementType::LIQUID && sideElement.Density >= element.Density))
+                    {
+                        dirX *= -1;
+                    }
+
+                    element.Velocity.x = (element.Velocity.y + random() * 2.0f - 1.0f) * dirX;
+                    break;
+                }
+            }
+
+            if (lastX != x || lastY != y)
+            {
+                SwapElement(GetElementInOrOut(lastX, lastY), lastX, lastY, element, x, y);
+                return;
+            }
+        }
+        else
+        {
+            element.Velocity.y = 2.f;
+
+            int dirX = element.Velocity.x >= 0 ? 1 : -1;
+
+            if (element.Velocity.x <= 2.f)
+            {
+                element.Velocity.x = (2.0f + randi(2)) * dirX;
+            }
+
+            int lastX = x;
+            int lastY = y;
+
+            float absVelocityX = fabs(element.Velocity.x);
+            for (int j = 1; j < (int)absVelocityX; j++)
+            {
+                Element& target = GetElementInOrOut(x + j * dirX, y);
+
+                if (target.Type == eElementType::EMPTY || target.Type == eElementType::GAS
+                    || (target.Type == eElementType::LIQUID && target.Density < element.Density))
+                {
+                    lastX = x + j * dirX;
+                }
+                else //if (target.Type == eElementType::SOLID || target.Type == eElementType::LIQUID)
+                {
+                    break;
+                }
+            }
+
+            if (lastX != x)
+            {
+                SwapElement(GetElementInOrOut(lastX, lastY), lastX, lastY, element, x, y);
+                return;
+            }
+            else
+            {
+                element.Velocity.x *= -1;
+            }
+        }
+    }
+
+    void PixelChunk::UpdateLava(int x, int y, Element& element)
+    {
+        Element& target = GetElementInOrOut(x, y + 1);
+        if (target.Type == eElementType::EMPTY || target.Type == eElementType::GAS
+            || (target.Type == eElementType::LIQUID && target.Density < element.Density))
+        {
+            element.Velocity.x *= 0.8f;
+            element.Velocity.y += 0.1f;
+
+            int floorVelX = (int)fabs(floor(element.Velocity.x));
+            int floorVelY = (int)floor(element.Velocity.y);
+
+            int dirX = element.Velocity.x >= 0 ? 1 : -1;
+
+            int largeVel;
+            int smallVel;
+
+            bool isVelXLarger;
+
+            floorVelX > floorVelY ? (largeVel = floorVelX, smallVel = floorVelY, isVelXLarger = true)
+                : (largeVel = floorVelY, smallVel = floorVelX, isVelXLarger = false);
+
+            float slope = (smallVel == 0 || largeVel == 0) ? 0 : ((float)(smallVel + 1) / (largeVel + 1));
+
+            int lastX = x;
+            int lastY = y + 1;
+
+            for (int i = 1; i < largeVel; i++)
+            {
+                int smallerCount = (int)floor(i * slope);
+
+                int yIncrease, xIncrease;
+                if (isVelXLarger)
+                {
+                    xIncrease = i;
+                    yIncrease = smallerCount;
+                }
+                else
+                {
+                    yIncrease = i;
+                    xIncrease = smallerCount;
+                }
+
+                Element& nextTarget = GetElementInOrOut(x + (xIncrease * dirX), y + yIncrease);
+
+                if (nextTarget.Type == eElementType::EMPTY || nextTarget.Type == eElementType::GAS
+                    || (nextTarget.Type == eElementType::LIQUID && nextTarget.Density < element.Density))
+                {
+                    lastX = x + (xIncrease * dirX);
+                    lastY = y + yIncrease;
+                }
+                else if (nextTarget.Type == eElementType::LIQUID || nextTarget.Type == eElementType::SOLID)
+                {
+                    Element& sideElement = GetElementInOrOut(x + (xIncrease * dirX) + dirX, y + yIncrease);
+
+                    if (sideElement.Type == eElementType::SOLID
+                        || (sideElement.Type == eElementType::LIQUID && sideElement.Density >= element.Density))
+                    {
+                        dirX *= -1;
+                    }
+
+                    element.Velocity.x = (element.Velocity.y + random() * 2.0f - 1.0f) * dirX;
+                    break;
+                }
+            }
+
+            if (lastX != x || lastY != y)
+            {
+                SwapElement(GetElementInOrOut(lastX, lastY), lastX, lastY, element, x, y);
+                return;
+            }
+        }
+        else
+        {
+            element.Velocity.y = 2.f;
+
+            int dirX = element.Velocity.x >= 0 ? 1 : -1;
+
+            if (element.Velocity.x <= 2.f)
+            {
+                element.Velocity.x = (1.0f) * dirX;
+            }
+
+            int lastX = x;
+            int lastY = y;
+
+            float absVelocityX = fabs(element.Velocity.x);
+            for (int j = 1; j < (int)absVelocityX; j++)
+            {
+                Element& target = GetElementInOrOut(x + j * dirX, y);
+
+                if (target.Type == eElementType::EMPTY || target.Type == eElementType::GAS
+                    || (target.Type == eElementType::LIQUID && target.Density < element.Density))
+                {
+                    lastX = x + j * dirX;
+                }
+                else //if (target.Type == eElementType::SOLID || target.Type == eElementType::LIQUID)
+                {
+                    break;
+                }
+            }
+
+            if (lastX != x)
+            {
+                SwapElement(GetElementInOrOut(lastX, lastY), lastX, lastY, element, x, y);
+                return;
+            }
+            else
+            {
+                element.Velocity.x *= -1;
+            }
+        }
+    }
+
     void PixelChunk::UpdateFire(int x, int y, Element& element)
     {
         Element& target = GetElementInOrOut(x, y - 1);
@@ -573,6 +804,62 @@ namespace zz
                 element.Velocity.x *= -1;
             }
         }
+    }
+
+    void PixelChunk::UpdateParticle(int x, int y, Element& element)
+    {
+        element.Velocity.y += (float)Time::DeltaTime() * 10.f;
+
+        int velX = fabs(element.Velocity.x);
+        int velY = fabs(element.Velocity.y);
+
+        int dirX = element.Velocity.x >= 0 ? 1 : -1;
+        int dirY = element.Velocity.x >= 0 ? 1 : -1;
+
+        int largeVel;
+        int smallVel;
+
+        bool isVelXLarger;
+
+        velX > velY ? (largeVel = velX, smallVel = velY, isVelXLarger = true)
+            : (largeVel = velY, smallVel = velX, isVelXLarger = false);
+
+        float slope = (smallVel == 0 || largeVel == 0) ? 0 : ((float)(smallVel + 1) / (largeVel + 1));
+
+        int lastX = x;
+        int lastY = y;
+
+        for (int i = 1; i <= largeVel; i++)
+        {
+            int smallerCount = (int)floor(i * slope);
+
+            int yIncrease, xIncrease;
+            if (isVelXLarger)
+            {
+                xIncrease = i;
+                yIncrease = smallerCount;
+            }
+            else
+            {
+                yIncrease = i;
+                xIncrease = smallerCount;
+            }
+
+            Element& nextTarget = GetElementInOrOut(x + (xIncrease * dirX), y + (yIncrease * dirY));
+
+            if (nextTarget.Type == eElementType::EMPTY)
+            {
+                lastX = x + (xIncrease * dirX);
+                lastY = y + (yIncrease * dirY);
+            }
+            else
+            {
+                InsertElementInOrOut(lastX, lastY, BLOOD);
+                InsertElementInOrOut(x, y, EMPTY);
+                return;
+            }
+        }
+        SwapElement(GetElementInOrOut(lastX, lastY), lastX, lastY, element, x, y);
     }
 
     void PixelChunk::UpdateGrass(int x, int y, Element& element)

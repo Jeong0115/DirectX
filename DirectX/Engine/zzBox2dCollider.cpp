@@ -26,29 +26,51 @@ namespace zz
     {
         mTransform = GetOwner()->GetComponent<Transform>();
 
-        Vector3 pos = mTransform->GetPosition();
+        //b2Vec2 position = mBody->GetPosition();
+        //float angle = mBody->GetAngle();
 
-        Box2dWorld::CreateBody(mBody, eBodyShape::Box, Vector2(8.f, 8.f), pos);
+        //mTransform->SetPositionXY(position.x, -position.y);
+        //mTransform->SetRotationZ(-angle);
     }
 
     void Box2dCollider::Update()
     {
-        b2Vec2 position = mBody->GetPosition();
-        float angle = mBody->GetAngle();
+        if (mBody != nullptr)
+        {
+            b2Vec2 position = mBody->GetPosition();
+            float angle = mBody->GetAngle();
 
-        mTransform->SetPositionXY(position.x, -position.y);
-        mTransform->SetRotationZ(-angle);
+            mTransform->SetPositionXY(position.x, -position.y);
+            mTransform->SetRotationZ(-angle);
+        }
 
     }
 
     void Box2dCollider::LateUpdate()
     {
-        b2Vec2 position = mBody->GetPosition();
-        PixelWorld::RenewalChunkBody(position.x, position.y);
+        if (mBody != nullptr)
+        {
+            b2Vec2 position = mBody->GetPosition();
+            PixelWorld::RenewalChunkBody(position.x, position.y);
+        }
     }
 
     void Box2dCollider::Render()
     {
+    }
+
+    void Box2dCollider::Create(Vector3 pos, Vector3 scale)
+    {
+        Box2dWorld::CreateBody(mBody, eBodyShape::Box, Vector2(scale.x, scale.y), pos);
+    }
+
+    void Box2dCollider::Release()
+    {
+        if (mBody != nullptr)
+        {
+            Box2dWorld::DeleteBody(mBody);
+            mBody = nullptr;
+        }
     }
 
     void Box2dCollider::ApplyLinearImpulse(Vector2 impulse, Vector2 point)

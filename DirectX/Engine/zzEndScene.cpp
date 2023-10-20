@@ -6,10 +6,12 @@
 #include "zzTexture.h"
 #include "zzEndingEffect.h"
 #include "zzInput.h"
+#include "zzAudioClip.h"
 
 namespace zz
 {
     EndScene::EndScene()
+        : mAudio(nullptr)
     {
     }
     EndScene::~EndScene()
@@ -38,6 +40,9 @@ namespace zz
         bgmesh->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
 
 
+        mAudio = ResourceManager::LoadAudioClip(L"rainforest_d01_s03_action_125", L"..\\Resources\\Audio\\BGM\\rainforest_d01_s03_action_125.wav");
+        mAudio->SetLoop(true);
+        mAudio->Play();
         Scene::Initialize();
     }
     void EndScene::Update()

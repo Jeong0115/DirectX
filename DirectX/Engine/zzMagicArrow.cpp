@@ -82,7 +82,7 @@ namespace zz
         mParticleData.scale = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
         mParticleData.color_min = Vector4(150.f / 255.f, 255.f / 255.f, 70.f / 255.f, 1.0f);
         mParticleData.color_max = Vector4(150.f / 255.f, 255.f / 255.f, 70.f / 255.f, 1.0f);
-        mParticleData.lightScale = Vector4(5.0f, 5.0f, 1.0f, 0.0f);
+        mParticleData.lightScale = Vector4(7.0f, 7.0f, 1.0f, 0.0f);
         mParticleData.randVelocityMax = Vector2(3.0f, 0.0f);
 
         mParticle->CreateStructedBuffer(sizeof(Particle), 200, eViewType::UAV, particles.get(), true, 0, 14, 0);

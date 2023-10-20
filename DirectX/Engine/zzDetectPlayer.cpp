@@ -11,7 +11,7 @@ namespace zz
         : Component(eComponentType::DetectPlayer)
         , mDetectRangeX(100.0f)
         , mDetectRangeYUp(20.f)
-        , mDetectRangeYDown(-50.f)
+        , mDetectRangeYDown(-100.f)
         , mbPlayerInRange(false)
         , mDirection(1)
     {

@@ -398,6 +398,7 @@ namespace zz
         {
             for (int j = 0; j < 154; j++)
             {
+                if (i >= 0 && i <= 25 && j >= 65 && j <= 77) continue;
                 uint32_t color = Vec3bToColor(randTileImage.at<cv::Vec3b>(i, j));
 
                 if (color == 0xFFFFFFFF)
@@ -819,13 +820,13 @@ namespace zz
                 else if (color == 0xFF800000 || color == 0xFFFF0000)
                 {
                     int rand = randi(1);
-
+                    
                     switch (rand)
                     {
                     case 0: CreateObject(new ShotGunner_Weak(), eLayerType::Monster, j * 10, -i * 10);  break;
                     case 1: CreateObject(new Zombie_weak(), eLayerType::Monster, j * 10, -i * 10);      break;
                     default: break;
-                    }
+                    } 
                     
                 }
                 else if (color == 0xFFFF0AFF)
@@ -842,6 +843,7 @@ namespace zz
                 }
             }
         }
+        LoadStartTile(65 * 10, 0);
 
         for (int i = 0; i < 1720; i++)
         {
@@ -1634,9 +1636,15 @@ namespace zz
                         InsertElement(j, i, element);
                     }
                 }
-                else if (color == 0xFF2F554C || color == 0xFFFF6000)
+                else if (color == 0xFF2F554C)
                 {
                     Element element = WATER;
+
+                    InsertElement(j, i, element);
+                }
+                else if (color == 0xFFFF6000)
+                {
+                    Element element = LAVA;
 
                     InsertElement(j, i, element);
                 }
@@ -2029,14 +2037,14 @@ namespace zz
 
             InsertElement(x, y, element);
         }
-        else if (wangColor == 0x45FF45) //fungi green
+        else if (wangColor == 0xFF45FF45) //fungi green
         {
             Element element = GRASS;
             element.Color = getMaterialColor(L"grass", x, y);
 
             InsertElement(x, y, element);
         }
-        else if (wangColor == 0xF0BBEE) // random liquid
+        else if (wangColor == 0xFFF0BBEE) // random liquid
         {
             Element element = OIL;
 
@@ -2279,6 +2287,27 @@ namespace zz
         }
 
         cv::cvtColor(material_image, material_image, cv::COLOR_BGR2RGB);
+
+        for (int i = 0; i < 260; i++)
+        {
+            for (int j = 0; j < 130; j++)
+            {
+                uint32_t color = Vec3bToColor(material_image.at<cv::Vec3b>(i, j));
+
+                InsertElementFromWangColor(color, x + j, y + i);
+            }
+        }
+
+        DrawRandomSceneImage(material_image, visual_image, x, y);
+    }
+
+    void PixelWorld::LoadStartTile(int x, int y)
+    {
+        cv::Mat material_image = cv::imread("..\\Resources\\Texture\\Coalmine\\coalpit01.png", cv::IMREAD_COLOR);
+        cv::Mat visual_image = cv::imread("..\\Resources\\Texture\\Coalmine\\coalpit01_visual.png", cv::IMREAD_UNCHANGED);
+
+        cv::cvtColor(material_image, material_image, cv::COLOR_BGR2RGB);
+
 
         for (int i = 0; i < 260; i++)
         {

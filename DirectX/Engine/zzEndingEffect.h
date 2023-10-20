@@ -17,6 +17,7 @@ namespace zz
 
     private:
         class ParticleSystem*       mParticle;
+        class AudioSource*          mAudio;
         struct ParticleImageShared  mSharedData;
 
         class EndingView* mView;

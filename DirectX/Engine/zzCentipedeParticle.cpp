@@ -4,6 +4,8 @@
 #include "zzTime.h"
 #include "zzTransform.h"
 #include "zzLight.h"
+#include "zzAudioSource.h"
+#include "zzCollider.h"
 
 namespace zz
 {
@@ -12,6 +14,7 @@ namespace zz
         , mParticle(nullptr)
         , mbCreate(false)
         , mTime(0.f)
+        , mAudio(nullptr)
     {
     }
     CentipedeParticle::~CentipedeParticle()
@@ -20,6 +23,7 @@ namespace zz
 
     void CentipedeParticle::Initialize()
     {
+        AddComponent<Collider>()->SetScale(180.f, 180.f, 1.0f);
         mParticle = AddComponent<ParticleSystem>();
         mParticle->SetMaterial(ResourceManager::Find<Material>(L"m_ParticleCirceShader"));
         mParticle->SetMesh(ResourceManager::Find<Mesh>(L"PointMesh"));
@@ -46,6 +50,9 @@ namespace zz
         particleLight->SetMesh(ResourceManager::Find<Mesh>(L"PointMesh"));
         mParticle->SetParticleLight(particleLight);
 
+        mAudio = AddComponent<AudioSource>();
+        mAudio->SetClip(ResourceManager::LoadAudioClip(L"centipede_shoot_clean_01", L"..\\Resources\\Audio\\Enemy\\centipede_shoot_clean_01.wav"));
+        mAudio->SetLoop(false);
         GameObject::Initialize();
     }
 
@@ -67,6 +74,7 @@ namespace zz
             mbCreate = false;
             mTime = 0.f;
             mParticle->SetActive(false);
+            SetState(eState::LastUpdate);
         }
 
         GameObject::LateUpdate();
@@ -82,6 +90,8 @@ namespace zz
         {
             return;
         }
+        mAudio->Play();
+        SetState(eState::Active);
         mParticle->SetActive(true);
         mShareData.create = true;
         mShareData.curPosition = GetComponent<Transform>()->GetPosition() + 0.0f;

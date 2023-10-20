@@ -19,6 +19,7 @@
 #include "zzCollisionManger.h"
 #include "zzTeleport.h"
 #include "zzPixelWorld.h"
+#include "zzCentipede.h"
 
 #include "zzAudioSource.h"
 #include "zzAudioListener.h"
@@ -169,8 +170,8 @@ namespace zz
         for (int i = 0; i < 3; i++)
         {
             Teleport* teleport = new Teleport();
-            //teleport->GetComponent<Transform>()->SetPosition(256.f + 512.f * i + 10, -1747.f - 86.f, 0.00f);
-            teleport->GetComponent<Transform>()->SetPosition(0.f, 0.f + i * - 100.f, 0.0f);
+            teleport->GetComponent<Transform>()->SetPosition(256.f + 512.f * i + 10, -1747.f - 86.f, 0.00f);
+            //teleport->GetComponent<Transform>()->SetPosition(0.f, 0.f + i * - 100.f, 0.0f);
             CreateObject(teleport, eLayerType::Object);
         }
 
@@ -178,16 +179,18 @@ namespace zz
         //AddGameObject(boss, eLayerType::Monster);
         //boss->GetComponent<Transform>()->SetPosition(100.f, -100.f, 0.2f);
 
-
+        //ShotGunner_Weak* monster = new ShotGunner_Weak();
+        //AddGameObject(monster, eLayerType::Monster);
+        //monster->GetComponent<Transform>()->SetPosition(100.f, -100.f, 0.2f);
 
         Scene::Initialize();
         {
             Player* player;
             player = new Player();
             AddGameObject(player, eLayerType::Player);
-            player->GetComponent<Transform>()->SetPosition(Vector3(200.f / 2.f, -10.f, 0.200f));
+            player->GetComponent<Transform>()->SetPosition(Vector3(715.f, -12.f, 0.200f));
             player->GetComponent<Transform>()->SetScale(Vector3(12.f, 19.f, 1.0f));
-            //player->SetCamera(camera);
+            cameraComp->SetTarget(player);
 
             PlayerArm* player_arm = new PlayerArm();
 
@@ -206,13 +209,6 @@ namespace zz
 
     void PlayScene::Update()
     {
-        if (Input::GetKeyDown(eKeyCode::E))
-        {
-            EndingEffect* effect = new EndingEffect();
-            effect->GetComponent<Transform>()->SetPosition(Vector3(0.0f, 0.0f, 0.0f));
-            AddGameObject(effect, eLayerType::Effect);
-            effect->Initialize();
-        }
         Scene::Update();
     }
 
@@ -237,6 +233,14 @@ namespace zz
     void PlayScene::Render()
     {
         Scene::Render();
+    }
+
+    void PlayScene::Exit()
+    {
+        for (auto bgm : mBGM)
+        {
+            bgm->Stop();
+        }
     }
 
     void PlayScene::loadBGM()

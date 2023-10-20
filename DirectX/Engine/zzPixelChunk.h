@@ -47,9 +47,12 @@ namespace zz
 
         void UpdateSand(int x, int y, Element& element);
         void UpdateWater(int x, int y, Element& element);
+        void UpdateBlood(int x, int y, Element& element);
+        void UpdateLava(int x, int y, Element& element);
         void UpdateFire(int x, int y, Element& element);
         void UpdateGrass(int x, int y, Element& element);
         void UpdateSmoke(int x, int y, Element& element);
+        void UpdateParticle(int x, int y, Element& element);
 
         void HeatNeighbors(int x, int y, Element& element);
         void DecreaseLifeTime(int x, int y, Element& element);

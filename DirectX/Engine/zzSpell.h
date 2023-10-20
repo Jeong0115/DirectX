@@ -8,6 +8,7 @@ namespace zz
     {
         Projectile,
         Utility,
+        Other,
         End
     };
 

@@ -24,16 +24,18 @@ namespace zz
 
     enum class eElementID : uint8_t
     {
-        EMPTY ,
-        SAND  ,
-        WATER ,
-        OIL   ,
-        BLOOD ,
-        ROCK  ,
-        WOOD  ,
-        FIRE  ,
-        SMOKE ,
-        GRASS ,
+        EMPTY   ,
+        SAND    ,
+        WATER   ,
+        OIL     ,
+        BLOOD   ,
+        LAVA    ,
+        PARTICLE,
+        ROCK    ,
+        WOOD    ,
+        FIRE    ,
+        SMOKE   ,
+        GRASS   ,
     };
 
     enum class eElementUpdate
@@ -50,6 +52,8 @@ namespace zz
         WATER   = 0xA0376259,
         OIL     = 0xE63D3728,
         BLOOD   = 0xAA830000,
+        LAVA    = 0xFFFF6000,
+        PARTICLE= 0xAA830000,
         ROCK    = 0xFF808080,
         WOOD    = 0xFF413F24,
         FIRE    = 0x00000000,//= 0x7FFF6060,
@@ -91,7 +95,7 @@ namespace zz
         bool* destoryBody = nullptr;
     };
 
-    Element EMPTY, SAND, WATER, OIL, BLOOD, ROCK, WOOD, FIRE, SMOKE, GRASS;
+    Element EMPTY, SAND, WATER, OIL, BLOOD, LAVA, ROCK, WOOD, FIRE, SMOKE, GRASS, PARTICLE;
 
     inline bool operator&(eElementUpdate a, eElementUpdate b)
     {
@@ -166,6 +170,32 @@ namespace zz
         BLOOD.FireHP        = 10000.f;
         BLOOD.Density       = 1.21f;
         BLOOD.Temperature   = 0.f;
+
+        LAVA.Type           = eElementType::LIQUID;
+        LAVA.Id             = eElementID::LAVA;
+        LAVA.Color          = (uint32_t)eElementColor::LAVA;
+        LAVA.Name           = L"LAVA";
+        LAVA.Velocity       = math::Vector2(0.f, 1.f);
+        LAVA.StopThreshold  = 15;
+        LAVA.StopCount      = 15;
+        LAVA.isIgnite       = false;
+        LAVA.onFire         = false;
+        LAVA.FireHP         = 10000.f;
+        LAVA.Density        = 5.21f;
+        LAVA.Temperature    = 0.f;
+
+        PARTICLE.Type           = eElementType::GAS;
+        PARTICLE.Id             = eElementID::PARTICLE;
+        PARTICLE.Color          = (uint32_t)eElementColor::PARTICLE;
+        PARTICLE.Name           = L"Blood_Particle";
+        PARTICLE.Velocity       = math::Vector2(0.f, 2.f);
+        PARTICLE.StopThreshold  = 20;
+        PARTICLE.StopCount      = 20;
+        PARTICLE.isIgnite       = false;
+        PARTICLE.onFire         = false;
+        PARTICLE.FireHP         = 10000.f;
+        PARTICLE.Density        = 1.21f;
+        PARTICLE.Temperature    = 0.f;
 
         GRASS.Type          = eElementType::LIQUID;
         GRASS.Id            = eElementID::GRASS;

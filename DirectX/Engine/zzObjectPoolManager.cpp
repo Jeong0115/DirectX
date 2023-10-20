@@ -34,7 +34,7 @@ namespace zz
         mObjectPool.insert(std::make_pair(typeid(Smoke_Orange).name(), smoke));
         
         std::stack<GameObject*> bouncing;
-        for (int i = 0; i < 30; i++)
+        for (int i = 0; i < 302; i++)
         {
             BouncingBurst* object = new BouncingBurst();
           //  SceneManager::GetActiveScene()->AddGameObject(object, eLayerType::PlayerAttack);
@@ -44,7 +44,7 @@ namespace zz
         mObjectPool.insert(std::make_pair(typeid(BouncingBurst).name(), bouncing));
         
         std::stack<GameObject*> spark;
-        for (int i = 0; i < 25; i++)
+        for (int i = 0; i < 150; i++)
         {
             SparkBolt* object = new SparkBolt();
             //SceneManager::GetActiveScene()->AddGameObject(object, eLayerType::PlayerAttack);
@@ -54,7 +54,7 @@ namespace zz
         mObjectPool.insert(std::make_pair(typeid(SparkBolt).name(), spark));
         
         std::stack<GameObject*> arrow;
-        for (int i = 0; i < 25; i++)
+        for (int i = 0; i < 150; i++)
         {
             MagicArrow* object = new MagicArrow();
            // SceneManager::GetActiveScene()->AddGameObject(object, eLayerType::PlayerAttack);
@@ -64,7 +64,7 @@ namespace zz
         mObjectPool.insert(std::make_pair(typeid(MagicArrow).name(), arrow));
         
         std::stack<GameObject*> megalaser;
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < 6; i++)
         {
             Megalaser* object = new Megalaser();
           //  SceneManager::GetActiveScene()->AddGameObject(object, eLayerType::PlayerAttack);
@@ -84,7 +84,7 @@ namespace zz
         mObjectPool.insert(std::make_pair(typeid(Bomb).name(), bomb));
         
         std::stack<GameObject*> drill;
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 20; i++)
         {
             Luminous_drill* object = new Luminous_drill();
          //   SceneManager::GetActiveScene()->AddGameObject(object, eLayerType::PlayerAttack);

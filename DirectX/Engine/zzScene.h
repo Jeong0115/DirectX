@@ -17,6 +17,8 @@ namespace zz
         virtual void Render();
         virtual void MovePlayer();
 
+        virtual void Exit();
+
         void AddGameObject(GameObject* gameObject, eLayerType type);
         Layer& GetLayer(eLayerType type) { return mLayers[(UINT)type]; }
 

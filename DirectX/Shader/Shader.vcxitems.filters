@@ -156,6 +156,12 @@
     <FxCompile Include="$(MSBuildThisFileDirectory)ParticleOffCS.hlsl">
       <Filter>Particle</Filter>
     </FxCompile>
+    <FxCompile Include="$(MSBuildThisFileDirectory)DamagedPS.hlsl">
+      <Filter>PS</Filter>
+    </FxCompile>
+    <FxCompile Include="$(MSBuildThisFileDirectory)SpriteColorPS.hlsl">
+      <Filter>PS</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)Common.hlsli" />

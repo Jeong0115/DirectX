@@ -23,8 +23,9 @@ namespace zz
         void RenderOpaque();
         void RenderCutOut();
         void RenderTransparent();
-
         void RenderPlayerView();
+
+        void SetTarget(GameObject* target) { mTarget = target; }
 
     private:
         std::bitset<(UINT)eLayerType::End>  mLayerMask;
@@ -33,5 +34,8 @@ namespace zz
         std::vector<GameObject*>            mCutOutGameObjects;
         std::vector<GameObject*>            mTransparentGameObjects;
         std::vector<GameObject*>            mTp;
+
+        GameObject* mDamaged;
+        GameObject* mTarget;
     };
 }   

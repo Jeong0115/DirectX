@@ -18,7 +18,8 @@ namespace zz
         void Play();
 
     private:
-        class ParticleSystem* mParticle;    
+        class ParticleSystem* mParticle;  
+        class AudioSource* mAudio;
         struct ParticleCircleShared mShareData;
 
         bool mbCreate;

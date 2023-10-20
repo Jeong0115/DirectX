@@ -14,6 +14,8 @@
 #include "zzHealthPoint.h"
 #include "zzRenderer.h"
 #include "zzPixelWorld.h"
+#include "zzMonsterBody.h"
+#include "zzAudioSource.h"
 
 namespace zz
 {
@@ -33,6 +35,7 @@ namespace zz
         , mDetectPlayerTime(1.5f)
         , mReloadTime(0.0f)
         , mbJump(false)
+        , mAudio(nullptr)
     {
     }
 
@@ -79,6 +82,10 @@ namespace zz
         mHealPoint->SetMaxHP(25.f);
         mHealPoint->SetHpZeroEvent([this]() { DeadEvent(); });
         mHealPoint->SetHitEvent([this]() { HitEvent(); });
+
+        mAudio = AddComponent<AudioSource>();
+
+        createBody();
 
         GameObject::Initialize();
     }
@@ -149,13 +156,76 @@ namespace zz
     {
         if (!IsDead())
         {
+            switch (randi(2))
+            {
+            case 0: mAudio->SetClip(ResourceManager::LoadAudioClip(L"shotgunner_evil_voc_death1", L"..\\Resources\\Audio\\Enemy\\shotgunner_evil_voc_death1.wav")); break;
+            case 1: mAudio->SetClip(ResourceManager::LoadAudioClip(L"shotgunner_evil_voc_death2", L"..\\Resources\\Audio\\Enemy\\shotgunner_evil_voc_death2.wav")); break;
+            case 2: mAudio->SetClip(ResourceManager::LoadAudioClip(L"shotgunner_evil_voc_death3", L"..\\Resources\\Audio\\Enemy\\shotgunner_evil_voc_death3.wav")); break;
+            }
+
+            mAudio->SetLoop(false);
+            mAudio->Play();
+
             DeleteObject(this, eLayerType::Monster);
+
+            std::random_device rd;
+            std::mt19937 g(rd());      
+            std::shuffle(mBodies.begin(), mBodies.end(), g);
+
+            Vector3 pos = GetComponent<Transform>()->GetPosition();
+
+            //for (int i = -2; i <= 2; i++)
+            //{
+            //    for (int j = 1; j <= 4; j++)
+            //    {
+            //        Element particle = BLOOD;
+            //        particle.Velocity.x = i * 5;
+            //        particle.Velocity.y = -10.f;
+
+            //        PixelWorld::InsertElementIfEmpty((int)pos.x + i, -((int)pos.y + j), particle);
+            //    }
+            //}
+            Vector2 impulse = Vector2(4, 0);
+            int size = mBodies.size();
+            for (int i = 0; i < size; i++)
+            {
+                float angle = PI * ((float)i / size);
+
+                Vector2 vel;
+                vel.x = impulse.x * cos(angle);
+                vel.y = impulse.x * sin(angle);
+
+                mBodies[i]->Impulse(vel * 30.f);
+
+                mBodies[i]->GetComponent<Transform>()->SetPosition(Vector3(pos.x + vel.x, pos.y + vel.y, pos.z));
+                mBodies[i]->SetBox2dScale(Vector3(3.0f, 3.0f, 1.0f));
+
+                CreateObject(mBodies[i], eLayerType::Effect);
+            }
         }
     }
 
     void ShotGunner_Weak::HitEvent()
     {
         mHitFlashTime = 0.15f;
+
+        Vector3 pos = GetComponent<Transform>()->GetPosition();
+
+        for (int i = -1; i <= 1; i++)
+        {
+            for (int j = -1; j <= 1; j++)
+            {
+                PixelWorld::InsertElementIfEmpty((int)pos.x + i, (int)-pos.y + j, BLOOD);
+            }
+        }
+        switch (randi(1))
+        {
+        case 0: mAudio->SetClip(ResourceManager::LoadAudioClip(L"shotgunner_evil_voc_damage1", L"..\\Resources\\Audio\\Enemy\\shotgunner_evil_voc_damage1.wav")); break;
+        case 1: mAudio->SetClip(ResourceManager::LoadAudioClip(L"shotgunner_evil_voc_damage2", L"..\\Resources\\Audio\\Enemy\\shotgunner_evil_voc_damage2.wav")); break;
+        }
+
+        mAudio->SetLoop(false);
+        mAudio->Play();
     }
 
     void ShotGunner_Weak::playIdleAnimation()
@@ -167,6 +237,7 @@ namespace zz
     {
         mState = eMonsterState::FollowPlayer;
         mbEnterAction = true;
+        mActionIndex = 1;
         mDetectPlayerTime = 1.0f;
         mReloadTime = 2.0f;
     }
@@ -209,6 +280,7 @@ namespace zz
             if (mDetectPlayer->IsPlayerInRange())
             {
                 mState = eMonsterState::FollowPlayer;
+                mActionIndex = 1;
                 mbEnterAction = true;
                 return;
             }
@@ -273,6 +345,7 @@ namespace zz
             {
                 mAnimator->PlayAnimation(L"shotgunner_weak_jump", false);
                 mRigid->SetVelocityY(150.f);
+                mRigid->SetVelocityX(mDirection * -50.f);
                 mbEnterAction = false;
                 mbJump = true;
             }
@@ -299,9 +372,14 @@ namespace zz
     {
         if (!mDetectPlayer->IsPlayerInRange())
         {
+            mChoiceNextAction = 0.3f;
+            mActionIndex = 0;
+            mAnimator->PlayAnimation(L"shotgunner_weak_stand", true);
+            mbEnterAction = false;
             mState = eMonsterState::Freedom;
             return;
         }
+
 
         if (mDirection != mDetectPlayer->GetDirection())
         {
@@ -318,8 +396,19 @@ namespace zz
             return;
         }
 
-        if (mDirection == 1)
+        if (fabs(mDetectPlayer->GetPlayerPos().x - GetComponent<Transform>()->GetPosition().x) < 25.f)
         {
+            if(mActionIndex == 1)
+            {
+                mAnimator->PlayAnimation(L"shotgunner_weak_stand", true);
+                mbEnterAction = true;
+                mActionIndex = 0;
+            }
+            mRigid->SetVelocityX(0.f);
+        }
+        else if (mDirection == 1)
+        {
+            mActionIndex = 1;
             if (mbEnterAction)
             {
                 mAnimator->PlayAnimation(L"shotgunner_weak_walk", true);
@@ -329,6 +418,7 @@ namespace zz
         }
         else
         {
+            mActionIndex = 1;
             if (mbEnterAction)
             {
                 mAnimator->PlayAnimation(L"shotgunner_weak_walk", true);
@@ -343,6 +433,8 @@ namespace zz
             {
                 mAnimator->PlayAnimation(L"shotgunner_weak_jump", true);
                 mRigid->SetVelocityY(150.f);
+
+                mRigid->SetVelocityX(mDirection * -50.f);
                 mbEnterAction = false;
             }
         }
@@ -363,6 +455,10 @@ namespace zz
             mAnimator->PlayAnimation(L"shotgunner_weak_attack_ranged", false);
             mRigid->SetVelocityX(0.f);
             mbEnterAction = false;
+
+            mAudio->SetClip(ResourceManager::LoadAudioClip(L"shotgun_cocking", L"..\\Resources\\Audio\\Enemy\\shotgun_cocking.wav"));
+            mAudio->SetLoop(false);
+            mAudio->Play();
         }
 
     }
@@ -395,6 +491,45 @@ namespace zz
             y += yIncrement;
         }
         return true;
+    }
+
+    void ShotGunner_Weak::createBody()
+    {
+        MonsterBody* head = new MonsterBody();
+        head->SetTexture(ResourceManager::Load<Texture>(L"shotgunner_weak_head", L"..\\Resources\\Texture\\Monster\\shotgunner_weak\\head.png"));
+        mBodies.push_back(head);
+
+        MonsterBody* left_arm = new MonsterBody();
+        left_arm->SetTexture(ResourceManager::Load<Texture>(L"shotgunner_weak_left_arm", L"..\\Resources\\Texture\\Monster\\shotgunner_weak\\left_arm.png"));
+        mBodies.push_back(left_arm);
+
+        MonsterBody* left_foot = new MonsterBody();
+        left_foot->SetTexture(ResourceManager::Load<Texture>(L"shotgunner_weak_left_foot", L"..\\Resources\\Texture\\Monster\\shotgunner_weak\\left_foot.png"));
+        mBodies.push_back(left_foot);
+
+        MonsterBody* left_hand = new MonsterBody();
+        left_hand->SetTexture(ResourceManager::Load<Texture>(L"shotgunner_weak_left_hand", L"..\\Resources\\Texture\\Monster\\shotgunner_weak\\left_hand.png"));
+        mBodies.push_back(left_hand);
+
+        MonsterBody* left_thigh = new MonsterBody();
+        left_thigh->SetTexture(ResourceManager::Load<Texture>(L"shotgunner_weak_left_thigh", L"..\\Resources\\Texture\\Monster\\shotgunner_weak\\left_thigh.png"));
+        mBodies.push_back(left_thigh);
+
+        MonsterBody* right_foot = new MonsterBody();
+        right_foot->SetTexture(ResourceManager::Load<Texture>(L"shotgunner_weak_right_foot", L"..\\Resources\\Texture\\Monster\\shotgunner_weak\\right_foot.png"));
+        mBodies.push_back(right_foot);
+
+        MonsterBody* right_thigh = new MonsterBody();
+        right_thigh->SetTexture(ResourceManager::Load<Texture>(L"shotgunner_weak_right_thigh", L"..\\Resources\\Texture\\Monster\\shotgunner_weak\\right_thigh.png"));
+        mBodies.push_back(right_thigh);
+
+        MonsterBody* torso = new MonsterBody();
+        torso->SetTexture(ResourceManager::Load<Texture>(L"shotgunner_weak_torso", L"..\\Resources\\Texture\\Monster\\shotgunner_weak\\torso.png"));
+        mBodies.push_back(torso);
+
+        MonsterBody* gun = new MonsterBody();
+        gun->SetTexture(ResourceManager::Load<Texture>(L"shotgunner_weak_gun", L"..\\Resources\\Texture\\Monster\\shotgunner_weak\\gun.png"));
+        mBodies.push_back(gun);
     }
 
 }

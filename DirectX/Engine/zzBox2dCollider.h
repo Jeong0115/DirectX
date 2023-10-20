@@ -16,6 +16,9 @@ namespace zz
         virtual void LateUpdate()   override;
         virtual void Render()       override;
 
+        void Create(Vector3 pos, Vector3 scale);
+        void Release();
+
         void ApplyLinearImpulse(Vector2 impulse, Vector2 point = Vector2::Zero);
 
     private:

@@ -13,7 +13,7 @@ namespace zz
         : mTime(0.0f)
         , mbBend(false)
         , mDuration(1.0f)
-        , mMoveState(eMoveState::Stay)
+        , mMoveState(eMoveState::Sleep)
         , dir(-1)
         , mCurAngle(0.f)
         , mNextAngle(0.f)
@@ -86,6 +86,17 @@ namespace zz
         mNextAngle = revolutionAngle;
         mMoveState = eMoveState::Move;
         mTime = 0.f;
+    }
+
+    void LimbB::Awake()
+    {
+        SetBend();
+
+    }
+
+    void LimbB::SetSleep()
+    {
+        mMoveState = eMoveState::Sleep;
     }
     
 

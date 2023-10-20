@@ -26,7 +26,7 @@ namespace zz
 
         std::shared_ptr<Texture> texture = ResourceManager::Find<Texture>(L"bomb");
 
-        AddComponent<Box2dCollider>();
+        AddComponent<Box2dCollider>()->Create(Vector3(0.f, 0.f, 0.f), Vector3(8.0f, 8.0f, 1.0f));
 
         Animator* ani = AddComponent<Animator>();
         ani->Create(L"Bomb_Idle", texture, Vector2(0.0f, 0.0f), Vector2(12.0f, 12.0f), 1, Vector2::Zero, 1.f);
@@ -45,30 +45,20 @@ namespace zz
 
     void Bomb::Initialize()
     {
-        mMuzzleEffect = new MuzzleEffect();
-        std::shared_ptr<Texture> muzzleTexture = ResourceManager::Find<Texture>(L"muzzle_launcher_large_01");
-        Animator* manimator = new Animator();
-        manimator->Create(L"muzzle_launcher_large_01_play", muzzleTexture, Vector2(0.0f, 0.0f), Vector2(16.0f, 16.0f), 1, Vector2::Zero, 0.1f);
-        manimator->PlayAnimation(L"muzzle_launcher_large_01_play", false);
+        mSpeed = 60.f;
+        mCastDelay = 1.67f;
+        mDamage = 3.0f;
+        mManaDrain = 25.0f;
 
-        mMuzzleEffect->SetAnimator(manimator, L"muzzle_launcher_large_01_play");
-        mMuzzleEffect->GetComponent<Transform>()->SetScale(16.0f, 16.0f, 1.0f);
-        CreateObject(mMuzzleEffect, eLayerType::Effect);
-
+     
         ProjectileSpell::Initialize();
     }
 
     void Bomb::Update()
     {
-        if (mTime >= 1.0f && IsActive())
+        if (mTime >= 3.0f && IsActive())
         {
-            ObjectPoolManager::ReturnObjectToPool(this);
-
-            Vector3 pos = GetComponent<Transform>()->GetPosition();
-
-            Explosion_128* bomb = new Explosion_128();
-            bomb->GetComponent<Transform>()->SetPosition(pos);
-            CreateObject(bomb, eLayerType::Effect);
+            Dead();
         }
 
         ProjectileSpell::Update();
@@ -86,11 +76,6 @@ namespace zz
 
     void Bomb::InitialSetting()
     {
-        mSpeed = 60.f;
-        mCastDelay = 1.67f;
-        mDamage = 3.0f;
-        mManaDrain = 25.0f;
-
         Vector3 mousePos = Input::GetMouseWorldPos();
         Vector3 pos = GetComponent<Transform>()->GetPosition();
 
@@ -100,13 +85,37 @@ namespace zz
         force.x = 600.f * cos(angle);
         force.y = -600.f * sin(angle);
 
+        GetComponent<Box2dCollider>()->Create(pos, Vector3(8.0f, 8.0f, 1.0f));
         GetComponent<Box2dCollider>()->ApplyLinearImpulse(force, Vector2(-1, -1));
 
-        mAudio->Play();
+        mMuzzleEffect = new MuzzleEffect();
+        std::shared_ptr<Texture> muzzleTexture = ResourceManager::Find<Texture>(L"muzzle_launcher_large_01");
+        Animator* manimator = new Animator();
+        manimator->Create(L"muzzle_launcher_large_01_play", muzzleTexture, Vector2(0.0f, 0.0f), Vector2(16.0f, 16.0f), 1, Vector2::Zero, 0.1f);
+        manimator->PlayAnimation(L"muzzle_launcher_large_01_play", false);
+
+        mMuzzleEffect->SetAnimator(manimator, L"muzzle_launcher_large_01_play");
+        mMuzzleEffect->GetComponent<Transform>()->SetScale(16.0f, 16.0f, 1.0f);
+        CreateObject(mMuzzleEffect, eLayerType::Effect);
     }
 
     Bomb* Bomb::Clone()
     {
         return ObjectPoolManager::GetObjectInPool<Bomb>();
+    }
+
+    void Bomb::Dead()
+    {
+        GetComponent<Box2dCollider>()->Release();
+
+        ObjectPoolManager::ReturnObjectToPool(this);
+
+        Vector3 pos = GetComponent<Transform>()->GetPosition();
+
+        Explosion_128* bomb = new Explosion_128();
+        bomb->GetComponent<Transform>()->SetPosition(pos);
+        CreateObject(bomb, eLayerType::Effect);
+
+        mAudio->Play();
     }
 }

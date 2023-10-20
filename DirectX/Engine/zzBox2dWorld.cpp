@@ -166,7 +166,7 @@ namespace zz
             fixtureDef.friction = OBJ_FRICTION;
             fixtureDef.restitution = OBJ_RESTITUTION;
             fixtureDef.filter.categoryBits = 0x0002;
-            fixtureDef.filter.maskBits = 0xFFFF;
+            fixtureDef.filter.maskBits = 0x0001;
 
             body->CreateFixture(&fixtureDef);
 
@@ -444,7 +444,7 @@ namespace zz
                 }
 
                 b2PolygonShape dynamicTriangle;
-                dynamicTriangle.Set(vertices, 3);
+                dynamicTriangle.Set(vertices, 3);           
 
                 b2FixtureDef fixtureDef;
                 fixtureDef.shape = &dynamicTriangle;

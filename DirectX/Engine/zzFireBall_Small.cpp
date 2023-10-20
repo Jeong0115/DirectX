@@ -9,6 +9,7 @@
 #include "zzTime.h"
 #include "zzTransform.h"
 #include "zzCollider.h"
+#include "zzAudioSource.h"
 
 namespace zz
 {
@@ -45,6 +46,11 @@ namespace zz
 
         AddComponent<PixelCollider_Lite>()->SetCollisionEvent([this](Element& element) { OnCollision(element); });
 
+        AudioSource* audio = AddComponent<AudioSource>();
+        audio->SetClip(ResourceManager::LoadAudioClip(L"shotgun_02", L"..\\Resources\\Audio\\Projectiles\\shotgun_02.wav"));
+        //audio->SetClip(ResourceManager::Load<AudioClip>(L"shotgun_02", L"..\\Resources\\Audio\\Projectiles\\shotgun_02.wav"));
+        audio->SetLoop(false);
+        audio->Play();
         MonsterAttack::Initialize();
     }
 

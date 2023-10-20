@@ -40,12 +40,17 @@ namespace zz
 
         bool shootRay();
 
+        void createBody();
+
+        std::vector<class MonsterBody*> mBodies;
+
         class PixelCollider*    mPxCollider;
         class MuzzleEffect*     mMuzzleEffect;
         class HealthPoint*      mHealPoint;
         class DetectPlayer*     mDetectPlayer;
         class Animator*         mAnimator;
         class RigidBody*        mRigid;
+        class AudioSource*      mAudio;
 
         eMonsterState mState;
 

@@ -15,6 +15,7 @@ namespace zz
         virtual void LateUpdate()   override;
         virtual void Render()       override;
 
+        virtual void Exit()         override;
     private:
         void loadBGM();
         void playNextBGM();

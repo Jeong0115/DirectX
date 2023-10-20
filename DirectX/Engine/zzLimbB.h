@@ -14,6 +14,7 @@ namespace zz
             Move,
             Land,
             Stay,
+            Sleep,
         };
 
         LimbB();
@@ -28,6 +29,8 @@ namespace zz
         void SetAngle(float angle) { mCurAngle = angle; }
         void SetBend();
         void SetMove(float revolutionAngle);
+        void Awake();
+        void SetSleep();
     private:
         void bend();
         void move();

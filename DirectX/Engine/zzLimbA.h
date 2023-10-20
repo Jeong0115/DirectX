@@ -13,6 +13,7 @@ namespace zz
             Search,
             Move,
             Stay,
+            Sleep,
         };
 
         LimbA(GameObject* body);
@@ -23,6 +24,7 @@ namespace zz
         virtual void LateUpdate()   override;
         virtual void Render()       override;
 
+        void Awake();
         void SetMoveState(eMoveState state);
         void TransPosition();
 

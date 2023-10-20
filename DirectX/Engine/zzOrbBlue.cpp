@@ -8,6 +8,7 @@
 #include "zzRigidBody.h"
 #include "zzLight.h"
 #include "zzCollider.h"
+#include "zzAudioSource.h"
 
 namespace zz
 {
@@ -17,6 +18,7 @@ namespace zz
         , mOrbitalCenter(Vector3::Zero)
         , mOrbitalTime(0.0f)
         , mRigid(nullptr)
+        , mAudio(nullptr)
     {
         mDamage = 15.f;
         mLimitTime = 3.0f;
@@ -61,6 +63,7 @@ namespace zz
             mOrbitalCenter = GetComponent<Transform>()->GetPosition();
         }
 
+        mAudio = AddComponent<AudioSource>();
         //Light* light = AddComponent<Light>();
         //light->SetLightType(0);
         //light->SetLightScale(16.f, 17.f, 1.0f);
@@ -86,6 +89,10 @@ namespace zz
         }
         if (mType == 0 && mOrbitalTime >= 1.0f)
         {
+            mType = 3;
+            mAudio->SetClip(ResourceManager::LoadAudioClip(L"field_create_01", L"..\\Resources\\Audio\\Enemy\\field_create_01.wav"));
+            mAudio->SetLoop(false);
+            mAudio->Play();
             mRigid->SetOrbitalMotion(true, mOrbitalCenter);
         }
         MonsterAttack::Update();
@@ -119,9 +126,11 @@ namespace zz
             Vector3 pos = GetComponent<Transform>()->GetPosition();
             mEffect->SetPosition(pos.x, pos.y, pos.z - 0.05f);
             CreateObject(mEffect, eLayerType::Effect);
-
             if (mType == 1)
             {
+                mAudio->SetClip(ResourceManager::LoadAudioClip(L"enemy_orb_ver1_01", L"..\\Resources\\Audio\\Enemy\\enemy_orb_ver1_01.wav"));
+                mAudio->SetLoop(false);
+                mAudio->Play();
                 for (int i = 0; i < 4; i++)
                 {
                     OrbBlue* blue = new OrbBlue(2);

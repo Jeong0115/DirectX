@@ -9,6 +9,9 @@
 namespace zz
 {
     Tail1::Tail1()
+        : mAngle(0.f)
+        , mDir(1)
+        , mbDead(false)
     {
     }
     Tail1::~Tail1()
@@ -16,6 +19,7 @@ namespace zz
     }
     void Tail1::Initialize()
     {
+        mDir = random() > 0.5f ? 1 : -1;
         GetComponent<Transform>()->SetScale(30.f, 31.f, 1.0f);
         GetComponent<Transform>()->SetPosition(0.f, -15.f, 0.23f);
         MeshRenderer* mesh = AddComponent<MeshRenderer>();
@@ -26,14 +30,18 @@ namespace zz
     }
     void Tail1::Update()
     {
-        if (Input::GetKey(eKeyCode::R))
+        if(!mbDead)
         {
-            GetComponent<Transform>()->ShiftRotationZ(1.0f * (float)Time::DeltaTime());
+            mAngle += randf(2.0f) * mDir * (float)Time::DeltaTime();
+
+            if (mAngle >= 0.5f * PI || mAngle <= -0.5f * PI)
+            {
+                mDir *= -1;
+            }
+            GetComponent<Transform>()->SetRotationZ(mAngle);
         }
-        if (Input::GetKey(eKeyCode::Q))
-        {
-            GetComponent<Transform>()->ShiftRotationZ(-1.0f * (float)Time::DeltaTime());
-        }
+       //int dir = random() > 0.5f ? 1 : -1;
+       //GetComponent<Transform>()->ShiftRotationZ(dir* random() * 0.5f* (float)Time::DeltaTime());
         GameObject::Update();
     }
     void Tail1::LateUpdate()
@@ -44,4 +52,5 @@ namespace zz
     {
         GameObject::Render();
     }
+
 }

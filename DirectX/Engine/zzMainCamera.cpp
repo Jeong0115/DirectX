@@ -10,10 +10,11 @@
 #include "zzResourceManager.h"
 #include "zzApplication.h"
 #include "zzBloomManager.h"
-#include "zzExplosion_128.h"
-
+#include "zzInput.h"
 #include "zzTransform.h"
 #include "zzPixelWorld.h"
+#include "zzTime.h"
+#include "zzDamaged.h"
 
 namespace zz
 {
@@ -32,16 +33,25 @@ namespace zz
         , mOpaqueGameObjects{}
         , mCutOutGameObjects{}
         , mTransparentGameObjects{}
+        , mTarget(nullptr)
+        , mDamaged(nullptr)
     {
         EnableLayerMasks();
     }
 
     MainCamera::~MainCamera()
     {
+        if (mDamaged)
+        {
+            delete mDamaged;
+            mDamaged = nullptr;
+        }
     }
 
     void MainCamera::Initialize()
     {
+        mDamaged = new Damaged();
+        mDamaged->Initialize();
     }
 
     void MainCamera::Update()
@@ -87,9 +97,27 @@ namespace zz
         ResourceManager::Find<Mesh>(L"LightMesh")->BindBuffer();
         ResourceManager::Find<Shader>(L"BloomShader")->BindShaders();
 
-
         BloomManager::Render();      
 
+        Vector3 targetPos = mTarget->GetComponent<Transform>()->GetPosition();
+        Vector3 curPos = GetOwner()->GetComponent<Transform>()->GetPosition();
+        Vector3 mousePos = Input::GetMouseWorldPos();
+
+        float disX = std::clamp(fabs(targetPos.x - mousePos.x), 1.f, 20.f);
+        float disY = std::clamp(fabs(targetPos.y - mousePos.y), 1.f, 20.f);
+
+        Vector3 cameraPos;
+        cameraPos.x = std::lerp(curPos.x, mousePos.x, (20.f / disX) * 0.05f * (float)Time::DeltaTime());
+        cameraPos.y = std::lerp(curPos.y, mousePos.y, (20.f / disY) * 0.05f * (float)Time::DeltaTime());
+
+        float clampedX = std::clamp(cameraPos.x, targetPos.x - 10.f, targetPos.x + 10.f);
+        float clampedY = std::clamp(cameraPos.y, targetPos.y - 10.f, targetPos.y + 10.f);
+
+        GetOwner()->GetComponent<Transform>()->SetPositionXY(clampedX, clampedY);
+        mDamaged->GetComponent<Transform>()->SetPosition(clampedX, clampedY, 0.0f);
+        mDamaged->Update();
+        mDamaged->LateUpdate();
+        mDamaged->Render();
     }
 
 

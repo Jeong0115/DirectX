@@ -4,6 +4,7 @@
 #include "zzTransform.h"
 #include "zzBlastWand_0585.h"
 #include "zzBoltWand_0997.h"
+#include "zzWand0765.h"
 #include "zzUI.h"
 #include "zzInventoryBG.h"
 #include "zzEquipment.h"
@@ -26,11 +27,16 @@
 #include "zzMegalaserUI.h"
 #include "zzDrill.h"
 #include "zzRubber_ball.h"
+#include "zzScatter3.h"
+#include "zzBloodTrail_UI.h"
+#include "zzOilTrail_UI.h"
 
 #include "zzHealth.h"
 #include "zzLevitationEnerge.h"
 #include "zzWandMana.h"
 #include "zzWandRecharge.h"
+
+#include "zzInput.h"
 
 namespace zz
 {
@@ -55,6 +61,10 @@ namespace zz
         wand2->Initialize();
         AcquireItem(wand2);
 
+        Wand0765* wand3 = new Wand0765();
+        wand3->Initialize();
+        AcquireItem(wand3);
+
         LightBullet* spell = new LightBullet();
         spell->Initialize();
         AcquireSpell(spell);
@@ -66,6 +76,16 @@ namespace zz
         }
         {
             WaterTrail_UI* spell = new WaterTrail_UI();
+            spell->Initialize();
+            AcquireSpell(spell);
+        }
+        {
+            OilTrail_UI* spell = new OilTrail_UI();
+            spell->Initialize();
+            AcquireSpell(spell);
+        }
+        {
+            BloodTrail_UI* spell = new BloodTrail_UI();
             spell->Initialize();
             AcquireSpell(spell);
         }
@@ -86,6 +106,21 @@ namespace zz
         }
         {
             Rubber_ball* spell = new Rubber_ball();
+            spell->Initialize();
+            AcquireSpell(spell);
+        }
+        {
+            Rubber_ball* spell = new Rubber_ball();
+            spell->Initialize();
+            AcquireSpell(spell);
+        }
+        {
+            Rubber_ball* spell = new Rubber_ball();
+            spell->Initialize();
+            AcquireSpell(spell);
+        }
+        {
+            Scatter3* spell = new Scatter3();
             spell->Initialize();
             AcquireSpell(spell);
         }
@@ -161,6 +196,20 @@ namespace zz
     {
         if (mbOpenInventory)
         {
+            if (Input::GetKey(eKeyCode::CTRL) && Input::GetKeyDown(eKeyCode::M))
+            {
+                Bullet* spell = new Bullet();
+                spell->Initialize();
+                AcquireSpell(spell);
+            }
+            if (Input::GetKey(eKeyCode::CTRL) && Input::GetKeyDown(eKeyCode::R))
+            {
+                MegalaserUI* spell = new MegalaserUI();
+                spell->Initialize();
+                AcquireSpell(spell);
+            }
+
+
             dynamic_cast<UICamera*>(renderer::uiCamera)->TurnLayerMask(eUIType::BG, true);
             dynamic_cast<UICamera*>(renderer::uiCamera)->TurnLayerMask(eUIType::InfoBox, true);
             dynamic_cast<UICamera*>(renderer::uiCamera)->TurnLayerMask(eUIType::WandSlot, true);

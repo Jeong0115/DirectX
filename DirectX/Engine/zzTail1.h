@@ -14,6 +14,12 @@ namespace zz
         virtual void Update()       override;
         virtual void LateUpdate()   override;
         virtual void Render()       override;
+
+        void SetDead() { mbDead = true; }
+    private:
+        bool mbDead;
+        float mAngle;
+        int mDir;
     };
 
 }

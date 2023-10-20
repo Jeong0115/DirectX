@@ -21,6 +21,8 @@ namespace zz
     private:
         virtual void dead() override;
 
+        class AudioSource* mAudio;
+
         class RigidBody* mRigid;
         ExplosionEffect* mEffect;
 

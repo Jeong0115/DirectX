@@ -5,9 +5,12 @@
 #include "zzResourceManager.h"
 #include "zzTexture.h"
 #include "zzRedTeleport.h"
+#include "zzAudioClip.h"
+
 namespace zz
 {
     BossArenaScene::BossArenaScene()
+        : mAudio(nullptr)
     {
     }
 
@@ -38,9 +41,9 @@ namespace zz
         bgmesh->SetMesh(ResourceManager::Find<Mesh>(L"RectMesh"));
 
 
-        RedTeleport* teleport = new RedTeleport();
-        teleport->GetComponent<Transform>()->SetPosition(380.f, -889.f, 0.200f);
-        AddGameObject(teleport, eLayerType::Object);
+        mAudio = ResourceManager::LoadAudioClip(L"BossArena", L"..\\Resources\\Audio\\BGM\\BossArena.wav");
+        mAudio->SetLoop(true);
+        mAudio->Play();
 
         Scene::Initialize();
     }
@@ -60,10 +63,13 @@ namespace zz
         Scene::Render();
     }
 
+    void BossArenaScene::Exit()
+    {
+        mAudio->Stop();
+    }
+
     void BossArenaScene::MovePlayer()
     {
-   
-
         GetLayer(eLayerType::Player).GetGameObjects()[0]->GetComponent<Transform>()->SetPosition(356.f, -889.f, 0.200f);
     }
 }

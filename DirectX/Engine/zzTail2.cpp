@@ -2,10 +2,13 @@
 #include "zzResourceManager.h"
 #include "zzTransform.h"
 #include "zzMeshRenderer.h"
-
+#include "zzTime.h"
 namespace zz
 {
     Tail2::Tail2()
+        : mAngle(0.f)
+        , mDir(1)
+        , mbDead(false)
     {
     }
     Tail2::~Tail2()
@@ -23,6 +26,14 @@ namespace zz
     }
     void Tail2::Update()
     {
+        if(!mbDead)
+        {
+            mAngle += random() * mDir * (float)Time::DeltaTime();
+
+            random() > 0.0005 ? true : mDir *= -1;
+
+            GetComponent<Transform>()->SetRotationZ(mAngle);
+        }
         GameObject::Update();
     }
     void Tail2::LateUpdate()

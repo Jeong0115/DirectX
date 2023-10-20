@@ -234,6 +234,16 @@ namespace zz::renderer
         fadeSpriteShader->CreateShader(eShaderStage::PS, L"FadeSpritePS.hlsl", "main");
         ResourceManager::Insert(L"FadeSpriteShader", fadeSpriteShader);
 
+        std::shared_ptr<Shader> DamagedShader = std::make_shared<Shader>();
+        DamagedShader->CreateShader(eShaderStage::VS, L"SpriteVS.hlsl", "main");
+        DamagedShader->CreateShader(eShaderStage::PS, L"DamagedPS.hlsl", "main");
+        ResourceManager::Insert(L"DamagedShader", DamagedShader);
+
+        std::shared_ptr<Shader> SpriteColorPS = std::make_shared<Shader>();
+        SpriteColorPS->CreateShader(eShaderStage::VS, L"SpriteVS.hlsl", "main");
+        SpriteColorPS->CreateShader(eShaderStage::PS, L"SpriteColorPS.hlsl", "main");
+        ResourceManager::Insert(L"SpriteColorShader", SpriteColorPS);
+
         std::shared_ptr<Shader> lightShader = std::make_shared<Shader>();
         lightShader->CreateShader(eShaderStage::VS, L"LightVS.hlsl", "main");
         lightShader->CreateShader(eShaderStage::PS, L"LightPS.hlsl", "main");
@@ -485,6 +495,9 @@ namespace zz::renderer
         shader = ResourceManager::Find<Shader>(L"SliderShader");
         GetDevice()->CreateInputLayout(arrLayout, 3, shader->GetVSCode(), shader->GetInputLayoutAddressOf());
 
+        shader = ResourceManager::Find<Shader>(L"SpriteColorShader");
+        GetDevice()->CreateInputLayout(arrLayout, 3, shader->GetVSCode(), shader->GetInputLayoutAddressOf());
+
         shader = ResourceManager::Find<Shader>(L"FadeSpriteShader");
         GetDevice()->CreateInputLayout(arrLayout, 3, shader->GetVSCode(), shader->GetInputLayoutAddressOf());
 
@@ -493,6 +506,9 @@ namespace zz::renderer
 
 		shader = ResourceManager::Find<Shader>(L"TextShader");
 		GetDevice()->CreateInputLayout(arrLayout, 3, shader->GetVSCode(), shader->GetInputLayoutAddressOf());
+
+        shader = ResourceManager::Find<Shader>(L"DamagedShader");
+        GetDevice()->CreateInputLayout(arrLayout, 3, shader->GetVSCode(), shader->GetInputLayoutAddressOf());
 
         shader = ResourceManager::Find<Shader>(L"LightMapShader");
         GetDevice()->CreateInputLayout(arrLayout, 3, shader->GetVSCode(), shader->GetInputLayoutAddressOf());
@@ -966,6 +982,12 @@ namespace zz::renderer
         material->SetShader(spriteShader);
         material->SetTexture(BoltWand_0997);
         ResourceManager::Insert(L"m_BoltWand_0997", material);
+
+        std::shared_ptr<Texture> wand_0765 = ResourceManager::Load<Texture>(L"Wand_0765", L"..\\Resources\\Texture\\Wand\\wand_0765.png");
+        material = std::make_shared<Material>();
+        material->SetShader(spriteShader);
+        material->SetTexture(wand_0765);
+        ResourceManager::Insert(L"m_Wand_0765", material);
     }
 
     void LoadMonsterResource()
@@ -1055,6 +1077,12 @@ namespace zz::renderer
         material->SetTexture(luminous_drill);
         ResourceManager::Insert(L"m_luminous_drill", material);
 
+        std::shared_ptr<Texture> scatter_3 = ResourceManager::Load<Texture>(L"scatter_3", L"..\\Resources\\Texture\\Spell\\Scatter\\scatter_3.png");
+        material = std::make_shared<Material>();
+        material->SetShader(spriteShader);
+        material->SetTexture(scatter_3);
+        ResourceManager::Insert(L"m_scatter_3", material);
+
         ResourceManager::Load<Texture>(L"light_arrow", L"..\\Resources\\Texture\\Spell\\MagicArrow\\light_arrow.png");
         ResourceManager::Load<AudioClip>(L"MagicArrow_Sound", L"..\\Resources\\Audio\\Projectiles\\spell_shoot_ver2_1.wav");
         ResourceManager::Load<Texture>(L"explosion_016_slime", L"..\\Resources\\Texture\\Spell\\MagicArrow\\explosion_016_slime.png");
@@ -1085,6 +1113,18 @@ namespace zz::renderer
         material->SetShader(spriteShader);
         material->SetTexture(water_trail);
         ResourceManager::Insert(L"m_water_trail", material);
+
+        std::shared_ptr<Texture> blood_trail = ResourceManager::Load<Texture>(L"blood_trail", L"..\\Resources\\Texture\\Spell\\Trail\\blood_trail.png");
+        material = std::make_shared<Material>();
+        material->SetShader(spriteShader);
+        material->SetTexture(blood_trail);
+        ResourceManager::Insert(L"m_blood_trail", material);
+
+        std::shared_ptr<Texture> oil_trail = ResourceManager::Load<Texture>(L"oil_trail", L"..\\Resources\\Texture\\Spell\\Trail\\oil_trail.png");
+        material = std::make_shared<Material>();
+        material->SetShader(spriteShader);
+        material->SetTexture(oil_trail);
+        ResourceManager::Insert(L"m_oil_trail", material);
 
         ResourceManager::Load<Texture>(L"bomb", L"..\\Resources\\Texture\\Spell\\Bomb\\bomb.png");
         ResourceManager::Load<Texture>(L"muzzle_launcher_large_01", L"..\\Resources\\Texture\\Spell\\Bomb\\muzzle_launcher_large_01.png");

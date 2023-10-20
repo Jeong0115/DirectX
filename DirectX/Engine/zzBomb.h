@@ -18,7 +18,7 @@ namespace zz
         virtual void InitialSetting() override;
         Bomb* Clone() override;
 
-
+        virtual void Dead() override;
     private:
     };
 }
